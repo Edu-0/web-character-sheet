@@ -1,0 +1,175 @@
+/* responsive.css — layouts específicos por largura de tela (não é apenas "encolher") */
+
+/* Notebook / desktops menores (≤1280px) */
+@media (max-width: 1280px) {
+  .identity-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablets (≤1024px) */
+@media (max-width: 1024px) {
+  .app-main {
+    padding: var(--space-4);
+  }
+
+  .personality-grid,
+  .proficiencies-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card--full {
+    grid-column: auto;
+  }
+
+  .currency-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .app-header__actions .button span {
+    display: none;
+  }
+}
+
+/* Tablets retrato / celulares grandes (≤768px) */
+@media (max-width: 768px) {
+  .app-header {
+    height: auto;
+    flex-wrap: wrap;
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .tab-nav {
+    top: auto;
+    position: static;
+  }
+
+  .identity-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .field--name .input--title {
+    text-align: center;
+  }
+
+  .field-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vitals-bar {
+    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+  }
+
+  .hp-bar {
+    gap: var(--space-3);
+    justify-content: space-between;
+  }
+
+  .hp-field {
+    min-width: 30%;
+    flex: 1 1 30%;
+  }
+
+  .currency-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .spell-slots {
+    grid-template-columns: 1fr;
+  }
+
+  /* Tabela de inventário vira lista de cartões empilhados */
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table, .data-table tbody, .data-table tr, .data-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .data-table tr {
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-3);
+    padding: var(--space-2);
+  }
+
+  .data-table td {
+    border-bottom: none;
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .data-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: var(--fs-xs);
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  .input--narrow {
+    max-width: none;
+  }
+}
+
+/* Celulares (≤480px) */
+@media (max-width: 480px) {
+  .app-header__brand .brand-subtitle {
+    display: none;
+  }
+
+  .app-header__actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vitals-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .currency-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hp-field {
+    min-width: 45%;
+    flex: 1 1 45%;
+  }
+
+  .skill-row {
+    grid-template-columns: auto auto 1fr auto;
+  }
+
+  .skill-row__ability {
+    display: none;
+  }
+
+  .dice-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inventory-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .field--search input {
+    min-width: 0;
+  }
+}

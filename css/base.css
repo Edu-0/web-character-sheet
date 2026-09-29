@@ -1,0 +1,105 @@
+/* base.css — reset e estilos de elementos fundamentais */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark light;
+  scrollbar-color: var(--scrollbar-color);
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+  color: var(--color-text);
+  letter-spacing: 0.01em;
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+a {
+  color: var(--color-accent-strong);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+/* Garante que o atributo hidden nunca seja sobrescrito por display de componentes */
+[hidden] {
+  display: none !important;
+}
+
+/* Evita que itens de grid/flex "estourem" a largura do contêiner por causa do
+   min-content dos filhos (bug clássico de layout em grids aninhados) */
+.card,
+.ability-card,
+.skill-row,
+.vital-stat,
+.hp-field,
+.spell-slot-row,
+.entry-card,
+.field,
+.tag-list,
+.currency-field,
+.identity-fields,
+.identity-columns > * {
+  min-width: 0;
+}
+
+/* Foco visível e consistente para acessibilidade de teclado */
+:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

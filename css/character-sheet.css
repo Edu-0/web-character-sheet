@@ -1,0 +1,384 @@
+/* character-sheet.css — estilos específicos das seções da ficha */
+
+/* Cartão de identidade */
+.identity-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.portrait-frame {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 2px solid var(--color-border-strong);
+  background: var(--color-panel-alt);
+  flex-shrink: 0;
+}
+
+.portrait-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portrait-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-faint);
+  font-size: 2rem;
+}
+
+.portrait-actions {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.portrait-frame:hover .portrait-actions,
+.portrait-frame:focus-within .portrait-actions {
+  opacity: 1;
+}
+
+.portrait-actions .icon-button {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.identity-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* Barra de status vitais */
+.vitals-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.vital-stat {
+  flex: 1 1 140px;
+  background: var(--color-panel);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+  text-align: center;
+}
+
+.vital-stat__label {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-faint);
+}
+
+.vital-stat__value {
+  font-size: var(--fs-lg);
+}
+
+.vital-stat__input {
+  width: 100%;
+  text-align: center;
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  border-bottom: 2px dashed var(--color-border-strong);
+  border-radius: 0;
+  color: var(--color-text);
+  padding-bottom: 2px;
+}
+
+.vital-stat__input:focus {
+  box-shadow: none;
+  border-bottom-style: solid;
+  border-bottom-color: var(--color-accent);
+  color: var(--color-accent-strong);
+}
+
+/* Barra de pontos de vida */
+.hp-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+}
+
+.hp-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 90px;
+}
+
+.hp-field__label {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-faint);
+}
+
+.input--hp {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  text-align: center;
+}
+
+.input--small {
+  font-size: var(--fs-base);
+  font-weight: 500;
+}
+
+/* Grid de atributos — cada carta nunca fica mais estreita que 240px, evitando espremer o conteúdo */
+.abilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.ability-card {
+  background: var(--color-panel-alt);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.ability-card__label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-accent-strong);
+  letter-spacing: 0.05em;
+}
+
+.ability-card__score {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+.ability-card__modifier {
+  font-size: var(--fs-md);
+  justify-self: end;
+}
+
+.ability-card__save {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.ability-card__save .computed {
+  margin-left: auto;
+}
+
+/* Lista de perícias */
+.skills-list__legend {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto;
+  gap: var(--space-3);
+  padding: 0 var(--space-2) var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.skill-row {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.skill-row:hover {
+  background: var(--color-panel-alt);
+}
+
+.skill-row__name {
+  font-size: var(--fs-sm);
+}
+
+.skill-row__ability {
+  font-size: var(--fs-xs);
+  color: var(--color-text-faint);
+  width: 2.2rem;
+}
+
+.skill-row__modifier {
+  min-width: 2.6rem;
+  text-align: center;
+}
+
+/* Conjuração */
+.spellcasting-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.spell-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+
+.spell-slot-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto auto;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-panel-alt);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+
+.spell-slot-row__label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.spell-slot-row__count {
+  font-variant-numeric: tabular-nums;
+  min-width: 3.2rem;
+  text-align: center;
+}
+
+.spell-slot-row .field--inline input {
+  width: 3.2rem;
+}
+
+/* Inventário */
+.currency-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-3);
+}
+
+.currency-field input {
+  text-align: center;
+  font-weight: 600;
+}
+
+.inventory-summary {
+  display: flex;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.inventory-summary strong {
+  color: var(--color-text);
+}
+
+.field--search input {
+  min-width: 220px;
+}
+
+/* Bandeja de dados */
+.dice-tray__toggle {
+  width: 100%;
+  height: var(--dice-tray-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.dice-tray__toggle:hover {
+  color: var(--color-accent-strong);
+}
+
+.dice-panel {
+  padding: var(--space-4) var(--space-5);
+  border-top: var(--border-width) solid var(--color-border);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.dice-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.dice-button {
+  min-width: 3rem;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: var(--border-width) solid var(--color-border-strong);
+  background: var(--color-panel-alt);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.dice-button:hover {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  border-color: var(--color-accent);
+}
+
+.dice-result {
+  grid-column: 1 / -1;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--color-accent-strong);
+  min-height: 1.6rem;
+}
+
+.dice-history {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}

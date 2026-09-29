@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ficha de Personagem — RPG</title>
+<meta name="description" content="Ficha de personagem web premium para RPG de mesa." />
+<link rel="stylesheet" href="css/variables.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/character-sheet.css" />
+<link rel="stylesheet" href="css/responsive.css" />
+<link rel="stylesheet" href="css/print.css" media="print" />
+</head>
+<body>
+<div class="app">
+
+  <header class="app-header no-print">
+    <div class="app-header__brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M24 4l16 7v11c0 10-7 17-16 22-9-5-16-12-16-22V11z"/><path d="M24 14v20M16 20l8-6 8 6"/></svg>
+      </span>
+      <div class="brand-text">
+        <span class="brand-title">Ficha</span>
+        <span class="brand-subtitle">Personagem de RPG</span>
+      </div>
+    </div>
+
+    <div class="app-header__actions">
+      <button type="button" id="btn-theme-toggle" class="icon-button" aria-label="Alternar tema claro/escuro" title="Alternar tema"></button>
+      <button type="button" id="btn-new-character" class="button button--ghost">Novo</button>
+      <button type="button" id="btn-clear-character" class="button button--ghost">Limpar</button>
+      <button type="button" id="btn-export" class="button button--ghost">Exportar</button>
+      <button type="button" id="btn-import" class="button button--ghost">Importar</button>
+      <input type="file" id="input-import-file" accept="application/json" hidden />
+      <button type="button" id="btn-print" class="button button--primary">Imprimir</button>
+      <span id="save-indicator" class="save-indicator" role="status" aria-live="polite">Salvo</span>
+    </div>
+  </header>
+
+  <nav class="tab-nav no-print" role="tablist" aria-label="Seções da ficha">
+    <button type="button" id="tab-identity" class="tab" role="tab" aria-controls="panel-identity" aria-selected="true">Identidade</button>
+    <button type="button" id="tab-combat" class="tab" role="tab" aria-controls="panel-combat" aria-selected="false" tabindex="-1">Combate</button>
+    <button type="button" id="tab-features" class="tab" role="tab" aria-controls="panel-features" aria-selected="false" tabindex="-1">Habilidades</button>
+    <button type="button" id="tab-spells" class="tab" role="tab" aria-controls="panel-spells" aria-selected="false" tabindex="-1">Magias</button>
+    <button type="button" id="tab-inventory" class="tab" role="tab" aria-controls="panel-inventory" aria-selected="false" tabindex="-1">Inventário</button>
+    <button type="button" id="tab-personality" class="tab" role="tab" aria-controls="panel-personality" aria-selected="false" tabindex="-1">Personalidade</button>
+    <button type="button" id="tab-proficiencies" class="tab" role="tab" aria-controls="panel-proficiencies" aria-selected="false" tabindex="-1">Proficiências</button>
+  </nav>
+
+  <main class="app-main">
+
+    <!-- PÁGINA 1: IDENTIDADE E ATRIBUTOS -->
+    <section id="panel-identity" class="panel" role="tabpanel" aria-labelledby="tab-identity">
+
+      <div class="card identity-card">
+        <div class="portrait-frame">
+          <img id="portrait-image" alt="Retrato do personagem" hidden />
+          <div id="portrait-placeholder" class="portrait-placeholder"></div>
+          <div class="portrait-actions">
+            <button type="button" id="btn-portrait-upload" class="icon-button" aria-label="Carregar retrato"></button>
+            <button type="button" id="btn-portrait-remove" class="icon-button" aria-label="Remover retrato"></button>
+          </div>
+          <input type="file" id="input-portrait-file" accept="image/*" hidden />
+        </div>
+
+        <div class="identity-fields">
+          <label class="field field--name">
+            <span>Nome do personagem</span>
+            <input type="text" data-bind="identity.name" placeholder="Nome do personagem" class="input input--title" />
+          </label>
+          <div class="field-grid">
+            <label class="field"><span>Jogador</span><input type="text" data-bind="identity.player" /></label>
+            <label class="field"><span>Classe</span><input type="text" data-bind="identity.class" /></label>
+            <label class="field"><span>Nível</span><input type="number" min="1" max="20" data-bind="identity.level" /></label>
+            <label class="field"><span>Espécie</span><input type="text" data-bind="identity.species" /></label>
+            <label class="field"><span>Antecedente</span><input type="text" data-bind="identity.background" /></label>
+            <label class="field"><span>Alinhamento</span><input type="text" data-bind="identity.alignment" /></label>
+            <label class="field"><span>Experiência</span><input type="number" min="0" data-bind="identity.experience" /></label>
+            <label class="field field--checkbox"><input type="checkbox" data-bind="identity.inspiration" /><span>Inspiração</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="vitals-bar">
+        <div class="vital-stat" title="Bônus de proficiência">
+          <span class="vital-stat__label">Proficiência</span>
+          <span class="vital-stat__value computed" id="stat-proficiency">+2</span>
+        </div>
+        <div class="vital-stat">
+          <span class="vital-stat__label">CA</span>
+          <input type="number" class="vital-stat__input" data-bind="combat.ac" />
+        </div>
+        <div class="vital-stat" title="Modificador de Destreza + bônus adicional">
+          <span class="vital-stat__label">Iniciativa</span>
+          <span class="vital-stat__value computed" id="stat-initiative">+0</span>
+        </div>
+        <div class="vital-stat">
+          <span class="vital-stat__label">Deslocamento (m)</span>
+          <input type="number" class="vital-stat__input" data-bind="combat.speed" />
+        </div>
+        <div class="vital-stat" title="Percepção passiva">
+          <span class="vital-stat__label">Percepção Passiva</span>
+          <span class="vital-stat__value computed" id="stat-passive-perception">10</span>
+        </div>
+      </div>
+
+      <div class="hp-bar card">
+        <div class="hp-field">
+          <span class="hp-field__label">PV Atual</span>
+          <input type="number" class="input input--hp" data-bind="combat.hpCurrent" />
+        </div>
+        <div class="hp-field">
+          <span class="hp-field__label">PV Máximo</span>
+          <input type="number" class="input input--hp" data-bind="combat.hpMax" />
+        </div>
+        <div class="hp-field">
+          <span class="hp-field__label">PV Temporário</span>
+          <input type="number" class="input input--hp" data-bind="combat.hpTemp" />
+        </div>
+        <div class="hp-field">
+          <span class="hp-field__label">Dados de Vida (usados)</span>
+          <input type="number" min="0" class="input input--hp input--small" data-bind="combat.hitDice.used" />
+        </div>
+        <div class="hp-field">
+          <span class="hp-field__label">Dados de Vida (total)</span>
+          <input type="number" min="0" class="input input--hp input--small" data-bind="combat.hitDice.total" />
+        </div>
+        <div class="hp-field">
+          <span class="hp-field__label">Dado</span>
+          <select class="input input--hp input--small" data-bind="combat.hitDice.die">
+            <option value="d6">d6</option>
+            <option value="d8">d8</option>
+            <option value="d10">d10</option>
+            <option value="d12">d12</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="identity-columns">
+        <div class="card">
+          <h2 class="card__title">Atributos</h2>
+          <div class="abilities-grid" id="abilities-grid"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="card__title">Perícias</h2>
+          <div class="skills-list__legend">
+            <span title="Especialização (dobra a proficiência)">Esp.</span>
+            <span title="Proficiente">Prof.</span>
+            <span></span>
+          </div>
+          <div class="skills-list" id="skills-list"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- COMBATE: ATAQUES E AÇÕES -->
+    <section id="panel-combat" class="panel" role="tabpanel" aria-labelledby="tab-combat" hidden>
+      <div class="panel-toolbar">
+        <h2 class="panel-title">Ataques e Ações</h2>
+        <button type="button" id="btn-add-attack" class="button button--primary">Adicionar Ataque</button>
+      </div>
+      <div class="entry-list" id="attacks-list"></div>
+      <p class="empty-hint" id="attacks-empty-hint">Nenhum ataque cadastrado. Adicione ataques, feitiços de combate ou ações especiais.</p>
+
+      <div class="card">
+        <h2 class="card__title">Condições Ativas</h2>
+        <div class="tag-list" id="conditions-tag-list"></div>
+      </div>
+    </section>
+
+    <!-- HABILIDADES E RECURSOS -->
+    <section id="panel-features" class="panel" role="tabpanel" aria-labelledby="tab-features" hidden>
+      <div class="panel-toolbar">
+        <h2 class="panel-title">Habilidades e Recursos</h2>
+        <button type="button" id="btn-add-feature" class="button button--primary">Adicionar Habilidade</button>
+      </div>
+      <div class="entry-list" id="features-list"></div>
+      <p class="empty-hint" id="features-empty-hint">Nenhuma habilidade cadastrada. Adicione características de classe, espécie, talentos e recursos.</p>
+    </section>
+
+    <!-- MAGIAS -->
+    <section id="panel-spells" class="panel" role="tabpanel" aria-labelledby="tab-spells" hidden>
+      <div class="card spellcasting-summary">
+        <label class="field"><span>Atributo de Conjuração</span>
+          <select data-bind="spellcasting.ability">
+            <option value="">Nenhum</option>
+            <option value="int">Inteligência</option>
+            <option value="wis">Sabedoria</option>
+            <option value="cha">Carisma</option>
+          </select>
+        </label>
+        <div class="vital-stat"><span class="vital-stat__label">CD de Magia</span><span class="vital-stat__value computed" id="stat-spell-dc">—</span></div>
+        <div class="vital-stat"><span class="vital-stat__label">Bônus de Ataque</span><span class="vital-stat__value computed" id="stat-spell-attack">—</span></div>
+      </div>
+
+      <div class="card">
+        <h2 class="card__title">Espaços de Magia</h2>
+        <div class="spell-slots" id="spell-slots"></div>
+      </div>
+
+      <div class="panel-toolbar">
+        <h2 class="panel-title">Magias</h2>
+        <button type="button" id="btn-add-spell" class="button button--primary">Adicionar Magia</button>
+      </div>
+      <div class="entry-list" id="spells-list"></div>
+      <p class="empty-hint" id="spells-empty-hint">Nenhuma magia cadastrada.</p>
+    </section>
+
+    <!-- INVENTÁRIO -->
+    <section id="panel-inventory" class="panel" role="tabpanel" aria-labelledby="tab-inventory" hidden>
+      <div class="card currency-card">
+        <h2 class="card__title">Moedas</h2>
+        <div class="currency-grid" id="currency-grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="panel-toolbar">
+          <h2 class="panel-title">Itens</h2>
+          <div class="inventory-toolbar">
+            <label class="field field--search">
+              <span class="visually-hidden">Pesquisar itens</span>
+              <input type="search" id="inventory-search" placeholder="Pesquisar itens..." />
+            </label>
+            <button type="button" id="btn-add-item" class="button button--primary">Adicionar Item</button>
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table class="data-table" id="inventory-table">
+            <thead>
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Qtd</th>
+                <th scope="col">Peso</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Equipado</th>
+                <th scope="col">Notas</th>
+                <th scope="col"><span class="visually-hidden">Ações</span></th>
+              </tr>
+            </thead>
+            <tbody id="inventory-tbody"></tbody>
+          </table>
+        </div>
+        <p class="empty-hint" id="inventory-empty-hint">Nenhum item no inventário.</p>
+
+        <div class="inventory-summary">
+          <span>Peso total: <strong id="stat-total-weight">0</strong> kg</span>
+          <span>Capacidade de carga: <strong id="stat-carry-capacity">0</strong> kg</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERSONALIDADE -->
+    <section id="panel-personality" class="panel" role="tabpanel" aria-labelledby="tab-personality" hidden>
+      <div class="personality-grid">
+        <label class="field field--grow"><span>Traços de Personalidade</span><textarea data-bind="personality.traits" rows="4"></textarea></label>
+        <label class="field field--grow"><span>Ideais</span><textarea data-bind="personality.ideals" rows="4"></textarea></label>
+        <label class="field field--grow"><span>Vínculos</span><textarea data-bind="personality.bonds" rows="4"></textarea></label>
+        <label class="field field--grow"><span>Defeitos</span><textarea data-bind="personality.flaws" rows="4"></textarea></label>
+        <label class="field field--grow field--full"><span>Aparência</span><textarea data-bind="personality.appearance" rows="4"></textarea></label>
+        <label class="field field--grow field--full"><span>História</span><textarea data-bind="personality.backstory" rows="6"></textarea></label>
+        <label class="field field--grow field--full"><span>Aliados e Organizações</span><textarea data-bind="personality.allies" rows="4"></textarea></label>
+        <label class="field field--grow field--full"><span>Notas</span><textarea data-bind="personality.notes" rows="4"></textarea></label>
+      </div>
+    </section>
+
+    <!-- PROFICIÊNCIAS E IDIOMAS -->
+    <section id="panel-proficiencies" class="panel" role="tabpanel" aria-labelledby="tab-proficiencies" hidden>
+      <div class="proficiencies-grid">
+        <div class="card">
+          <h2 class="card__title">Armaduras</h2>
+          <div class="tag-list" id="tags-armor"></div>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Armas</h2>
+          <div class="tag-list" id="tags-weapons"></div>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Ferramentas</h2>
+          <div class="tag-list" id="tags-tools"></div>
+        </div>
+        <div class="card">
+          <h2 class="card__title">Idiomas</h2>
+          <div class="tag-list" id="tags-languages"></div>
+        </div>
+        <div class="card card--full">
+          <h2 class="card__title">Outras Proficiências</h2>
+          <div class="tag-list" id="tags-other"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="dice-tray no-print" id="dice-tray">
+    <button type="button" class="dice-tray__toggle" id="btn-dice-toggle" aria-expanded="false" aria-controls="dice-panel">
+      <span id="dice-toggle-icon"></span>
+      <span>Dados</span>
+    </button>
+    <div class="dice-panel" id="dice-panel" hidden>
+      <div class="dice-buttons" id="dice-buttons"></div>
+      <div class="dice-result" id="dice-result" aria-live="polite"></div>
+      <ol class="dice-history" id="dice-history"></ol>
+    </div>
+  </footer>
+
+</div>
+
+<!-- TEMPLATES -->
+<template id="tpl-ability-card">
+  <div class="ability-card">
+    <span class="ability-card__label" data-el="label"></span>
+    <input type="number" class="ability-card__score" data-el="score" />
+    <span class="ability-card__modifier computed" data-el="modifier">+0</span>
+    <label class="ability-card__save">
+      <input type="checkbox" data-el="save-proficient" />
+      <span>Resistência</span>
+      <span class="computed" data-el="save-modifier">+0</span>
+    </label>
+  </div>
+</template>
+
+<template id="tpl-skill-row">
+  <div class="skill-row">
+    <input type="checkbox" data-el="expertise" title="Especialização (dobra a proficiência)" />
+    <input type="checkbox" data-el="proficient" title="Proficiente" />
+    <span class="skill-row__name" data-el="name"></span>
+    <span class="skill-row__ability" data-el="ability"></span>
+    <span class="skill-row__modifier computed" data-el="modifier">+0</span>
+  </div>
+</template>
+
+<template id="tpl-attack-card">
+  <details class="entry-card">
+    <summary class="entry-card__summary">
+      <span class="entry-card__title" data-el="title-display">Novo ataque</span>
+      <span class="entry-card__meta" data-el="meta-display"></span>
+      <span class="entry-card__spacer"></span>
+      <button type="button" class="icon-button entry-card__remove" data-action="remove" aria-label="Remover ataque"></button>
+    </summary>
+    <div class="entry-card__body">
+      <div class="field-grid">
+        <label class="field"><span>Nome</span><input type="text" data-field="name" /></label>
+        <label class="field"><span>Bônus de ataque</span><input type="text" data-field="bonus" placeholder="+5" /></label>
+        <label class="field"><span>Dano</span><input type="text" data-field="damage" placeholder="1d8+3" /></label>
+        <label class="field"><span>Tipo de dano</span><input type="text" data-field="damageType" placeholder="Cortante" /></label>
+        <label class="field"><span>Alcance</span><input type="text" data-field="range" placeholder="1,5 m" /></label>
+        <label class="field"><span>Propriedades</span><input type="text" data-field="properties" placeholder="Leve, Arremesso" /></label>
+      </div>
+      <label class="field field--full"><span>Notas / ações especiais</span><textarea data-field="notes" rows="2"></textarea></label>
+    </div>
+  </details>
+</template>
+
+<template id="tpl-feature-card">
+  <details class="entry-card">
+    <summary class="entry-card__summary">
+      <span class="entry-card__title" data-el="title-display">Nova habilidade</span>
+      <span class="entry-card__meta" data-el="meta-display"></span>
+      <span class="entry-card__spacer"></span>
+      <button type="button" class="icon-button" data-action="move-up" aria-label="Mover para cima"></button>
+      <button type="button" class="icon-button" data-action="move-down" aria-label="Mover para baixo"></button>
+      <button type="button" class="icon-button entry-card__remove" data-action="remove" aria-label="Remover habilidade"></button>
+    </summary>
+    <div class="entry-card__body">
+      <div class="field-grid">
+        <label class="field"><span>Nome</span><input type="text" data-field="name" /></label>
+        <label class="field"><span>Origem</span>
+          <select data-field="source">
+            <option value="Classe">Classe</option>
+            <option value="Espécie">Espécie</option>
+            <option value="Talento">Talento</option>
+            <option value="Antecedente">Antecedente</option>
+            <option value="Recurso">Recurso</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </label>
+        <label class="field"><span>Usos Atuais</span><input type="number" min="0" data-field="usesCurrent" /></label>
+        <label class="field"><span>Usos Máximos</span><input type="number" min="0" data-field="usesMax" /></label>
+      </div>
+      <label class="field field--full"><span>Descrição</span><textarea data-field="description" rows="3"></textarea></label>
+      <label class="field field--full"><span>Notas</span><textarea data-field="notes" rows="2"></textarea></label>
+    </div>
+  </details>
+</template>
+
+<template id="tpl-spell-card">
+  <details class="entry-card">
+    <summary class="entry-card__summary">
+      <span class="entry-card__title" data-el="title-display">Nova magia</span>
+      <span class="entry-card__meta" data-el="meta-display"></span>
+      <span class="entry-card__spacer"></span>
+      <button type="button" class="icon-button entry-card__remove" data-action="remove" aria-label="Remover magia"></button>
+    </summary>
+    <div class="entry-card__body">
+      <div class="field-grid">
+        <label class="field"><span>Nome</span><input type="text" data-field="name" /></label>
+        <label class="field"><span>Nível</span>
+          <select data-field="level">
+            <option value="0">Truque</option>
+            <option value="1">1º nível</option>
+            <option value="2">2º nível</option>
+            <option value="3">3º nível</option>
+            <option value="4">4º nível</option>
+            <option value="5">5º nível</option>
+            <option value="6">6º nível</option>
+            <option value="7">7º nível</option>
+            <option value="8">8º nível</option>
+            <option value="9">9º nível</option>
+          </select>
+        </label>
+        <label class="field"><span>Escola</span><input type="text" data-field="school" /></label>
+        <label class="field field--checkbox"><input type="checkbox" data-field="prepared" /><span>Preparada</span></label>
+        <label class="field"><span>Tempo de Conjuração</span><input type="text" data-field="castingTime" /></label>
+        <label class="field"><span>Alcance</span><input type="text" data-field="range" /></label>
+        <label class="field"><span>Duração</span><input type="text" data-field="duration" /></label>
+        <label class="field"><span>Componentes</span><input type="text" data-field="components" /></label>
+      </div>
+      <label class="field field--full"><span>Descrição</span><textarea data-field="description" rows="3"></textarea></label>
+    </div>
+  </details>
+</template>
+
+<template id="tpl-inventory-row">
+  <tr>
+    <td data-label="Item"><input type="text" data-field="name" /></td>
+    <td data-label="Qtd"><input type="number" min="0" class="input--narrow" data-field="qty" /></td>
+    <td data-label="Peso"><input type="number" min="0" step="0.1" class="input--narrow" data-field="weight" /></td>
+    <td data-label="Valor"><input type="number" min="0" step="0.01" class="input--narrow" data-field="value" /></td>
+    <td data-label="Categoria">
+      <select data-field="category">
+        <option>Equipamento</option>
+        <option>Arma</option>
+        <option>Armadura</option>
+        <option>Item Mágico</option>
+        <option>Consumível</option>
+        <option>Ferramenta</option>
+        <option>Tesouro</option>
+        <option>Outro</option>
+      </select>
+    </td>
+    <td data-label="Equipado" class="cell-center"><input type="checkbox" data-field="equipped" aria-label="Equipado" /></td>
+    <td data-label="Notas"><input type="text" data-field="notes" /></td>
+    <td data-label=""><button type="button" class="icon-button" data-action="remove" aria-label="Remover item"></button></td>
+  </tr>
+</template>
+
+<template id="tpl-spell-slot-row">
+  <div class="spell-slot-row">
+    <span class="spell-slot-row__label" data-el="label"></span>
+    <button type="button" class="icon-button" data-action="use" aria-label="Gastar espaço"></button>
+    <span class="spell-slot-row__count" data-el="count">0 / 0</span>
+    <button type="button" class="icon-button" data-action="restore" aria-label="Recuperar espaço"></button>
+    <label class="field field--inline"><span>Máx.</span><input type="number" min="0" class="input--narrow" data-el="max" /></label>
+  </div>
+</template>
+
+<template id="tpl-tag-chip">
+  <span class="tag-chip">
+    <span data-el="label"></span>
+    <button type="button" class="tag-chip__remove" data-action="remove" aria-label="Remover"></button>
+  </span>
+</template>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
