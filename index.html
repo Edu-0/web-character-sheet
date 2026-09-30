@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Ficha de Personagem — RPG</title>
 <meta name="description" content="Ficha de personagem web premium para RPG de mesa." />
+<link rel="icon" href="data:," />
 <link rel="stylesheet" href="css/variables.css" />
 <link rel="stylesheet" href="css/base.css" />
 <link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/engine-shell.css" />
 <link rel="stylesheet" href="css/components.css" />
 <link rel="stylesheet" href="css/character-sheet.css" />
 <link rel="stylesheet" href="css/responsive.css" />
@@ -16,18 +18,30 @@
 <body>
 <div class="app">
 
-  <header class="app-header no-print">
-    <div class="app-header__brand">
-      <span class="brand-mark" aria-hidden="true">
+  <header class="shell-header no-print">
+    <div class="shell-header__brand">
+      <span class="shell-header__brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M24 4l16 7v11c0 10-7 17-16 22-9-5-16-12-16-22V11z"/><path d="M24 14v20M16 20l8-6 8 6"/></svg>
       </span>
-      <div class="brand-text">
-        <span class="brand-title">Ficha</span>
-        <span class="brand-subtitle">Personagem de RPG</span>
+      <div class="shell-header__brand-text">
+        <span class="shell-header__brand-title">Ficha</span>
+        <span class="shell-header__brand-subtitle">Personagens de RPG</span>
       </div>
     </div>
 
-    <div class="app-header__actions">
+    <div class="shell-header__context" aria-label="Contexto atual">
+      <div class="shell-header__context-item">
+        <span class="shell-header__context-label">Sistema</span>
+        <strong id="shell-current-system">Carregando…</strong>
+      </div>
+      <span class="shell-header__context-divider" aria-hidden="true"></span>
+      <div class="shell-header__context-item">
+        <span class="shell-header__context-label">Personagem</span>
+        <strong id="shell-current-character">Sem nome</strong>
+      </div>
+    </div>
+
+    <div class="shell-header__actions">
       <button type="button" id="btn-theme-toggle" class="icon-button" aria-label="Alternar tema claro/escuro" title="Alternar tema"></button>
       <button type="button" id="btn-new-character" class="button button--ghost">Novo</button>
       <button type="button" id="btn-clear-character" class="button button--ghost">Limpar</button>
@@ -39,6 +53,41 @@
     </div>
   </header>
 
+  <nav class="shell-nav no-print" aria-label="Navegação principal">
+    <button type="button" class="shell-nav__item" data-app-view-target="systems">Sistemas</button>
+    <button type="button" class="shell-nav__item" data-app-view-target="characters">Personagens</button>
+    <button type="button" class="shell-nav__item" data-app-view-target="sheet">Ficha atual</button>
+    <button type="button" class="shell-nav__item" data-app-view-target="settings">Configurações</button>
+  </nav>
+
+  <div class="shell-content">
+  <section id="view-systems" class="shell-view" data-app-view="systems" hidden>
+    <div class="shell-stub">
+      <p class="shell-stub__eyebrow">Sistemas</p>
+      <h1>Sistemas de RPG</h1>
+      <p>O catálogo e a importação de sistemas serão conectados na próxima fase. O D&amp;D 5e (2024) permanece disponível como sistema de referência.</p>
+      <button type="button" class="button button--primary" data-app-view-target="sheet">Abrir sistema atual</button>
+    </div>
+  </section>
+
+  <section id="view-characters" class="shell-view" data-app-view="characters" hidden>
+    <div class="shell-stub">
+      <p class="shell-stub__eyebrow">Personagens</p>
+      <h1>Biblioteca de personagens</h1>
+      <p>A biblioteca com múltiplos personagens será conectada na próxima fase. O personagem salvo no navegador continua disponível sem conversão.</p>
+      <button type="button" class="button button--primary" data-app-view-target="sheet">Voltar ao personagem atual</button>
+    </div>
+  </section>
+
+  <section id="view-settings" class="shell-view" data-app-view="settings" hidden>
+    <div class="shell-stub">
+      <p class="shell-stub__eyebrow">Configurações</p>
+      <h1>Preferências da aplicação</h1>
+      <p>O tema já é persistido localmente. Outras preferências globais serão adicionadas aqui sem depender do sistema aberto.</p>
+    </div>
+  </section>
+
+  <section id="view-sheet" class="shell-view shell-view--sheet" data-app-view="sheet">
   <nav class="tab-nav no-print" role="tablist" aria-label="Seções da ficha">
     <button type="button" id="tab-identity" class="tab" role="tab" aria-controls="panel-identity" aria-selected="true">Identidade</button>
     <button type="button" id="tab-combat" class="tab" role="tab" aria-controls="panel-combat" aria-selected="false" tabindex="-1">Combate</button>
@@ -308,6 +357,9 @@
       <ol class="dice-history" id="dice-history"></ol>
     </div>
   </footer>
+
+  </section>
+  </div>
 
 </div>
 

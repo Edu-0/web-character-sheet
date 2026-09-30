@@ -92,6 +92,7 @@
 .shell-header__actions {
   gap: var(--space-3);
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .shell-nav {
@@ -171,6 +172,10 @@
   min-width: 0;
 }
 
+.shell-view--sheet > .tab-nav {
+  top: calc(var(--header-height) + var(--tab-nav-height));
+}
+
 .sheet-legacy-toolbar {
   padding: var(--space-3) var(--space-5) 0;
 }
@@ -220,6 +225,10 @@
 
   .shell-nav {
     position: static;
+  }
+
+  .shell-view--sheet > .tab-nav {
+    top: auto;
   }
 
   .sheet-legacy-toolbar {

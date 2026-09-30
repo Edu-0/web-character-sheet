@@ -1,10 +1,12 @@
 // tabs.js
 // Navegação entre seções (abas) da ficha, acessível via teclado.
-export function initTabs(root = document) {
+export function initTabs(root = document, { initialTabId = null, onChange } = {}) {
   const tabList = root.querySelector('[role="tablist"]');
-  if (!tabList) return;
+  if (!tabList) return { activate: () => {}, destroy: () => {} };
   const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
-  const panels = tabs.map((tab) => root.getElementById(tab.getAttribute('aria-controls')));
+  const ownerDocument = root.ownerDocument || root;
+  const panels = tabs.map((tab) => ownerDocument.getElementById(tab.getAttribute('aria-controls')));
+  const cleanups = [];
 
   function activate(index, { focus = true } = {}) {
     tabs.forEach((tab, i) => {
@@ -15,11 +17,12 @@ export function initTabs(root = document) {
     });
     if (focus) tabs[index].focus();
     localStorage.setItem('ficha-rpg:last-tab', tabs[index].id);
+    onChange?.(tabs[index].id.replace(/^tab-/, ''));
   }
 
   tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => activate(index, { focus: false }));
-    tab.addEventListener('keydown', (e) => {
+    const onClick = () => activate(index, { focus: false });
+    const onKeydown = (e) => {
       let newIndex = null;
       if (e.key === 'ArrowRight') newIndex = (index + 1) % tabs.length;
       if (e.key === 'ArrowLeft') newIndex = (index - 1 + tabs.length) % tabs.length;
@@ -29,10 +32,28 @@ export function initTabs(root = document) {
         e.preventDefault();
         activate(newIndex);
       }
+    };
+    tab.addEventListener('click', onClick);
+    tab.addEventListener('keydown', onKeydown);
+    cleanups.push(() => {
+      tab.removeEventListener('click', onClick);
+      tab.removeEventListener('keydown', onKeydown);
     });
   });
 
   const lastTabId = localStorage.getItem('ficha-rpg:last-tab');
-  const restoreIndex = tabs.findIndex((t) => t.id === lastTabId);
+  const requestedId = initialTabId ? `tab-${initialTabId}` : lastTabId;
+  const restoreIndex = tabs.findIndex((t) => t.id === requestedId);
   activate(restoreIndex >= 0 ? restoreIndex : 0, { focus: false });
+
+  return {
+    activate(tabId, options) {
+      const normalized = tabId.startsWith('tab-') ? tabId : `tab-${tabId}`;
+      const index = tabs.findIndex((tab) => tab.id === normalized);
+      if (index >= 0) activate(index, options);
+    },
+    destroy() {
+      cleanups.forEach((cleanup) => cleanup());
+    },
+  };
 }

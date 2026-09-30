@@ -10,6 +10,7 @@ import { confirmDialog } from './modal.js';
 import { roll, getHistory } from './dice.js';
 import { loadSystem, getDiceSet } from './engine/system.js';
 import { loadLayout } from './engine/layout.js';
+import { getAppState, setAppState, updateAppState, subscribeAppState } from './app-state.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -18,7 +19,7 @@ async function init() {
 
   // System.json define as regras (atributos, perícias, dados, fórmulas) — precisa
   // estar carregado antes de qualquer personagem ser criado ou renderizado.
-  await loadSystem('./data/systems/dnd2024.system.json');
+  const system = await loadSystem('./data/systems/dnd2024.system.json');
 
   try {
     // Layout.json ainda é apenas descritivo nesta versão: documenta a organização
@@ -29,12 +30,23 @@ async function init() {
     console.warn('Layout descritivo não carregado (não afeta a ficha atual):', err);
   }
 
-  initTabs();
+  initShell();
+  initTabs(document, {
+    initialTabId: getAppState().ui.activeTab,
+    onChange: (tabId) => setAppState('ui.activeTab', tabId),
+  });
   ui.mountStaticIcons();
   ui.initGenericBindings();
 
   const saved = storage.loadCharacter();
   state.load(saved || createDefaultCharacter());
+
+  updateAppState({
+    currentSystem: { id: system.id, name: system.name },
+    currentCharacter: characterSummary(state.get()),
+    availableSystems: [{ id: system.id, name: system.name }],
+    availableCharacters: [characterSummary(state.get())],
+  });
 
   ui.renderAll(state.get());
   buildDiceButtons();
@@ -45,6 +57,8 @@ async function init() {
     ui.updatePortrait(character);
     storage.saveCharacter(character);
     showSaved();
+    const summary = characterSummary(character);
+    updateAppState({ currentCharacter: summary, availableCharacters: [summary] });
   });
 
   wireToolbar();
@@ -52,6 +66,40 @@ async function init() {
   wireAddButtons();
   wireInventorySearch();
   wireDiceTray();
+}
+
+function characterSummary(character) {
+  return {
+    id: character.meta?.id ?? null,
+    system: character.meta?.system ?? null,
+    name: character.identity?.name?.trim() || 'Sem nome',
+  };
+}
+
+function initShell() {
+  document.querySelectorAll('[data-app-view-target]').forEach((button) => {
+    button.addEventListener('click', () => setAppState('currentView', button.dataset.appViewTarget));
+  });
+
+  subscribeAppState(renderShell);
+  renderShell(getAppState());
+}
+
+function renderShell(appState) {
+  document.querySelectorAll('[data-app-view]').forEach((view) => {
+    view.toggleAttribute('hidden', view.dataset.appView !== appState.currentView);
+  });
+
+  document.querySelectorAll('.shell-nav [data-app-view-target]').forEach((button) => {
+    const active = button.dataset.appViewTarget === appState.currentView;
+    button.classList.toggle('shell-nav__item--active', active);
+    button.toggleAttribute('aria-current', active);
+  });
+
+  const systemName = appState.currentSystem?.name || 'Nenhum sistema';
+  const characterName = appState.currentCharacter?.name || 'Sem personagem';
+  $('shell-current-system').textContent = systemName;
+  $('shell-current-character').textContent = characterName;
 }
 
 let saveIndicatorTimeout = null;

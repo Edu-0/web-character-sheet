@@ -13,6 +13,8 @@
 
   .no-print,
   .app-header,
+  .shell-header,
+  .shell-nav,
   .tab-nav,
   .dice-tray,
   .toast-stack,
@@ -26,6 +28,11 @@
   .app-main {
     max-width: none;
     padding: 0;
+  }
+
+  .shell-content,
+  .shell-view--sheet {
+    display: block !important;
   }
 
   /* Todas as seções ficam visíveis e sequenciais na impressão */
