@@ -3,6 +3,38 @@
   "name": "Sistema de RPG",
   "description": "Sistema genérico multi-gênero baseado em Pools de dados (d4–d12), Ápice/Base/Peso/Potência e Dificuldade calculada contra oposição. Serve como teste real de que a engine é agnóstica de sistema.",
 
+  "characterTemplate": {
+    "meta": {},
+    "name": "",
+    "origin": "",
+    "description": "",
+    "concept": "",
+    "appearance": "",
+    "personality": "",
+    "quality": "quality-7",
+    "pointsAvailable": 7,
+    "pointsSpent": 0,
+    "evolutionPoints": 0,
+    "buffs": [],
+    "debuffs": [],
+    "attributes": { "strength": 6, "constitution": 6, "dexterity": 6, "intelligence": 6, "charisma": 6, "willpower": 6 },
+    "existenceDie": 8,
+    "skills": {},
+    "specializations": [],
+    "essences": [
+      { "id": "essence-1", "name": "", "description": "", "die": 6, "gainActionResourceCondition": "", "spendActionResourceAbility": "", "passiveProperties": "", "activeProperties": "" },
+      { "id": "essence-2", "name": "", "description": "", "die": 6, "gainActionResourceCondition": "", "spendActionResourceAbility": "", "passiveProperties": "", "activeProperties": "" },
+      { "id": "essence-3", "name": "", "description": "", "die": 6, "gainActionResourceCondition": "", "spendActionResourceAbility": "", "passiveProperties": "", "activeProperties": "" }
+    ],
+    "techniques": [],
+    "resources": { "actionResource": { "current": 0 }, "energy": { "current": 0, "max": 0 } },
+    "reaction": { "available": true },
+    "velocity": 9,
+    "inventory": [],
+    "states": { "characteristics": [], "wear": [], "trauma": [], "complications": [] },
+    "notes": ""
+  },
+
   "dieScale": [4, 6, 8, 10, 12],
 
   "dieMeaning": {

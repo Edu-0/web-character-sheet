@@ -3,94 +3,15 @@
 // As chaves de atributos/perícias vêm do system.json carregado (engine/system.js),
 // não de uma lista fixa de D&D — outro sistema gera outra forma de personagem.
 import { createId } from './data.js';
-import { getAbilities, getSkills, getSystem } from './engine/system.js';
-
-function defaultAbilityScores() {
-  const out = {};
-  getAbilities().forEach((a) => {
-    out[a.key] = { score: 10 };
-  });
-  return out;
-}
-
-function defaultSavingThrows() {
-  const out = {};
-  getAbilities().forEach((a) => {
-    out[a.key] = { proficient: false };
-  });
-  return out;
-}
-
-function defaultSkills() {
-  const out = {};
-  getSkills().forEach((s) => {
-    out[s.key] = { proficient: false, expertise: false };
-  });
-  return out;
-}
-
-function defaultSpellSlots() {
-  return Array.from({ length: 9 }, (_, i) => ({ level: i + 1, max: 0, used: 0 }));
-}
+import { getSystem } from './engine/system.js';
 
 export function createDefaultCharacter() {
-  return {
-    meta: { version: 1, id: createId(), system: getSystem()?.id ?? 'unknown' },
-    identity: {
-      name: '',
-      player: '',
-      class: '',
-      level: 1,
-      species: '',
-      background: '',
-      alignment: '',
-      experience: 0,
-      inspiration: false,
-      portrait: null,
-    },
-    abilities: defaultAbilityScores(),
-    savingThrows: defaultSavingThrows(),
-    skills: defaultSkills(),
-    combat: {
-      ac: 10,
-      initiativeBonus: 0,
-      speed: 9,
-      hpMax: 10,
-      hpCurrent: 10,
-      hpTemp: 0,
-      hitDice: { total: 1, die: 'd8', used: 0 },
-      attacks: [],
-      conditions: [],
-    },
-    spellcasting: {
-      ability: '',
-      slots: defaultSpellSlots(),
-      spells: [],
-    },
-    inventory: {
-      currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 0 },
-      items: [],
-    },
-    features: [],
-    personality: {
-      traits: '',
-      ideals: '',
-      bonds: '',
-      flaws: '',
-      appearance: '',
-      backstory: '',
-      allies: '',
-      notes: '',
-    },
-    proficiencies: {
-      armor: [],
-      weapons: [],
-      tools: [],
-      languages: [],
-      other: [],
-    },
-    diceHistory: [],
-  };
+  const system = getSystem();
+  if (!system?.characterTemplate) throw new Error('O sistema atual não define characterTemplate.');
+  const character = structuredClone(system.characterTemplate);
+  const now = new Date().toISOString();
+  character.meta = { ...character.meta, id: createId(), system: system.id, createdAt: now, updatedAt: now };
+  return character;
 }
 
 class CharacterState {

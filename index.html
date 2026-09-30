@@ -45,6 +45,7 @@
       <button type="button" id="btn-theme-toggle" class="icon-button" aria-label="Alternar tema claro/escuro" title="Alternar tema"></button>
       <button type="button" id="btn-new-character" class="button button--ghost">Novo</button>
       <button type="button" id="btn-clear-character" class="button button--ghost">Limpar</button>
+      <button type="button" id="btn-save-character" class="button button--ghost">Salvar</button>
       <button type="button" id="btn-export" class="button button--ghost">Exportar</button>
       <button type="button" id="btn-import" class="button button--ghost">Importar</button>
       <input type="file" id="input-import-file" accept="application/json" hidden />
@@ -62,20 +63,33 @@
 
   <div class="shell-content">
   <section id="view-systems" class="shell-view" data-app-view="systems" hidden>
-    <div class="shell-stub">
-      <p class="shell-stub__eyebrow">Sistemas</p>
-      <h1>Sistemas de RPG</h1>
-      <p>O catálogo e a importação de sistemas serão conectados na próxima fase. O D&amp;D 5e (2024) permanece disponível como sistema de referência.</p>
-      <button type="button" class="button button--primary" data-app-view-target="sheet">Abrir sistema atual</button>
+    <div class="manager-page">
+      <div class="manager-page__header">
+        <div>
+          <p class="shell-stub__eyebrow">Sistemas</p>
+          <h1>Sistemas de RPG</h1>
+          <p>Escolha um sistema embutido ou importe um pacote com sua configuração e layouts.</p>
+        </div>
+        <div class="manager-page__actions">
+          <button type="button" id="btn-import-system" class="button button--primary">Importar sistema</button>
+          <input type="file" id="input-import-system" accept="application/json" hidden />
+        </div>
+      </div>
+      <div id="systems-list" class="library-grid" aria-live="polite"></div>
     </div>
   </section>
 
   <section id="view-characters" class="shell-view" data-app-view="characters" hidden>
-    <div class="shell-stub">
-      <p class="shell-stub__eyebrow">Personagens</p>
-      <h1>Biblioteca de personagens</h1>
-      <p>A biblioteca com múltiplos personagens será conectada na próxima fase. O personagem salvo no navegador continua disponível sem conversão.</p>
-      <button type="button" class="button button--primary" data-app-view-target="sheet">Voltar ao personagem atual</button>
+    <div class="manager-page">
+      <div class="manager-page__header">
+        <div>
+          <p class="shell-stub__eyebrow">Personagens</p>
+          <h1>Biblioteca de personagens</h1>
+          <p>Crie, abra, duplique, exporte ou exclua personagens armazenados neste navegador.</p>
+        </div>
+        <button type="button" id="btn-library-new-character" class="button button--primary">Novo personagem</button>
+      </div>
+      <div id="characters-list" class="library-grid" aria-live="polite"></div>
     </div>
   </section>
 
@@ -88,6 +102,7 @@
   </section>
 
   <section id="view-sheet" class="shell-view shell-view--sheet" data-app-view="sheet">
+  <div id="legacy-dnd-sheet">
   <nav class="tab-nav no-print" role="tablist" aria-label="Seções da ficha">
     <button type="button" id="tab-identity" class="tab" role="tab" aria-controls="panel-identity" aria-selected="true">Identidade</button>
     <button type="button" id="tab-combat" class="tab" role="tab" aria-controls="panel-combat" aria-selected="false" tabindex="-1">Combate</button>
@@ -357,6 +372,9 @@
       <ol class="dice-history" id="dice-history"></ol>
     </div>
   </footer>
+
+  </div>
+  <div id="generic-sheet-host" class="generic-sheet-host" hidden></div>
 
   </section>
   </div>

@@ -13,6 +13,11 @@ export async function loadSystem(url) {
   return currentSystem;
 }
 
+export function setSystem(system) {
+  currentSystem = system;
+  return currentSystem;
+}
+
 export function getSystem() {
   return currentSystem;
 }

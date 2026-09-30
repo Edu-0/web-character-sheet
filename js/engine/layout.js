@@ -11,6 +11,11 @@ export async function loadLayout(url) {
   return currentLayout;
 }
 
+export function setLayout(layout) {
+  currentLayout = layout;
+  return currentLayout;
+}
+
 export function getLayout() {
   return currentLayout;
 }

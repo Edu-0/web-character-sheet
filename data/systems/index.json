@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "systems": [
+    {
+      "id": "dnd2024",
+      "name": "D&D 5e (2024)",
+      "system": "./dnd2024.system.json",
+      "layouts": [
+        { "id": "default", "name": "Padrão", "file": "./dnd2024.layout.json" }
+      ]
+    },
+    {
+      "id": "sistema-rpg",
+      "name": "Sistema de RPG",
+      "system": "./sistema-rpg.system.json",
+      "layouts": [
+        { "id": "default", "name": "Padrão", "file": "./sistema-rpg.layout.json" }
+      ]
+    }
+  ]
+}

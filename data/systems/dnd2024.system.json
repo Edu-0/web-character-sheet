@@ -3,6 +3,59 @@
   "name": "D&D 5e (2024)",
   "description": "Sistema de referência inicial da engine, baseado na estrutura de D&D 5e 2024.",
 
+  "characterTemplate": {
+    "meta": {},
+    "identity": { "name": "", "player": "", "class": "", "level": 1, "species": "", "background": "", "alignment": "", "experience": 0, "inspiration": false, "portrait": null },
+    "abilities": {
+      "str": { "score": 10 }, "dex": { "score": 10 }, "con": { "score": 10 },
+      "int": { "score": 10 }, "wis": { "score": 10 }, "cha": { "score": 10 }
+    },
+    "savingThrows": {
+      "str": { "proficient": false }, "dex": { "proficient": false }, "con": { "proficient": false },
+      "int": { "proficient": false }, "wis": { "proficient": false }, "cha": { "proficient": false }
+    },
+    "skills": {
+      "acrobatics": { "proficient": false, "expertise": false },
+      "animalHandling": { "proficient": false, "expertise": false },
+      "arcana": { "proficient": false, "expertise": false },
+      "athletics": { "proficient": false, "expertise": false },
+      "deception": { "proficient": false, "expertise": false },
+      "history": { "proficient": false, "expertise": false },
+      "insight": { "proficient": false, "expertise": false },
+      "intimidation": { "proficient": false, "expertise": false },
+      "investigation": { "proficient": false, "expertise": false },
+      "medicine": { "proficient": false, "expertise": false },
+      "nature": { "proficient": false, "expertise": false },
+      "perception": { "proficient": false, "expertise": false },
+      "performance": { "proficient": false, "expertise": false },
+      "persuasion": { "proficient": false, "expertise": false },
+      "religion": { "proficient": false, "expertise": false },
+      "sleightOfHand": { "proficient": false, "expertise": false },
+      "stealth": { "proficient": false, "expertise": false },
+      "survival": { "proficient": false, "expertise": false }
+    },
+    "combat": {
+      "ac": 10, "initiativeBonus": 0, "speed": 9, "hpMax": 10, "hpCurrent": 10, "hpTemp": 0,
+      "hitDice": { "total": 1, "die": "d8", "used": 0 }, "attacks": [], "conditions": []
+    },
+    "spellcasting": {
+      "ability": "",
+      "slots": [
+        { "level": 1, "max": 0, "used": 0 }, { "level": 2, "max": 0, "used": 0 },
+        { "level": 3, "max": 0, "used": 0 }, { "level": 4, "max": 0, "used": 0 },
+        { "level": 5, "max": 0, "used": 0 }, { "level": 6, "max": 0, "used": 0 },
+        { "level": 7, "max": 0, "used": 0 }, { "level": 8, "max": 0, "used": 0 },
+        { "level": 9, "max": 0, "used": 0 }
+      ],
+      "spells": []
+    },
+    "inventory": { "currency": { "pp": 0, "gp": 0, "ep": 0, "sp": 0, "cp": 0 }, "items": [] },
+    "features": [],
+    "personality": { "traits": "", "ideals": "", "bonds": "", "flaws": "", "appearance": "", "backstory": "", "allies": "", "notes": "" },
+    "proficiencies": { "armor": [], "weapons": [], "tools": [], "languages": [], "other": [] },
+    "diceHistory": []
+  },
+
   "abilities": [
     { "key": "str", "label": "Força", "short": "FOR" },
     { "key": "dex", "label": "Destreza", "short": "DES" },

@@ -2,6 +2,7 @@
 // Toda a persistência (localStorage, import/export JSON, imagens) fica isolada aqui.
 const CHARACTER_KEY = 'ficha-rpg:character';
 const SETTINGS_KEY = 'ficha-rpg:settings';
+const APP_SESSION_KEY = 'ficha-rpg:v2:app-session';
 
 let saveTimeout = null;
 
@@ -87,4 +88,28 @@ export function readImageAsDataUrl(file) {
     reader.onerror = () => reject(new Error('Não foi possível carregar a imagem.'));
     reader.readAsDataURL(file);
   });
+}
+
+export function saveAppSession(session) {
+  localStorage.setItem(APP_SESSION_KEY, JSON.stringify(session));
+}
+
+export function loadAppSession() {
+  try {
+    return JSON.parse(localStorage.getItem(APP_SESSION_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+export function downloadJson(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
 }
