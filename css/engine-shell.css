@@ -1,0 +1,250 @@
+/* engine-shell.css — Fase 1: shell global da aplicação.
+   Prefixo shell-* para não interferir na ficha D&D legada. */
+
+.shell-header {
+  min-height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-bg-elevated);
+  border-bottom: var(--border-width) solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.shell-header__brand,
+.shell-header__context,
+.shell-header__actions {
+  display: flex;
+  align-items: center;
+}
+
+.shell-header__brand {
+  gap: var(--space-3);
+  color: var(--color-accent-strong);
+  min-width: 0;
+}
+
+.shell-header__brand-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.shell-header__brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.1;
+}
+
+.shell-header__brand-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--color-text);
+}
+
+.shell-header__brand-subtitle {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.shell-header__context {
+  justify-content: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.shell-header__context-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.shell-header__context-label {
+  font-size: var(--fs-xs);
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.shell-header__context-item strong {
+  max-width: 26vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+}
+
+.shell-header__context-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--color-border);
+}
+
+.shell-header__actions {
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+.shell-nav {
+  display: flex;
+  gap: var(--space-1);
+  padding: 0 var(--space-5);
+  background: var(--color-bg);
+  border-bottom: var(--border-width) solid var(--color-border);
+  overflow-x: auto;
+  position: sticky;
+  top: var(--header-height);
+  z-index: 30;
+}
+
+.shell-nav__item {
+  flex: 0 0 auto;
+  min-height: var(--tab-nav-height);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.shell-nav__item:hover {
+  color: var(--color-text);
+  background: var(--color-panel-alt);
+}
+
+.shell-nav__item--active {
+  color: var(--color-accent-strong);
+  border-bottom-color: var(--color-accent-strong);
+}
+
+.shell-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.shell-view {
+  width: 100%;
+  min-width: 0;
+}
+
+.shell-stub {
+  width: min(720px, calc(100% - 2 * var(--space-5)));
+  margin: var(--space-7) auto;
+  padding: var(--space-6);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-panel);
+  box-shadow: var(--shadow-md);
+}
+
+.shell-stub h1 {
+  margin-bottom: var(--space-3);
+}
+
+.shell-stub p:not(.shell-stub__eyebrow) {
+  color: var(--color-text-muted);
+  max-width: 60ch;
+}
+
+.shell-stub__eyebrow {
+  margin-bottom: var(--space-2);
+  color: var(--color-accent-strong);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.shell-view--sheet {
+  min-width: 0;
+}
+
+.sheet-legacy-toolbar {
+  padding: var(--space-3) var(--space-5) 0;
+}
+
+.sheet-legacy-toolbar__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .shell-header {
+    padding-inline: var(--space-4);
+  }
+
+  .shell-header__context-item strong {
+    max-width: 22vw;
+  }
+
+  .shell-nav {
+    padding-inline: var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .shell-header {
+    position: static;
+    flex-wrap: wrap;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .shell-header__context {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    padding-top: var(--space-1);
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .shell-header__context-item strong {
+    max-width: 38vw;
+  }
+
+  .shell-nav {
+    position: static;
+  }
+
+  .sheet-legacy-toolbar {
+    padding-inline: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .shell-header__brand-subtitle {
+    display: none;
+  }
+
+  .shell-header__context-item strong {
+    max-width: 34vw;
+  }
+
+  .shell-nav__item {
+    padding-inline: var(--space-3);
+  }
+
+  .sheet-legacy-toolbar__actions {
+    justify-content: stretch;
+  }
+
+  .sheet-legacy-toolbar__actions .button {
+    flex: 1 1 auto;
+  }
+}

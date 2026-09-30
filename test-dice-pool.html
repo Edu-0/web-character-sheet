@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Validação da Engine — Sistema de RPG (Pools)</title>
+<link rel="stylesheet" href="css/variables.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<style>
+  body { max-width: 920px; margin: 0 auto; padding: var(--space-6); }
+  .engine-section { margin-bottom: var(--space-5); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+  .row > .field { min-width: 160px; flex: 1; }
+  .trait-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: var(--space-3); }
+  .trait-list label { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); }
+  pre { background: var(--color-panel-alt); padding: var(--space-3); border-radius: var(--radius-sm); overflow-x: auto; }
+  .result-badge { font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .result-badge.apex { background: var(--color-computed-bg); color: var(--color-computed-text); }
+  .result-badge.base { background: rgba(91,138,176,0.18); color: var(--color-secondary); }
+</style>
+</head>
+<body>
+  <h1>Validação arquitetural — Sistema de RPG (Pools &amp; Potência)</h1>
+  <p>
+    Prova real de generalidade: este sistema (dados d4–d12, Ápice/Base/Peso/Potência,
+    Dificuldade contra oposição, Estados graduados) é executado inteiramente pelos módulos
+    de <code>js/engine/</code> a partir de <code>sistema-rpg.system.json</code> — nenhuma
+    fórmula deste sistema está hardcoded no core da engine.
+  </p>
+
+  <div class="card engine-section">
+    <h2 class="card__title">Personagem carregado</h2>
+    <div id="character-summary"></div>
+  </div>
+
+  <div class="card engine-section">
+    <h2 class="card__title">1. Montar e rolar uma Pool</h2>
+    <p>Selecione os Traços que entram na Pool (uma mesma fonte não entra duas vezes):</p>
+    <div class="trait-list" id="trait-checklist"></div>
+    <button type="button" id="btn-roll-pool" class="button button--primary">Rolar Pool</button>
+    <div id="pool-result"></div>
+  </div>
+
+  <div class="card engine-section">
+    <h2 class="card__title">2. Oposição e Dificuldade</h2>
+    <div class="row">
+      <label class="field"><span>Oposição Passiva (preset)</span>
+        <select id="opposition-preset"></select>
+      </label>
+      <label class="field"><span>ou Peso manual do oponente</span>
+        <input type="number" id="opponent-weight-manual" placeholder="deixe vazio para usar o preset" />
+      </label>
+    </div>
+    <button type="button" id="btn-resolve" class="button button--primary">Calcular Dificuldade e Resolver Ação (d20)</button>
+    <div id="resolution-result"></div>
+  </div>
+
+  <div class="card engine-section">
+    <h2 class="card__title">3. Provas determinísticas das regras (sem depender de sorte)</h2>
+
+    <h3>Empate de Ápice (d12=8, d10=8, d6=4) — "o dado de maior tamanho assume a função"</h3>
+    <button type="button" id="btn-tie-example" class="button button--ghost">Rodar exemplo</button>
+    <pre id="tie-output"></pre>
+
+    <h3>Pool vazia (0 dados) — falha automática</h3>
+    <button type="button" id="btn-empty-pool" class="button button--ghost">Rodar exemplo</button>
+    <pre id="empty-output"></pre>
+
+    <h3>Traço Composto (d12 + d6) — resultados somados, uma única fonte</h3>
+    <button type="button" id="btn-composite" class="button button--ghost">Rolar Traço Composto</button>
+    <pre id="composite-output"></pre>
+
+    <h3>Custo de Energia por dado da Técnica (d12 não definido pela documentação)</h3>
+    <pre id="energy-cost-output"></pre>
+
+    <h3>Estado graduado (Ferido d8) recebendo Potência</h3>
+    <div class="row">
+      <label class="field"><span>Potência recebida</span>
+        <select id="potency-vs-state">
+          <option value="6">d6 (menor)</option>
+          <option value="8" selected>d8 (igual)</option>
+          <option value="10">d10 (maior)</option>
+        </select>
+      </label>
+    </div>
+    <button type="button" id="btn-state-upgrade" class="button button--ghost">Aplicar à Ferido d8</button>
+    <pre id="state-output"></pre>
+  </div>
+
+  <script type="module" src="js/dice-pool-test.js"></script>
+</body>
+</html>

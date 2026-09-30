@@ -1,0 +1,211 @@
+{
+  "id": "sistema-rpg-layout",
+  "system": "sistema-rpg",
+  "description": "Layout descritivo (páginas/seções/campos) para o Sistema de RPG. Documenta a organização visual esperada; o teste funcional (test-dice-pool.html) renderiza um subconjunto real destes campos através dos componentes genéricos do engine.",
+
+  "pages": [
+    {
+      "id": "identity",
+      "title": "Identidade",
+      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "sections": [
+        {
+          "id": "identity-fields",
+          "components": [
+            { "type": "text", "field": "name", "label": "Nome", "span": 6 },
+            { "type": "text", "field": "origin", "label": "Origem", "span": 6 },
+            { "type": "textarea", "field": "description", "label": "Descrição", "span": 12 },
+            { "type": "textarea", "field": "concept", "label": "Conceito", "span": 12 },
+            { "type": "textarea", "field": "appearance", "label": "Aparência", "span": 6 },
+            { "type": "textarea", "field": "personality", "label": "Personalidade", "span": 6 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "progression",
+      "title": "Progressão",
+      "sections": [
+        {
+          "id": "progression-fields",
+          "components": [
+            { "type": "select", "field": "quality", "label": "Qualidade", "optionsFrom": "system.qualityPresets", "span": 4 },
+            { "type": "number", "field": "pointsAvailable", "label": "Pontos Disponíveis", "span": 4 },
+            { "type": "number", "field": "pointsSpent", "label": "Pontos Gastos", "span": 4 },
+            { "type": "number", "field": "evolutionPoints", "label": "Pontos de Evolução", "span": 4 },
+            { "type": "tagList", "field": "buffs", "label": "Buffs", "span": 4 },
+            { "type": "tagList", "field": "debuffs", "label": "Debuffs", "span": 4 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "attributes",
+      "title": "Atributos",
+      "sections": [
+        {
+          "id": "attribute-fields",
+          "repeatFor": "system.attributes",
+          "components": [
+            { "type": "die", "field": "attributes.{key}", "label": "{label}", "span": 4 }
+          ]
+        },
+        {
+          "id": "existence-die",
+          "components": [
+            { "type": "die", "field": "existenceDie", "label": "Dado de Existência", "span": 4 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "Perícias",
+      "sections": [
+        {
+          "id": "skill-fields",
+          "repeatFor": "system.skillCategories[].skills",
+          "components": [
+            { "type": "die", "field": "skills.{name}", "label": "{name}", "span": 4 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "specializations",
+      "title": "Especializações",
+      "sections": [
+        {
+          "id": "specialization-list",
+          "components": [
+            { "type": "list", "field": "specializations", "label": "Especializações", "span": 12,
+              "itemSchema": { "name": "text", "die": "die", "techniqueIds": "reference" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "essences",
+      "title": "Essências",
+      "sections": [
+        {
+          "id": "essence-list",
+          "note": "Sempre exatamente 3 (essences.count/fixedCount no system.json).",
+          "components": [
+            { "type": "list", "field": "essences", "label": "Essências", "span": 12, "fixedLength": 3,
+              "itemSchema": { "name": "text", "description": "textarea", "die": "die", "gainActionResourceCondition": "textarea", "spendActionResourceAbility": "textarea", "passiveProperties": "textarea", "activeProperties": "textarea" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "resources",
+      "title": "Recursos",
+      "sections": [
+        {
+          "id": "resource-fields",
+          "components": [
+            { "type": "counter", "field": "resources.actionResource.current", "label": "RA Atual", "span": 4 },
+            { "type": "resource", "field": "resources.energy", "label": "Energia", "span": 4 },
+            { "type": "boolean", "field": "reaction.available", "label": "Reação Disponível", "span": 4 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "techniques",
+      "title": "Técnicas",
+      "sections": [
+        {
+          "id": "technique-list",
+          "components": [
+            { "type": "list", "field": "techniques", "label": "Técnicas", "span": 12,
+              "itemSchema": { "name": "text", "specializationId": "reference", "maxDie": "die", "currentDie": "die", "energyCost": "number", "usage": "text", "effect": "textarea", "roll": "text", "resolution": "text", "activationTime": "text", "duration": "text", "concentration": "boolean", "bonusAction": "boolean", "reaction": "boolean", "limitations": "textarea", "reverse": "textarea" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "equipment",
+      "title": "Equipamentos",
+      "sections": [
+        {
+          "id": "equipment-list",
+          "components": [
+            { "type": "table", "field": "inventory", "label": "Armas, Armaduras e Equipamentos", "span": 12,
+              "itemSchema": { "name": "text", "type": "select", "die": "die", "weight": "number", "quantity": "number", "properties": "text", "requirements": "text", "state": "text" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "states",
+      "title": "Estados",
+      "sections": [
+        {
+          "id": "wear",
+          "title": "Desgaste",
+          "components": [{ "type": "list", "field": "states.wear", "label": "Desgaste", "span": 6, "itemSchema": { "name": "text", "sides": "die", "temporary": "boolean", "source": "text" } }]
+        },
+        {
+          "id": "trauma",
+          "title": "Trauma",
+          "components": [{ "type": "list", "field": "states.trauma", "label": "Trauma", "span": 6, "itemSchema": { "name": "text", "sides": "die" } }]
+        },
+        {
+          "id": "complications",
+          "title": "Complicações",
+          "components": [{ "type": "list", "field": "states.complications", "label": "Complicações", "span": 6, "itemSchema": { "name": "text", "sides": "die", "note": "text" } }]
+        },
+        {
+          "id": "characteristics",
+          "title": "Características",
+          "components": [{ "type": "list", "field": "states.characteristics", "label": "Características", "span": 6, "itemSchema": { "name": "text", "sides": "die", "note": "text" } }]
+        }
+      ]
+    },
+    {
+      "id": "combat",
+      "title": "Combate",
+      "sections": [
+        {
+          "id": "combat-fields",
+          "components": [
+            { "type": "number", "field": "velocity", "label": "Velocidade (m)", "span": 3 },
+            { "type": "computed", "formula": "carryCapacity", "label": "Carga Máxima (kg)", "span": 3 },
+            { "type": "computed", "formula": "initiative", "label": "Iniciativa", "span": 3 },
+            { "type": "boolean", "field": "reaction.available", "label": "Reação Disponível", "span": 3 }
+          ]
+        },
+        {
+          "id": "pool-builder",
+          "title": "Montagem de Pool e Rolagem",
+          "note": "Renderizado de fato pelo test-dice-pool.html via engine/pool.js + engine/resolution.js.",
+          "components": [
+            { "type": "poolBuilder", "label": "Pool de Ação", "span": 12 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inventory",
+      "title": "Inventário",
+      "sections": [
+        {
+          "id": "inventory-list",
+          "components": [
+            { "type": "table", "field": "inventory", "label": "Inventário", "span": 12,
+              "itemSchema": { "name": "text", "description": "text", "type": "select", "die": "die", "weight": "number", "quantity": "number", "properties": "text", "requirements": "text", "state": "text" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "title": "Notas",
+      "sections": [
+        { "id": "notes-field", "components": [{ "type": "textarea", "field": "notes", "label": "Notas", "span": 12 }] }
+      ]
+    }
+  ]
+}

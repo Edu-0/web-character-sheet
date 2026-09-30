@@ -1,0 +1,168 @@
+{
+  "meta": { "id": "example-kaelen", "system": "sistema-rpg" },
+  "name": "Kaelen",
+  "origin": "Fronteira das Brumas",
+  "description": "Batedor experiente que troca conforto por liberdade.",
+  "concept": "Rastreador pragmático com um pé no mundo espiritual",
+  "appearance": "Magro, cicatrizes finas nos antebraços, capa surrada.",
+  "personality": "Observador, fala pouco, decide rápido.",
+
+  "quality": "quality-14",
+  "pointsAvailable": 14,
+  "pointsSpent": 14,
+  "evolutionPoints": 0,
+  "buffs": [],
+  "debuffs": [],
+
+  "attributes": {
+    "strength": 8,
+    "constitution": 6,
+    "dexterity": 8,
+    "intelligence": 6,
+    "charisma": 6,
+    "willpower": 8
+  },
+
+  "existenceDie": 8,
+
+  "skills": {
+    "Armas à Distância": 8,
+    "Percepção": 6,
+    "Rastreamento": 8,
+    "Furtividade": 6,
+    "Investigação": 4,
+    "Sobrevivência": 4
+  },
+
+  "specializations": [
+    {
+      "id": "spec-1",
+      "name": "Tradição da Bruma",
+      "die": 8,
+      "techniqueIds": ["tech-1", "tech-2"]
+    }
+  ],
+
+  "essences": [
+    {
+      "id": "essence-1",
+      "name": "O Batedor Solitário",
+      "description": "Prefere agir sozinho e confiar só em si mesmo.",
+      "die": 8,
+      "gainActionResourceCondition": "Aceitar agir sem apoio de aliados em uma situação perigosa.",
+      "spendActionResourceAbility": "Gasta 1 RA para agir com certeza absoluta em uma tarefa solitária, ignorando uma Complicação.",
+      "passiveProperties": "",
+      "activeProperties": ""
+    },
+    {
+      "id": "essence-2",
+      "name": "Dívida com a Bruma",
+      "description": "Deve favores a um espírito antigo da fronteira.",
+      "die": 6,
+      "gainActionResourceCondition": "Cumprir um pedido estranho e inconveniente do espírito.",
+      "spendActionResourceAbility": "Gasta 1 RA para pedir um favor sobrenatural imediato ao espírito.",
+      "passiveProperties": "",
+      "activeProperties": ""
+    },
+    {
+      "id": "essence-3",
+      "name": "Cicatriz de Guerra",
+      "description": "Carrega o peso de uma batalha que não devia ter vencido.",
+      "die": 6,
+      "gainActionResourceCondition": "Reviver o trauma da batalha ao enfrentar uma situação semelhante, sofrendo uma complicação emocional.",
+      "spendActionResourceAbility": "Gasta 1 RA para canalizar o instinto de sobrevivência daquela batalha em uma ação desesperada.",
+      "passiveProperties": "",
+      "activeProperties": ""
+    }
+  ],
+
+  "techniques": [
+    {
+      "id": "tech-1",
+      "name": "Passo na Névoa",
+      "specializationId": "spec-1",
+      "maxDie": 8,
+      "currentDie": 8,
+      "energyCost": null,
+      "usage": "Ação Principal",
+      "effect": "Desliza através da névoa da Tradição, cobrindo distância sem ser percebido.",
+      "roll": "Destreza + Tradição da Bruma + Técnica",
+      "resolution": "Oposição ativa (Percepção do observador)",
+      "activationTime": "1 Ação Principal",
+      "duration": "Instantânea",
+      "concentration": false,
+      "bonusAction": false,
+      "reaction": false,
+      "limitations": "Requer névoa, neblina ou penumbra natural nas proximidades.",
+      "reverse": "Ficar exposto e imóvel por um instante dentro da névoa."
+    },
+    {
+      "id": "tech-2",
+      "name": "Chamado da Bruma",
+      "specializationId": "spec-1",
+      "maxDie": 6,
+      "currentDie": 6,
+      "energyCost": null,
+      "usage": "Ação Principal",
+      "effect": "Convoca uma cortina de névoa espessa em uma área próxima.",
+      "roll": "Vontade + Tradição da Bruma + Técnica",
+      "resolution": "Ação simples (sem oposição direta)",
+      "activationTime": "1 Ação Principal",
+      "duration": "Concentração",
+      "concentration": true,
+      "bonusAction": false,
+      "reaction": false,
+      "limitations": "Não funciona em ambientes completamente secos ou com vento forte.",
+      "reverse": "A névoa se dissipa instantaneamente e revela a posição de Kaelen."
+    }
+  ],
+
+  "resources": {
+    "actionResource": { "current": 1 },
+    "energy": { "current": 6, "max": 8 }
+  },
+
+  "reaction": { "available": true },
+
+  "velocity": 9,
+
+  "inventory": [
+    {
+      "id": "item-1",
+      "name": "Arco Curto",
+      "description": "Arco leve de caça, herdado do pai.",
+      "type": "Arma",
+      "die": 8,
+      "weight": 1.5,
+      "quantity": 1,
+      "properties": "Alcance longo, requer duas mãos",
+      "requirements": "",
+      "state": "Bom estado"
+    },
+    {
+      "id": "item-2",
+      "name": "Capa Encerada",
+      "description": "Protege contra chuva e frio leve.",
+      "type": "Equipamento",
+      "die": null,
+      "weight": 2,
+      "quantity": 1,
+      "properties": "",
+      "requirements": "",
+      "state": "Surrada"
+    }
+  ],
+
+  "states": {
+    "characteristics": [],
+    "wear": [
+      { "id": "wear-1", "name": "Ferido", "sides": 6, "temporary": true, "source": "Emboscada recente" }
+    ],
+    "trauma": [],
+    "complications": [
+      { "id": "comp-1", "name": "Escuridão", "sides": 10, "note": "Só entra em ações que dependam de visão." }
+    ]
+  },
+
+  "notes": ""
+}

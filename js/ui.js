@@ -188,6 +188,7 @@ export function buildAttacks(character) {
       e.preventDefault();
       e.stopPropagation();
       state.removeItem('combat.attacks', attack.id);
+      buildAttacks(state.get());
     });
     list.appendChild(node);
   });
@@ -217,16 +218,19 @@ export function buildFeatures(character) {
       e.preventDefault();
       e.stopPropagation();
       state.removeItem('features', feature.id);
+      buildFeatures(state.get());
     });
     node.querySelector('[data-action="move-up"]').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       state.moveItem('features', feature.id, -1);
+      buildFeatures(state.get());
     });
     node.querySelector('[data-action="move-down"]').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       state.moveItem('features', feature.id, 1);
+      buildFeatures(state.get());
     });
     list.appendChild(node);
   });
@@ -257,6 +261,7 @@ export function buildSpells(character) {
       e.preventDefault();
       e.stopPropagation();
       state.removeItem('spellcasting.spells', spell.id);
+      buildSpells(state.get());
     });
     list.appendChild(node);
   });
@@ -347,6 +352,7 @@ export function buildInventory(character) {
     removeBtn.innerHTML = icons.trash;
     removeBtn.addEventListener('click', () => {
       state.removeItem('inventory.items', item.id);
+      buildInventory(state.get());
     });
     tbody.appendChild(node);
   });
@@ -373,6 +379,7 @@ export function buildTagList(containerId, character, path) {
       const list = state.getPath(path);
       list.splice(index, 1);
       state.notify();
+      buildTagList(containerId, state.get(), path);
     });
     chipWrap.appendChild(node);
   });
@@ -388,8 +395,9 @@ export function buildTagList(containerId, character, path) {
       e.preventDefault();
       const list = state.getPath(path);
       list.push(input.value.trim());
-      input.value = '';
       state.notify();
+      buildTagList(containerId, state.get(), path);
+      container.querySelector('.tag-list__input input')?.focus();
     }
   });
   inputWrap.appendChild(input);

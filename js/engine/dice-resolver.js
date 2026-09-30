@@ -14,7 +14,7 @@ export function resolve(descriptor) {
   return fn(descriptor);
 }
 
-function rollOne(sides) {
+export function rollOne(sides) {
   return Math.floor(Math.random() * sides) + 1;
 }
 
@@ -35,4 +35,19 @@ registerResolver('dicePool', ({ dice = [], label = '' }) => {
   const total = rolls.reduce((sum, r) => sum + r.result, 0);
   const formula = dice.map((d) => `d${d.sides}`).join(' + ');
   return { label, formula, rolls, total };
+});
+
+// Resolver embutido: um único "Traço" com dado próprio, ou um Traço Composto
+// (vários dados que rolam juntos e cujos resultados se somam em um único valor).
+// Usado por sistemas baseados em pools de traços (ex: Traços Compostos de d12+d6).
+registerResolver('trait', ({ source, sides, dice, label = '' }) => {
+  const components = dice && dice.length ? dice : [{ sides }];
+  const rolls = components.map((d) => ({ sides: d.sides, result: rollOne(d.sides) }));
+  const result = rolls.reduce((sum, r) => sum + r.result, 0);
+  // Para desempates (regra "maior dado assume a função"), um Traço Composto é
+  // representado pelo maior dado entre seus componentes — não existe regra
+  // explícita para outros casos, então não inventamos além disso.
+  const representativeSides = Math.max(...rolls.map((r) => r.sides));
+  const formula = components.map((d) => `d${d.sides}`).join(' + ');
+  return { source, label, formula, sides: representativeSides, composite: components.length > 1, rolls, result };
 });

@@ -3,7 +3,7 @@
 // As chaves de atributos/perícias vêm do system.json carregado (engine/system.js),
 // não de uma lista fixa de D&D — outro sistema gera outra forma de personagem.
 import { createId } from './data.js';
-import { getAbilities, getSkills } from './engine/system.js';
+import { getAbilities, getSkills, getSystem } from './engine/system.js';
 
 function defaultAbilityScores() {
   const out = {};
@@ -35,7 +35,7 @@ function defaultSpellSlots() {
 
 export function createDefaultCharacter() {
   return {
-    meta: { version: 1, id: createId(), system: 'dnd5e-2024' },
+    meta: { version: 1, id: createId(), system: getSystem()?.id ?? 'unknown' },
     identity: {
       name: '',
       player: '',
