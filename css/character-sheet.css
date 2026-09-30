@@ -257,15 +257,16 @@
 
 .spell-slots {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: var(--space-3);
 }
 
 .spell-slot-row {
   display: grid;
-  grid-template-columns: 1fr auto auto auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: var(--space-2);
+  min-width: 0;
   background: var(--color-panel-alt);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -275,6 +276,7 @@
 .spell-slot-row__label {
   font-size: var(--fs-sm);
   color: var(--color-text-muted);
+  overflow-wrap: anywhere;
 }
 
 .spell-slot-row__count {
@@ -283,8 +285,18 @@
   text-align: center;
 }
 
+.spell-slot-row .field--inline {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4.5rem;
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
 .spell-slot-row .field--inline input {
-  width: 3.2rem;
+  width: 100%;
+  min-width: 0;
+  text-align: center;
 }
 
 /* Inventário */

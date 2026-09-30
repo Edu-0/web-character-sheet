@@ -275,8 +275,8 @@ export function buildSpellSlots(character) {
   character.spellcasting.slots.forEach((slot, index) => {
     const node = tpl.content.firstElementChild.cloneNode(true);
     node.querySelector('[data-el="label"]').textContent = `Nível ${slot.level}`;
-    node.querySelector('[data-action="use"]').textContent = '−';
-    node.querySelector('[data-action="restore"]').textContent = '+';
+    node.querySelector('[data-action="decrement"]').textContent = '−';
+    node.querySelector('[data-action="increment"]').textContent = '+';
     const maxInput = node.querySelector('[data-el="max"]');
     maxInput.value = slot.max;
     const refreshCount = () => {
@@ -289,15 +289,15 @@ export function buildSpellSlots(character) {
       if (character.spellcasting.slots[index].used > value) character.spellcasting.slots[index].used = value;
       state.notify();
     });
-    node.querySelector('[data-action="use"]').addEventListener('click', () => {
-      if (slot.used < slot.max) {
-        character.spellcasting.slots[index].used += 1;
+    node.querySelector('[data-action="decrement"]').addEventListener('click', () => {
+      if (slot.used > 0) {
+        character.spellcasting.slots[index].used -= 1;
         state.notify();
       }
     });
-    node.querySelector('[data-action="restore"]').addEventListener('click', () => {
-      if (slot.used > 0) {
-        character.spellcasting.slots[index].used -= 1;
+    node.querySelector('[data-action="increment"]').addEventListener('click', () => {
+      if (slot.used < slot.max) {
+        character.spellcasting.slots[index].used += 1;
         state.notify();
       }
     });

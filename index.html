@@ -523,9 +523,9 @@
 <template id="tpl-spell-slot-row">
   <div class="spell-slot-row">
     <span class="spell-slot-row__label" data-el="label"></span>
-    <button type="button" class="icon-button" data-action="use" aria-label="Gastar espaço"></button>
+    <button type="button" class="icon-button" data-action="decrement" aria-label="Reduzir espaços usados"></button>
     <span class="spell-slot-row__count" data-el="count">0 / 0</span>
-    <button type="button" class="icon-button" data-action="restore" aria-label="Recuperar espaço"></button>
+    <button type="button" class="icon-button" data-action="increment" aria-label="Aumentar espaços usados"></button>
     <label class="field field--inline"><span>Máx.</span><input type="number" min="0" class="input--narrow" data-el="max" /></label>
   </div>
 </template>

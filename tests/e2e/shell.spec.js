@@ -60,8 +60,10 @@ test('preserva interações centrais da ficha D&D', async ({ page }) => {
   await page.getByRole('tab', { name: 'Magias' }).click();
   const firstSlot = page.locator('.spell-slot-row').first();
   await firstSlot.locator('[data-el="max"]').fill('2');
-  await firstSlot.locator('[data-action="use"]').click();
+  await firstSlot.locator('[data-action="increment"]').click();
   await expect(firstSlot.locator('[data-el="count"]')).toHaveText('1 / 2');
+  await firstSlot.locator('[data-action="decrement"]').click();
+  await expect(firstSlot.locator('[data-el="count"]')).toHaveText('0 / 2');
 
   await page.locator('#btn-dice-toggle').click();
   await page.getByRole('button', { name: 'd20', exact: true }).click();
@@ -87,4 +89,43 @@ test('alternância de tema continua disponível no shell', async ({ page }) => {
   await page.locator('#btn-theme-toggle').click();
   const after = await page.locator('html').getAttribute('data-theme');
   expect(after).not.toBe(before);
+});
+
+test('espaços de magia mantêm controles dentro dos cards em todos os breakpoints', async ({ page }, testInfo) => {
+  if (await page.locator('html').getAttribute('data-theme') !== 'light') await page.locator('#btn-theme-toggle').click();
+  for (const width of [360, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.getByRole('tab', { name: 'Magias' }).click();
+    const layout = await page.locator('.spell-slot-row').evaluateAll((rows) => rows.map((row) => {
+      const rowRect = row.getBoundingClientRect();
+      const maxRect = row.querySelector('[data-el="max"]').getBoundingClientRect();
+      return {
+        noInternalOverflow: row.scrollWidth <= row.clientWidth + 1,
+        maxInside: maxRect.left >= rowRect.left && maxRect.right <= rowRect.right + 1,
+      };
+    }));
+    expect(layout.every((entry) => entry.noInternalOverflow && entry.maxInside)).toBe(true);
+    if (width === 1280) await page.screenshot({ path: testInfo.outputPath('spell-slots-light-1280.png'), fullPage: false });
+  }
+});
+
+test('controles nativos acompanham o tema claro', async ({ page }, testInfo) => {
+  if (await page.locator('html').getAttribute('data-theme') !== 'light') await page.locator('#btn-theme-toggle').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  const styles = await page.evaluate(() => {
+    const numberInput = document.querySelector('.ability-card__score');
+    const select = document.querySelector('[data-bind="combat.hitDice.die"]');
+    const root = getComputedStyle(document.documentElement);
+    return {
+      colorScheme: root.colorScheme,
+      numberBackground: getComputedStyle(numberInput).backgroundColor,
+      numberColor: getComputedStyle(numberInput).color,
+      selectBackground: getComputedStyle(select).backgroundColor,
+    };
+  });
+  expect(styles.colorScheme).toBe('light');
+  expect(styles.numberBackground).toBe('rgb(255, 255, 255)');
+  expect(styles.selectBackground).toBe('rgb(255, 255, 255)');
+  expect(styles.numberColor).toBe('rgb(38, 35, 32)');
+  await page.screenshot({ path: testInfo.outputPath('controls-light-1280.png'), fullPage: false });
 });

@@ -5,8 +5,16 @@
 }
 
 html {
-  color-scheme: dark light;
+  color-scheme: dark;
   scrollbar-color: var(--scrollbar-color);
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 body {
@@ -52,6 +60,24 @@ button {
 input, select, textarea, button {
   font-family: inherit;
   font-size: inherit;
+}
+
+input, select, textarea {
+  color: var(--color-text);
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--color-accent);
+}
+
+button:not([class]) {
+  color: var(--color-text);
+  background-color: var(--color-panel-alt);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
 }
 
 a {
