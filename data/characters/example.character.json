@@ -1,5 +1,9 @@
 {
-  "meta": { "version": 1, "id": "example-arannis", "system": "dnd2024" },
+  "meta": {
+    "version": 1,
+    "id": "example-arannis",
+    "system": "dnd2024"
+  },
   "identity": {
     "name": "Arannis",
     "player": "Exemplo",
@@ -13,40 +17,118 @@
     "portrait": null
   },
   "abilities": {
-    "str": { "score": 8 },
-    "dex": { "score": 14 },
-    "con": { "score": 13 },
-    "int": { "score": 17 },
-    "wis": { "score": 12 },
-    "cha": { "score": 10 }
+    "str": {
+      "score": 8
+    },
+    "dex": {
+      "score": 14
+    },
+    "con": {
+      "score": 13
+    },
+    "int": {
+      "score": 17
+    },
+    "wis": {
+      "score": 12
+    },
+    "cha": {
+      "score": 10
+    }
   },
   "savingThrows": {
-    "str": { "proficient": false },
-    "dex": { "proficient": false },
-    "con": { "proficient": false },
-    "int": { "proficient": true },
-    "wis": { "proficient": true },
-    "cha": { "proficient": false }
+    "str": {
+      "proficient": false
+    },
+    "dex": {
+      "proficient": false
+    },
+    "con": {
+      "proficient": false
+    },
+    "int": {
+      "proficient": true
+    },
+    "wis": {
+      "proficient": true
+    },
+    "cha": {
+      "proficient": false
+    }
   },
   "skills": {
-    "acrobatics": { "proficient": false, "expertise": false },
-    "animalHandling": { "proficient": false, "expertise": false },
-    "arcana": { "proficient": true, "expertise": true },
-    "athletics": { "proficient": false, "expertise": false },
-    "deception": { "proficient": false, "expertise": false },
-    "history": { "proficient": true, "expertise": false },
-    "insight": { "proficient": false, "expertise": false },
-    "intimidation": { "proficient": false, "expertise": false },
-    "investigation": { "proficient": true, "expertise": false },
-    "medicine": { "proficient": false, "expertise": false },
-    "nature": { "proficient": false, "expertise": false },
-    "perception": { "proficient": false, "expertise": false },
-    "performance": { "proficient": false, "expertise": false },
-    "persuasion": { "proficient": false, "expertise": false },
-    "religion": { "proficient": false, "expertise": false },
-    "sleightOfHand": { "proficient": false, "expertise": false },
-    "stealth": { "proficient": false, "expertise": false },
-    "survival": { "proficient": false, "expertise": false }
+    "acrobatics": {
+      "proficient": false,
+      "expertise": false
+    },
+    "animalHandling": {
+      "proficient": false,
+      "expertise": false
+    },
+    "arcana": {
+      "proficient": true,
+      "expertise": true
+    },
+    "athletics": {
+      "proficient": false,
+      "expertise": false
+    },
+    "deception": {
+      "proficient": false,
+      "expertise": false
+    },
+    "history": {
+      "proficient": true,
+      "expertise": false
+    },
+    "insight": {
+      "proficient": false,
+      "expertise": false
+    },
+    "intimidation": {
+      "proficient": false,
+      "expertise": false
+    },
+    "investigation": {
+      "proficient": true,
+      "expertise": false
+    },
+    "medicine": {
+      "proficient": false,
+      "expertise": false
+    },
+    "nature": {
+      "proficient": false,
+      "expertise": false
+    },
+    "perception": {
+      "proficient": false,
+      "expertise": false
+    },
+    "performance": {
+      "proficient": false,
+      "expertise": false
+    },
+    "persuasion": {
+      "proficient": false,
+      "expertise": false
+    },
+    "religion": {
+      "proficient": false,
+      "expertise": false
+    },
+    "sleightOfHand": {
+      "proficient": false,
+      "expertise": false
+    },
+    "stealth": {
+      "proficient": false,
+      "expertise": false
+    },
+    "survival": {
+      "proficient": false,
+      "expertise": false
+    }
   },
   "combat": {
     "ac": 12,
@@ -55,7 +137,11 @@
     "hpMax": 32,
     "hpCurrent": 32,
     "hpTemp": 0,
-    "hitDice": { "total": 5, "die": "d6", "used": 0 },
+    "hitDice": {
+      "total": 5,
+      "die": "d6",
+      "used": 0
+    },
     "attacks": [
       {
         "id": "attack-1",
@@ -73,15 +159,51 @@
   "spellcasting": {
     "ability": "int",
     "slots": [
-      { "level": 1, "max": 4, "used": 0 },
-      { "level": 2, "max": 3, "used": 0 },
-      { "level": 3, "max": 2, "used": 0 },
-      { "level": 4, "max": 0, "used": 0 },
-      { "level": 5, "max": 0, "used": 0 },
-      { "level": 6, "max": 0, "used": 0 },
-      { "level": 7, "max": 0, "used": 0 },
-      { "level": 8, "max": 0, "used": 0 },
-      { "level": 9, "max": 0, "used": 0 }
+      {
+        "level": 1,
+        "max": 4,
+        "used": 0
+      },
+      {
+        "level": 2,
+        "max": 3,
+        "used": 0
+      },
+      {
+        "level": 3,
+        "max": 2,
+        "used": 0
+      },
+      {
+        "level": 4,
+        "max": 0,
+        "used": 0
+      },
+      {
+        "level": 5,
+        "max": 0,
+        "used": 0
+      },
+      {
+        "level": 6,
+        "max": 0,
+        "used": 0
+      },
+      {
+        "level": 7,
+        "max": 0,
+        "used": 0
+      },
+      {
+        "level": 8,
+        "max": 0,
+        "used": 0
+      },
+      {
+        "level": 9,
+        "max": 0,
+        "used": 0
+      }
     ],
     "spells": [
       {
@@ -99,13 +221,36 @@
     ]
   },
   "inventory": {
-    "currency": { "pp": 0, "gp": 45, "ep": 0, "sp": 12, "cp": 0 },
+    "currency": {
+      "pp": 0,
+      "gp": 45,
+      "ep": 0,
+      "sp": 12,
+      "cp": 0
+    },
     "items": [
-      { "id": "item-1", "name": "Livro de Magias", "qty": 1, "weight": 1.5, "value": 50, "category": "Equipamento", "equipped": true, "notes": "" }
+      {
+        "id": "item-1",
+        "name": "Livro de Magias",
+        "qty": 1,
+        "weight": 1.5,
+        "value": 50,
+        "category": "Equipamento",
+        "equipped": true,
+        "notes": ""
+      }
     ]
   },
   "features": [
-    { "id": "feature-1", "name": "Recuperação Arcana", "source": "Classe", "usesCurrent": 1, "usesMax": 1, "description": "Recupera espaços de magia em um descanso curto.", "notes": "" }
+    {
+      "id": "feature-1",
+      "name": "Recuperação Arcana",
+      "source": "Classe",
+      "usesCurrent": 1,
+      "usesMax": 1,
+      "description": "Recupera espaços de magia em um descanso curto.",
+      "notes": ""
+    }
   ],
   "personality": {
     "traits": "Curioso e cauteloso.",
@@ -119,10 +264,18 @@
   },
   "proficiencies": {
     "armor": [],
-    "weapons": ["Adagas", "Bordões"],
+    "weapons": [
+      "Adagas",
+      "Bordões"
+    ],
     "tools": [],
-    "languages": ["Comum", "Élfico", "Dracônico"],
+    "languages": [
+      "Comum",
+      "Élfico",
+      "Dracônico"
+    ],
     "other": []
   },
-  "diceHistory": []
+  "diceHistory": [],
+  "schemaVersion": 1
 }

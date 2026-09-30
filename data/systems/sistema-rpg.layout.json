@@ -2,209 +2,606 @@
   "id": "sistema-rpg-layout",
   "system": "sistema-rpg",
   "description": "Layout descritivo (páginas/seções/campos) para o Sistema de RPG. Documenta a organização visual esperada; o teste funcional (test-dice-pool.html) renderiza um subconjunto real destes campos através dos componentes genéricos do engine.",
-
-  "pages": [
+  "schemaVersion": 1,
+  "tabs": [
     {
       "id": "identity",
-      "title": "Identidade",
-      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "label": "Identidade",
       "sections": [
         {
           "id": "identity-fields",
-          "components": [
-            { "type": "text", "field": "name", "label": "Nome", "span": 6 },
-            { "type": "text", "field": "origin", "label": "Origem", "span": 6 },
-            { "type": "textarea", "field": "description", "label": "Descrição", "span": 12 },
-            { "type": "textarea", "field": "concept", "label": "Conceito", "span": 12 },
-            { "type": "textarea", "field": "appearance", "label": "Aparência", "span": 6 },
-            { "type": "textarea", "field": "personality", "label": "Personalidade", "span": 6 }
+          "containers": [
+            {
+              "id": "identity-fields-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "name",
+                  "label": "Nome"
+                },
+                {
+                  "type": "text",
+                  "field": "origin",
+                  "label": "Origem"
+                },
+                {
+                  "type": "textarea",
+                  "field": "description",
+                  "label": "Descrição"
+                },
+                {
+                  "type": "textarea",
+                  "field": "concept",
+                  "label": "Conceito"
+                },
+                {
+                  "type": "textarea",
+                  "field": "appearance",
+                  "label": "Aparência"
+                },
+                {
+                  "type": "textarea",
+                  "field": "personality",
+                  "label": "Personalidade"
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "progression",
-      "title": "Progressão",
+      "label": "Progressão",
       "sections": [
         {
           "id": "progression-fields",
-          "components": [
-            { "type": "select", "field": "quality", "label": "Qualidade", "optionsFrom": "system.qualityPresets", "span": 4 },
-            { "type": "number", "field": "pointsAvailable", "label": "Pontos Disponíveis", "span": 4 },
-            { "type": "number", "field": "pointsSpent", "label": "Pontos Gastos", "span": 4 },
-            { "type": "number", "field": "evolutionPoints", "label": "Pontos de Evolução", "span": 4 },
-            { "type": "tagList", "field": "buffs", "label": "Buffs", "span": 4 },
-            { "type": "tagList", "field": "debuffs", "label": "Debuffs", "span": 4 }
+          "containers": [
+            {
+              "id": "progression-fields-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "select",
+                  "field": "quality",
+                  "label": "Qualidade",
+                  "optionsFrom": "system.qualityPresets"
+                },
+                {
+                  "type": "number",
+                  "field": "pointsAvailable",
+                  "label": "Pontos Disponíveis"
+                },
+                {
+                  "type": "number",
+                  "field": "pointsSpent",
+                  "label": "Pontos Gastos"
+                },
+                {
+                  "type": "number",
+                  "field": "evolutionPoints",
+                  "label": "Pontos de Evolução"
+                },
+                {
+                  "type": "tagList",
+                  "field": "buffs",
+                  "label": "Buffs"
+                },
+                {
+                  "type": "tagList",
+                  "field": "debuffs",
+                  "label": "Debuffs"
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "attributes",
-      "title": "Atributos",
+      "label": "Atributos",
       "sections": [
         {
           "id": "attribute-fields",
-          "repeatFor": "system.attributes",
-          "components": [
-            { "type": "die", "field": "attributes.{key}", "label": "{label}", "span": 4 }
+          "containers": [
+            {
+              "id": "attribute-fields-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "repeat": {
+                "source": "system.attributes"
+              },
+              "components": [
+                {
+                  "type": "die",
+                  "field": "attributes.{key}",
+                  "label": "{label}"
+                }
+              ]
+            }
           ]
         },
         {
           "id": "existence-die",
-          "components": [
-            { "type": "die", "field": "existenceDie", "label": "Dado de Existência", "span": 4 }
+          "containers": [
+            {
+              "id": "existence-die-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "die",
+                  "field": "existenceDie",
+                  "label": "Dado de Existência"
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "skills",
-      "title": "Perícias",
+      "label": "Perícias",
       "sections": [
         {
           "id": "skill-fields",
-          "repeatFor": "system.skillCategories[].skills",
-          "components": [
-            { "type": "die", "field": "skills.{name}", "label": "{name}", "span": 4 }
+          "containers": [
+            {
+              "id": "skill-fields-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "repeat": {
+                "source": "system.skillCategories[].skills"
+              },
+              "components": [
+                {
+                  "type": "die",
+                  "field": "skills.{name}",
+                  "label": "{name}"
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "specializations",
-      "title": "Especializações",
+      "label": "Especializações",
       "sections": [
         {
           "id": "specialization-list",
-          "components": [
-            { "type": "list", "field": "specializations", "label": "Especializações", "span": 12,
-              "itemSchema": { "name": "text", "die": "die", "techniqueIds": "reference" } }
+          "containers": [
+            {
+              "id": "specialization-list-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "specializations",
+                  "label": "Especializações",
+                  "itemSchema": {
+                    "name": "text",
+                    "die": "die",
+                    "techniqueIds": "reference"
+                  }
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "essences",
-      "title": "Essências",
+      "label": "Essências",
       "sections": [
         {
           "id": "essence-list",
           "note": "Sempre exatamente 3 (essences.count/fixedCount no system.json).",
-          "components": [
-            { "type": "list", "field": "essences", "label": "Essências", "span": 12, "fixedLength": 3,
-              "itemSchema": { "name": "text", "description": "textarea", "die": "die", "gainActionResourceCondition": "textarea", "spendActionResourceAbility": "textarea", "passiveProperties": "textarea", "activeProperties": "textarea" } }
+          "containers": [
+            {
+              "id": "essence-list-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "essences",
+                  "label": "Essências",
+                  "fixedLength": 3,
+                  "itemSchema": {
+                    "name": "text",
+                    "description": "textarea",
+                    "die": "die",
+                    "gainActionResourceCondition": "textarea",
+                    "spendActionResourceAbility": "textarea",
+                    "passiveProperties": "textarea",
+                    "activeProperties": "textarea"
+                  }
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "resources",
-      "title": "Recursos",
+      "label": "Recursos",
       "sections": [
         {
           "id": "resource-fields",
-          "components": [
-            { "type": "counter", "field": "resources.actionResource.current", "label": "RA Atual", "span": 4 },
-            { "type": "resource", "field": "resources.energy", "label": "Energia", "span": 4 },
-            { "type": "boolean", "field": "reaction.available", "label": "Reação Disponível", "span": 4 }
+          "containers": [
+            {
+              "id": "resource-fields-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "counter",
+                  "field": "resources.actionResource.current",
+                  "label": "RA Atual"
+                },
+                {
+                  "type": "resource",
+                  "field": "resources.energy",
+                  "label": "Energia"
+                },
+                {
+                  "type": "boolean",
+                  "field": "reaction.available",
+                  "label": "Reação Disponível"
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "techniques",
-      "title": "Técnicas",
+      "label": "Técnicas",
       "sections": [
         {
           "id": "technique-list",
-          "components": [
-            { "type": "list", "field": "techniques", "label": "Técnicas", "span": 12,
-              "itemSchema": { "name": "text", "specializationId": "reference", "maxDie": "die", "currentDie": "die", "energyCost": "number", "usage": "text", "effect": "textarea", "roll": "text", "resolution": "text", "activationTime": "text", "duration": "text", "concentration": "boolean", "bonusAction": "boolean", "reaction": "boolean", "limitations": "textarea", "reverse": "textarea" } }
+          "containers": [
+            {
+              "id": "technique-list-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "techniques",
+                  "label": "Técnicas",
+                  "itemSchema": {
+                    "name": "text",
+                    "specializationId": "reference",
+                    "maxDie": "die",
+                    "currentDie": "die",
+                    "energyCost": "number",
+                    "usage": "text",
+                    "effect": "textarea",
+                    "roll": "text",
+                    "resolution": "text",
+                    "activationTime": "text",
+                    "duration": "text",
+                    "concentration": "boolean",
+                    "bonusAction": "boolean",
+                    "reaction": "boolean",
+                    "limitations": "textarea",
+                    "reverse": "textarea"
+                  }
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "equipment",
-      "title": "Equipamentos",
+      "label": "Equipamentos",
       "sections": [
         {
           "id": "equipment-list",
-          "components": [
-            { "type": "table", "field": "inventory", "label": "Armas, Armaduras e Equipamentos", "span": 12,
-              "itemSchema": { "name": "text", "type": "select", "die": "die", "weight": "number", "quantity": "number", "properties": "text", "requirements": "text", "state": "text" } }
+          "containers": [
+            {
+              "id": "equipment-list-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "table",
+                  "field": "inventory",
+                  "label": "Armas, Armaduras e Equipamentos",
+                  "itemSchema": {
+                    "name": "text",
+                    "type": "select",
+                    "die": "die",
+                    "weight": "number",
+                    "quantity": "number",
+                    "properties": "text",
+                    "requirements": "text",
+                    "state": "text"
+                  }
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "states",
-      "title": "Estados",
+      "label": "Estados",
       "sections": [
         {
           "id": "wear",
           "title": "Desgaste",
-          "components": [{ "type": "list", "field": "states.wear", "label": "Desgaste", "span": 6, "itemSchema": { "name": "text", "sides": "die", "temporary": "boolean", "source": "text" } }]
+          "containers": [
+            {
+              "id": "wear-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "states.wear",
+                  "label": "Desgaste",
+                  "itemSchema": {
+                    "name": "text",
+                    "sides": "die",
+                    "temporary": "boolean",
+                    "source": "text"
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "trauma",
           "title": "Trauma",
-          "components": [{ "type": "list", "field": "states.trauma", "label": "Trauma", "span": 6, "itemSchema": { "name": "text", "sides": "die" } }]
+          "containers": [
+            {
+              "id": "trauma-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "states.trauma",
+                  "label": "Trauma",
+                  "itemSchema": {
+                    "name": "text",
+                    "sides": "die"
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "complications",
           "title": "Complicações",
-          "components": [{ "type": "list", "field": "states.complications", "label": "Complicações", "span": 6, "itemSchema": { "name": "text", "sides": "die", "note": "text" } }]
+          "containers": [
+            {
+              "id": "complications-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "states.complications",
+                  "label": "Complicações",
+                  "itemSchema": {
+                    "name": "text",
+                    "sides": "die",
+                    "note": "text"
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "characteristics",
           "title": "Características",
-          "components": [{ "type": "list", "field": "states.characteristics", "label": "Características", "span": 6, "itemSchema": { "name": "text", "sides": "die", "note": "text" } }]
+          "containers": [
+            {
+              "id": "characteristics-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "states.characteristics",
+                  "label": "Características",
+                  "itemSchema": {
+                    "name": "text",
+                    "sides": "die",
+                    "note": "text"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     {
       "id": "combat",
-      "title": "Combate",
+      "label": "Combate",
       "sections": [
         {
           "id": "combat-fields",
-          "components": [
-            { "type": "number", "field": "velocity", "label": "Velocidade (m)", "span": 3 },
-            { "type": "computed", "formula": "carryCapacity", "label": "Carga Máxima (kg)", "span": 3 },
-            { "type": "computed", "formula": "initiative", "label": "Iniciativa", "span": 3 },
-            { "type": "boolean", "field": "reaction.available", "label": "Reação Disponível", "span": 3 }
+          "containers": [
+            {
+              "id": "combat-fields-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "number",
+                  "field": "velocity",
+                  "label": "Velocidade (m)"
+                },
+                {
+                  "type": "computed",
+                  "formula": "carryCapacity",
+                  "label": "Carga Máxima (kg)"
+                },
+                {
+                  "type": "computed",
+                  "formula": "initiative",
+                  "label": "Iniciativa"
+                },
+                {
+                  "type": "boolean",
+                  "field": "reaction.available",
+                  "label": "Reação Disponível"
+                }
+              ]
+            }
           ]
         },
         {
           "id": "pool-builder",
           "title": "Montagem de Pool e Rolagem",
           "note": "Renderizado de fato pelo test-dice-pool.html via engine/pool.js + engine/resolution.js.",
-          "components": [
-            { "type": "poolBuilder", "label": "Pool de Ação", "span": 12 }
+          "containers": [
+            {
+              "id": "pool-builder-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "poolBuilder",
+                  "label": "Pool de Ação"
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "inventory",
-      "title": "Inventário",
+      "label": "Inventário",
       "sections": [
         {
           "id": "inventory-list",
-          "components": [
-            { "type": "table", "field": "inventory", "label": "Inventário", "span": 12,
-              "itemSchema": { "name": "text", "description": "text", "type": "select", "die": "die", "weight": "number", "quantity": "number", "properties": "text", "requirements": "text", "state": "text" } }
+          "containers": [
+            {
+              "id": "inventory-list-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "table",
+                  "field": "inventory",
+                  "label": "Inventário",
+                  "itemSchema": {
+                    "name": "text",
+                    "description": "text",
+                    "type": "select",
+                    "die": "die",
+                    "weight": "number",
+                    "quantity": "number",
+                    "properties": "text",
+                    "requirements": "text",
+                    "state": "text"
+                  }
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
       "id": "notes",
-      "title": "Notas",
+      "label": "Notas",
       "sections": [
-        { "id": "notes-field", "components": [{ "type": "textarea", "field": "notes", "label": "Notas", "span": 12 }] }
+        {
+          "id": "notes-field",
+          "containers": [
+            {
+              "id": "notes-field-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "textarea",
+                  "field": "notes",
+                  "label": "Notas"
+                }
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

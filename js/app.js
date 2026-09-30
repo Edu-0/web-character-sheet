@@ -489,7 +489,6 @@ async function runAction(action) {
   try {
     await action();
   } catch (error) {
-    console.error(error);
     notify(error.message, { type: 'error', duration: 6000 });
   }
 }

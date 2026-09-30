@@ -1,21 +1,51 @@
 {
   "id": "fictional-test-layout",
   "system": "fictional-test",
-  "pages": [
+  "schemaVersion": 1,
+  "tabs": [
     {
       "id": "main",
-      "title": "Personagem (Sistema Fictício)",
-      "layout": { "type": "grid", "columns": 12, "gap": 12 },
+      "label": "Personagem (Sistema Fictício)",
       "sections": [
         {
           "id": "core",
           "title": "Atributos e Recursos",
-          "components": [
-            { "type": "text", "field": "name", "label": "Nome", "span": 12 },
-            { "type": "number", "field": "attributes.attributeA", "label": "Atributo A", "span": 6 },
-            { "type": "number", "field": "attributes.attributeB", "label": "Atributo B", "span": 6 },
-            { "type": "resource", "field": "energy", "label": "Energia", "span": 8 },
-            { "type": "boolean", "field": "customSkillTrained", "label": "Perícia Customizada Treinada", "span": 4 }
+          "containers": [
+            {
+              "id": "core-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "name",
+                  "label": "Nome"
+                },
+                {
+                  "type": "number",
+                  "field": "attributes.attributeA",
+                  "label": "Atributo A"
+                },
+                {
+                  "type": "number",
+                  "field": "attributes.attributeB",
+                  "label": "Atributo B"
+                },
+                {
+                  "type": "resource",
+                  "field": "energy",
+                  "label": "Energia"
+                },
+                {
+                  "type": "boolean",
+                  "field": "customSkillTrained",
+                  "label": "Perícia Customizada Treinada"
+                }
+              ]
+            }
           ]
         }
       ]

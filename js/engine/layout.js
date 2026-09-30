@@ -1,5 +1,5 @@
 // engine/layout.js
-// Carrega e expõe o "layout.json": como as páginas/seções/componentes da ficha
+// Carrega e expõe o "layout.json": como as abas/seções/containers/componentes da ficha
 // devem ser organizadas na tela para um dado sistema. Puramente descritivo —
 // não contém nenhuma regra de RPG.
 let currentLayout = null;
@@ -20,6 +20,6 @@ export function getLayout() {
   return currentLayout;
 }
 
-export function getPages() {
-  return currentLayout?.pages ?? [];
+export function getTabs() {
+  return currentLayout?.tabs ?? [];
 }

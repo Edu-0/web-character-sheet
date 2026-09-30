@@ -1,7 +1,17 @@
 {
-  "meta": { "id": "test-char-1", "system": "fictional-test" },
+  "meta": {
+    "id": "test-char-1",
+    "system": "fictional-test"
+  },
   "name": "Protótipo",
-  "attributes": { "attributeA": 12, "attributeB": 18 },
-  "energy": { "current": 5, "max": 8 },
-  "customSkillTrained": true
+  "attributes": {
+    "attributeA": 12,
+    "attributeB": 18
+  },
+  "energy": {
+    "current": 5,
+    "max": 8
+  },
+  "customSkillTrained": true,
+  "schemaVersion": 1
 }

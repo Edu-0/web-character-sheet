@@ -1,19 +1,20 @@
 {
-  "meta": { "id": "example-kaelen", "system": "sistema-rpg" },
+  "meta": {
+    "id": "example-kaelen",
+    "system": "sistema-rpg"
+  },
   "name": "Kaelen",
   "origin": "Fronteira das Brumas",
   "description": "Batedor experiente que troca conforto por liberdade.",
   "concept": "Rastreador pragmático com um pé no mundo espiritual",
   "appearance": "Magro, cicatrizes finas nos antebraços, capa surrada.",
   "personality": "Observador, fala pouco, decide rápido.",
-
   "quality": "quality-14",
   "pointsAvailable": 14,
   "pointsSpent": 14,
   "evolutionPoints": 0,
   "buffs": [],
   "debuffs": [],
-
   "attributes": {
     "strength": 8,
     "constitution": 6,
@@ -22,9 +23,7 @@
     "charisma": 6,
     "willpower": 8
   },
-
   "existenceDie": 8,
-
   "skills": {
     "Armas à Distância": 8,
     "Percepção": 6,
@@ -33,16 +32,17 @@
     "Investigação": 4,
     "Sobrevivência": 4
   },
-
   "specializations": [
     {
       "id": "spec-1",
       "name": "Tradição da Bruma",
       "die": 8,
-      "techniqueIds": ["tech-1", "tech-2"]
+      "techniqueIds": [
+        "tech-1",
+        "tech-2"
+      ]
     }
   ],
-
   "essences": [
     {
       "id": "essence-1",
@@ -75,7 +75,6 @@
       "activeProperties": ""
     }
   ],
-
   "techniques": [
     {
       "id": "tech-1",
@@ -116,16 +115,19 @@
       "reverse": "A névoa se dissipa instantaneamente e revela a posição de Kaelen."
     }
   ],
-
   "resources": {
-    "actionResource": { "current": 1 },
-    "energy": { "current": 6, "max": 8 }
+    "actionResource": {
+      "current": 1
+    },
+    "energy": {
+      "current": 6,
+      "max": 8
+    }
   },
-
-  "reaction": { "available": true },
-
+  "reaction": {
+    "available": true
+  },
   "velocity": 9,
-
   "inventory": [
     {
       "id": "item-1",
@@ -152,17 +154,27 @@
       "state": "Surrada"
     }
   ],
-
   "states": {
     "characteristics": [],
     "wear": [
-      { "id": "wear-1", "name": "Ferido", "sides": 6, "temporary": true, "source": "Emboscada recente" }
+      {
+        "id": "wear-1",
+        "name": "Ferido",
+        "sides": 6,
+        "temporary": true,
+        "source": "Emboscada recente"
+      }
     ],
     "trauma": [],
     "complications": [
-      { "id": "comp-1", "name": "Escuridão", "sides": 10, "note": "Só entra em ações que dependam de visão." }
+      {
+        "id": "comp-1",
+        "name": "Escuridão",
+        "sides": 10,
+        "note": "Só entra em ações que dependam de visão."
+      }
     ]
   },
-
-  "notes": ""
+  "notes": "",
+  "schemaVersion": 1
 }

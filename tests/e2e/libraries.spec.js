@@ -77,6 +77,7 @@ test('cria, duplica e exclui personagens na biblioteca', async ({ page }) => {
 
 test('mantém personagem órfão visível com aviso, sem quebrar', async ({ page }) => {
   const orphan = {
+    schemaVersion: 1,
     meta: { id: 'external-id', system: 'sistema-inexistente' },
     name: 'Viajante Órfão',
   };
@@ -96,12 +97,35 @@ test('importa, abre e exporta um pacote único de sistema', async ({ page }) => 
     schemaVersion: 1,
     kind: 'rpg-system-package',
     system: {
+      schemaVersion: 1,
       id: 'sistema-importado',
       name: 'Sistema Importado',
-      characterTemplate: { meta: {}, name: '', attributes: {}, resources: {} },
+      characterTemplate: {
+        schemaVersion: 1,
+        meta: { system: 'sistema-importado' },
+        name: '',
+        attributes: {},
+        resources: {},
+      },
       diceSet: [6],
     },
-    layouts: [{ id: 'imported-default', system: 'sistema-importado', pages: [] }],
+    layouts: [{
+      schemaVersion: 1,
+      id: 'imported-default',
+      system: 'sistema-importado',
+      tabs: [{
+        id: 'main',
+        label: 'Principal',
+        sections: [{
+          id: 'main',
+          containers: [{
+            id: 'main-fields',
+            layout: { type: 'grid', min: '160px', gap: 12 },
+            components: [{ type: 'text', field: 'name', label: 'Nome' }],
+          }],
+        }],
+      }],
+    }],
   };
 
   await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
@@ -121,6 +145,67 @@ test('importa, abre e exporta um pacote único de sistema', async ({ page }) => 
   await card.getByRole('button', { name: 'Abrir' }).click();
   await expect(page.locator('#shell-current-system')).toHaveText('Sistema Importado');
   await expect(page.locator('#generic-sheet-host')).toBeVisible();
+});
+
+test('rejeita pacote com componente desconhecido e informa o caminho exato', async ({ page }) => {
+  const pkg = {
+    schemaVersion: 1,
+    kind: 'rpg-system-package',
+    system: {
+      schemaVersion: 1,
+      id: 'sistema-invalido',
+      name: 'Sistema Inválido',
+      characterTemplate: {
+        schemaVersion: 1,
+        meta: { system: 'sistema-invalido' },
+        name: '',
+      },
+    },
+    layouts: [{
+      schemaVersion: 1,
+      id: 'invalid-default',
+      system: 'sistema-invalido',
+      tabs: [{
+        id: 'main',
+        label: 'Principal',
+        sections: [{
+          id: 'main',
+          containers: [{
+            id: 'main-fields',
+            components: [{ type: 'lisst', field: 'items' }],
+          }],
+        }],
+      }],
+    }],
+  };
+
+  await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
+  await page.locator('#input-import-system').setInputFiles({
+    name: 'invalid.system.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(pkg)),
+  });
+
+  await expect(page.locator('.toast')).toContainText(
+    'layout.tabs[0].sections[0].containers[0].components[0]: tipo "lisst" desconhecido',
+  );
+  await expect(page.locator('#systems-list .library-card').filter({ hasText: 'Sistema Inválido' })).toHaveCount(0);
+});
+
+test('rejeita personagem com versão de schema incompatível', async ({ page }) => {
+  const character = {
+    schemaVersion: 99,
+    meta: { system: 'dnd2024' },
+    identity: { name: 'Visitante do Futuro' },
+  };
+
+  await page.locator('#input-import-file').setInputFiles({
+    name: 'future.character.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(character)),
+  });
+
+  await expect(page.locator('.toast')).toContainText('character.schemaVersion: deve ser 1');
 });
 
 test('gerenciadores fazem reflow em 360px sem overflow da página', async ({ page }, testInfo) => {

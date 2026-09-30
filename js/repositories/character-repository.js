@@ -1,4 +1,5 @@
 import { createId } from '../data.js';
+import { assertValid, validateCharacter } from '../validation/schemas.js';
 
 const INDEX_KEY = 'ficha-rpg:v2:characters:index';
 const CHARACTER_PREFIX = 'ficha-rpg:v2:characters:';
@@ -50,6 +51,7 @@ export function saveCharacter(character) {
   const stored = clone(character);
   stored.meta ||= {};
   stored.meta.updatedAt = new Date().toISOString();
+  assertValid(stored, validateCharacter, 'personagem');
   localStorage.setItem(`${CHARACTER_PREFIX}${stored.meta.id}`, JSON.stringify(stored));
   const index = readIndex().filter((entry) => entry.id !== stored.meta.id);
   index.push(toSummary(stored));
@@ -93,7 +95,7 @@ export async function importCharacter(file) {
   } catch {
     throw new Error('O arquivo do personagem não contém JSON válido.');
   }
-  if (!character?.meta?.system) throw new Error('Personagem inválido: meta.system é obrigatório.');
+  assertValid(character, (value) => validateCharacter(value, { allowMissingId: true }), 'personagem');
   character.meta.id = createId();
   character.meta.createdAt ||= new Date().toISOString();
   return saveCharacter(character);

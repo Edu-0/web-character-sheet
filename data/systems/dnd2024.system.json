@@ -2,97 +2,383 @@
   "id": "dnd2024",
   "name": "D&D 5e (2024)",
   "description": "Sistema de referência inicial da engine, baseado na estrutura de D&D 5e 2024.",
-
   "characterTemplate": {
-    "meta": {},
-    "identity": { "name": "", "player": "", "class": "", "level": 1, "species": "", "background": "", "alignment": "", "experience": 0, "inspiration": false, "portrait": null },
+    "meta": {
+      "system": "dnd2024"
+    },
+    "identity": {
+      "name": "",
+      "player": "",
+      "class": "",
+      "level": 1,
+      "species": "",
+      "background": "",
+      "alignment": "",
+      "experience": 0,
+      "inspiration": false,
+      "portrait": null
+    },
     "abilities": {
-      "str": { "score": 10 }, "dex": { "score": 10 }, "con": { "score": 10 },
-      "int": { "score": 10 }, "wis": { "score": 10 }, "cha": { "score": 10 }
+      "str": {
+        "score": 10
+      },
+      "dex": {
+        "score": 10
+      },
+      "con": {
+        "score": 10
+      },
+      "int": {
+        "score": 10
+      },
+      "wis": {
+        "score": 10
+      },
+      "cha": {
+        "score": 10
+      }
     },
     "savingThrows": {
-      "str": { "proficient": false }, "dex": { "proficient": false }, "con": { "proficient": false },
-      "int": { "proficient": false }, "wis": { "proficient": false }, "cha": { "proficient": false }
+      "str": {
+        "proficient": false
+      },
+      "dex": {
+        "proficient": false
+      },
+      "con": {
+        "proficient": false
+      },
+      "int": {
+        "proficient": false
+      },
+      "wis": {
+        "proficient": false
+      },
+      "cha": {
+        "proficient": false
+      }
     },
     "skills": {
-      "acrobatics": { "proficient": false, "expertise": false },
-      "animalHandling": { "proficient": false, "expertise": false },
-      "arcana": { "proficient": false, "expertise": false },
-      "athletics": { "proficient": false, "expertise": false },
-      "deception": { "proficient": false, "expertise": false },
-      "history": { "proficient": false, "expertise": false },
-      "insight": { "proficient": false, "expertise": false },
-      "intimidation": { "proficient": false, "expertise": false },
-      "investigation": { "proficient": false, "expertise": false },
-      "medicine": { "proficient": false, "expertise": false },
-      "nature": { "proficient": false, "expertise": false },
-      "perception": { "proficient": false, "expertise": false },
-      "performance": { "proficient": false, "expertise": false },
-      "persuasion": { "proficient": false, "expertise": false },
-      "religion": { "proficient": false, "expertise": false },
-      "sleightOfHand": { "proficient": false, "expertise": false },
-      "stealth": { "proficient": false, "expertise": false },
-      "survival": { "proficient": false, "expertise": false }
+      "acrobatics": {
+        "proficient": false,
+        "expertise": false
+      },
+      "animalHandling": {
+        "proficient": false,
+        "expertise": false
+      },
+      "arcana": {
+        "proficient": false,
+        "expertise": false
+      },
+      "athletics": {
+        "proficient": false,
+        "expertise": false
+      },
+      "deception": {
+        "proficient": false,
+        "expertise": false
+      },
+      "history": {
+        "proficient": false,
+        "expertise": false
+      },
+      "insight": {
+        "proficient": false,
+        "expertise": false
+      },
+      "intimidation": {
+        "proficient": false,
+        "expertise": false
+      },
+      "investigation": {
+        "proficient": false,
+        "expertise": false
+      },
+      "medicine": {
+        "proficient": false,
+        "expertise": false
+      },
+      "nature": {
+        "proficient": false,
+        "expertise": false
+      },
+      "perception": {
+        "proficient": false,
+        "expertise": false
+      },
+      "performance": {
+        "proficient": false,
+        "expertise": false
+      },
+      "persuasion": {
+        "proficient": false,
+        "expertise": false
+      },
+      "religion": {
+        "proficient": false,
+        "expertise": false
+      },
+      "sleightOfHand": {
+        "proficient": false,
+        "expertise": false
+      },
+      "stealth": {
+        "proficient": false,
+        "expertise": false
+      },
+      "survival": {
+        "proficient": false,
+        "expertise": false
+      }
     },
     "combat": {
-      "ac": 10, "initiativeBonus": 0, "speed": 9, "hpMax": 10, "hpCurrent": 10, "hpTemp": 0,
-      "hitDice": { "total": 1, "die": "d8", "used": 0 }, "attacks": [], "conditions": []
+      "ac": 10,
+      "initiativeBonus": 0,
+      "speed": 9,
+      "hpMax": 10,
+      "hpCurrent": 10,
+      "hpTemp": 0,
+      "hitDice": {
+        "total": 1,
+        "die": "d8",
+        "used": 0
+      },
+      "attacks": [],
+      "conditions": []
     },
     "spellcasting": {
       "ability": "",
       "slots": [
-        { "level": 1, "max": 0, "used": 0 }, { "level": 2, "max": 0, "used": 0 },
-        { "level": 3, "max": 0, "used": 0 }, { "level": 4, "max": 0, "used": 0 },
-        { "level": 5, "max": 0, "used": 0 }, { "level": 6, "max": 0, "used": 0 },
-        { "level": 7, "max": 0, "used": 0 }, { "level": 8, "max": 0, "used": 0 },
-        { "level": 9, "max": 0, "used": 0 }
+        {
+          "level": 1,
+          "max": 0,
+          "used": 0
+        },
+        {
+          "level": 2,
+          "max": 0,
+          "used": 0
+        },
+        {
+          "level": 3,
+          "max": 0,
+          "used": 0
+        },
+        {
+          "level": 4,
+          "max": 0,
+          "used": 0
+        },
+        {
+          "level": 5,
+          "max": 0,
+          "used": 0
+        },
+        {
+          "level": 6,
+          "max": 0,
+          "used": 0
+        },
+        {
+          "level": 7,
+          "max": 0,
+          "used": 0
+        },
+        {
+          "level": 8,
+          "max": 0,
+          "used": 0
+        },
+        {
+          "level": 9,
+          "max": 0,
+          "used": 0
+        }
       ],
       "spells": []
     },
-    "inventory": { "currency": { "pp": 0, "gp": 0, "ep": 0, "sp": 0, "cp": 0 }, "items": [] },
+    "inventory": {
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "items": []
+    },
     "features": [],
-    "personality": { "traits": "", "ideals": "", "bonds": "", "flaws": "", "appearance": "", "backstory": "", "allies": "", "notes": "" },
-    "proficiencies": { "armor": [], "weapons": [], "tools": [], "languages": [], "other": [] },
-    "diceHistory": []
+    "personality": {
+      "traits": "",
+      "ideals": "",
+      "bonds": "",
+      "flaws": "",
+      "appearance": "",
+      "backstory": "",
+      "allies": "",
+      "notes": ""
+    },
+    "proficiencies": {
+      "armor": [],
+      "weapons": [],
+      "tools": [],
+      "languages": [],
+      "other": []
+    },
+    "diceHistory": [],
+    "schemaVersion": 1
   },
-
   "abilities": [
-    { "key": "str", "label": "Força", "short": "FOR" },
-    { "key": "dex", "label": "Destreza", "short": "DES" },
-    { "key": "con", "label": "Constituição", "short": "CON" },
-    { "key": "int", "label": "Inteligência", "short": "INT" },
-    { "key": "wis", "label": "Sabedoria", "short": "SAB" },
-    { "key": "cha", "label": "Carisma", "short": "CAR" }
+    {
+      "key": "str",
+      "label": "Força",
+      "short": "FOR"
+    },
+    {
+      "key": "dex",
+      "label": "Destreza",
+      "short": "DES"
+    },
+    {
+      "key": "con",
+      "label": "Constituição",
+      "short": "CON"
+    },
+    {
+      "key": "int",
+      "label": "Inteligência",
+      "short": "INT"
+    },
+    {
+      "key": "wis",
+      "label": "Sabedoria",
+      "short": "SAB"
+    },
+    {
+      "key": "cha",
+      "label": "Carisma",
+      "short": "CAR"
+    }
   ],
-
   "skills": [
-    { "key": "acrobatics", "label": "Acrobacia", "ability": "dex" },
-    { "key": "animalHandling", "label": "Adestrar Animais", "ability": "wis" },
-    { "key": "arcana", "label": "Arcanismo", "ability": "int" },
-    { "key": "athletics", "label": "Atletismo", "ability": "str" },
-    { "key": "deception", "label": "Enganação", "ability": "cha" },
-    { "key": "history", "label": "História", "ability": "int" },
-    { "key": "insight", "label": "Intuição", "ability": "wis" },
-    { "key": "intimidation", "label": "Intimidação", "ability": "cha" },
-    { "key": "investigation", "label": "Investigação", "ability": "int" },
-    { "key": "medicine", "label": "Medicina", "ability": "wis" },
-    { "key": "nature", "label": "Natureza", "ability": "int" },
-    { "key": "perception", "label": "Percepção", "ability": "wis" },
-    { "key": "performance", "label": "Atuação", "ability": "cha" },
-    { "key": "persuasion", "label": "Persuasão", "ability": "cha" },
-    { "key": "religion", "label": "Religião", "ability": "int" },
-    { "key": "sleightOfHand", "label": "Prestidigitação", "ability": "dex" },
-    { "key": "stealth", "label": "Furtividade", "ability": "dex" },
-    { "key": "survival", "label": "Sobrevivência", "ability": "wis" }
+    {
+      "key": "acrobatics",
+      "label": "Acrobacia",
+      "ability": "dex"
+    },
+    {
+      "key": "animalHandling",
+      "label": "Adestrar Animais",
+      "ability": "wis"
+    },
+    {
+      "key": "arcana",
+      "label": "Arcanismo",
+      "ability": "int"
+    },
+    {
+      "key": "athletics",
+      "label": "Atletismo",
+      "ability": "str"
+    },
+    {
+      "key": "deception",
+      "label": "Enganação",
+      "ability": "cha"
+    },
+    {
+      "key": "history",
+      "label": "História",
+      "ability": "int"
+    },
+    {
+      "key": "insight",
+      "label": "Intuição",
+      "ability": "wis"
+    },
+    {
+      "key": "intimidation",
+      "label": "Intimidação",
+      "ability": "cha"
+    },
+    {
+      "key": "investigation",
+      "label": "Investigação",
+      "ability": "int"
+    },
+    {
+      "key": "medicine",
+      "label": "Medicina",
+      "ability": "wis"
+    },
+    {
+      "key": "nature",
+      "label": "Natureza",
+      "ability": "int"
+    },
+    {
+      "key": "perception",
+      "label": "Percepção",
+      "ability": "wis"
+    },
+    {
+      "key": "performance",
+      "label": "Atuação",
+      "ability": "cha"
+    },
+    {
+      "key": "persuasion",
+      "label": "Persuasão",
+      "ability": "cha"
+    },
+    {
+      "key": "religion",
+      "label": "Religião",
+      "ability": "int"
+    },
+    {
+      "key": "sleightOfHand",
+      "label": "Prestidigitação",
+      "ability": "dex"
+    },
+    {
+      "key": "stealth",
+      "label": "Furtividade",
+      "ability": "dex"
+    },
+    {
+      "key": "survival",
+      "label": "Sobrevivência",
+      "ability": "wis"
+    }
   ],
-
-  "diceSet": [4, 6, 8, 10, 12, 20, 100],
-
+  "diceSet": [
+    4,
+    6,
+    8,
+    10,
+    12,
+    20,
+    100
+  ],
   "resources": {
-    "hitPoints": { "label": "Pontos de Vida", "hasCurrent": true, "hasMax": true, "hasTemp": true },
-    "hitDice": { "label": "Dados de Vida", "diceTypes": ["d6", "d8", "d10", "d12"] }
+    "hitPoints": {
+      "label": "Pontos de Vida",
+      "hasCurrent": true,
+      "hasMax": true,
+      "hasTemp": true
+    },
+    "hitDice": {
+      "label": "Dados de Vida",
+      "diceTypes": [
+        "d6",
+        "d8",
+        "d10",
+        "d12"
+      ]
+    }
   },
-
   "formulas": {
     "abilityModifier": "floor((value - 10) / 2)",
     "proficiencyBonus": "2 + floor((level - 1) / 4)",
@@ -103,5 +389,6 @@
     "spellSaveDC": "8 + proficiencyBonus + spellAbilityModifier",
     "spellAttackBonus": "proficiencyBonus + spellAbilityModifier",
     "carryCapacity": "strengthScore * 7.5"
-  }
+  },
+  "schemaVersion": 1
 }

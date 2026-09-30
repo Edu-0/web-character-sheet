@@ -2,9 +2,10 @@
   "id": "sistema-rpg",
   "name": "Sistema de RPG",
   "description": "Sistema genérico multi-gênero baseado em Pools de dados (d4–d12), Ápice/Base/Peso/Potência e Dificuldade calculada contra oposição. Serve como teste real de que a engine é agnóstica de sistema.",
-
   "characterTemplate": {
-    "meta": {},
+    "meta": {
+      "system": "sistema-rpg"
+    },
     "name": "",
     "origin": "",
     "description": "",
@@ -17,135 +18,504 @@
     "evolutionPoints": 0,
     "buffs": [],
     "debuffs": [],
-    "attributes": { "strength": 6, "constitution": 6, "dexterity": 6, "intelligence": 6, "charisma": 6, "willpower": 6 },
+    "attributes": {
+      "strength": 6,
+      "constitution": 6,
+      "dexterity": 6,
+      "intelligence": 6,
+      "charisma": 6,
+      "willpower": 6
+    },
     "existenceDie": 8,
     "skills": {},
     "specializations": [],
     "essences": [
-      { "id": "essence-1", "name": "", "description": "", "die": 6, "gainActionResourceCondition": "", "spendActionResourceAbility": "", "passiveProperties": "", "activeProperties": "" },
-      { "id": "essence-2", "name": "", "description": "", "die": 6, "gainActionResourceCondition": "", "spendActionResourceAbility": "", "passiveProperties": "", "activeProperties": "" },
-      { "id": "essence-3", "name": "", "description": "", "die": 6, "gainActionResourceCondition": "", "spendActionResourceAbility": "", "passiveProperties": "", "activeProperties": "" }
+      {
+        "id": "essence-1",
+        "name": "",
+        "description": "",
+        "die": 6,
+        "gainActionResourceCondition": "",
+        "spendActionResourceAbility": "",
+        "passiveProperties": "",
+        "activeProperties": ""
+      },
+      {
+        "id": "essence-2",
+        "name": "",
+        "description": "",
+        "die": 6,
+        "gainActionResourceCondition": "",
+        "spendActionResourceAbility": "",
+        "passiveProperties": "",
+        "activeProperties": ""
+      },
+      {
+        "id": "essence-3",
+        "name": "",
+        "description": "",
+        "die": 6,
+        "gainActionResourceCondition": "",
+        "spendActionResourceAbility": "",
+        "passiveProperties": "",
+        "activeProperties": ""
+      }
     ],
     "techniques": [],
-    "resources": { "actionResource": { "current": 0 }, "energy": { "current": 0, "max": 0 } },
-    "reaction": { "available": true },
+    "resources": {
+      "actionResource": {
+        "current": 0
+      },
+      "energy": {
+        "current": 0,
+        "max": 0
+      }
+    },
+    "reaction": {
+      "available": true
+    },
     "velocity": 9,
     "inventory": [],
-    "states": { "characteristics": [], "wear": [], "trauma": [], "complications": [] },
-    "notes": ""
+    "states": {
+      "characteristics": [],
+      "wear": [],
+      "trauma": [],
+      "complications": []
+    },
+    "notes": "",
+    "schemaVersion": 1
   },
-
-  "dieScale": [4, 6, 8, 10, 12],
-
+  "dieScale": [
+    4,
+    6,
+    8,
+    10,
+    12
+  ],
   "dieMeaning": {
     "note": "Descrições apenas informativas para tooltip/ajuda contextual — não alteram cálculos.",
-    "attributes": { "4": "Ruim / fraco", "6": "Médio / regular", "8": "Bom", "10": "Excelente", "12": "Mestre" },
-    "skills": { "4": "Fraco / iniciante", "6": "Competente / médio", "8": "Bom / acima da média", "10": "Especialista", "12": "Mestre" }
+    "attributes": {
+      "4": "Ruim / fraco",
+      "6": "Médio / regular",
+      "8": "Bom",
+      "10": "Excelente",
+      "12": "Mestre"
+    },
+    "skills": {
+      "4": "Fraco / iniciante",
+      "6": "Competente / médio",
+      "8": "Bom / acima da média",
+      "10": "Especialista",
+      "12": "Mestre"
+    }
   },
-
   "existenceDie": {
     "label": "Dado de Existência",
     "sides": 8,
     "participatesInSkillTests": true,
     "participatesInCombatByDefault": false
   },
-
   "qualityPresets": [
-    { "id": "quality-7", "points": 7, "maxDie": null },
-    { "id": "quality-14", "points": 14, "maxDie": null },
-    { "id": "quality-21", "points": 21, "maxDie": null },
-    { "id": "quality-30", "points": 30, "maxDie": null },
-    { "id": "quality-44", "points": 44, "maxDie": null }
+    {
+      "id": "quality-7",
+      "points": 7,
+      "maxDie": null
+    },
+    {
+      "id": "quality-14",
+      "points": 14,
+      "maxDie": null
+    },
+    {
+      "id": "quality-21",
+      "points": 21,
+      "maxDie": null
+    },
+    {
+      "id": "quality-30",
+      "points": 30,
+      "maxDie": null
+    },
+    {
+      "id": "quality-44",
+      "points": 44,
+      "maxDie": null
+    }
   ],
   "qualityNote": "A documentação define apenas os pontos (7/14/21/30/44), sem nomear os níveis nem fixar o dado máximo por nível — maxDie fica null (indefinido) até a campanha configurar.",
-
   "attributes": [
-    { "key": "strength", "label": "Força" },
-    { "key": "constitution", "label": "Constituição" },
-    { "key": "dexterity", "label": "Destreza" },
-    { "key": "intelligence", "label": "Inteligência" },
-    { "key": "charisma", "label": "Carisma" },
-    { "key": "willpower", "label": "Vontade" }
+    {
+      "key": "strength",
+      "label": "Força"
+    },
+    {
+      "key": "constitution",
+      "label": "Constituição"
+    },
+    {
+      "key": "dexterity",
+      "label": "Destreza"
+    },
+    {
+      "key": "intelligence",
+      "label": "Inteligência"
+    },
+    {
+      "key": "charisma",
+      "label": "Carisma"
+    },
+    {
+      "key": "willpower",
+      "label": "Vontade"
+    }
   ],
-
   "attributeSetPresets": [
-    { "id": "low-power", "label": "Baixo nível", "dice": [8, 8, 6, 6, 6, 6] },
-    { "id": "balanced", "label": "Equilibrado", "dice": [8, 8, 8, 6, 6, 6] },
-    { "id": "high-power", "label": "Alto nível", "dice": [12, 10, 8, 8, 6, 6] }
+    {
+      "id": "low-power",
+      "label": "Baixo nível",
+      "dice": [
+        8,
+        8,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "id": "balanced",
+      "label": "Equilibrado",
+      "dice": [
+        8,
+        8,
+        8,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "id": "high-power",
+      "label": "Alto nível",
+      "dice": [
+        12,
+        10,
+        8,
+        8,
+        6,
+        6
+      ]
+    }
   ],
   "attributeSetNote": "Presets de referência da criação de personagem; a campanha pode configurar outros conjuntos. O jogador pode Reduzir um d6 ou d8 para Aprimorar outro dado nas regras de criação (não automatizado aqui).",
-
   "skillBaseDie": 4,
   "skillCategories": [
-    { "id": "combat", "label": "Combate", "skills": ["Armas Corpo a Corpo", "Corporal", "Armas à Distância", "Combate Montado", "Táticas e Estratégias", "Armadilhas"] },
-    { "id": "body", "label": "Corpo e Vigor", "skills": ["Primeiros Socorros", "Atletismo", "Concentração", "Resistência", "Tolerância a Dor", "Reflexo"] },
-    { "id": "social", "label": "Sociais", "skills": ["Persuasão", "Intimidação", "Enganação", "Diplomacia", "Liderança", "Performance"] },
-    { "id": "investigation", "label": "Investigação / Percepção", "skills": ["Investigação", "Percepção", "Interrogação", "Rastreamento", "Intuição", "Reconhecimento"] },
-    { "id": "survival", "label": "Sobrevivência / Natureza", "skills": ["Animais", "Forrageamento", "Caça", "Navegação", "Montaria", "Acampamento e Abrigos"] },
-    { "id": "knowledge", "label": "Conhecimento", "skills": ["História", "Religião", "Engenharia", "Geografia", "Astronomia", "Medicina"] },
-    { "id": "stealth", "label": "Furtividade / Ladinagem", "skills": ["Furtividade", "Arrombamento", "Falsificação", "Escapismo", "Disfarce", "Mãos Leves"] }
+    {
+      "id": "combat",
+      "label": "Combate",
+      "skills": [
+        "Armas Corpo a Corpo",
+        "Corporal",
+        "Armas à Distância",
+        "Combate Montado",
+        "Táticas e Estratégias",
+        "Armadilhas"
+      ]
+    },
+    {
+      "id": "body",
+      "label": "Corpo e Vigor",
+      "skills": [
+        "Primeiros Socorros",
+        "Atletismo",
+        "Concentração",
+        "Resistência",
+        "Tolerância a Dor",
+        "Reflexo"
+      ]
+    },
+    {
+      "id": "social",
+      "label": "Sociais",
+      "skills": [
+        "Persuasão",
+        "Intimidação",
+        "Enganação",
+        "Diplomacia",
+        "Liderança",
+        "Performance"
+      ]
+    },
+    {
+      "id": "investigation",
+      "label": "Investigação / Percepção",
+      "skills": [
+        "Investigação",
+        "Percepção",
+        "Interrogação",
+        "Rastreamento",
+        "Intuição",
+        "Reconhecimento"
+      ]
+    },
+    {
+      "id": "survival",
+      "label": "Sobrevivência / Natureza",
+      "skills": [
+        "Animais",
+        "Forrageamento",
+        "Caça",
+        "Navegação",
+        "Montaria",
+        "Acampamento e Abrigos"
+      ]
+    },
+    {
+      "id": "knowledge",
+      "label": "Conhecimento",
+      "skills": [
+        "História",
+        "Religião",
+        "Engenharia",
+        "Geografia",
+        "Astronomia",
+        "Medicina"
+      ]
+    },
+    {
+      "id": "stealth",
+      "label": "Furtividade / Ladinagem",
+      "skills": [
+        "Furtividade",
+        "Arrombamento",
+        "Falsificação",
+        "Escapismo",
+        "Disfarce",
+        "Mãos Leves"
+      ]
+    }
   ],
   "skillListNote": "Lista de referência. Perícias/categorias podem ser adicionadas, removidas, renomeadas e reorganizadas pela campanha sem alterar a engine.",
-
   "improvementCosts": {
-    "skills": { "4->6": 1, "6->8": 1, "8->10": 2, "10->12": 4 },
-    "specializations": { "0->4": 1, "4->6": 2, "6->8": 2, "8->10": 4, "10->12": 8 }
+    "skills": {
+      "4->6": 1,
+      "6->8": 1,
+      "8->10": 2,
+      "10->12": 4
+    },
+    "specializations": {
+      "0->4": 1,
+      "4->6": 2,
+      "6->8": 2,
+      "8->10": 4,
+      "10->12": 8
+    }
   },
   "improvementCostsNote": "A documentação menciona uma progressão de custo adicional acima disso para evolução posterior (não criação inicial) — ver evolution.postAscensionFormulaOptional.",
-
-  "specializationRule": { "startsAt": 0, "grantsAccessTo": "techniques" },
-
+  "specializationRule": {
+    "startsAt": 0,
+    "grantsAccessTo": "techniques"
+  },
   "essences": {
     "count": 3,
     "fixedCount": true,
-    "fields": ["name", "description", "die", "gainActionResourceCondition", "spendActionResourceAbility", "passiveProperties", "activeProperties"]
+    "fields": [
+      "name",
+      "description",
+      "die",
+      "gainActionResourceCondition",
+      "spendActionResourceAbility",
+      "passiveProperties",
+      "activeProperties"
+    ]
   },
-
   "actionResource": {
     "key": "actionResource",
     "label": "Recurso de Ação (RA)",
     "gainedBy": "Cada Essência define sua própria condição de ganho (consequência negativa coerente, ou concessão do Mestre).",
     "spentBy": "Cada Essência define sua própria habilidade de gasto — não existe lista universal de usos de RA."
   },
-
   "techniques": {
-    "fields": ["name", "specialization", "maxDie", "currentDie", "energyCost", "usage", "effect", "roll", "resolution", "activationTime", "duration", "concentration", "bonusAction", "reaction", "limitations", "reverse"],
+    "fields": [
+      "name",
+      "specialization",
+      "maxDie",
+      "currentDie",
+      "energyCost",
+      "usage",
+      "effect",
+      "roll",
+      "resolution",
+      "activationTime",
+      "duration",
+      "concentration",
+      "bonusAction",
+      "reaction",
+      "limitations",
+      "reverse"
+    ],
     "reductionRule": "Uma Técnica pode ser Reduzida antes da rolagem para diminuir seu custo de Energia; o Dado Máximo não é consumido e continua existindo.",
     "progressionByDie": {
-      "4": { "freeCount": 1, "grants": [{ "sides": 6, "count": 1 }] },
-      "6": { "freeCount": 2, "grants": [{ "sides": 6, "count": 2 }], "additionalPerLevel": [{ "sides": 6, "count": 1 }] },
-      "8": { "freeCount": 4, "grants": [{ "sides": 8, "count": 2 }, { "sides": 6, "count": 2 }], "additionalPerLevel": [{ "sides": 8, "count": 2 }] },
-      "10": { "freeCount": 8, "grants": [{ "sides": 10, "count": 1 }, { "sides": 8, "count": 3 }, { "sides": 6, "count": 4 }], "additionalPerLevel": [{ "sides": 10, "count": 1 }, { "sides": 8, "count": 1 }, { "sides": 6, "count": 2 }] },
-      "12": { "freeCount": 16, "grants": [{ "sides": 12, "count": 1 }, { "sides": 10, "count": 4 }, { "sides": 8, "count": 6 }, { "sides": 6, "count": 5 }], "additionalPerLevel": [{ "sides": 12, "count": 1 }, { "sides": 10, "count": 3 }, { "sides": 8, "count": 3 }, { "sides": 6, "count": 1 }] }
+      "4": {
+        "freeCount": 1,
+        "grants": [
+          {
+            "sides": 6,
+            "count": 1
+          }
+        ]
+      },
+      "6": {
+        "freeCount": 2,
+        "grants": [
+          {
+            "sides": 6,
+            "count": 2
+          }
+        ],
+        "additionalPerLevel": [
+          {
+            "sides": 6,
+            "count": 1
+          }
+        ]
+      },
+      "8": {
+        "freeCount": 4,
+        "grants": [
+          {
+            "sides": 8,
+            "count": 2
+          },
+          {
+            "sides": 6,
+            "count": 2
+          }
+        ],
+        "additionalPerLevel": [
+          {
+            "sides": 8,
+            "count": 2
+          }
+        ]
+      },
+      "10": {
+        "freeCount": 8,
+        "grants": [
+          {
+            "sides": 10,
+            "count": 1
+          },
+          {
+            "sides": 8,
+            "count": 3
+          },
+          {
+            "sides": 6,
+            "count": 4
+          }
+        ],
+        "additionalPerLevel": [
+          {
+            "sides": 10,
+            "count": 1
+          },
+          {
+            "sides": 8,
+            "count": 1
+          },
+          {
+            "sides": 6,
+            "count": 2
+          }
+        ]
+      },
+      "12": {
+        "freeCount": 16,
+        "grants": [
+          {
+            "sides": 12,
+            "count": 1
+          },
+          {
+            "sides": 10,
+            "count": 4
+          },
+          {
+            "sides": 8,
+            "count": 6
+          },
+          {
+            "sides": 6,
+            "count": 5
+          }
+        ],
+        "additionalPerLevel": [
+          {
+            "sides": 12,
+            "count": 1
+          },
+          {
+            "sides": 10,
+            "count": 3
+          },
+          {
+            "sides": 8,
+            "count": 3
+          },
+          {
+            "sides": 6,
+            "count": 1
+          }
+        ]
+      }
     },
     "progressionNote": "Representa o repertório MÍNIMO por nível de Especialização, não um limite absoluto de aprendizado.",
-    "evolutionOptions": ["upgradeOneTechnique", "upgradeTwoTechniques", "addOneNewD8Technique", "addTwoNewD8Techniques"]
+    "evolutionOptions": [
+      "upgradeOneTechnique",
+      "upgradeTwoTechniques",
+      "addOneNewD8Technique",
+      "addTwoNewD8Techniques"
+    ]
   },
-
-  "energyCostByDie": { "0": 0, "4": 0, "6": 2, "8": 4, "10": 8, "12":16 },
-  
+  "energyCostByDie": {
+    "0": 0,
+    "4": 0,
+    "6": 2,
+    "8": 4,
+    "10": 8,
+    "12": 16
+  },
   "untrainedUse": {
     "strangeSpecialization": {
       "label": "Especialização estranha",
       "poolFormula": "attribute + d4",
       "risk": "Muito Alto",
-      "onFailure": ["Falha", "Reverso", "Potência Aprimorada contra o próprio personagem"]
+      "onFailure": [
+        "Falha",
+        "Reverso",
+        "Potência Aprimorada contra o próprio personagem"
+      ]
     },
     "newTechniqueSameSpecialization": {
       "label": "Técnica nova da mesma Especialização",
       "poolFormula": "attribute + specialization + reducedSpecializationDie",
       "risk": "Moderado",
-      "onFailure": ["Falha", "Reverso"]
+      "onFailure": [
+        "Falha",
+        "Reverso"
+      ]
     },
     "newTechniqueSameArea": {
       "label": "Técnica nova dentro da mesma área",
       "poolFormula": "attribute + specialization + reducedSpecializationDie",
       "reductionNote": "Redução correspondente à diferença de domínio (não numericamente fixada pela documentação).",
       "risk": "Baixo",
-      "onFailure": ["Ação falha (sem Reverso automático pelo Risco)"]
+      "onFailure": [
+        "Ação falha (sem Reverso automático pelo Risco)"
+      ]
     }
   },
-
   "genericKnowledge": {
     "label": "Arcana",
     "labelNote": "O nome pode ser adaptado conforme o gênero da campanha.",
@@ -153,31 +523,65 @@
     "usesEnergy": false,
     "canReplaceSpecializedTechnique": false
   },
-
   "concentration": {
     "skill": "Concentração",
     "poolFormula": "willpower + concentration + technique",
     "maintenanceNote": "Enquanto o efeito é mantido não há novo pagamento de Energia, salvo se a própria Técnica determinar o contrário."
   },
-
   "pool": {
     "sameSourceLimit": 1,
     "sameSourceLimitNote": "Uma mesma fonte/Traço não fornece mais de um dado à mesma Pool, salvo exceção de uma regra específica.",
-    "healthyRange": [3, 5],
+    "healthyRange": [
+      3,
+      5
+    ],
     "voluntaryOmissionAllowed": true
   },
-
   "opposition": {
     "passivePresets": [
-      { "id": "trivial", "label": "Trivial", "dice": [4, 4] },
-      { "id": "easy", "label": "Fácil", "dice": [6, 6] },
-      { "id": "medium", "label": "Médio", "dice": [8, 8] },
-      { "id": "hard", "label": "Difícil", "dice": [10, 10] },
-      { "id": "veryHard", "label": "Muito difícil", "dice": [12, 12] }
+      {
+        "id": "trivial",
+        "label": "Trivial",
+        "dice": [
+          4,
+          4
+        ]
+      },
+      {
+        "id": "easy",
+        "label": "Fácil",
+        "dice": [
+          6,
+          6
+        ]
+      },
+      {
+        "id": "medium",
+        "label": "Médio",
+        "dice": [
+          8,
+          8
+        ]
+      },
+      {
+        "id": "hard",
+        "label": "Difícil",
+        "dice": [
+          10,
+          10
+        ]
+      },
+      {
+        "id": "veryHard",
+        "label": "Muito difícil",
+        "dice": [
+          12,
+          12
+        ]
+      }
     ],
     "passiveHasPotency": false
   },
-
   "resolution": {
     "type": "d20-above-difficulty",
     "difficultyFormula": "difficulty",
@@ -185,47 +589,66 @@
     "criticalFailureAt": 20,
     "note": "d20 é neutro: não recebe bônus, penalidades, vantagem/desvantagem ou rerrolagem geral. 20/1 natural não são automaticamente críticos — o crítico depende só da Dificuldade calculada."
   },
-
   "formulas": {
     "difficulty": "10 + opponentWeight - actorWeight",
     "carryCapacity": "strengthSides * carryMultiplier",
     "initiative": "dexterityRoll + willpowerRoll + velocity"
   },
-
   "carryMultiplier": 5,
   "velocityDefault": 9,
   "squareMeters": 1.5,
-
-  "reaction": { "perRound": 1, "recoversAt": "início da próxima rodada" },
-
-  "initiative": {
-    "tieBreakOrder": ["dexterity", "velocity", "willpower", "random"]
+  "reaction": {
+    "perRound": 1,
+    "recoversAt": "início da próxima rodada"
   },
-
+  "initiative": {
+    "tieBreakOrder": [
+      "dexterity",
+      "velocity",
+      "willpower",
+      "random"
+    ]
+  },
   "wear": {
-    "progression": [4, 6, 8, 10, 12],
+    "progression": [
+      4,
+      6,
+      8,
+      10,
+      12
+    ],
     "defaultType": "Ferido",
     "configurableTypes": true
   },
   "trauma": {
-    "progression": [6, 8, 10, 12],
+    "progression": [
+      6,
+      8,
+      10,
+      12
+    ],
     "onWearExceeds12": "primeiro Trauma nasce em d6; normalmente provoca Retirada de Cena (salvo regra específica)",
     "onTraumaExceeds12WithWearAt12": "morte (salvo regra excepcional)"
   },
-
   "stateUpgradeRule": {
     "note": "Quando uma Potência cria/aumenta um Estado graduado: Potência > Estado atual => Estado sobe para o dado da Potência. Potência == Estado atual => Estado recebe 1 Aprimoramento. Potência < Estado atual => Estado não aumenta."
   },
-
   "buffsDebuffs": {
     "optional": true,
     "affectsPoolDirectly": false,
-    "reference": { "light": 1, "medium": 2, "heavy": 4, "debilitating": 8 }
+    "reference": {
+      "light": 1,
+      "medium": 2,
+      "heavy": 4,
+      "debilitating": 8
+    }
   },
-
   "evolution": {
-    "costs": { "10->12": 16 },
+    "costs": {
+      "10->12": 16
+    },
     "postAscensionFormulaOptional": "16 + 8 * n",
     "postAscensionNote": "Opcional — não aplicado automaticamente. n = número da evolução após a Ascensão."
-  }
+  },
+  "schemaVersion": 1
 }

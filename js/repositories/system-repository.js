@@ -1,3 +1,5 @@
+import { assertValid, validateManifest, validateSystemPackage } from '../validation/schemas.js';
+
 const MANIFEST_URL = './data/systems/index.json';
 const IMPORTED_SYSTEMS_KEY = 'ficha-rpg:v2:systems';
 
@@ -27,22 +29,12 @@ function persistImportedSystems() {
   localStorage.setItem(IMPORTED_SYSTEMS_KEY, JSON.stringify(importedSystems));
 }
 
-function basicValidatePackage(pkg) {
-  if (!pkg || typeof pkg !== 'object') throw new Error('O pacote de sistema deve ser um objeto JSON.');
-  if (pkg.kind !== 'rpg-system-package') throw new Error('Pacote inválido: "kind" deve ser "rpg-system-package".');
-  if (!pkg.system?.id || !pkg.system?.name) throw new Error('Pacote inválido: system.id e system.name são obrigatórios.');
-  if (!Array.isArray(pkg.layouts) || pkg.layouts.length === 0) throw new Error('Pacote inválido: layouts deve conter ao menos um layout.');
-  pkg.layouts.forEach((layout, index) => {
-    if (!layout?.id) throw new Error(`Pacote inválido: layouts[${index}].id é obrigatório.`);
-    if (layout.system !== pkg.system.id) throw new Error(`Pacote inválido: layouts[${index}].system deve ser "${pkg.system.id}".`);
-  });
-}
-
 export async function initSystemRepository() {
   const manifest = await fetchJson(MANIFEST_URL, 'o manifesto de sistemas');
-  if (!Array.isArray(manifest.systems)) throw new Error('Manifesto inválido: systems deve ser uma lista.');
+  assertValid(manifest, validateManifest, 'manifest');
   manifestSystems = manifest.systems.map((entry) => ({ ...entry, source: 'builtin' }));
-  importedSystems = loadImportedSystems();
+  importedSystems = loadImportedSystems().filter((pkg) => validateSystemPackage(pkg).length === 0);
+  persistImportedSystems();
   return listSystems();
 }
 
@@ -77,7 +69,11 @@ export async function getSystemPackage(id) {
     ...await fetchJson(new URL(layoutRef.file, new URL(MANIFEST_URL, location.href)), `o layout ${layoutRef.name}`),
     manifest: { id: layoutRef.id, name: layoutRef.name },
   })));
-  return { schemaVersion: 1, kind: 'rpg-system-package', system, layouts };
+  return assertValid(
+    { schemaVersion: 1, kind: 'rpg-system-package', system, layouts },
+    validateSystemPackage,
+    `sistema ${id}`,
+  );
 }
 
 export async function importSystemPackage(file) {
@@ -87,7 +83,7 @@ export async function importSystemPackage(file) {
   } catch {
     throw new Error('O arquivo do sistema não contém JSON válido.');
   }
-  basicValidatePackage(pkg);
+  assertValid(pkg, validateSystemPackage, 'pacote de sistema');
   if (manifestSystems.some((entry) => entry.id === pkg.system.id)) {
     throw new Error(`O ID "${pkg.system.id}" pertence a um sistema embutido.`);
   }
