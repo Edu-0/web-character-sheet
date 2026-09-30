@@ -16,6 +16,7 @@
   .shell-header,
   .shell-nav,
   .tab-nav,
+  .engine-tabs,
   .dice-tray,
   .toast-stack,
   .modal-overlay,
@@ -44,6 +45,19 @@
 
   .panel:last-child {
     page-break-after: auto;
+  }
+
+  .engine-panel[hidden] {
+    display: grid !important;
+  }
+
+  .engine-sheet,
+  .engine-panel {
+    gap: 8mm;
+  }
+
+  .engine-section {
+    break-inside: avoid;
   }
 
   .card,

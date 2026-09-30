@@ -18,6 +18,7 @@ import { confirmDialog } from './modal.js';
 import { roll, getHistory, clearHistory } from './dice.js';
 import { setSystem, getDiceSet } from './engine/system.js';
 import { setLayout } from './engine/layout.js';
+import { renderSheet } from './engine/renderer.js';
 import { getAppState, setAppState, updateAppState, subscribeAppState } from './app-state.js';
 
 const $ = (id) => document.getElementById(id);
@@ -28,9 +29,11 @@ let activeCharacterId = null;
 let saveTimeout = null;
 let suppressCharacterEffects = false;
 let appPersistenceEnabled = false;
+let genericSheetController = null;
 
 async function init() {
   const session = storage.loadAppSession();
+  if (session.activeTab) setAppState('ui.activeTab', session.activeTab);
   initTheme();
   initShell();
   initLegacyControls(session.activeTab);
@@ -54,7 +57,9 @@ async function init() {
 function initLegacyControls(initialTabId) {
   initTabs(document, {
     initialTabId,
-    onChange: (tabId) => setAppState('ui.activeTab', tabId),
+    onChange: (tabId) => {
+      if (activePackage?.system.id === DND_SYSTEM_ID) setAppState('ui.activeTab', tabId);
+    },
   });
   ui.mountStaticIcons();
   ui.initGenericBindings();
@@ -145,6 +150,8 @@ async function createAndOpenCharacter(systemId, { notifyUser = true } = {}) {
 
 function mountActiveSheet(character) {
   const isLegacyDnd = activePackage?.system.id === DND_SYSTEM_ID;
+  genericSheetController?.destroy();
+  genericSheetController = null;
   $('legacy-dnd-sheet').hidden = !isLegacyDnd;
   $('generic-sheet-host').hidden = isLegacyDnd;
 
@@ -154,39 +161,18 @@ function mountActiveSheet(character) {
     buildDiceButtons();
     renderDiceHistory();
   } else {
-    renderGenericPreview(character);
+    renderGenericSheet(character);
   }
 }
 
-function renderGenericPreview(character) {
+function renderGenericSheet(character) {
   const host = $('generic-sheet-host');
-  host.innerHTML = '';
-  const grid = element('div', 'generic-sheet-preview');
-  const hero = element('article', 'card generic-sheet-preview__hero');
-  hero.append(
-    element('p', 'generic-sheet-preview__eyebrow', activePackage.system.name),
-    element('h1', '', characterSummary(character).name),
-    element('p', '', character.origin || character.concept || 'Personagem pronto para a ficha gerada pela engine.'),
-  );
-
-  const status = element('article', 'card');
-  status.append(
-    element('h2', 'card__title', 'Montagem isolada'),
-    element('p', '', 'Sistema e personagem estão carregados e persistidos sem recarregar a página. A interface declarativa completa será conectada após a conversão do schema e dos componentes.'),
-  );
-
-  const summary = element('article', 'card');
-  summary.append(element('h2', 'card__title', 'Resumo dos dados'));
-  const pre = document.createElement('pre');
-  pre.textContent = JSON.stringify({
-    attributes: character.attributes,
-    resources: character.resources,
-    specializations: character.specializations?.length ?? 0,
-    techniques: character.techniques?.length ?? 0,
-  }, null, 2);
-  summary.appendChild(pre);
-  grid.append(hero, status, summary);
-  host.appendChild(grid);
+  genericSheetController = renderSheet(host, activePackage.layouts[0], character, {
+    system: activePackage.system,
+    initialTabId: getAppState().ui.activeTab,
+    onTabChange: (tabId) => setAppState('ui.activeTab', tabId),
+    onChange: () => state.notify(),
+  });
 }
 
 function onCharacterChange(character) {
@@ -194,8 +180,6 @@ function onCharacterChange(character) {
   if (activePackage?.system.id === DND_SYSTEM_ID) {
     ui.refreshComputedOnly(character);
     ui.updatePortrait(character);
-  } else {
-    renderGenericPreview(character);
   }
   scheduleCharacterSave(character);
   updateAppState({ currentCharacter: characterSummary(character) });

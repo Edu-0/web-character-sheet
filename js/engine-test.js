@@ -3,8 +3,8 @@
 // de D&D, através dos mesmos módulos genéricos da engine — nenhum deles conhece
 // "fictional-test" ou "dnd2024" especificamente.
 import { loadSystem, resolveFormula } from './engine/system.js';
-import { loadLayout, getTabs } from './engine/layout.js';
-import { renderTab } from './engine/renderer.js';
+import { loadLayout, getLayout } from './engine/layout.js';
+import { renderSheet } from './engine/renderer.js';
 import { resolve } from './engine/dice-resolver.js';
 import './engine/fields.js';
 
@@ -14,10 +14,8 @@ async function main() {
   const character = await fetch('./data/characters/fictional-test.character.json').then((r) => r.json());
 
   const root = document.getElementById('engine-root');
-  const [tab] = getTabs();
-
   const rerenderFormulas = () => updateFormulas(character);
-  renderTab(root, tab, character, { onChange: rerenderFormulas });
+  renderSheet(root, getLayout(), character, { system, onChange: rerenderFormulas });
   rerenderFormulas();
 
   document.getElementById('btn-roll-pool').addEventListener('click', () => {

@@ -9,7 +9,8 @@ test('renderer genérico consome o schema Tabs → Sections → Containers → C
 
   await page.goto('/test-engine.html');
 
-  await expect(page.getByRole('heading', { name: 'Personagem (Sistema Fictício)' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Protótipo' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Personagem (Sistema Fictício)' })).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByLabel('Nome')).toHaveValue('Protótipo');
   await expect(page.getByLabel('Atributo A')).toHaveValue('12');
   await expect(page.locator('#formula-output')).toContainText('abilityModifier(Atributo A = 12) = 3');

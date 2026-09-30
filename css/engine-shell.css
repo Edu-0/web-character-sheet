@@ -269,33 +269,6 @@
   padding: var(--space-5);
 }
 
-.generic-sheet-preview {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-  gap: var(--space-4);
-}
-
-.generic-sheet-preview__hero {
-  grid-column: 1 / -1;
-}
-
-.generic-sheet-preview__eyebrow {
-  color: var(--color-accent-strong);
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.generic-sheet-preview pre {
-  max-height: 320px;
-  overflow: auto;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  color: var(--color-text-muted);
-  font-size: var(--fs-xs);
-}
-
 .shell-view--sheet {
   min-width: 0;
 }

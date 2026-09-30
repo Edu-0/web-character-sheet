@@ -122,9 +122,7 @@ registerFieldType('resource', {
     wrap.appendChild(span);
 
     const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.alignItems = 'center';
-    row.style.gap = '8px';
+    row.className = 'engine-resource';
 
     const current = document.createElement('input');
     current.type = 'number';
@@ -184,9 +182,7 @@ registerFieldType('counter', {
   render(container, { character, field, label, onChange, min = 0, max = Infinity }) {
     const wrap = fieldWrapper(label);
     const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.alignItems = 'center';
-    row.style.gap = '8px';
+    row.className = 'engine-counter';
 
     const value = document.createElement('span');
     value.className = 'computed';
@@ -195,6 +191,8 @@ registerFieldType('counter', {
 
     const decBtn = document.createElement('button');
     decBtn.type = 'button';
+    decBtn.className = 'engine-counter__button';
+    decBtn.setAttribute('aria-label', `Reduzir ${label}`);
     decBtn.textContent = '−';
     decBtn.addEventListener('click', () => {
       setByPath(character, field, Math.max(min, current() - 1));
@@ -204,6 +202,8 @@ registerFieldType('counter', {
 
     const incBtn = document.createElement('button');
     incBtn.type = 'button';
+    incBtn.className = 'engine-counter__button';
+    incBtn.setAttribute('aria-label', `Aumentar ${label}`);
     incBtn.textContent = '+';
     incBtn.addEventListener('click', () => {
       setByPath(character, field, Math.min(max, current() + 1));
