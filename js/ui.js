@@ -2,7 +2,8 @@
 // Renderização e ligação (binding) da interface com o estado do personagem.
 // Não contém fórmulas — apenas exibe valores já calculados por calculations.js.
 import { state } from './state.js';
-import { ABILITIES, SKILLS, CURRENCY_KEYS } from './data.js';
+import { CURRENCY_KEYS } from './data.js';
+import { getAbilities, getSkills } from './engine/system.js';
 import { icons } from './icons.js';
 import {
   abilityModifier,
@@ -17,6 +18,7 @@ import {
   totalInventoryWeight,
   carryCapacity,
 } from './calculations.js';
+
 
 const $ = (id) => document.getElementById(id);
 
@@ -58,7 +60,7 @@ export function buildAbilities(character) {
   const grid = $('abilities-grid');
   const tpl = $('tpl-ability-card');
   grid.innerHTML = '';
-  ABILITIES.forEach((ability) => {
+  getAbilities().forEach((ability) => {
     const node = tpl.content.firstElementChild.cloneNode(true);
     node.dataset.ability = ability.key;
     node.querySelector('[data-el="label"]').textContent = ability.short;
@@ -80,7 +82,7 @@ export function buildAbilities(character) {
 
 export function refreshAbilities(character) {
   const grid = $('abilities-grid');
-  ABILITIES.forEach((ability) => {
+  getAbilities().forEach((ability) => {
     const node = grid.querySelector(`[data-ability="${ability.key}"]`);
     if (!node) return;
     const score = character.abilities[ability.key].score;
@@ -97,7 +99,7 @@ export function buildSkills(character) {
   const list = $('skills-list');
   const tpl = $('tpl-skill-row');
   list.innerHTML = '';
-  SKILLS.forEach((skill) => {
+  getSkills().forEach((skill) => {
     const node = tpl.content.firstElementChild.cloneNode(true);
     node.dataset.skill = skill.key;
     node.querySelector('[data-el="name"]').textContent = skill.label;
@@ -119,7 +121,7 @@ export function buildSkills(character) {
 
 export function refreshSkills(character) {
   const list = $('skills-list');
-  SKILLS.forEach((skill) => {
+  getSkills().forEach((skill) => {
     const node = list.querySelector(`[data-skill="${skill.key}"]`);
     if (!node) return;
     const entry = character.skills[skill.key] || {};

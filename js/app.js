@@ -8,12 +8,27 @@ import { initTheme, applyTheme, getAvailableThemes } from './theme.js';
 import { notify } from './notifications.js';
 import { confirmDialog } from './modal.js';
 import { roll, getHistory } from './dice.js';
-import { DICE_TYPES } from './data.js';
+import { loadSystem, getDiceSet } from './engine/system.js';
+import { loadLayout } from './engine/layout.js';
 
 const $ = (id) => document.getElementById(id);
 
-function init() {
+async function init() {
   initTheme();
+
+  // System.json define as regras (atributos, perícias, dados, fórmulas) — precisa
+  // estar carregado antes de qualquer personagem ser criado ou renderizado.
+  await loadSystem('./data/systems/dnd2024.system.json');
+
+  try {
+    // Layout.json ainda é apenas descritivo nesta versão: documenta a organização
+    // visual da ficha, mas a interface abaixo continua desenhada por ui.js/index.html.
+    // Um renderer genérico (engine/renderer.js) já existe e é usado pelo test-engine.html.
+    await loadLayout('./data/systems/dnd2024.layout.json');
+  } catch (err) {
+    console.warn('Layout descritivo não carregado (não afeta a ficha atual):', err);
+  }
+
   initTabs();
   ui.mountStaticIcons();
   ui.initGenericBindings();
@@ -160,7 +175,7 @@ function wireDiceTray() {
 function buildDiceButtons() {
   const container = $('dice-buttons');
   container.innerHTML = '';
-  DICE_TYPES.forEach((sides) => {
+  getDiceSet().forEach((sides) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'dice-button';
@@ -185,4 +200,7 @@ function renderDiceHistory() {
   });
 }
 
-init();
+init().catch((err) => {
+  console.error(err);
+  notify(`Erro ao iniciar a ficha: ${err.message}`, { type: 'error', duration: 8000 });
+});

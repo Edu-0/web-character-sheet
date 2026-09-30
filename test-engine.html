@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Validação da Engine — Sistema Fictício</title>
+<link rel="stylesheet" href="css/variables.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<style>
+  body { max-width: 720px; margin: 0 auto; padding: var(--space-6); }
+  .engine-section { margin-bottom: var(--space-5); }
+  .engine-grid .field { margin-bottom: var(--space-3); }
+  pre { background: var(--color-panel-alt); padding: var(--space-3); border-radius: var(--radius-sm); }
+</style>
+</head>
+<body>
+  <h1>Validação arquitetural — sistema fictício</h1>
+  <p>
+    Esta página carrega um <code>system.json</code>, <code>character.json</code> e
+    <code>layout.json</code> completamente diferentes de D&amp;D (atributos "Atributo A/B",
+    um recurso "Energia" e uma pool de dados), usando exatamente os mesmos módulos de
+    <code>js/engine/</code> usados (ou preparados para uso) pela ficha principal — nenhuma
+    linha do núcleo da engine foi alterada para este sistema existir.
+  </p>
+
+  <div id="engine-root"></div>
+
+  <div class="card engine-section">
+    <h2 class="card__title">Fórmulas calculadas pelo system.json</h2>
+    <pre id="formula-output"></pre>
+  </div>
+
+  <div class="card engine-section">
+    <h2 class="card__title">Resolver de dados (dicePool declarado no system.json)</h2>
+    <button type="button" id="btn-roll-pool" class="button button--primary">Rolar pool de ação (d6 + d8 + d8)</button>
+    <p id="pool-result"></p>
+  </div>
+
+  <script type="module" src="js/engine-test.js"></script>
+</body>
+</html>

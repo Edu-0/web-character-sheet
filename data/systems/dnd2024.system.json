@@ -1,0 +1,54 @@
+{
+  "id": "dnd2024",
+  "name": "D&D 5e (2024)",
+  "description": "Sistema de referência inicial da engine, baseado na estrutura de D&D 5e 2024.",
+
+  "abilities": [
+    { "key": "str", "label": "Força", "short": "FOR" },
+    { "key": "dex", "label": "Destreza", "short": "DES" },
+    { "key": "con", "label": "Constituição", "short": "CON" },
+    { "key": "int", "label": "Inteligência", "short": "INT" },
+    { "key": "wis", "label": "Sabedoria", "short": "SAB" },
+    { "key": "cha", "label": "Carisma", "short": "CAR" }
+  ],
+
+  "skills": [
+    { "key": "acrobatics", "label": "Acrobacia", "ability": "dex" },
+    { "key": "animalHandling", "label": "Adestrar Animais", "ability": "wis" },
+    { "key": "arcana", "label": "Arcanismo", "ability": "int" },
+    { "key": "athletics", "label": "Atletismo", "ability": "str" },
+    { "key": "deception", "label": "Enganação", "ability": "cha" },
+    { "key": "history", "label": "História", "ability": "int" },
+    { "key": "insight", "label": "Intuição", "ability": "wis" },
+    { "key": "intimidation", "label": "Intimidação", "ability": "cha" },
+    { "key": "investigation", "label": "Investigação", "ability": "int" },
+    { "key": "medicine", "label": "Medicina", "ability": "wis" },
+    { "key": "nature", "label": "Natureza", "ability": "int" },
+    { "key": "perception", "label": "Percepção", "ability": "wis" },
+    { "key": "performance", "label": "Atuação", "ability": "cha" },
+    { "key": "persuasion", "label": "Persuasão", "ability": "cha" },
+    { "key": "religion", "label": "Religião", "ability": "int" },
+    { "key": "sleightOfHand", "label": "Prestidigitação", "ability": "dex" },
+    { "key": "stealth", "label": "Furtividade", "ability": "dex" },
+    { "key": "survival", "label": "Sobrevivência", "ability": "wis" }
+  ],
+
+  "diceSet": [4, 6, 8, 10, 12, 20, 100],
+
+  "resources": {
+    "hitPoints": { "label": "Pontos de Vida", "hasCurrent": true, "hasMax": true, "hasTemp": true },
+    "hitDice": { "label": "Dados de Vida", "diceTypes": ["d6", "d8", "d10", "d12"] }
+  },
+
+  "formulas": {
+    "abilityModifier": "floor((value - 10) / 2)",
+    "proficiencyBonus": "2 + floor((level - 1) / 4)",
+    "savingThrow": "abilityModifier + if(proficient, proficiencyBonus, 0)",
+    "skillModifier": "abilityModifier + if(expertise, proficiencyBonus * 2, if(proficient, proficiencyBonus, 0))",
+    "passivePerception": "10 + perceptionModifier",
+    "initiative": "dexterityModifier + initiativeBonus",
+    "spellSaveDC": "8 + proficiencyBonus + spellAbilityModifier",
+    "spellAttackBonus": "proficiencyBonus + spellAbilityModifier",
+    "carryCapacity": "strengthScore * 7.5"
+  }
+}

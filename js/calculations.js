@@ -1,10 +1,12 @@
 // calculations.js
-// Todas as fórmulas derivadas da ficha ficam centralizadas aqui.
-import { SKILLS, CARRY_CAPACITY_PER_STR } from './data.js';
+// Resolve os valores derivados do personagem. Nenhuma fórmula de RPG fica
+// hardcoded aqui — cada cálculo delega para a fórmula nomeada equivalente no
+// system.json carregado (via engine/system.js). Trocar de sistema muda o
+// resultado sem tocar neste arquivo nem no restante da interface.
+import { getSkills, resolveFormula } from './engine/system.js';
 
 export function abilityModifier(score) {
-  const s = Number(score) || 0;
-  return Math.floor((s - 10) / 2);
+  return resolveFormula('abilityModifier', { value: Number(score) || 0 }) ?? 0;
 }
 
 export function formatModifier(mod) {
@@ -13,33 +15,36 @@ export function formatModifier(mod) {
 
 export function proficiencyBonus(level) {
   const lvl = Math.max(1, Math.min(20, Number(level) || 1));
-  return 2 + Math.floor((lvl - 1) / 4);
+  return resolveFormula('proficiencyBonus', { level: lvl }) ?? 0;
 }
 
 export function savingThrowModifier(character, abilityKey) {
   const score = character.abilities[abilityKey]?.score ?? 10;
   const mod = abilityModifier(score);
-  const proficient = character.savingThrows?.[abilityKey]?.proficient;
+  const proficient = Boolean(character.savingThrows?.[abilityKey]?.proficient);
   const pb = proficiencyBonus(character.identity.level);
-  return mod + (proficient ? pb : 0);
+  return resolveFormula('savingThrow', { abilityModifier: mod, proficient, proficiencyBonus: pb }) ?? mod;
 }
 
 export function skillModifier(character, skillKey) {
-  const skillDef = SKILLS.find((s) => s.key === skillKey);
+  const skillDef = getSkills().find((s) => s.key === skillKey);
   if (!skillDef) return 0;
   const entry = character.skills?.[skillKey] || {};
   const abilityKey = entry.ability || skillDef.ability;
   const score = character.abilities[abilityKey]?.score ?? 10;
   const mod = abilityModifier(score);
   const pb = proficiencyBonus(character.identity.level);
-  let bonus = 0;
-  if (entry.expertise) bonus = pb * 2;
-  else if (entry.proficient) bonus = pb;
-  return mod + bonus;
+  return resolveFormula('skillModifier', {
+    abilityModifier: mod,
+    proficient: Boolean(entry.proficient),
+    expertise: Boolean(entry.expertise),
+    proficiencyBonus: pb,
+  }) ?? mod;
 }
 
 export function passivePerception(character) {
-  return 10 + skillModifier(character, 'perception');
+  const perceptionModifier = skillModifier(character, 'perception');
+  return resolveFormula('passivePerception', { perceptionModifier }) ?? (10 + perceptionModifier);
 }
 
 export function passiveInvestigation(character) {
@@ -51,23 +56,25 @@ export function passiveInsight(character) {
 }
 
 export function initiativeModifier(character) {
-  const dexMod = abilityModifier(character.abilities.dex?.score);
-  const misc = Number(character.combat?.initiativeBonus) || 0;
-  return dexMod + misc;
+  const dexterityModifier = abilityModifier(character.abilities.dex?.score);
+  const initiativeBonus = Number(character.combat?.initiativeBonus) || 0;
+  return resolveFormula('initiative', { dexterityModifier, initiativeBonus }) ?? dexterityModifier;
 }
 
 export function spellSaveDC(character) {
   const abilityKey = character.spellcasting?.ability;
   if (!abilityKey) return null;
-  const mod = abilityModifier(character.abilities[abilityKey]?.score);
-  return 8 + proficiencyBonus(character.identity.level) + mod;
+  const spellAbilityModifier = abilityModifier(character.abilities[abilityKey]?.score);
+  const pb = proficiencyBonus(character.identity.level);
+  return resolveFormula('spellSaveDC', { proficiencyBonus: pb, spellAbilityModifier }) ?? null;
 }
 
 export function spellAttackBonus(character) {
   const abilityKey = character.spellcasting?.ability;
   if (!abilityKey) return null;
-  const mod = abilityModifier(character.abilities[abilityKey]?.score);
-  return proficiencyBonus(character.identity.level) + mod;
+  const spellAbilityModifier = abilityModifier(character.abilities[abilityKey]?.score);
+  const pb = proficiencyBonus(character.identity.level);
+  return resolveFormula('spellAttackBonus', { proficiencyBonus: pb, spellAbilityModifier }) ?? null;
 }
 
 export function totalInventoryWeight(character) {
@@ -76,8 +83,8 @@ export function totalInventoryWeight(character) {
 }
 
 export function carryCapacity(character) {
-  const str = character.abilities.str?.score ?? 10;
-  return str * CARRY_CAPACITY_PER_STR;
+  const strengthScore = character.abilities.str?.score ?? 10;
+  return resolveFormula('carryCapacity', { strengthScore }) ?? 0;
 }
 
 export function totalCurrencyValueInGp(character) {

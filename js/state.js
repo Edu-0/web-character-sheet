@@ -1,18 +1,29 @@
 // state.js
 // Fonte única da verdade dos dados do personagem. Independente de HTML/CSS.
-import { SKILLS, createId } from './data.js';
+// As chaves de atributos/perícias vêm do system.json carregado (engine/system.js),
+// não de uma lista fixa de D&D — outro sistema gera outra forma de personagem.
+import { createId } from './data.js';
+import { getAbilities, getSkills } from './engine/system.js';
+
+function defaultAbilityScores() {
+  const out = {};
+  getAbilities().forEach((a) => {
+    out[a.key] = { score: 10 };
+  });
+  return out;
+}
 
 function defaultSavingThrows() {
   const out = {};
-  ['str', 'dex', 'con', 'int', 'wis', 'cha'].forEach((k) => {
-    out[k] = { proficient: false };
+  getAbilities().forEach((a) => {
+    out[a.key] = { proficient: false };
   });
   return out;
 }
 
 function defaultSkills() {
   const out = {};
-  SKILLS.forEach((s) => {
+  getSkills().forEach((s) => {
     out[s.key] = { proficient: false, expertise: false };
   });
   return out;
@@ -37,14 +48,7 @@ export function createDefaultCharacter() {
       inspiration: false,
       portrait: null,
     },
-    abilities: {
-      str: { score: 10 },
-      dex: { score: 10 },
-      con: { score: 10 },
-      int: { score: 10 },
-      wis: { score: 10 },
-      cha: { score: 10 },
-    },
+    abilities: defaultAbilityScores(),
     savingThrows: defaultSavingThrows(),
     skills: defaultSkills(),
     combat: {
@@ -91,7 +95,9 @@ export function createDefaultCharacter() {
 
 class CharacterState {
   constructor() {
-    this.character = createDefaultCharacter();
+    // Vazio até state.load(...) ser chamado (após o system.json carregar em app.js) —
+    // criar o personagem padrão aqui exigiria abilities/skills do sistema já carregados.
+    this.character = {};
     this.listeners = new Set();
   }
 

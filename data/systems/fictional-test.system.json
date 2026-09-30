@@ -1,0 +1,32 @@
+{
+  "id": "fictional-test",
+  "name": "Sistema Fictício de Teste",
+  "description": "Sistema deliberadamente diferente de D&D, usado apenas para validar que o núcleo da engine (system.js, formula.js, fields.js, dice-resolver.js, renderer.js) não assume nenhuma regra específica de RPG. Não é implementado na ficha principal.",
+
+  "abilities": [
+    { "key": "attributeA", "label": "Atributo A", "short": "ATA" },
+    { "key": "attributeB", "label": "Atributo B", "short": "ATB" }
+  ],
+
+  "skills": [
+    { "key": "customSkill", "label": "Perícia Customizada", "ability": "attributeA" }
+  ],
+
+  "diceSet": [6, 8],
+
+  "resources": {
+    "energy": { "label": "Energia", "hasCurrent": true, "hasMax": true }
+  },
+
+  "formulas": {
+    "abilityModifier": "floor(value / 4)",
+    "customSkillBonus": "abilityModifier + if(trained, 2, 0)"
+  },
+
+  "dicePools": {
+    "actionPool": {
+      "label": "Pool de Ação",
+      "dice": [{ "sides": 6 }, { "sides": 8 }, { "sides": 8 }]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "fictional-test-layout",
+  "system": "fictional-test",
+  "pages": [
+    {
+      "id": "main",
+      "title": "Personagem (Sistema Fictício)",
+      "layout": { "type": "grid", "columns": 12, "gap": 12 },
+      "sections": [
+        {
+          "id": "core",
+          "title": "Atributos e Recursos",
+          "components": [
+            { "type": "text", "field": "name", "label": "Nome", "span": 12 },
+            { "type": "number", "field": "attributes.attributeA", "label": "Atributo A", "span": 6 },
+            { "type": "number", "field": "attributes.attributeB", "label": "Atributo B", "span": 6 },
+            { "type": "resource", "field": "energy", "label": "Energia", "span": 8 },
+            { "type": "boolean", "field": "customSkillTrained", "label": "Perícia Customizada Treinada", "span": 4 }
+          ]
+        }
+      ]
+    }
+  ]
+}

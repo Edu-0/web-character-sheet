@@ -1,0 +1,191 @@
+{
+  "id": "dnd2024-layout",
+  "system": "dnd2024",
+  "description": "Descrição da organização visual atual da ficha. Ainda não é consumida pelo renderer genérico (js/ui.js continua desenhando esta versão da interface) — existe para documentar a separação entre dados/regras e apresentação, e para servir de ponto de partida quando a interface migrar para o renderer genérico (engine/renderer.js).",
+
+  "pages": [
+    {
+      "id": "identity",
+      "title": "Identidade",
+      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "sections": [
+        {
+          "id": "identity-header",
+          "title": "Identidade",
+          "components": [
+            { "type": "text", "field": "identity.name", "label": "Nome do personagem", "span": 12 },
+            { "type": "text", "field": "identity.player", "label": "Jogador", "span": 4 },
+            { "type": "text", "field": "identity.class", "label": "Classe", "span": 4 },
+            { "type": "number", "field": "identity.level", "label": "Nível", "span": 4 },
+            { "type": "text", "field": "identity.species", "label": "Espécie", "span": 4 },
+            { "type": "text", "field": "identity.background", "label": "Antecedente", "span": 4 },
+            { "type": "text", "field": "identity.alignment", "label": "Alinhamento", "span": 4 },
+            { "type": "number", "field": "identity.experience", "label": "Experiência", "span": 6 },
+            { "type": "boolean", "field": "identity.inspiration", "label": "Inspiração", "span": 6 }
+          ]
+        },
+        {
+          "id": "vitals",
+          "title": "Estado Vital",
+          "components": [
+            { "type": "number", "field": "combat.ac", "label": "Classe de Armadura", "span": 3 },
+            { "type": "number", "field": "combat.speed", "label": "Deslocamento", "span": 3 },
+            { "type": "number", "field": "combat.hpCurrent", "label": "PV Atual", "span": 2 },
+            { "type": "number", "field": "combat.hpMax", "label": "PV Máximo", "span": 2 },
+            { "type": "number", "field": "combat.hpTemp", "label": "PV Temporário", "span": 2 }
+          ],
+          "notes": "combat.hp* ainda são campos legados 'planos' no character.json (não usam o tipo 'resource' current/max ainda). Migrar para um recurso único 'combat.hitPoints' é um passo futuro documentado no resumo da arquitetura."
+        },
+        {
+          "id": "abilities",
+          "title": "Atributos",
+          "repeatFor": "system.abilities",
+          "components": [
+            { "type": "number", "field": "abilities.{key}.score", "label": "{label}", "span": 4 }
+          ]
+        },
+        {
+          "id": "skills",
+          "title": "Perícias",
+          "repeatFor": "system.skills",
+          "components": [
+            { "type": "boolean", "field": "skills.{key}.proficient", "label": "{label}", "span": 12 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "combat",
+      "title": "Combate",
+      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "sections": [
+        {
+          "id": "attacks",
+          "title": "Ataques e Ações",
+          "components": [
+            { "type": "list", "field": "combat.attacks", "label": "Ataques", "span": 12,
+              "itemSchema": { "name": "text", "bonus": "text", "damage": "text", "damageType": "text", "range": "text", "properties": "text", "notes": "textarea" } }
+          ]
+        },
+        {
+          "id": "conditions",
+          "title": "Condições Ativas",
+          "components": [
+            { "type": "tagList", "field": "combat.conditions", "label": "Condições", "span": 12 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "features",
+      "title": "Habilidades",
+      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "sections": [
+        {
+          "id": "features-list",
+          "title": "Habilidades e Recursos",
+          "components": [
+            { "type": "list", "field": "features", "label": "Habilidades", "span": 12,
+              "itemSchema": { "name": "text", "source": "select", "usesCurrent": "number", "usesMax": "number", "description": "textarea", "notes": "textarea" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spells",
+      "title": "Magias",
+      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "sections": [
+        {
+          "id": "spellcasting-summary",
+          "title": "Conjuração",
+          "components": [
+            { "type": "select", "field": "spellcasting.ability", "label": "Atributo de Conjuração", "span": 4 },
+            { "type": "computed", "formula": "spellSaveDC", "label": "CD de Magia", "span": 4 },
+            { "type": "computed", "formula": "spellAttackBonus", "label": "Bônus de Ataque", "span": 4 }
+          ]
+        },
+        {
+          "id": "spell-slots",
+          "title": "Espaços de Magia",
+          "components": [
+            { "type": "slotTracker", "field": "spellcasting.slots", "label": "Espaços por nível", "span": 12 }
+          ]
+        },
+        {
+          "id": "spell-list",
+          "title": "Magias",
+          "components": [
+            { "type": "list", "field": "spellcasting.spells", "label": "Magias", "span": 12,
+              "itemSchema": { "name": "text", "level": "select", "school": "text", "prepared": "boolean", "castingTime": "text", "range": "text", "duration": "text", "components": "text", "description": "textarea" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inventory",
+      "title": "Inventário",
+      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "sections": [
+        {
+          "id": "currency",
+          "title": "Moedas",
+          "components": [
+            { "type": "number", "field": "inventory.currency.pp", "label": "PP", "span": 2 },
+            { "type": "number", "field": "inventory.currency.gp", "label": "PO", "span": 2 },
+            { "type": "number", "field": "inventory.currency.ep", "label": "PE", "span": 2 },
+            { "type": "number", "field": "inventory.currency.sp", "label": "PP(prata)", "span": 2 },
+            { "type": "number", "field": "inventory.currency.cp", "label": "PC", "span": 2 }
+          ]
+        },
+        {
+          "id": "items",
+          "title": "Itens",
+          "components": [
+            { "type": "table", "field": "inventory.items", "label": "Itens", "span": 12,
+              "itemSchema": { "name": "text", "qty": "number", "weight": "number", "value": "number", "category": "select", "equipped": "boolean", "notes": "text" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "personality",
+      "title": "Personalidade",
+      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "sections": [
+        {
+          "id": "personality-fields",
+          "title": "Personalidade",
+          "components": [
+            { "type": "textarea", "field": "personality.traits", "label": "Traços de Personalidade", "span": 6 },
+            { "type": "textarea", "field": "personality.ideals", "label": "Ideais", "span": 6 },
+            { "type": "textarea", "field": "personality.bonds", "label": "Vínculos", "span": 6 },
+            { "type": "textarea", "field": "personality.flaws", "label": "Defeitos", "span": 6 },
+            { "type": "textarea", "field": "personality.appearance", "label": "Aparência", "span": 12 },
+            { "type": "textarea", "field": "personality.backstory", "label": "História", "span": 12 },
+            { "type": "textarea", "field": "personality.allies", "label": "Aliados e Organizações", "span": 12 },
+            { "type": "textarea", "field": "personality.notes", "label": "Notas", "span": 12 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "proficiencies",
+      "title": "Proficiências",
+      "layout": { "type": "grid", "columns": 12, "gap": 16 },
+      "sections": [
+        {
+          "id": "proficiency-lists",
+          "title": "Proficiências e Idiomas",
+          "components": [
+            { "type": "tagList", "field": "proficiencies.armor", "label": "Armaduras", "span": 6 },
+            { "type": "tagList", "field": "proficiencies.weapons", "label": "Armas", "span": 6 },
+            { "type": "tagList", "field": "proficiencies.tools", "label": "Ferramentas", "span": 6 },
+            { "type": "tagList", "field": "proficiencies.languages", "label": "Idiomas", "span": 6 },
+            { "type": "tagList", "field": "proficiencies.other", "label": "Outras Proficiências", "span": 12 }
+          ]
+        }
+      ]
+    }
+  ]
+}
