@@ -2,6 +2,7 @@
 // A estrutura, o conteúdo e as regras vêm dos JSONs; este módulo cuida somente
 // da composição acessível e do vínculo entre componentes e personagem.
 import { getFieldType } from './fields.js';
+import './advanced-fields.js';
 
 export function renderSheet(host, layout, character, options = {}) {
   host.innerHTML = '';
@@ -21,6 +22,19 @@ export function renderSheet(host, layout, character, options = {}) {
   const panels = element('div', 'engine-panels');
   const tabs = [];
   const cleanups = [];
+  const refreshers = new Set();
+  const componentOptions = {
+    ...options,
+    registerRefresh(refresh) {
+      refreshers.add(refresh);
+      return () => refreshers.delete(refresh);
+    },
+    onChange(updatedCharacter, component) {
+      title.textContent = characterName(updatedCharacter);
+      refreshers.forEach((refresh) => refresh());
+      options.onChange?.(updatedCharacter, component);
+    },
+  };
 
   (layout.tabs || []).forEach((tab, index) => {
     const tabId = `engine-tab-${layout.id}-${tab.id}`;
@@ -31,13 +45,7 @@ export function renderSheet(host, layout, character, options = {}) {
     button.setAttribute('role', 'tab');
     button.setAttribute('aria-controls', panelId);
 
-    const panel = renderTab(tab, character, {
-      ...options,
-      onChange: (updatedCharacter, component) => {
-        title.textContent = characterName(updatedCharacter);
-        options.onChange?.(updatedCharacter, component);
-      },
-    });
+    const panel = renderTab(tab, character, componentOptions);
     panel.id = panelId;
     panel.setAttribute('role', 'tabpanel');
     panel.setAttribute('aria-labelledby', tabId);
@@ -85,6 +93,7 @@ export function renderSheet(host, layout, character, options = {}) {
     },
     destroy() {
       cleanups.forEach((cleanup) => cleanup());
+      refreshers.clear();
       host.innerHTML = '';
     },
   };
@@ -159,6 +168,8 @@ function renderComponent(component, character, options) {
   fieldType.render(wrapper, {
     ...component,
     character,
+    system: options.system,
+    registerRefresh: options.registerRefresh,
     dieScale: options.system?.dieScale || options.system?.diceSet,
     onChange: () => options.onChange?.(character, component),
   });

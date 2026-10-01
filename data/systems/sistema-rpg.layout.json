@@ -1,7 +1,7 @@
 {
   "id": "sistema-rpg-layout",
   "system": "sistema-rpg",
-  "description": "Layout descritivo (páginas/seções/campos) para o Sistema de RPG. Documenta a organização visual esperada; o teste funcional (test-dice-pool.html) renderiza um subconjunto real destes campos através dos componentes genéricos do engine.",
+  "description": "Layout declarativo da ficha do Sistema de RPG, organizado em abas, seções, containers e componentes genéricos.",
   "schemaVersion": 1,
   "tabs": [
     {
@@ -205,9 +205,19 @@
                   "field": "specializations",
                   "label": "Especializações",
                   "itemSchema": {
-                    "name": "text",
-                    "die": "die",
-                    "techniqueIds": "reference"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "die": {
+                      "type": "die",
+                      "label": "Dado"
+                    },
+                    "techniqueIds": {
+                      "type": "reference",
+                      "label": "Técnicas relacionadas",
+                      "multiple": true
+                    }
                   }
                 }
               ]
@@ -238,13 +248,34 @@
                   "label": "Essências",
                   "fixedLength": 3,
                   "itemSchema": {
-                    "name": "text",
-                    "description": "textarea",
-                    "die": "die",
-                    "gainActionResourceCondition": "textarea",
-                    "spendActionResourceAbility": "textarea",
-                    "passiveProperties": "textarea",
-                    "activeProperties": "textarea"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    },
+                    "die": {
+                      "type": "die",
+                      "label": "Dado"
+                    },
+                    "gainActionResourceCondition": {
+                      "type": "textarea",
+                      "label": "Como ganha RA"
+                    },
+                    "spendActionResourceAbility": {
+                      "type": "textarea",
+                      "label": "Como gasta RA"
+                    },
+                    "passiveProperties": {
+                      "type": "textarea",
+                      "label": "Propriedades passivas"
+                    },
+                    "activeProperties": {
+                      "type": "textarea",
+                      "label": "Propriedades ativas"
+                    }
                   }
                 }
               ]
@@ -309,22 +340,71 @@
                   "field": "techniques",
                   "label": "Técnicas",
                   "itemSchema": {
-                    "name": "text",
-                    "specializationId": "reference",
-                    "maxDie": "die",
-                    "currentDie": "die",
-                    "energyCost": "number",
-                    "usage": "text",
-                    "effect": "textarea",
-                    "roll": "text",
-                    "resolution": "text",
-                    "activationTime": "text",
-                    "duration": "text",
-                    "concentration": "boolean",
-                    "bonusAction": "boolean",
-                    "reaction": "boolean",
-                    "limitations": "textarea",
-                    "reverse": "textarea"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "specializationId": {
+                      "type": "select",
+                      "label": "Especialização",
+                      "optionsFrom": "character.specializations"
+                    },
+                    "maxDie": {
+                      "type": "die",
+                      "label": "Dado máximo"
+                    },
+                    "currentDie": {
+                      "type": "die",
+                      "label": "Dado atual"
+                    },
+                    "energyCost": {
+                      "type": "number",
+                      "label": "Custo de Energia"
+                    },
+                    "usage": {
+                      "type": "text",
+                      "label": "Uso"
+                    },
+                    "effect": {
+                      "type": "textarea",
+                      "label": "Efeito"
+                    },
+                    "roll": {
+                      "type": "text",
+                      "label": "Rolagem"
+                    },
+                    "resolution": {
+                      "type": "text",
+                      "label": "Resolução"
+                    },
+                    "activationTime": {
+                      "type": "text",
+                      "label": "Tempo de ativação"
+                    },
+                    "duration": {
+                      "type": "text",
+                      "label": "Duração"
+                    },
+                    "concentration": {
+                      "type": "boolean",
+                      "label": "Concentração"
+                    },
+                    "bonusAction": {
+                      "type": "boolean",
+                      "label": "Ação bônus"
+                    },
+                    "reaction": {
+                      "type": "boolean",
+                      "label": "Reação"
+                    },
+                    "limitations": {
+                      "type": "textarea",
+                      "label": "Limitações"
+                    },
+                    "reverse": {
+                      "type": "textarea",
+                      "label": "Reverso"
+                    }
                   }
                 }
               ]
@@ -353,14 +433,46 @@
                   "field": "inventory",
                   "label": "Armas, Armaduras e Equipamentos",
                   "itemSchema": {
-                    "name": "text",
-                    "type": "select",
-                    "die": "die",
-                    "weight": "number",
-                    "quantity": "number",
-                    "properties": "text",
-                    "requirements": "text",
-                    "state": "text"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "type": {
+                      "type": "select",
+                      "label": "Tipo",
+                      "options": [
+                        "Arma",
+                        "Armadura",
+                        "Equipamento",
+                        "Consumível",
+                        "Ferramenta",
+                        "Outro"
+                      ]
+                    },
+                    "die": {
+                      "type": "die",
+                      "label": "Dado"
+                    },
+                    "weight": {
+                      "type": "number",
+                      "label": "Peso"
+                    },
+                    "quantity": {
+                      "type": "number",
+                      "label": "Quantidade"
+                    },
+                    "properties": {
+                      "type": "text",
+                      "label": "Propriedades"
+                    },
+                    "requirements": {
+                      "type": "text",
+                      "label": "Requisitos"
+                    },
+                    "state": {
+                      "type": "text",
+                      "label": "Estado"
+                    }
                   }
                 }
               ]
@@ -386,14 +498,26 @@
               },
               "components": [
                 {
-                  "type": "list",
+                  "type": "stateList",
                   "field": "states.wear",
                   "label": "Desgaste",
                   "itemSchema": {
-                    "name": "text",
-                    "sides": "die",
-                    "temporary": "boolean",
-                    "source": "text"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "sides": {
+                      "type": "die",
+                      "label": "Dado"
+                    },
+                    "temporary": {
+                      "type": "boolean",
+                      "label": "Temporário"
+                    },
+                    "source": {
+                      "type": "text",
+                      "label": "Origem"
+                    }
                   }
                 }
               ]
@@ -413,12 +537,18 @@
               },
               "components": [
                 {
-                  "type": "list",
+                  "type": "stateList",
                   "field": "states.trauma",
                   "label": "Trauma",
                   "itemSchema": {
-                    "name": "text",
-                    "sides": "die"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "sides": {
+                      "type": "die",
+                      "label": "Dado"
+                    }
                   }
                 }
               ]
@@ -438,13 +568,22 @@
               },
               "components": [
                 {
-                  "type": "list",
+                  "type": "stateList",
                   "field": "states.complications",
                   "label": "Complicações",
                   "itemSchema": {
-                    "name": "text",
-                    "sides": "die",
-                    "note": "text"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "sides": {
+                      "type": "die",
+                      "label": "Dado"
+                    },
+                    "note": {
+                      "type": "text",
+                      "label": "Observação"
+                    }
                   }
                 }
               ]
@@ -464,13 +603,22 @@
               },
               "components": [
                 {
-                  "type": "list",
+                  "type": "stateList",
                   "field": "states.characteristics",
                   "label": "Características",
                   "itemSchema": {
-                    "name": "text",
-                    "sides": "die",
-                    "note": "text"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "sides": {
+                      "type": "die",
+                      "label": "Dado"
+                    },
+                    "note": {
+                      "type": "text",
+                      "label": "Observação"
+                    }
                   }
                 }
               ]
@@ -502,12 +650,33 @@
                 {
                   "type": "computed",
                   "formula": "carryCapacity",
-                  "label": "Carga Máxima (kg)"
+                  "label": "Carga Máxima (kg)",
+                  "variables": {
+                    "strengthSides": {
+                      "field": "attributes.strength"
+                    },
+                    "carryMultiplier": {
+                      "system": "carryMultiplier"
+                    }
+                  }
                 },
                 {
                   "type": "computed",
                   "formula": "initiative",
-                  "label": "Iniciativa"
+                  "label": "Iniciativa",
+                  "mode": "roll",
+                  "actionLabel": "Rolar iniciativa",
+                  "variables": {
+                    "dexterityRoll": {
+                      "rollField": "attributes.dexterity"
+                    },
+                    "willpowerRoll": {
+                      "rollField": "attributes.willpower"
+                    },
+                    "velocity": {
+                      "field": "velocity"
+                    }
+                  }
                 },
                 {
                   "type": "boolean",
@@ -521,7 +690,7 @@
         {
           "id": "pool-builder",
           "title": "Montagem de Pool e Rolagem",
-          "note": "Renderizado de fato pelo test-dice-pool.html via engine/pool.js + engine/resolution.js.",
+          "note": "Selecione Traços do personagem, role a Pool e resolva a ação contra uma oposição.",
           "containers": [
             {
               "id": "pool-builder-container",
@@ -533,7 +702,52 @@
               "components": [
                 {
                   "type": "poolBuilder",
-                  "label": "Pool de Ação"
+                  "label": "Pool de Ação",
+                  "traitSources": [
+                    {
+                      "from": "system",
+                      "collection": "attributes",
+                      "id": "attribute:{key}",
+                      "label": "{label} (Atributo)",
+                      "sides": "attributes.{key}"
+                    },
+                    {
+                      "kind": "field",
+                      "id": "existence",
+                      "label": "Dado de Existência",
+                      "field": "existenceDie"
+                    },
+                    {
+                      "kind": "entries",
+                      "id": "skill:{key}",
+                      "label": "{key} (Perícia)",
+                      "field": "skills"
+                    },
+                    {
+                      "from": "character",
+                      "collection": "specializations",
+              "require": "name",
+                      "id": "specialization:{id}",
+                      "label": "{name} (Especialização)",
+                      "sides": "die"
+                    },
+                    {
+                      "from": "character",
+                      "collection": "essences",
+              "require": "name",
+                      "id": "essence:{id}",
+                      "label": "{name} (Essência)",
+                      "sides": "die"
+                    },
+                    {
+                      "from": "character",
+                      "collection": "techniques",
+              "require": "name",
+                      "id": "technique:{id}",
+                      "label": "{name} (Técnica)",
+                      "sides": "currentDie"
+                    }
+                  ]
                 }
               ]
             }
@@ -561,15 +775,50 @@
                   "field": "inventory",
                   "label": "Inventário",
                   "itemSchema": {
-                    "name": "text",
-                    "description": "text",
-                    "type": "select",
-                    "die": "die",
-                    "weight": "number",
-                    "quantity": "number",
-                    "properties": "text",
-                    "requirements": "text",
-                    "state": "text"
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "text",
+                      "label": "Descrição"
+                    },
+                    "type": {
+                      "type": "select",
+                      "label": "Tipo",
+                      "options": [
+                        "Arma",
+                        "Armadura",
+                        "Equipamento",
+                        "Consumível",
+                        "Ferramenta",
+                        "Outro"
+                      ]
+                    },
+                    "die": {
+                      "type": "die",
+                      "label": "Dado"
+                    },
+                    "weight": {
+                      "type": "number",
+                      "label": "Peso"
+                    },
+                    "quantity": {
+                      "type": "number",
+                      "label": "Quantidade"
+                    },
+                    "properties": {
+                      "type": "text",
+                      "label": "Propriedades"
+                    },
+                    "requirements": {
+                      "type": "text",
+                      "label": "Requisitos"
+                    },
+                    "state": {
+                      "type": "text",
+                      "label": "Estado"
+                    }
                   }
                 }
               ]

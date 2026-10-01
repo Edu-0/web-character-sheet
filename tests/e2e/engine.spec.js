@@ -19,3 +19,20 @@ test('renderer genérico consome o schema Tabs → Sections → Containers → C
   await expect(page.locator('#formula-output')).toContainText('abilityModifier(Atributo A = 20) = 5');
   expect(errors).toEqual([]);
 });
+
+test('página de prova da Pool continua carregando e resolvendo uma ação', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  await page.goto('/test-dice-pool.html');
+  await expect(page.locator('#character-summary')).toContainText('Kaelen');
+  await page.locator('#trait-checklist input').first().check();
+  await page.locator('#btn-roll-pool').click();
+  await expect(page.locator('#pool-result')).toContainText('Peso');
+  await page.locator('#opponent-weight-manual').fill('8');
+  await page.locator('#btn-resolve').click();
+  await expect(page.locator('#resolution-result')).toContainText('Resultado');
+  expect(errors).toEqual([]);
+});

@@ -10,6 +10,7 @@ test.beforeEach(async ({ page }) => {
     if (message.type() === 'error') errors.push(message.text());
   });
   await page.goto('/');
+  await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)', { timeout: 15_000 });
   await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
   await page.locator('#systems-list .library-card').filter({ hasText: 'Sistema de RPG' }).getByRole('button', { name: 'Abrir' }).click();
   await expect(page.locator('.engine-sheet')).toBeVisible();
@@ -24,20 +25,20 @@ test('monta abas acessíveis e persiste campos do sistema-rpg', async ({ page })
   await expect(tabs).toHaveCount(13);
   await expect(page.getByRole('tab', { name: 'Identidade' })).toHaveAttribute('aria-selected', 'true');
 
-  const name = page.getByLabel('Nome', { exact: true });
+  const name = page.locator('.engine-panel:not([hidden])').getByLabel('Nome', { exact: true });
   await name.fill('Aurora Declarativa');
   await expect(page.locator('.engine-sheet__title')).toHaveText('Aurora Declarativa');
   await expect(page.locator('#shell-current-character')).toHaveText('Aurora Declarativa');
 
   await page.getByRole('tab', { name: 'Atributos' }).click();
-  await expect(page.getByLabel('Força')).toBeVisible();
-  await page.getByLabel('Força').selectOption('10');
+  await expect(page.locator('.engine-panel:not([hidden]) label.field').filter({ hasText: /^Força/ }).locator('select')).toBeVisible();
+  await page.locator('.engine-panel:not([hidden]) label.field').filter({ hasText: /^Força/ }).locator('select').selectOption('10');
 
   await page.reload();
   await expect(page.getByRole('tab', { name: 'Atributos' })).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByLabel('Força')).toHaveValue('10');
+  await expect(page.locator('.engine-panel:not([hidden]) label.field').filter({ hasText: /^Força/ }).locator('select')).toHaveValue('10');
   await page.getByRole('tab', { name: 'Identidade' }).click();
-  await expect(page.getByLabel('Nome', { exact: true })).toHaveValue('Aurora Declarativa');
+  await expect(page.locator('.engine-panel:not([hidden])').getByLabel('Nome', { exact: true })).toHaveValue('Aurora Declarativa');
 });
 
 test('navega pelas abas do engine com teclado', async ({ page }) => {
