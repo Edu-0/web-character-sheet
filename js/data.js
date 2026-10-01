@@ -29,6 +29,9 @@ export const PALETTES = [
   { key: 'classic', label: 'Clássico', description: 'Papel e bronze, para uma ficha de aventura clássica.' },
   { key: 'editorial', label: 'Editorial', description: 'Tons neutros e azul, com foco na leitura.' },
   { key: 'forest', label: 'Floresta', description: 'Verde profundo e cobre, com uma atmosfera natural.' },
+  { key: 'ruby', label: 'Rubi', description: 'Vermelho e vinho sobre tons suaves e quentes.' },
+  { key: 'monochrome', label: 'Preto e branco', description: 'Preto, branco e cinza, com uma leitura sóbria.' },
+  { key: 'petals', label: 'Pétalas', description: 'Rosa, malva e lilás, delicados como um jardim florido.' },
 ];
 
 

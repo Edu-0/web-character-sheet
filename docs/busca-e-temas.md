@@ -39,12 +39,14 @@ D&D usa um único índice para a apresentação estática, a modular e a compara
 
 ## Aparência
 
-Em **Configurações**, a paleta (Clássico, Editorial ou Floresta) e o modo de leitura (Claro ou Escuro) são escolhas independentes. O botão do cabeçalho alterna somente o modo. Ambas as preferências são gravadas em `ficha-rpg:settings`, preservando as outras configurações. Preferências antigas com apenas `theme` mantêm esse modo e usam Clássico. Chaves desconhecidas voltam a Clássico/Escuro.
+Em **Configurações**, a paleta (Clássico, Editorial, Floresta, Rubi, Preto e branco ou Pétalas) e o modo de leitura (Claro ou Escuro) são escolhas independentes. Rubi usa vermelho/vinho; Preto e branco usa tons de cinza inclusive nos estados da interface, que continuam identificados por texto; Pétalas usa rosa, malva e lilás. O botão do cabeçalho alterna somente o modo. Ambas as preferências são gravadas em `ficha-rpg:settings`, preservando as outras configurações. Preferências antigas com apenas `theme` mantêm esse modo e usam Clássico. Chaves desconhecidas voltam a Clássico/Escuro.
 
 `js/theme.js` aplica `data-palette` e `data-theme` no elemento raiz. Os tokens ficam em `css/variables.css`; a paleta escolhida vale para o shell e para as duas fichas. A variante de layout `editorial` define tipografia e hierarquia, sem substituir cores. Adicionar uma paleta requer registrar a opção em `js/data.js`, definir seus tokens nos dois modos e acrescentar a amostra em `css/appearance-search.css`. As cores de sucesso, perigo e informação mantêm seus papéis semânticos.
 
 ## Verificação
 
-Os testes atuais de busca e temas ficam em `tests/e2e/search-themes.spec.js`. Cobrem as três apresentações D&D, cálculos atualizados, perícias implícitas sem alteração de dados, cartões recolhidos, teclado, conteúdo sem acentos, troca de personagem, sistema importado, persistência e as seis combinações de cores. Também conferem contraste dos tokens de texto/rótulos e largura nas fichas e configurações em telas menores. Capturas ficam em `test-results/`, sem serem versionadas.
+Os testes atuais de busca e temas ficam em `tests/e2e/search-themes.spec.js`. Cobrem as três apresentações D&D, cálculos atualizados, perícias implícitas sem alteração de dados, cartões recolhidos, teclado, conteúdo sem acentos, troca de personagem, sistema importado, persistência e as doze combinações de cores. Também conferem contraste dos tokens de texto/rótulos e largura nas fichas e configurações em telas menores. Capturas ficam em `test-results/`, sem serem versionadas.
+
+Em **Configurações**, **Apresentação dos dados** alterna entre texto (padrão) e ícone vetorial com texto. **Ornamentos da ficha** oferece nove artes, combinações prontas, três posições e intensidade, com ativação independente. Ambas as escolhas persistem separadamente das cores. Consulte [Vetores e ornamentos na interface](vetores-interface.md) para os locais cobertos, o contrato e as limitações; os testes específicos ficam em `tests/e2e/artwork.spec.js`.
 
 Execute `npx playwright test tests/e2e/search-themes.spec.js` para essa cobertura ou `npm run test:e2e` para a regressão completa. O resultado de uma execução precisa ser relatado separadamente: a existência dos testes não garante que uma alteração posterior passe.

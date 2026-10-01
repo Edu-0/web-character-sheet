@@ -4,6 +4,8 @@ A referência é o livro fornecido em `docs/references/Sistema RPG/conteudo-livr
 
 ## Perícias
 
+As Configurações oferecem dados em texto ou ícone vetorial com texto, usando as artes selecionadas do livro. Os controles de Traços, a seleção de fontes e os resultados de Pool recebem esses indicadores; Ápice, Base, Peso e Potência mantêm os rótulos textuais. Uma composição continua sendo uma única fonte. Os ornamentos são uma preferência separada da regra, do personagem e da paleta; detalhes em [Vetores e ornamentos](vetores-interface.md).
+
 Perícias não registradas permanecem gratuitamente em d4. A ficha normal mostra apenas as que ultrapassaram esse dado. **Editar perícias** abre o catálogo por categoria; escolher d4 remove a entrada do personagem. **Concluir edição** volta à lista compacta. As categorias e os nomes continuam definidos no JSON do sistema.
 
 ## Criação

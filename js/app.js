@@ -25,6 +25,8 @@ import { initAppearanceControls } from './appearance.js';
 import { initSheetSearch } from './sheet-search.js';
 import { buildSearchIndex } from './engine/search.js';
 import { revealDndSearchResult } from './systems/dnd2024-search.js';
+import { initArtworkControls } from './artwork.js';
+import { createDiceLabel } from './dice-display.js';
 
 const $ = (id) => document.getElementById(id);
 const DND_SYSTEM_ID = 'dnd2024';
@@ -49,6 +51,7 @@ async function init() {
   }
   initTheme();
   initAppearanceControls();
+  initArtworkControls();
   initShell();
   initLegacyControls(session.activeTab);
   sheetSearch = initSheetSearch({
@@ -499,11 +502,13 @@ function buildDiceButtons() {
   const container = $('dice-buttons');
   container.innerHTML = '';
   getDiceSet().forEach((sides) => {
-    container.appendChild(actionButton(`d${sides}`, 'dice-button', () => {
+    const button = actionButton('', 'dice-button', () => {
       const result = roll({ sides, count: 1, modifier: 0, label: `d${sides}` });
       $('dice-result').textContent = `${result.formula} = ${result.total}`;
       renderDiceHistory();
-    }));
+    });
+    button.appendChild(createDiceLabel([sides]));
+    container.appendChild(button);
   });
 }
 

@@ -24,18 +24,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-.engine-sheet__header::after {
-  content: '';
-  position: absolute;
-  width: 11rem;
-  height: 11rem;
-  right: -3rem;
-  top: -5rem;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 50%;
-  opacity: 0.35;
-}
-
 .engine-sheet__eyebrow {
   margin: 0 0 var(--space-2);
   color: var(--color-accent-strong);

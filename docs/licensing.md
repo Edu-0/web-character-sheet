@@ -22,6 +22,8 @@ O conteúdo original fornecido pelo autor permanece sem licença aberta concedid
 
 Essa reserva não reivindica exclusividade sobre ideias, métodos, mecânicas abstratas ou elementos de terceiros. A licença da engine não autoriza automaticamente publicar o livro, suas artes ou sua identidade visual.
 
+Em 1º de outubro de 2026, o autor autorizou a integração dos seis dados vetoriais e dos símbolos Ápice, Base, Peso e Potência na interface. Os caminhos selecionados e as composições decorativas estão em `assets/artwork/`, com proveniência e adaptações em [Artes selecionadas](../assets/artwork/README.md). A autorização desta integração não concede licença aberta às artes nem autoriza distribuir as referências completas do livro. Os direitos dos desenhos permanecem separados dos termos do software.
+
 ## D&D e materiais de terceiros
 
 D&D e Dungeons & Dragons são marcas da Wizards of the Coast. Este é um projeto independente e não oficial.

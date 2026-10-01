@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="css/character-sheet.css" />
 <link rel="stylesheet" href="css/responsive.css" />
 <link rel="stylesheet" href="css/appearance-search.css" />
+<link rel="stylesheet" href="css/artwork.css" />
 <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
@@ -104,6 +105,25 @@
       <h2 class="appearance-title">Paleta de cores</h2>
       <div id="appearance-palettes" class="palette-choices" role="group" aria-label="Paleta de cores"></div>
       <p class="appearance-note">Cada paleta tem uma versão clara e uma escura. O botão no cabeçalho alterna entre elas.</p>
+      <section class="appearance-section" aria-labelledby="dice-display-title">
+        <h2 id="dice-display-title">Apresentação dos dados</h2>
+        <label class="field"><span>Exibir dados como</span><select id="dice-display-mode"><option value="text">Texto · d6, d8…</option><option value="illustrated">Ícone vetorial com texto</option></select></label>
+        <div id="dice-display-preview" class="dice-display-preview" aria-label="Prévia dos dados"></div>
+        <p>O texto identifica cada dado nos dois modos. Essa escolha é independente dos ornamentos.</p>
+      </section>
+      <section class="appearance-section" aria-labelledby="ornament-title">
+        <h2 id="ornament-title">Ornamentos da ficha</h2>
+        <label class="field field--checkbox"><input id="ornament-enabled" type="checkbox" /><span>Mostrar ornamentos</span></label>
+        <p>Combine até três artes, uma por posição no topo da ficha. A combinação acompanha todas as paletas.</p>
+        <div class="ornament-controls">
+          <label class="field"><span>Começar com uma combinação</span><select id="ornament-preset"><option value="custom">Personalizada</option></select></label>
+          <label class="field"><span>Intensidade</span><select id="ornament-intensity"><option value="subtle">Discreta</option><option value="soft">Suave</option><option value="strong">Destacada</option></select></label>
+        </div>
+        <div class="ornament-composition-preview"><div id="ornament-preview" class="sheet-ornaments" aria-hidden="true"></div><p id="ornament-preview-state"></p></div>
+        <p class="appearance-note">Escolher uma posição ocupada substitui a arte anterior. Desativar os ornamentos guarda sua combinação.</p>
+        <div id="ornament-families"></div>
+        <p id="ornament-notice" class="ornament-notice" role="status" aria-live="polite"></p>
+      </section>
     </div>
   </section>
 
@@ -120,6 +140,7 @@
       <ul id="sheet-search-list" aria-label="Resultados da busca"></ul>
     </div>
   </search>
+  <div id="sheet-ornaments" class="sheet-ornaments no-print" aria-hidden="true" hidden></div>
   <div id="dnd-presentation-controls" class="dnd-presentation no-print" role="group" aria-label="Apresentação da ficha D&D" hidden>
     <span class="dnd-presentation__label">Visualização D&D</span>
     <button type="button" class="button button--ghost" data-dnd-presentation="legacy">Ficha estática</button>

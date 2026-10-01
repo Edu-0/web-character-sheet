@@ -163,10 +163,12 @@ test('paleta e modo persistem separadamente e o cabeçalho preserva a paleta', a
   await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');
 });
 
-test('seis combinações têm contraste de rótulos e cabem nas duas fichas', async ({ page }, testInfo) => {
+test('todas as paletas têm contraste de rótulos e cabem nas duas fichas', async ({ page }, testInfo) => {
+  // A matriz percorre 24 combinações e vários tamanhos, incluindo capturas.
+  test.setTimeout(90_000);
   for (const system of ['dnd', 'rpg']) {
     if (system === 'rpg') { await openRpg(page); await page.getByRole('tab', { name: 'Atributos', exact: true }).click(); }
-    for (const palette of ['classic', 'editorial', 'forest']) for (const mode of ['light', 'dark']) {
+    for (const palette of ['classic', 'editorial', 'forest', 'ruby', 'monochrome', 'petals']) for (const mode of ['light', 'dark']) {
       await page.getByRole('button', { name: 'Configurações', exact: true }).click();
       await page.locator(`[data-palette-choice="${palette}"]`).click();
       await page.locator('#appearance-mode').selectOption(mode);

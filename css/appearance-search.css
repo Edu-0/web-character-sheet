@@ -14,6 +14,11 @@
 .palette-choice--classic { --preview-bg: #f4f1ea; --preview-dark: #1f232c; --preview-accent: #b08a4e; }
 .palette-choice--editorial { --preview-bg: #eef1f6; --preview-dark: #202630; --preview-accent: #2e5fb8; }
 .palette-choice--forest { --preview-bg: #f0f2e9; --preview-dark: #202c26; --preview-accent: #38634b; }
+.palette-choice--ruby { --preview-bg: #fbf1ef; --preview-dark: #2b2023; --preview-accent: #993e49; }
+.palette-choice--monochrome { --preview-bg: #ffffff; --preview-dark: #202020; --preview-accent: #777777; }
+.palette-choice--petals { --preview-bg: #fbf2f7; --preview-dark: #302636; --preview-accent: #965279; }
+[data-palette='monochrome'] .tag-chip__remove:hover { background: rgba(128, 128, 128, 0.12); }
+[data-palette='monochrome'] .modal-overlay { background: rgba(0, 0, 0, 0.6); }
 .palette-choice__preview span:nth-child(1) { background: var(--preview-bg); }
 .palette-choice__preview span:nth-child(2) { background: var(--preview-dark); }
 .palette-choice__preview span:nth-child(3) { background: var(--preview-accent); }

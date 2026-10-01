@@ -10,6 +10,7 @@ import { createTraitControl, parseTrait, traitDescriptor, traitDice, traitLabel,
 import { healState } from './assistance.js';
 import { stepCost } from './point-budget.js';
 import { appendFieldHelp } from './help.js';
+import { createDiceLabel, createRuleGlyph } from '../dice-display.js';
 
 registerFieldType('tagList', {
   render(container, context) {
@@ -673,7 +674,9 @@ function renderPoolBuilder(container, context) {
       input.type = 'checkbox';
       input.value = trait.source;
       input.checked = selected.has(trait.source);
-      label.append(input, element('span', '', trait.label), element('strong', '', traitLabel(trait.dice ? { dice: trait.dice } : trait.sides)));
+      const dice = element('strong', '');
+      dice.appendChild(createDiceLabel(traitDice(trait.dice ? { dice: trait.dice } : trait.sides)));
+      label.append(input, element('span', '', trait.label), dice);
       checklist.appendChild(label);
     });
     if (!traits.length) checklist.appendChild(element('p', 'engine-empty', 'Nenhum Traço disponível para a Pool.'));
@@ -751,17 +754,22 @@ export function renderActorPoolResult(container, pool, potency, system) {
   const rolls = element('div', 'engine-pool__rolls');
   pool.rolls.forEach((roll) => {
     const item = element('span', 'engine-roll');
-    const diceLabel = roll.componentRolls?.length ? roll.componentRolls.map((die) => `d${die.sides}`).join(' + ') : `d${roll.sides}`;
+    const dice = roll.componentRolls?.length ? roll.componentRolls.map((die) => die.sides) : [roll.sides];
     const role = pool.apex === roll && pool.base === roll ? 'Ápice e Base' : pool.apex === roll ? 'Ápice' : pool.base === roll ? 'Base' : 'Potência disponível';
+    const detail = element('small', 'engine-roll__die');
+    detail.append(createDiceLabel(dice), ' · ');
+    const roles = pool.apex === roll && pool.base === roll ? ['apice', 'base'] : [pool.apex === roll ? 'apice' : pool.base === roll ? 'base' : 'potencia'];
+    roles.forEach((name) => detail.appendChild(createRuleGlyph(name)));
+    detail.append(role);
     item.append(
       element('span', '', roll.label),
       element('strong', '', `${roll.result}`),
-      element('small', 'engine-roll__die', `${diceLabel} · ${role}`),
+      detail,
     );
     rolls.appendChild(item);
   });
   const summary = element('p', 'engine-pool__summary');
-  summary.append('Peso ', element('strong', '', String(pool.weight)));
+  summary.append(createRuleGlyph('peso'), 'Peso ', element('strong', '', String(pool.weight)));
   const potencyLabel = fieldLabel('Potência');
   potencyOptions(pool, system.dieScale?.[0] || 4).forEach((item) => {
     potency.appendChild(optionElement(item.sides, `d${item.sides}${item.forced ? ' (mínima)' : ''}`));

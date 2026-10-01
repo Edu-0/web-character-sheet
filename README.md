@@ -17,7 +17,8 @@ Aplicação web para criar, preencher e organizar fichas de RPG de mesa. Uma eng
 
 - Biblioteca local de sistemas e personagens, com criação, duplicação e importação/exportação em JSON.
 - Fichas modulares com abas, cartões, listas, tabelas e ajuda contextual flutuante.
-- Paletas Clássico, Editorial e Floresta, cada uma com modo claro/escuro; responsividade e impressão pelo navegador, inclusive salvar como PDF.
+- Paletas Clássico, Editorial, Floresta, Rubi, Preto e branco e Pétalas, cada uma com modo claro/escuro; responsividade e impressão pelo navegador, inclusive salvar como PDF.
+- Ornamentos opcionais de dados, botânicos e geométricos, com combinações, posições e intensidade; dados em texto ou vetores acompanhados de texto, independentes das cores.
 - Busca na ficha atual inteira, entre abas, com valores atuais, tolerância a erros de digitação e navegação até o campo.
 - Rolagens, fórmulas e assistência configuráveis conforme o sistema.
 - Persistência por `localStorage`, sem backend ou conta de usuário.
@@ -136,6 +137,8 @@ Venda, acesso pago, assinaturas, monetização por anúncios e serviços pagos q
 Os termos devem ser revisados juridicamente antes do lançamento; a licença não comprova a autoria ou a proveniência de todas as partes do repositório.
 
 O conteúdo original do RPG autoral permanece separado e sem licença aberta. Referências em `docs/references/` são locais, ignoradas pelo Git e não integram a distribuição planejada.
+
+As artes autorais selecionadas para a interface ficam em `assets/artwork/`, com [registro das adaptações e direitos](assets/artwork/README.md). Sua integração foi autorizada pelo autor; a licença da engine não se estende automaticamente a esses desenhos.
 
 O projeto não é afiliado, patrocinado ou aprovado pela Wizards of the Coast. A licença do SRD não libera todos os livros, traduções, imagens ou marcas de D&D. A proveniência do conteúdo do módulo D&D ainda precisa ser auditada antes de distribuição pública.
 

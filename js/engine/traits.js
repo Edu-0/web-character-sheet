@@ -1,3 +1,5 @@
+import { createDiceIllustration } from '../dice-display.js';
+
 // Um traço permanece uma única fonte na Pool, mesmo com vários dados internos.
 export function traitDice(value) {
   const dice = typeof value === 'number' ? [value] : value?.dice?.map((die) => typeof die === 'number' ? die : die.sides) || [];
@@ -44,6 +46,11 @@ export function createTraitControl(value, onChange, { label, scale, allowComposi
   wrap.className = 'engine-trait-control';
   const select = document.createElement('select');
   select.setAttribute('aria-label', label);
+  const choice = document.createElement('div');
+  choice.className = 'engine-trait-choice';
+  const illustration = createDiceIllustration([]);
+  const refreshIllustration = (current) => illustration.replaceChildren(...createDiceIllustration(traitDice(current)).childNodes);
+  choice.append(illustration, select);
   const add = (value, text) => {
     const option = document.createElement('option');
     option.value = value;
@@ -61,6 +68,7 @@ export function createTraitControl(value, onChange, { label, scale, allowComposi
   error.className = 'engine-budget__feedback';
   const update = (current) => {
     value = current;
+    refreshIllustration(current);
     select.value = current && typeof current === 'object' ? 'composite' : String(current ?? '');
     input.hidden = select.value !== 'composite';
     if (document.activeElement !== input) input.value = traitLabel(current);
@@ -71,10 +79,11 @@ export function createTraitControl(value, onChange, { label, scale, allowComposi
     if (select.value === 'composite') {
       input.value = `${traitLabel(value) === '—' ? `d${scale.at(-1)}` : traitLabel(value)} + d${scale[1] || scale[0]}`;
       const parsed = parseTrait(input.value, scale);
-      if (parsed) { value = parsed; onChange(parsed); }
+      if (parsed) { value = parsed; refreshIllustration(value); onChange(parsed); }
       input.focus();
     } else {
       value = select.value ? Number(select.value) : null;
+      refreshIllustration(value);
       onChange(value);
     }
   });
@@ -82,10 +91,10 @@ export function createTraitControl(value, onChange, { label, scale, allowComposi
     const parsed = parseTrait(input.value, scale);
     error.textContent = parsed ? '' : 'Use dados da escala separados por +.';
     input.setAttribute('aria-invalid', String(!parsed));
-    if (parsed) { value = parsed; onChange(parsed); }
+    if (parsed) { value = parsed; refreshIllustration(value); onChange(parsed); }
   });
   update(value);
-  wrap.appendChild(select);
+  wrap.appendChild(choice);
   if (allowComposite) wrap.append(input, error);
   return { element: wrap, update };
 }
