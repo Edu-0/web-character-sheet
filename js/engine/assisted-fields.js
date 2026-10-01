@@ -4,6 +4,14 @@ import { executeSheetAction, inventoryTotals, repertoireStatus, undoSheetAction 
 import { traitLabel } from './traits.js';
 
 registerFieldType('inventorySummary', {
+  search(context) {
+    const totals = inventoryTotals(context.character, context);
+    return [
+      { label: 'Peso carregado', value: `${totals.weight.toLocaleString('pt-BR')} kg` },
+      { label: 'Capacidade de carga', value: `${totals.capacity.toLocaleString('pt-BR')} kg` },
+      { label: 'Sobrecarga', value: `${totals.excess.toLocaleString('pt-BR')} kg` },
+    ];
+  },
   render(container, context) {
     const wrap = node('div', 'engine-inventory-summary engine-callout');
     const weight = node('output');
@@ -27,6 +35,13 @@ registerFieldType('inventorySummary', {
 });
 
 registerFieldType('repertoire', {
+  search(context) {
+    const config = getByPath(context.system, context.configFrom);
+    return repertoireStatus(context.character, context.system, config).map(({ specialization, techniques, remaining }) => ({
+      label: `Repertório de ${specialization.name || 'Especialização sem nome'}`,
+      value: `${traitLabel(specialization[config.gradeField])} · ${techniques.length} técnicas conhecidas · ${remaining.length} opções disponíveis`,
+    }));
+  },
   render(container, context) {
     const wrap = node('div', 'engine-repertoire');
     const config = getByPath(context.system, context.configFrom);
@@ -54,6 +69,10 @@ registerFieldType('repertoire', {
 });
 
 registerFieldType('traitAllocation', {
+  search(context) {
+    const values = getByPath(context.character, context.field) || {};
+    return [{ label: context.label, value: (getByPath(context.system, context.traitsFrom) || []).map((trait) => `${trait.label || trait.key}: ${traitLabel(values[trait.key])}`).join(' · ') }];
+  },
   render(container, context) {
     const wrap = node('div', 'engine-allocation engine-callout');
     const select = document.createElement('select');
@@ -79,6 +98,15 @@ registerFieldType('traitAllocation', {
 });
 
 registerFieldType('actionGroup', {
+  search(context) {
+    const event = getByPath(context.character, context.historyField || 'scene.lastAction');
+    return (getByPath(context.system, context.actionsFrom) || []).map((action) => ({
+      label: action.label, value: event?.label === action.label ? event.details.join(' ') : 'Ação de cena · confirme as condições com a mesa', actionLabel: action.label,
+    }));
+  },
+  revealSearchResult(wrapper, entry) {
+    return [...wrapper.querySelectorAll('button')].find((button) => button.textContent === entry.actionLabel) || wrapper;
+  },
   render(container, context) {
     const wrap = node('div', 'engine-actions');
     const row = node('div', 'engine-budget__actions');

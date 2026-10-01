@@ -5,6 +5,20 @@ import { parseTrait, traitDice, traitLabel, traitMaximum } from './traits.js';
 import { evaluate } from './formula.js';
 
 registerFieldType('pointBudget', {
+  search(context) {
+    const config = getByPath(context.system, context.configFrom || 'pointBudget');
+    if (!config) return [];
+    const budget = pointBudget(context.character, context.system, config);
+    return [
+      { label: 'Pontos de criação', value: budget.creation.available },
+      { label: 'Gastos na criação', value: budget.creation.spent },
+      { label: 'Saldo de criação', value: budget.creation.remaining },
+      { label: 'Evolução recebida', value: budget.evolution.awarded },
+      { label: 'Gastos na evolução', value: budget.evolution.spent },
+      { label: 'Saldo de evolução', value: budget.evolution.remaining },
+      ...budget.history.map((entry) => ({ label: entry.description, value: `${entry.cost} pontos · ${entry.source === 'points' ? 'Paga' : 'Narrativa / livre'}` })),
+    ];
+  },
   render(container, context) {
     const config = getByPath(context.system, context.configFrom || 'pointBudget');
     if (!config) return;

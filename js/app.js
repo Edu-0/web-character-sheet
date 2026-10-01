@@ -21,6 +21,10 @@ import { setLayout } from './engine/layout.js';
 import { renderSheet } from './engine/renderer.js';
 import './systems/dnd2024-fields.js';
 import { getAppState, setAppState, updateAppState, subscribeAppState } from './app-state.js';
+import { initAppearanceControls } from './appearance.js';
+import { initSheetSearch } from './sheet-search.js';
+import { buildSearchIndex } from './engine/search.js';
+import { revealDndSearchResult } from './systems/dnd2024-search.js';
 
 const $ = (id) => document.getElementById(id);
 const DND_SYSTEM_ID = 'dnd2024';
@@ -35,6 +39,7 @@ let legacyTabsController = null;
 let engineChangeInProgress = false;
 let synchronizingTabs = false;
 let mountingGenericSheet = false;
+let sheetSearch = null;
 
 async function init() {
   const session = storage.loadAppSession();
@@ -43,8 +48,18 @@ async function init() {
     setAppState('ui.dndPresentation', session.dndPresentation);
   }
   initTheme();
+  initAppearanceControls();
   initShell();
   initLegacyControls(session.activeTab);
+  sheetSearch = initSheetSearch({
+    getIndex: () => activeCharacterId && activePackage ? buildSearchIndex(activePackage.layouts[0], state.get(), activePackage.system) : [],
+    onShortcut: () => setAppState('currentView', 'sheet'),
+    onNavigate: (entry) => {
+      if (!activeCharacterId || !getAppState().currentCharacter) return;
+      if (activePackage?.system.id === DND_SYSTEM_ID && getAppState().ui.dndPresentation === 'legacy') revealDndSearchResult(entry, state.get(), legacyTabsController);
+      else genericSheetController?.revealSearchResult(entry);
+    },
+  });
   await initSystemRepository();
 
   state.subscribe(onCharacterChange);
@@ -114,6 +129,8 @@ function renderShell(appState) {
   $('btn-clear-character').disabled = !appState.currentCharacter;
   $('btn-save-character').disabled = !appState.currentCharacter;
   $('btn-export').disabled = !appState.currentCharacter;
+  $('sheet-search-input').disabled = !appState.currentCharacter;
+  if (!appState.currentCharacter) sheetSearch?.reset();
   updateSheetPresentation();
 }
 
@@ -165,6 +182,7 @@ async function createAndOpenCharacter(systemId, { notifyUser = true } = {}) {
 }
 
 function mountActiveSheet(character) {
+  sheetSearch?.reset();
   const isDnd = activePackage?.system.id === DND_SYSTEM_ID;
   genericSheetController?.destroy();
   genericSheetController = null;
@@ -243,6 +261,7 @@ function onCharacterChange(character) {
     }
   }
   scheduleCharacterSave(character);
+  sheetSearch?.refresh();
   updateAppState({ currentCharacter: characterSummary(character) });
 }
 

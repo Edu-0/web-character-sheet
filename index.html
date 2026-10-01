@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="css/engine.css" />
 <link rel="stylesheet" href="css/character-sheet.css" />
 <link rel="stylesheet" href="css/responsive.css" />
+<link rel="stylesheet" href="css/appearance-search.css" />
 <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
@@ -98,11 +99,27 @@
     <div class="shell-stub">
       <p class="shell-stub__eyebrow">Configurações</p>
       <h1>Preferências da aplicação</h1>
-      <p>O tema já é persistido localmente. Outras preferências globais serão adicionadas aqui sem depender do sistema aberto.</p>
+      <p>Escolha as cores e o modo de leitura para toda a aplicação. Suas preferências ficam salvas neste navegador.</p>
+      <label class="field appearance-mode"><span>Modo de leitura</span><select id="appearance-mode"></select></label>
+      <h2 class="appearance-title">Paleta de cores</h2>
+      <div id="appearance-palettes" class="palette-choices" role="group" aria-label="Paleta de cores"></div>
+      <p class="appearance-note">Cada paleta tem uma versão clara e uma escura. O botão no cabeçalho alterna entre elas.</p>
     </div>
   </section>
 
   <section id="view-sheet" class="shell-view shell-view--sheet" data-app-view="sheet">
+  <search class="sheet-search no-print" aria-label="Busca na ficha atual">
+    <div class="sheet-search__bar">
+      <label for="sheet-search-input">Buscar na ficha</label>
+      <input id="sheet-search-input" type="search" class="input" placeholder="Perícias, técnicas, itens, anotações…" maxlength="120" aria-describedby="sheet-search-hint" aria-controls="sheet-search-results" autocomplete="off" />
+      <button id="sheet-search-clear" type="button" class="button button--ghost" hidden>Limpar busca</button>
+      <span id="sheet-search-hint" class="sheet-search__hint">Ctrl / ⌘ K</span>
+    </div>
+    <div id="sheet-search-results" class="sheet-search__results" hidden>
+      <p id="sheet-search-status" role="status" aria-live="polite"></p>
+      <ul id="sheet-search-list" aria-label="Resultados da busca"></ul>
+    </div>
+  </search>
   <div id="dnd-presentation-controls" class="dnd-presentation no-print" role="group" aria-label="Apresentação da ficha D&D" hidden>
     <span class="dnd-presentation__label">Visualização D&D</span>
     <button type="button" class="button button--ghost" data-dnd-presentation="legacy">Ficha estática</button>

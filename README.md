@@ -17,7 +17,8 @@ Aplicação web para criar, preencher e organizar fichas de RPG de mesa. Uma eng
 
 - Biblioteca local de sistemas e personagens, com criação, duplicação e importação/exportação em JSON.
 - Fichas modulares com abas, cartões, listas, tabelas e ajuda contextual flutuante.
-- Temas claro/escuro, responsividade e impressão pelo navegador, inclusive salvar como PDF.
+- Paletas Clássico, Editorial e Floresta, cada uma com modo claro/escuro; responsividade e impressão pelo navegador, inclusive salvar como PDF.
+- Busca na ficha atual inteira, entre abas, com valores atuais, tolerância a erros de digitação e navegação até o campo.
 - Rolagens, fórmulas e assistência configuráveis conforme o sistema.
 - Persistência por `localStorage`, sem backend ou conta de usuário.
 - Testes de interface com Playwright, incluindo persistência, regras assistidas e telas móveis.
@@ -95,6 +96,8 @@ No repositório, cada sistema tem arquivos `*.system.json` e `*.layout.json`. Na
 
 Os contratos são verificados em `js/validation/schemas.js`. As definições incluídas são exemplos executáveis; há uma [referência inicial da biblioteca](docs/componentes.md), mas ainda não existe um editor visual completo ou uma especificação exaustiva de todos os parâmetros.
 
+Consulte [Busca na ficha e aparência](docs/busca-e-temas.md) para usar a pesquisa, escolher paletas e estender os resultados de componentes específicos.
+
 Regras compatíveis reutilizam a biblioteca. Mecânicas novas podem exigir novos componentes JavaScript: não se promete representar qualquer livro apenas com JSON.
 
 ## Assistência e ajustes manuais
@@ -112,7 +115,6 @@ Personagens, sistemas importados e preferências ficam no armazenamento local do
 ## Próximos passos
 
 - Polimento visual e de acessibilidade.
-- Busca global entre abas, com tolerância a erros de digitação.
 - Ajustes manuais explícitos para resultados calculados, com retorno ao automático.
 - Editor visual de sistemas, layouts e módulos.
 - Documentação dos componentes e novos sistemas para ampliar a biblioteca.

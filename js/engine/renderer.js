@@ -8,6 +8,8 @@ import './assisted-fields.js';
 import './technique-fields.js';
 import { getByPath, setByPath } from './paths.js';
 import { appendFieldHelp } from './help.js';
+import { expandComponents, componentSearchKey } from './layout-components.js';
+import { highlightSearchTarget } from './search.js';
 
 export function renderSheet(host, layout, character, options = {}) {
   host.innerHTML = '';
@@ -100,6 +102,24 @@ export function renderSheet(host, layout, character, options = {}) {
   activate(requestedIndex >= 0 ? requestedIndex : 0, { focus: false });
 
   return {
+    revealSearchResult(entry) {
+      const index = tabs.findIndex(({ id }) => id === entry.tabId);
+      if (index < 0) return;
+      activate(index, { focus: false });
+      const wrapper = [...tabs[index].panel.querySelectorAll('[data-search-key]')].find((node) => node.dataset.searchKey === entry.componentKey);
+      if (!wrapper) return;
+      const customTarget = getFieldType(entry.component.type)?.revealSearchResult?.(wrapper, entry);
+      let target = customTarget || wrapper;
+      if (!customTarget && entry.itemIndex != null) {
+        // Uma pesquisa local na tabela não pode esconder o resultado global.
+        const filter = wrapper.querySelector('input[type="search"]');
+        if (filter?.value) { filter.value = ''; filter.dispatchEvent(new Event('input', { bubbles: true })); }
+        target = wrapper.querySelectorAll('.engine-entry, tbody > tr, .engine-slot')[entry.itemIndex] || wrapper;
+        if (target.matches('details')) target.open = true;
+        if (entry.itemField) target = [...target.querySelectorAll('[data-item-field]')].find((node) => node.dataset.itemField === entry.itemField) || target;
+      }
+      highlightSearchTarget(target);
+    },
     activate(tabId, activateOptions) {
       const index = tabs.findIndex(({ id }) => id === tabId);
       if (index >= 0) activate(index, activateOptions);
@@ -135,7 +155,7 @@ function renderSection(section, character, options) {
 
   const body = element('div', 'engine-section__body');
   (section.containers || []).forEach((definition) => {
-    body.appendChild(renderContainer(definition, character, options));
+    body.appendChild(renderContainer(definition, character, { ...options, searchSection: section }));
   });
   sectionEl.appendChild(body);
   return sectionEl;
@@ -148,18 +168,10 @@ function renderContainer(container, character, options) {
   addLayoutHintClass(content, 'min', layout.min);
   addLayoutHintClass(content, 'gap', layout.gap);
 
-  const repeatItems = container.repeat
-    ? resolveSource(options.system, container.repeat.source.replace(/^system\./, ''))
-    : [null];
-
-  repeatItems.forEach((item, index) => {
-    (container.components || []).forEach((definition) => {
-      const component = interpolate(definition, repeatContext(item, index));
-      if (component.optionsFrom && !component.options) {
-        component.options = normalizeOptions(resolveSource(options.system, component.optionsFrom.replace(/^system\./, '')));
-      }
-      content.appendChild(renderComponent(component, character, options));
-    });
+  expandComponents(container, options.system).forEach((component, index) => {
+    const wrapper = renderComponent(component, character, options);
+    wrapper.dataset.searchKey = componentSearchKey(options.searchSection, container, index);
+    content.appendChild(wrapper);
   });
 
   if (!content.children.length) {
@@ -200,47 +212,6 @@ function renderComponent(component, character, options) {
     options.registerRefresh?.(refresh);
   }
   return wrapper;
-}
-
-function resolveSource(root, path) {
-  if (!root || !path) return [];
-  let values = [root];
-  path.split('.').forEach((segment) => {
-    const flatten = segment.endsWith('[]');
-    const key = flatten ? segment.slice(0, -2) : segment;
-    values = values.flatMap((value) => {
-      const next = value?.[key];
-      if (next == null) return [];
-      return flatten && Array.isArray(next) ? next : [next];
-    });
-  });
-  return values.flatMap((value) => Array.isArray(value) ? value : [value]);
-}
-
-function repeatContext(item, index) {
-  if (item && typeof item === 'object') return { index, ...item };
-  return { index, key: item, name: item, label: item, value: item };
-}
-
-function interpolate(value, context) {
-  if (typeof value === 'string') {
-    return value.replace(/\{([^}]+)\}/g, (_, key) => context[key] ?? `{${key}}`);
-  }
-  if (Array.isArray(value)) return value.map((item) => interpolate(item, context));
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, interpolate(item, context)]));
-  }
-  return value;
-}
-
-function normalizeOptions(items) {
-  return items.map((item, index) => {
-    if (item == null || typeof item !== 'object') return { value: item, label: String(item ?? '') };
-    return {
-      value: item.value ?? item.id ?? item.key ?? index,
-      label: item.label ?? item.name ?? (item.points != null ? `${item.points} pontos` : String(item.id ?? index + 1)),
-    };
-  });
 }
 
 function addLayoutHintClass(elementNode, hint, value) {

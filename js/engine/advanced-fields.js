@@ -26,6 +26,22 @@ registerFieldType('list', {
 // Catálogo compacto: valores no dado-base são implícitos na ficha, mas continuam
 // disponíveis para edição. A configuração (categorias e escala) vem do sistema.
 registerFieldType('skillCatalog', {
+  search(context) {
+    const values = getByPath(context.character, context.field) || {};
+    const baseDie = Number(context.system?.[context.baseDieFrom || 'skillBaseDie']) || 4;
+    return (context.system?.[context.categoriesFrom || 'skillCategories'] || []).flatMap((category) => (category.skills || []).map((name) => ({
+      label: name, value: `${traitLabel(values[name] || baseDie)}${traitMaximum(values[name]) <= baseDie ? ' · dado base' : ''}`, category: category.label || category.id, skillName: name,
+    })));
+  },
+  revealSearchResult(wrapper, entry) {
+    let control = [...wrapper.querySelectorAll('select[aria-label]')].find((node) => node.getAttribute('aria-label') === entry.skillName);
+    if (!control) {
+      const toggle = wrapper.querySelector('.engine-skill-catalog__toolbar button');
+      if (toggle?.getAttribute('aria-expanded') === 'false') toggle.click();
+      control = [...wrapper.querySelectorAll('select[aria-label]')].find((node) => node.getAttribute('aria-label') === entry.skillName);
+    }
+    return control?.closest('.engine-skill-catalog__item') || wrapper;
+  },
   render(container, context) {
     const wrap = fieldBlock(context.label, 'engine-skill-catalog');
     const toolbar = element('div', 'engine-skill-catalog__toolbar');
@@ -104,6 +120,13 @@ registerFieldType('table', {
 });
 
 registerFieldType('computed', {
+  search(context) {
+    // Fórmulas de rolagem só são executadas pelo botão da ficha.
+    const value = context.mode === 'roll' ? 'Rolagem sob demanda' : formatValue(evaluate(context.system.formulas[context.formula], {
+      vars: resolveFormulaVariables(context.variables, context.character, context.system, false), data: context.character,
+    }), context.format);
+    return [{ label: context.label, value }];
+  },
   render(container, context) {
     const wrap = fieldBlock(context.label, 'engine-computed');
     const output = element('output', 'engine-computed__value');

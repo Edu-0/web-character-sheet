@@ -268,24 +268,9 @@
   text-align: center;
 }
 
-/* Variante editorial reutilizável, inspirada na ficha e na paleta do livro. */
+/* Variante editorial reutilizável: hierarquia e tipografia independem da paleta. */
 .engine-sheet--editorial {
   --font-display: var(--font-body);
-  --color-accent: #86b4ff;
-  --color-accent-strong: #a5c7ff;
-  --color-accent-contrast: #172a46;
-  --color-computed-bg: rgba(134, 180, 255, 0.12);
-}
-
-[data-theme='light'] .engine-sheet--editorial {
-  --color-accent: #2e5fb8;
-  --color-accent-strong: #214f9f;
-  --color-accent-contrast: #fff;
-  --color-bg-elevated: #f7f8fc;
-  --color-panel-alt: #edf2fa;
-  --color-border: #d5deed;
-  --color-border-strong: #aabbd6;
-  --color-computed-bg: rgba(46, 95, 184, 0.1);
 }
 
 .engine-sheet--editorial .engine-sheet__header {

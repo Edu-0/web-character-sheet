@@ -25,6 +25,12 @@ export const THEMES = [
   { key: 'light', label: 'Claro' },
 ];
 
+export const PALETTES = [
+  { key: 'classic', label: 'Clássico', description: 'Papel e bronze, para uma ficha de aventura clássica.' },
+  { key: 'editorial', label: 'Editorial', description: 'Tons neutros e azul, com foco na leitura.' },
+  { key: 'forest', label: 'Floresta', description: 'Verde profundo e cobre, com uma atmosfera natural.' },
+];
+
 
 export function createId() {
   if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();

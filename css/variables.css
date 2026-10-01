@@ -1,6 +1,6 @@
 /* variables.css
    Tokens de design: cores, tipografia, espaçamento, bordas, sombras, transições.
-   Dois temas (claro/escuro) prontos; novos temas podem ser adicionados sem tocar nos componentes. */
+   Paletas com modos claro/escuro; novas paletas não exigem alterar os componentes. */
 
 :root {
   /* Tipografia */
@@ -62,7 +62,7 @@
 
   --color-text: #e9ebf1;
   --color-text-muted: #9aa1b2;
-  --color-text-faint: #6b7285;
+  --color-text-faint: #a0a8ba;
 
   --color-accent: #b08a4e;
   --color-accent-strong: #c9a05f;
@@ -92,7 +92,7 @@
 
   --color-text: #262320;
   --color-text-muted: #6b6255;
-  --color-text-faint: #928a7a;
+  --color-text-faint: #716857;
 
   --color-accent: #93672f;
   --color-accent-strong: #7a541f;
@@ -109,4 +109,75 @@
   --color-computed-text: var(--color-accent-strong);
 
   --scrollbar-color: #c6bca4 #f0ece2;
+}
+
+/* A família de cores independe do modo claro/escuro. */
+[data-palette='editorial'] {
+  --color-bg: #14181f;
+  --color-bg-elevated: #1b2029;
+  --color-panel: #202630;
+  --color-panel-alt: #29313e;
+  --color-border: #3e4858;
+  --color-border-strong: #657187;
+  --color-text: #edf1f8;
+  --color-text-muted: #b5c0d2;
+  --color-text-faint: #a9b5ca;
+  --color-accent: #86b4ff;
+  --color-accent-strong: #a5c7ff;
+  --color-accent-contrast: #172a46;
+  --color-computed-bg: rgba(134, 180, 255, 0.12);
+  --scrollbar-color: #657187 #1b2029;
+}
+
+[data-palette='editorial'][data-theme='light'] {
+  --color-bg: #eef1f6;
+  --color-bg-elevated: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel-alt: #e8edf6;
+  --color-border: #cbd5e5;
+  --color-border-strong: #8799b5;
+  --color-text: #202938;
+  --color-text-muted: #4d5c73;
+  --color-text-faint: #56657c;
+  --color-accent: #2e5fb8;
+  --color-accent-strong: #214f9f;
+  --color-accent-contrast: #ffffff;
+  --color-computed-bg: rgba(46, 95, 184, 0.1);
+  --scrollbar-color: #8799b5 #e8edf6;
+}
+
+[data-palette='forest'] {
+  --color-bg: #141b19;
+  --color-bg-elevated: #1b2521;
+  --color-panel: #202c26;
+  --color-panel-alt: #2a382f;
+  --color-border: #405449;
+  --color-border-strong: #688374;
+  --color-text: #edf2e9;
+  --color-text-muted: #b8c8bb;
+  --color-text-faint: #a7bcae;
+  --color-accent: #8fc5a0;
+  --color-accent-strong: #aedcbb;
+  --color-accent-contrast: #16251b;
+  --color-secondary: #c79d77;
+  --color-computed-bg: rgba(143, 197, 160, 0.12);
+  --scrollbar-color: #688374 #1b2521;
+}
+
+[data-palette='forest'][data-theme='light'] {
+  --color-bg: #f0f2e9;
+  --color-bg-elevated: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel-alt: #e6eddf;
+  --color-border: #c9d5c2;
+  --color-border-strong: #889d80;
+  --color-text: #253126;
+  --color-text-muted: #4e604c;
+  --color-text-faint: #5c6b55;
+  --color-accent: #38634b;
+  --color-accent-strong: #284c38;
+  --color-accent-contrast: #ffffff;
+  --color-secondary: #86532f;
+  --color-computed-bg: rgba(56, 99, 75, 0.1);
+  --scrollbar-color: #889d80 #e6eddf;
 }

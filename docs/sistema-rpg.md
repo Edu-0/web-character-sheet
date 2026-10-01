@@ -1,6 +1,6 @@
 # Sistema de RPG: ficha assistida
 
-A referência é o livro fornecido em `docs/references/Sistema RPG/conteudo-livro.tex`, especialmente os capítulos 1–10, os exemplos do capítulo 15 e os casos especiais do capítulo 16. O resultado é uma ficha assistida de personagem jogador, não um simulador de campanha ou árbitro automático da ficção. A variante visual `editorial` é reutilizável: tipografia sem serifa, azul e grupos com hierarquia clara, adaptados aos temas claro e escuro.
+A referência é o livro fornecido em `docs/references/Sistema RPG/conteudo-livro.tex`, especialmente os capítulos 1–10, os exemplos do capítulo 15 e os casos especiais do capítulo 16. O resultado é uma ficha assistida de personagem jogador, não um simulador de campanha ou árbitro automático da ficção. A variante visual `editorial` é reutilizável: tipografia sem serifa e grupos com hierarquia clara. As cores seguem a paleta escolhida nas Configurações da aplicação, com modo claro ou escuro independente; o layout não impõe uma cor de sistema.
 
 ## Perícias
 

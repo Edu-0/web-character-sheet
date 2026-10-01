@@ -21,6 +21,13 @@ function rollCheck(label, modifier) {
 }
 
 registerFieldType('dndAbility', {
+  search({ character, field, key, label, short }) {
+    const score = getByPath(character, field) ?? 10;
+    return [
+      { label, value: `${score} · modificador ${formatModifier(abilityModifier(score))}`, keywords: [short || ''] },
+      { label: `Resistência de ${label}`, value: formatModifier(savingThrowModifier(character, key)) },
+    ];
+  },
   render(container, context) {
     const { character, field, key, label, short, onChange } = context;
     const card = node('div', 'engine-dnd-ability');
@@ -63,6 +70,9 @@ registerFieldType('dndAbility', {
 });
 
 registerFieldType('dndSkill', {
+  search({ character, key, label }) {
+    return [{ label, value: formatModifier(skillModifier(character, key)) }];
+  },
   render(container, context) {
     const { character, field, key, label, ability, onChange } = context;
     const row = node('div', 'engine-dnd-skill');
@@ -122,6 +132,9 @@ const derivedValues = {
 };
 
 registerFieldType('dndDerived', {
+  search(context) {
+    return [{ label: context.label, value: derivedValues[context.stat]?.(context.character) ?? '—' }];
+  },
   render(container, context) {
     const card = node('div', 'engine-dnd-derived');
     const label = node('span', 'engine-dnd-derived__label', context.label);
