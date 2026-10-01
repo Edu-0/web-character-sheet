@@ -1,154 +1,131 @@
-# RPG Character Sheet
+# Ficha RPG
 
-> Uma ficha de personagem web moderna, modular e extensível para RPGs de mesa.
+Aplicação web para criar, preencher e organizar fichas de RPG de mesa. Uma engine declarativa transforma sistemas e layouts em JSON em fichas responsivas, com componentes reutilizáveis e assistência opcional às regras.
 
-## 🚧 Status
+**Status:** protótipo funcional em desenvolvimento, ainda sem lançamento de produção. Os nomes do aplicativo e do RPG autoral são provisórios. Estruturas de dados podem mudar; exporte seus personagens antes de atualizar.
 
-**Em desenvolvimento — fase 7: paridade da ficha D&D modular**
+## Funcionalidades atuais
 
-O projeto já possui uma engine declarativa, biblioteca local de sistemas e personagens, temas claro/escuro e testes de interface com Playwright.
+- Biblioteca local de sistemas e personagens, com criação, duplicação e importação/exportação em JSON.
+- Fichas modulares com abas, cartões, listas, tabelas e ajuda contextual flutuante.
+- Temas claro/escuro, responsividade e impressão pelo navegador, inclusive salvar como PDF.
+- Rolagens, fórmulas e assistência configuráveis conforme o sistema.
+- Persistência por `localStorage`, sem backend ou conta de usuário.
+- Testes de interface com Playwright, incluindo persistência, regras assistidas e telas móveis.
 
-A primeira versão está sendo desenvolvida como uma **ficha de personagem web baseada em HTML, CSS e JavaScript**, inicialmente inspirada na estrutura de D&D 5e 2024.
+O aplicativo não é um VTT, um simulador de campanha nem um árbitro automático. A mesa continua responsável por decisões narrativas e exceções.
 
-O D&D 5e (2024) abre pela ficha modular em navegadores novos. A ficha estática permanece isolada como referência, acessível pelo seletor junto ao modo de comparação lado a lado. A preferência e a aba ativa são preservadas no navegador.
+## Sistemas incluídos
 
----
+| Sistema | Implementação |
+| --- | --- |
+| D&D 5e (2024) | Ficha modular com cálculos e controles de personagem. A apresentação estática permanece separada para comparação visual. Não automatiza todo o livro. |
+| RPG autoral, ainda sem nome | Ficha assistida com criação por pontos, evolução, perícias, traços compostos, Técnicas, Energia, estados, recuperação, carga e Pool. |
+| Sistema fictício de teste | Exemplo técnico para verificar componentes sem depender dos sistemas principais. |
 
-## 🎯 Objetivo
+Consulte a [comparação D&D estático × modular](docs/dnd-parity.md) e a [cobertura do sistema autoral](docs/sistema-rpg.md).
 
-Criar uma ficha que combine:
+## Executar localmente
 
-* design premium e contemporâneo;
-* fantasia medieval discreta;
-* excelente UX;
-* responsividade;
-* preenchimento digital;
-* persistência local;
-* cálculos automáticos;
-* componentes reutilizáveis;
-* arquitetura preparada para expansão.
+Requisitos: Node.js **22 ou superior**, npm e um navegador moderno. Os testes estão configurados para usar o Microsoft Edge instalado.
 
-A ideia é que a ficha possa eventualmente deixar de ser específica de um único sistema e passar a funcionar como uma camada de apresentação para diferentes sistemas de RPG.
-
----
-
-## 🧪 Natureza do projeto
-
-Este projeto começou como um experimento de **vibecoding/AI-assisted development**.
-
-Grande parte da implementação inicial está sendo desenvolvida com auxílio de agentes de IA a partir de especificações, prompts e decisões de design/arquitetura fornecidas durante o desenvolvimento.
-
-O código produzido por IA será posteriormente revisado, entendido e refatorado conforme a arquitetura do projeto amadurecer.
-
-Este README também será atualizado à medida que o projeto evoluir.
-
----
-
-## 🛠️ Tecnologias
-
-A primeira versão utiliza:
-
-* HTML5
-* CSS3
-* JavaScript (ES6+)
-* CSS Grid
-* Flexbox
-* SVG
-* LocalStorage
-
-A intenção inicial é evitar frameworks e dependências desnecessárias.
-
----
-
-## 🧩 Arquitetura atual
-
-Uma das principais ideias do projeto é separar a **engine da ficha** da definição de um sistema específico.
-
-Conceitualmente:
-
-```text
-Sistema de RPG
-      ↓
-Definição / Configuração
-      ↓
-Engine da ficha
-      ↓
-Componentes de UI
-      ↓
-Personagem
+```sh
+npm ci
+node tests/static-server.mjs
 ```
 
-Cada sistema possui uma configuração JSON e um layout JSON. Os personagens são persistidos separadamente:
+Abra [http://127.0.0.1:4173](http://127.0.0.1:4173). Encerre o servidor com `Ctrl+C`.
 
-```text
-data/systems/
-├── dnd2024.system.json
-├── dnd2024.layout.json
-├── sistema-rpg.system.json
-└── sistema-rpg.layout.json
+Use HTTP: abrir `index.html` diretamente por `file://` não é o fluxo suportado, pois a aplicação carrega módulos JavaScript e arquivos JSON.
+
+O servidor fornecido é apenas para desenvolvimento local e serve arquivos do repositório. **Não o exponha à internet nem publique a pasta inteira com referências privadas.** Para hospedagem, selecione os arquivos públicos e use uma hospedagem estática apropriada.
+
+## Testar
+
+Pare o servidor manual antes de executar os testes: a configuração inicia seu próprio servidor na porta 4173.
+
+```sh
+npm run test:e2e
+npm run test:e2e:headed
 ```
 
-O layout define abas, seções, containers e componentes. O renderizador genérico e o registro de componentes montam a ficha para qualquer sistema compatível. Componentes específicos de D&D ficam isolados em `js/systems/dnd2024-fields.js`.
+Para executar somente um conjunto:
 
-A ficha estática permanece disponível para comparação, conforme a decisão do projeto. A matriz de paridade, as diferenças visuais menores e como regenerar as capturas estão em [docs/dnd-parity.md](docs/dnd-parity.md). A fase seguinte cobre conteúdo variável extremo e regressão final.
+```sh
+npx playwright test tests/e2e/system-rpg-assistance.spec.js
+npx playwright test tests/e2e/dnd-parity.spec.js
+```
 
-Para executar a aplicação localmente e os testes de interface: `npm install` e `npm run test:e2e`.
+Capturas e traces ficam em `test-results/`, que não é versionado. Para usar Chromium em vez de Edge, ajuste o `channel` em `playwright.config.js` e instale o navegador correspondente pelo Playwright.
 
-O Sistema de RPG possui uma ficha assistida: catálogo compacto de Perícias, orçamento e evolução, traços compostos, repertório e uso de Técnicas, carga, descansos, cura e ações de cena. O visual segue a variante editorial do livro de referência. A cobertura, os limites narrativos e as regras configuráveis estão em [docs/sistema-rpg.md](docs/sistema-rpg.md).
+## Arquitetura
 
----
+O sistema define dados e regras; o layout define a apresentação; o personagem guarda escolhas e valores. O renderizador conecta essas partes.
 
-## 📋 Escopo inicial
+```text
+data/systems/       Sistemas, layouts e manifesto
+data/characters/    Personagens de exemplo
+js/engine/         Renderização, campos, fórmulas, dados e assistência
+js/systems/        Componentes específicos de um sistema
+js/repositories/   Persistência e importação/exportação
+js/validation/     Validação dos documentos JSON
+css/               Temas, componentes, responsividade e impressão
+tests/e2e/         Testes de interface e regressão
+docs/              Cobertura, decisões e direitos de uso
+```
 
-A primeira versão está focada em uma ficha com:
+No repositório, cada sistema tem arquivos `*.system.json` e `*.layout.json`. Na importação/exportação, eles são reunidos em um pacote `rpg-system-package`, com `schemaVersion`, `system` e `layouts`. Personagens são documentos separados.
 
-* identidade do personagem;
-* atributos;
-* perícias;
-* combate;
-* ataques;
-* habilidades;
-* recursos;
-* magias;
-* inventário;
-* equipamentos;
-* personalidade;
-* aparência;
-* anotações;
-* rolagem de dados;
-* persistência local;
-* importação/exportação;
-* temas;
-* impressão/PDF;
-* layout responsivo.
+### Criar outro sistema
 
-O escopo poderá mudar conforme o protótipo for testado.
+1. Use uma definição existente como exemplo e escolha um ID próprio.
+2. Defina o `characterTemplate` e as configurações de regras no sistema.
+3. Monte abas e componentes no layout, vinculando campos aos dados do personagem.
+4. Importe um pacote pela biblioteca de sistemas ou registre seus arquivos em `data/systems/index.json` para incluí-los no aplicativo.
+5. Teste criação, edição, exportação, recarga e apresentação móvel.
 
----
+Os contratos são verificados em `js/validation/schemas.js`. As definições incluídas são exemplos executáveis; ainda não existe um editor visual completo ou uma documentação completa de todos os componentes.
 
-## 🎨 Direção de design
+Regras compatíveis reutilizam a biblioteca. Mecânicas novas podem exigir novos componentes JavaScript: não se promete representar qualquer livro apenas com JSON.
 
-A interface busca combinar:
+## Assistência e ajustes manuais
 
-**minimalismo + fantasia medieval + design editorial + UI moderna.**
+Campos editáveis podem ser alterados diretamente. No sistema autoral, ajustes durante o jogo não cobram pontos de evolução automaticamente: melhorias pagas devem ser registradas pelo fluxo de evolução.
 
-A prioridade visual é:
+Resultados calculados ainda não têm substituição manual universal. Algumas escolhas iniciais ficam bloqueadas após concluir a criação. Assistência não significa automação completa.
 
-1. legibilidade;
-2. organização;
-3. usabilidade;
-4. consistência;
-5. estética.
+## Dados e privacidade
 
-O objetivo é evitar tanto a aparência de um formulário convencional quanto o excesso de elementos decorativos típico de algumas fichas de RPG.
+Personagens, sistemas importados e preferências ficam no armazenamento local do navegador. Não há sincronização entre dispositivos nem backup em nuvem implementado. Limpar os dados do site ou mudar de navegador ou endereço pode tornar a biblioteca anterior indisponível.
 
----
+**Exporte os JSONs para manter backups.** Um arquivo exportado pode conter nomes, anotações e imagens: revise-o antes de compartilhar. Importar ou exportar uma ficha não transfere direitos sobre seu conteúdo.
 
-## 🗺️ Roadmap inicial
+## Próximos passos
 
-* [x] Definição inicial do conceito
-* [x] Definição da direção visual
-* [ ] Primeira versão funcional da ficha
-* [ ] Revisão de UX
-* [ ] Revisão de responsividade
-* [ ] Refatoração da arquitetura
+- Polimento visual e de acessibilidade.
+- Busca global entre abas, com tolerância a erros de digitação.
+- Ajustes manuais explícitos para resultados calculados, com retorno ao automático.
+- Editor visual de sistemas, layouts e módulos.
+- Documentação dos componentes e novos sistemas para ampliar a biblioteca.
+
+Esses itens são planejamento, não funcionalidades já disponíveis.
+
+## Contribuições e desenvolvimento com IA
+
+O projeto é desenvolvido com auxílio de IA, orientado por decisões de produto e revisão humana. Isso não substitui testes, validação de regras ou verificação de autoria e licenças.
+
+Ao propor mudanças, preserve a referência estática D&D, mantenha regras específicas fora do renderizador genérico quando possível e acrescente testes para comportamentos novos. Não inclua livros, artes, fontes ou textos de terceiros sem autorização compatível.
+
+## Direitos e licenças
+
+O código original da aplicação e da engine está sob uma [licença própria de uso não comercial](LICENSE), incluindo sua estrutura implementada: permite uso, modificações, forks e compartilhamento gratuito não comercial com atribuição. Exploração comercial exige autorização escrita dos titulares. Não é uma licença open source MIT ou Apache-2.0.
+
+Venda, acesso pago, assinaturas, monetização por anúncios e serviços pagos que utilizem o software coberto exigem autorização. Arrecadação vinculada à distribuição ou hospedagem também depende de autorização. A licença não reivindica direitos sobre conteúdo independente criado pelos usuários nem sobre ideias abstratas de arquitetura.
+
+Os termos devem ser revisados juridicamente antes do lançamento; a licença não comprova a autoria ou a proveniência de todas as partes do repositório.
+
+O conteúdo original do RPG autoral permanece separado e sem licença aberta. Referências em `docs/references/` são locais, ignoradas pelo Git e não integram a distribuição planejada.
+
+O projeto não é afiliado, patrocinado ou aprovado pela Wizards of the Coast. A licença do SRD não libera todos os livros, traduções, imagens ou marcas de D&D. A proveniência do conteúdo do módulo D&D ainda precisa ser auditada antes de distribuição pública.
+
+Leia [Direitos e distribuição](docs/licensing.md) e [Avisos de terceiros](THIRD_PARTY_NOTICES.md) antes de redistribuir.

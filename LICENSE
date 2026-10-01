@@ -1,0 +1,88 @@
+Ficha RPG — Licença de Código Disponível para Uso Não Comercial
+Versão 1.0 — 1 de outubro de 2026
+
+Copyright (c) 2026, respectivos titulares dos direitos sobre o código original
+do projeto Ficha RPG. Direitos não concedidos expressamente são reservados.
+
+1. ESCOPO
+
+Esta licença abrange as partes originais do código da aplicação, da engine,
+dos estilos, dos testes, da validação e da documentação técnica do projeto,
+incluindo sua organização e implementação concretas, na medida em que sejam
+protegidas por direitos autorais e seus titulares possam licenciá-las.
+
+Não abrange conteúdo criativo do RPG autoral, livros, artes, marcas, dados dos
+usuários ou materiais e dependências de terceiros. Esses elementos mantêm seus
+direitos e termos próprios. Em arquivos mistos, esta licença só alcança as
+partes originais de software. Consulte docs/licensing.md e THIRD_PARTY_NOTICES.md.
+
+2. PERMISSÕES NÃO COMERCIAIS
+
+É permitido consultar, executar, estudar, copiar e modificar o software coberto,
+inclusive a engine e sua estrutura implementada, para fins não comerciais.
+Também é permitido compartilhar cópias originais ou modificadas e hospedar uma
+versão gratuita para fins não comerciais, observadas as condições abaixo.
+Não há obrigação geral de publicar código-fonte de alterações privadas.
+
+3. LIMITES COMERCIAIS
+
+Sem autorização prévia e expressa, por escrito, dos titulares pertinentes,
+não é permitido explorar comercialmente o software coberto ou suas adaptações.
+Isso inclui vender ou sublicenciar cópias; cobrar por acesso, assinaturas ou
+hospedagem; monetizar uma distribuição ou serviço baseado no software por
+anúncios; e cobrar por personalização, integração, módulos ou suporte quando
+o serviço utilizar ou distribuir o software coberto.
+
+Disponibilização gratuita não torna um uso não comercial quando ela serve à
+exploração comercial do software. O status de pessoa física ou entidade sem
+fins lucrativos não cria exceção automática. Arrecadação vinculada à distribuição
+ou hospedagem, inclusive doações para custear esse serviço, depende de autorização
+escrita. Isso não alcança doações sem relação com o software.
+
+Não se reivindicam direitos sobre fichas e conteúdos independentes criados
+pelos usuários, nem sobre software desenvolvido independentemente sem copiar
+partes protegidas deste projeto. Esta licença não transfere ao projeto a
+titularidade dessas criações ou de contribuições originais de terceiros.
+
+4. ATRIBUIÇÃO E REDISTRIBUIÇÃO
+
+Ao distribuir o software ou disponibilizar uma versão hospedada:
+a) Preserve esta licença, os avisos de copyright e os avisos de terceiros
+aplicáveis, e inclua-os nos arquivos distribuídos.
+b) Exiba crédito legível ao projeto Ficha RPG e aos autores identificados nos
+avisos preservados. Em interfaces hospedadas, os créditos e um acesso a esta
+licença devem estar em Sobre, Créditos ou equivalente, facilmente acessível.
+Mantenha o endereço de origem quando fornecido na distribuição.
+c) Identifique versões modificadas como modificadas, sem sugerir que sejam
+oficiais ou que tenham aprovação dos autores originais.
+d) Não remova as restrições desta licença das partes cobertas redistribuídas,
+inclusive quando adaptadas. Não é permitido sublicenciá-las sob termos que
+autorizem exploração comercial não concedida pelos titulares.
+
+Créditos não substituem autorização comercial nem autorizam uso de marcas.
+
+5. RESERVAS E DIREITOS LEGAIS
+
+Não é concedida licença de marcas ou patentes. Esta licença não pretende criar
+exclusividade sobre ideias, conceitos de arquitetura, métodos, formatos
+abstratos, mecânicas de jogo ou semelhanças impostas por requisitos funcionais.
+Exceções e direitos obrigatórios da legislação aplicável permanecem preservados.
+A licença somente concede direitos que os titulares possam conceder.
+
+6. GARANTIAS E RESPONSABILIDADE
+
+Na medida permitida pela legislação aplicável, o software é fornecido no estado
+em que se encontra, sem garantias de adequação, disponibilidade ou ausência de
+erros. Não há compromisso de suporte ou atualização. Limitações de responsabilidade
+não afastam obrigações legais que não possam ser excluídas.
+
+7. DESCUMPRIMENTO E AUTORIZAÇÕES SEPARADAS
+
+O descumprimento das condições encerra as permissões concedidas por esta licença,
+na medida permitida pela legislação aplicável. Os titulares podem conceder
+autorizações comerciais ou exceções em instrumento separado, por escrito,
+identificando concedente, destinatário, objeto e limites da autorização.
+
+Esta é uma licença própria de código disponível com restrição comercial;
+não é MIT, Apache-2.0, Creative Commons nem uma licença open source aprovada
+pela Open Source Initiative.

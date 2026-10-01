@@ -1,6 +1,7 @@
 {
   "name": "ficha-rpg",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"
