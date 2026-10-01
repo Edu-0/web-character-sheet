@@ -4,6 +4,15 @@ Aplicação web para criar, preencher e organizar fichas de RPG de mesa. Uma eng
 
 **Status:** protótipo funcional em desenvolvimento, ainda sem lançamento de produção. Os nomes do aplicativo e do RPG autoral são provisórios. Estruturas de dados podem mudar; exporte seus personagens antes de atualizar.
 
+## Documentação e continuidade
+
+- [Memória do projeto e decisões](docs/continuidade.md): escopo, requisitos, histórico e pendências.
+- [Arquitetura e operação](docs/arquitetura.md): dados, módulos e testes.
+- [Referência inicial de componentes](docs/componentes.md): tipos e contratos reutilizáveis.
+- [Texto para retomar em outro chat](docs/novo-chat.md): contexto curto para uma IA futura.
+
+`AGENTS.md` orienta agentes que trabalham neste repositório a consultar essa documentação.
+
 ## Funcionalidades atuais
 
 - Biblioteca local de sistemas e personagens, com criação, duplicação e importação/exportação em JSON.
@@ -21,7 +30,7 @@ O aplicativo não é um VTT, um simulador de campanha nem um árbitro automátic
 | --- | --- |
 | D&D 5e (2024) | Ficha modular com cálculos e controles de personagem. A apresentação estática permanece separada para comparação visual. Não automatiza todo o livro. |
 | RPG autoral, ainda sem nome | Ficha assistida com criação por pontos, evolução, perícias, traços compostos, Técnicas, Energia, estados, recuperação, carga e Pool. |
-| Sistema fictício de teste | Exemplo técnico para verificar componentes sem depender dos sistemas principais. |
+| Sistema fictício de teste | Exemplo técnico para verificar componentes; não é listado como sistema embutido no manifesto da biblioteca. |
 
 Consulte a [comparação D&D estático × modular](docs/dnd-parity.md) e a [cobertura do sistema autoral](docs/sistema-rpg.md).
 
@@ -84,7 +93,7 @@ No repositório, cada sistema tem arquivos `*.system.json` e `*.layout.json`. Na
 4. Importe um pacote pela biblioteca de sistemas ou registre seus arquivos em `data/systems/index.json` para incluí-los no aplicativo.
 5. Teste criação, edição, exportação, recarga e apresentação móvel.
 
-Os contratos são verificados em `js/validation/schemas.js`. As definições incluídas são exemplos executáveis; ainda não existe um editor visual completo ou uma documentação completa de todos os componentes.
+Os contratos são verificados em `js/validation/schemas.js`. As definições incluídas são exemplos executáveis; há uma [referência inicial da biblioteca](docs/componentes.md), mas ainda não existe um editor visual completo ou uma especificação exaustiva de todos os parâmetros.
 
 Regras compatíveis reutilizam a biblioteca. Mecânicas novas podem exigir novos componentes JavaScript: não se promete representar qualquer livro apenas com JSON.
 

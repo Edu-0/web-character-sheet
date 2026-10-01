@@ -2,3 +2,9 @@ node_modules/
 test-results/
 playwright-report/
 docs/references/
+docs/private/
+backups/
+exports/private/
+.env
+.env.*
+!.env.example

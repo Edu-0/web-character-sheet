@@ -1,6 +1,6 @@
 # Avisos de terceiros
 
-Este inventário não substitui as licenças completas nem certifica a proveniência de todo o projeto. Dependências mantêm suas próprias licenças, independentemente dos termos escolhidos para a engine.
+Este inventário não substitui as licenças completas nem certifica a proveniência de todo o projeto. Dependências mantêm suas próprias licenças, independentemente da licença não comercial da engine.
 
 ## Ferramentas de desenvolvimento
 
