@@ -269,6 +269,76 @@
   padding: var(--space-5);
 }
 
+.dnd-presentation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5) 0;
+}
+
+.dnd-presentation__label {
+  margin-right: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.dnd-presentation__button--active {
+  border-color: var(--color-accent-strong);
+  color: var(--color-accent-strong);
+  background: var(--color-panel-alt);
+}
+
+.dnd-sheet-surfaces--compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--space-4);
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.dnd-sheet-surfaces--compare > * {
+  min-width: 0;
+}
+
+.dnd-sheet-surfaces--compare #legacy-dnd-sheet::before,
+.dnd-sheet-surfaces--compare #generic-sheet-host::before {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.dnd-sheet-surfaces--compare #legacy-dnd-sheet::before {
+  content: 'Ficha estática · referência';
+}
+
+.dnd-sheet-surfaces--compare #generic-sheet-host::before {
+  content: 'Ficha modular · engine';
+}
+
+.dnd-sheet-surfaces--compare .generic-sheet-host {
+  width: 100%;
+  padding: 0;
+}
+
+.dnd-sheet-surfaces--compare .app-main {
+  padding: var(--space-4) 0;
+}
+
+@media (max-width: 900px) {
+  .dnd-sheet-surfaces--compare {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .shell-view--sheet {
   min-width: 0;
 }

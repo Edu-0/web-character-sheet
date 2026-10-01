@@ -4,13 +4,13 @@
 
 ## 🚧 Status
 
-**Em desenvolvimento — protótipo inicial**
+**Em desenvolvimento — fase 6: ficha D&D modular em comparação com a estática**
 
-Este projeto está atualmente na fase de experimentação e prototipagem.
+O projeto já possui uma engine declarativa, biblioteca local de sistemas e personagens, temas claro/escuro e testes de interface com Playwright.
 
 A primeira versão está sendo desenvolvida como uma **ficha de personagem web baseada em HTML, CSS e JavaScript**, inicialmente inspirada na estrutura de D&D 5e 2024.
 
-O objetivo inicial não é criar apenas uma ficha estática, mas experimentar uma arquitetura que possa futuramente evoluir para uma **engine/framework genérica de fichas de RPG**.
+O D&D 5e (2024) pode ser exibido como ficha estática de referência, ficha modular da engine ou comparação lado a lado. A preferência e a aba ativa são preservadas no navegador.
 
 ---
 
@@ -60,7 +60,7 @@ A intenção inicial é evitar frameworks e dependências desnecessárias.
 
 ---
 
-## 🧩 Visão futura
+## 🧩 Arquitetura atual
 
 Uma das principais ideias do projeto é separar a **engine da ficha** da definição de um sistema específico.
 
@@ -78,18 +78,21 @@ Componentes de UI
 Personagem
 ```
 
-No futuro, a definição de um sistema poderá ser representada por arquivos de configuração, possivelmente em JSON:
+Cada sistema possui uma configuração JSON e um layout JSON. Os personagens são persistidos separadamente:
 
 ```text
-systems/
-├── dnd2024.json
-├── custom-rpg.json
-└── outro-sistema.json
+data/systems/
+├── dnd2024.system.json
+├── dnd2024.layout.json
+├── sistema-rpg.system.json
+└── sistema-rpg.layout.json
 ```
 
-Isso permitiria utilizar a mesma engine para diferentes sistemas sem precisar reconstruir a aplicação inteira.
+O layout define abas, seções, containers e componentes. O renderizador genérico e o registro de componentes montam a ficha para qualquer sistema compatível. Componentes específicos de D&D ficam isolados em `js/systems/dnd2024-fields.js`.
 
-Essa arquitetura ainda **não está implementada** e faz parte da direção futura do projeto.
+A ficha estática permanece intacta durante a comparação; a próxima etapa é ajustar a paridade visual e funcional antes de considerar sua retirada.
+
+Para executar a aplicação localmente e os testes de interface: `npm install` e `npm run test:e2e`.
 
 ---
 

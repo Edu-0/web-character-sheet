@@ -1,7 +1,7 @@
 {
   "id": "dnd2024-layout",
   "system": "dnd2024",
-  "description": "Descrição da organização visual atual da ficha. Ainda não é consumida pelo renderer genérico (js/ui.js continua desenhando esta versão da interface) — existe para documentar a separação entre dados/regras e apresentação, e para servir de ponto de partida quando a interface migrar para o renderer genérico (engine/renderer.js).",
+  "description": "Ficha modular D&D 5e (2024), renderizada pela engine em paralelo à ficha estática de referência.",
   "schemaVersion": 1,
   "tabs": [
     {
@@ -21,9 +21,16 @@
               },
               "components": [
                 {
+                  "type": "image",
+                  "field": "identity.portrait",
+                  "label": "Retrato",
+                  "variant": "card"
+                },
+                {
                   "type": "text",
                   "field": "identity.name",
-                  "label": "Nome do personagem"
+                  "label": "Nome do personagem",
+                  "variant": "hero"
                 },
                 {
                   "type": "text",
@@ -106,6 +113,42 @@
                   "type": "number",
                   "field": "combat.hpTemp",
                   "label": "PV Temporário"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "proficiency",
+                  "label": "Proficiência"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "initiative",
+                  "label": "Iniciativa"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "passivePerception",
+                  "label": "Percepção Passiva"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.initiativeBonus",
+                  "label": "Bônus adicional de iniciativa"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.hitDice.total",
+                  "label": "Dados de Vida (total)"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.hitDice.used",
+                  "label": "Dados de Vida (usados)"
+                },
+                {
+                  "type": "select",
+                  "field": "combat.hitDice.die",
+                  "label": "Dado de Vida",
+                  "options": ["d6", "d8", "d10", "d12"]
                 }
               ]
             }
@@ -127,9 +170,11 @@
               },
               "components": [
                 {
-                  "type": "number",
+                  "type": "dndAbility",
                   "field": "abilities.{key}.score",
-                  "label": "{label}"
+                  "key": "{key}",
+                  "label": "{label}",
+                  "short": "{short}"
                 }
               ]
             }
@@ -151,9 +196,11 @@
               },
               "components": [
                 {
-                  "type": "boolean",
+                  "type": "dndSkill",
                   "field": "skills.{key}.proficient",
-                  "label": "{label}"
+                  "key": "{key}",
+                  "label": "{label}",
+                  "ability": "{ability}"
                 }
               ]
             }
@@ -182,13 +229,13 @@
                   "field": "combat.attacks",
                   "label": "Ataques",
                   "itemSchema": {
-                    "name": "text",
-                    "bonus": "text",
-                    "damage": "text",
-                    "damageType": "text",
-                    "range": "text",
-                    "properties": "text",
-                    "notes": "textarea"
+                    "name": { "type": "text", "label": "Nome" },
+                    "bonus": { "type": "text", "label": "Bônus" },
+                    "damage": { "type": "text", "label": "Dano" },
+                    "damageType": { "type": "text", "label": "Tipo de dano" },
+                    "range": { "type": "text", "label": "Alcance" },
+                    "properties": { "type": "text", "label": "Propriedades" },
+                    "notes": { "type": "textarea", "label": "Notas" }
                   }
                 }
               ]
@@ -240,7 +287,7 @@
                   "label": "Habilidades",
                   "itemSchema": {
                     "name": "text",
-                    "source": "select",
+                    "source": { "type": "select", "label": "Origem", "options": ["Classe", "Espécie", "Antecedente", "Talento", "Outro"] },
                     "usesCurrent": "number",
                     "usesMax": "number",
                     "description": "textarea",
@@ -272,16 +319,22 @@
                 {
                   "type": "select",
                   "field": "spellcasting.ability",
-                  "label": "Atributo de Conjuração"
+                  "label": "Atributo de Conjuração",
+                  "options": [
+                    { "value": "", "label": "Nenhum" },
+                    { "value": "int", "label": "Inteligência" },
+                    { "value": "wis", "label": "Sabedoria" },
+                    { "value": "cha", "label": "Carisma" }
+                  ]
                 },
                 {
-                  "type": "computed",
-                  "formula": "spellSaveDC",
+                  "type": "dndDerived",
+                  "stat": "spellSaveDC",
                   "label": "CD de Magia"
                 },
                 {
-                  "type": "computed",
-                  "formula": "spellAttackBonus",
+                  "type": "dndDerived",
+                  "stat": "spellAttackBonus",
                   "label": "Bônus de Ataque"
                 }
               ]
@@ -327,7 +380,7 @@
                   "label": "Magias",
                   "itemSchema": {
                     "name": "text",
-                    "level": "select",
+                    "level": { "type": "select", "label": "Nível", "options": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "default": 0, "valueType": "number" },
                     "school": "text",
                     "prepared": "boolean",
                     "castingTime": "text",
@@ -383,6 +436,16 @@
                   "type": "number",
                   "field": "inventory.currency.cp",
                   "label": "PC"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "totalInventoryWeight",
+                  "label": "Peso total"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "carryCapacity",
+                  "label": "Capacidade de carga"
                 }
               ]
             }
@@ -409,7 +472,7 @@
                     "qty": "number",
                     "weight": "number",
                     "value": "number",
-                    "category": "select",
+                    "category": { "type": "select", "label": "Categoria", "options": ["Equipamento", "Arma", "Armadura", "Ferramenta", "Consumível", "Tesouro", "Outro"], "default": "Equipamento" },
                     "equipped": "boolean",
                     "notes": "text"
                   }

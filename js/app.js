@@ -1,4 +1,4 @@
-// app.js — shell global, bibliotecas e montagem temporária da ficha D&D legada.
+// app.js — shell global, bibliotecas e apresentações da ficha ativa.
 import { state } from './state.js';
 import * as storage from './storage.js';
 import * as ui from './ui.js';
@@ -19,6 +19,7 @@ import { roll, getHistory, clearHistory } from './dice.js';
 import { setSystem, getDiceSet } from './engine/system.js';
 import { setLayout } from './engine/layout.js';
 import { renderSheet } from './engine/renderer.js';
+import './systems/dnd2024-fields.js';
 import { getAppState, setAppState, updateAppState, subscribeAppState } from './app-state.js';
 
 const $ = (id) => document.getElementById(id);
@@ -30,10 +31,17 @@ let saveTimeout = null;
 let suppressCharacterEffects = false;
 let appPersistenceEnabled = false;
 let genericSheetController = null;
+let legacyTabsController = null;
+let engineChangeInProgress = false;
+let synchronizingTabs = false;
+let mountingGenericSheet = false;
 
 async function init() {
   const session = storage.loadAppSession();
   if (session.activeTab) setAppState('ui.activeTab', session.activeTab);
+  if (['legacy', 'engine', 'compare'].includes(session.dndPresentation)) {
+    setAppState('ui.dndPresentation', session.dndPresentation);
+  }
   initTheme();
   initShell();
   initLegacyControls(session.activeTab);
@@ -55,10 +63,14 @@ async function init() {
 }
 
 function initLegacyControls(initialTabId) {
-  initTabs(document, {
+  legacyTabsController = initTabs($('legacy-dnd-sheet'), {
     initialTabId,
     onChange: (tabId) => {
-      if (activePackage?.system.id === DND_SYSTEM_ID) setAppState('ui.activeTab', tabId);
+      if (activePackage?.system.id !== DND_SYSTEM_ID || synchronizingTabs) return;
+      setAppState('ui.activeTab', tabId);
+      synchronizingTabs = true;
+      try { genericSheetController?.activate(tabId, { focus: false }); }
+      finally { synchronizingTabs = false; }
     },
   });
   ui.mountStaticIcons();
@@ -68,6 +80,9 @@ function initLegacyControls(initialTabId) {
   wireAddButtons();
   wireInventorySearch();
   wireDiceTray();
+  document.querySelectorAll('[data-dnd-presentation]').forEach((button) => {
+    button.addEventListener('click', () => setAppState('ui.dndPresentation', button.dataset.dndPresentation));
+  });
 }
 
 function initShell() {
@@ -99,6 +114,7 @@ function renderShell(appState) {
   $('btn-clear-character').disabled = !appState.currentCharacter;
   $('btn-save-character').disabled = !appState.currentCharacter;
   $('btn-export').disabled = !appState.currentCharacter;
+  updateSheetPresentation();
 }
 
 async function activateSystem(systemId) {
@@ -149,37 +165,82 @@ async function createAndOpenCharacter(systemId, { notifyUser = true } = {}) {
 }
 
 function mountActiveSheet(character) {
-  const isLegacyDnd = activePackage?.system.id === DND_SYSTEM_ID;
+  const isDnd = activePackage?.system.id === DND_SYSTEM_ID;
   genericSheetController?.destroy();
   genericSheetController = null;
-  $('legacy-dnd-sheet').hidden = !isLegacyDnd;
-  $('generic-sheet-host').hidden = isLegacyDnd;
 
   clearHistory();
-  if (isLegacyDnd) {
+  if (isDnd) {
     ui.renderAll(character);
     buildDiceButtons();
     renderDiceHistory();
+    if (getAppState().ui.dndPresentation !== 'legacy') renderGenericSheet(character);
   } else {
     renderGenericSheet(character);
   }
+  updateSheetPresentation();
+}
+
+function updateSheetPresentation() {
+  if (!activePackage) return;
+  const isDnd = activePackage.system.id === DND_SYSTEM_ID;
+  const presentation = getAppState().ui.dndPresentation;
+  const compare = isDnd && presentation === 'compare';
+  $('dnd-presentation-controls').hidden = !isDnd;
+  $('legacy-dnd-sheet').hidden = !isDnd || presentation === 'engine';
+  $('generic-sheet-host').hidden = isDnd && presentation === 'legacy';
+  $('dice-tray').hidden = !isDnd;
+  $('dnd-sheet-surfaces').classList.toggle('dnd-sheet-surfaces--compare', compare);
+  document.querySelectorAll('[data-dnd-presentation]').forEach((button) => {
+    const active = button.dataset.dndPresentation === presentation;
+    button.classList.toggle('dnd-presentation__button--active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  if (isDnd && presentation === 'legacy' && genericSheetController) {
+    genericSheetController.destroy();
+    genericSheetController = null;
+  }
+  if (isDnd && presentation !== 'legacy' && !genericSheetController && !mountingGenericSheet) renderGenericSheet(state.get());
 }
 
 function renderGenericSheet(character) {
   const host = $('generic-sheet-host');
-  genericSheetController = renderSheet(host, activePackage.layouts[0], character, {
-    system: activePackage.system,
-    initialTabId: getAppState().ui.activeTab,
-    onTabChange: (tabId) => setAppState('ui.activeTab', tabId),
-    onChange: () => state.notify(),
-  });
+  mountingGenericSheet = true;
+  try {
+    genericSheetController = renderSheet(host, activePackage.layouts[0], character, {
+      system: activePackage.system,
+      initialTabId: getAppState().ui.activeTab,
+      onTabChange: (tabId) => {
+        if (activePackage?.system.id === DND_SYSTEM_ID && !synchronizingTabs) {
+          synchronizingTabs = true;
+          try { legacyTabsController?.activate(tabId, { focus: false }); }
+          finally { synchronizingTabs = false; }
+        }
+        if (getAppState().ui.activeTab !== tabId) setAppState('ui.activeTab', tabId);
+      },
+      onChange: () => {
+        engineChangeInProgress = true;
+        try { state.notify(); } finally { engineChangeInProgress = false; }
+      },
+    });
+  } finally {
+    mountingGenericSheet = false;
+  }
 }
 
 function onCharacterChange(character) {
   if (suppressCharacterEffects || !activeCharacterId || character.meta?.id !== activeCharacterId) return;
   if (activePackage?.system.id === DND_SYSTEM_ID) {
-    ui.refreshComputedOnly(character);
-    ui.updatePortrait(character);
+    if (engineChangeInProgress) ui.renderAll(character);
+    else {
+      ui.refreshComputedOnly(character);
+      ui.updatePortrait(character);
+      if (genericSheetController && getAppState().ui.dndPresentation !== 'legacy') {
+        genericSheetController.destroy();
+        genericSheetController = null;
+        renderGenericSheet(character);
+      }
+    }
   }
   scheduleCharacterSave(character);
   updateAppState({ currentCharacter: characterSummary(character) });
@@ -406,6 +467,13 @@ function wireDiceTray() {
     toggle.setAttribute('aria-expanded', String(!expanded));
     panel.hidden = expanded;
   });
+  document.addEventListener('dnd:rolled', (event) => {
+    const result = event.detail;
+    $('dice-result').textContent = `${result.formula} = ${result.total}`;
+    renderDiceHistory();
+    panel.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+  });
 }
 
 function buildDiceButtons() {
@@ -447,6 +515,7 @@ function persistAppState(appState) {
     currentCharacterId: appState.currentCharacter?.id ?? null,
     currentView: appState.currentView,
     activeTab: appState.ui.activeTab,
+    dndPresentation: appState.ui.dndPresentation,
   });
 }
 

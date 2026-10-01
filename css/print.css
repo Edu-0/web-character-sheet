@@ -12,6 +12,7 @@
   }
 
   .no-print,
+  .dnd-presentation,
   .app-header,
   .shell-header,
   .shell-nav,
@@ -49,6 +50,14 @@
 
   .engine-panel[hidden] {
     display: grid !important;
+  }
+
+  .dnd-sheet-surfaces--compare {
+    display: block;
+  }
+
+  .dnd-sheet-surfaces--compare #legacy-dnd-sheet {
+    display: none !important;
   }
 
   .engine-sheet,

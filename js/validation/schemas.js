@@ -5,6 +5,9 @@ export const KNOWN_COMPONENT_TYPES = new Set([
   'computed',
   'counter',
   'die',
+  'dndAbility',
+  'dndDerived',
+  'dndSkill',
   'image',
   'list',
   'number',
@@ -20,7 +23,7 @@ export const KNOWN_COMPONENT_TYPES = new Set([
 ]);
 
 const FIELD_COMPONENT_TYPES = new Set([
-  'boolean', 'counter', 'die', 'image', 'list', 'number', 'resource', 'select',
+  'boolean', 'counter', 'die', 'dndAbility', 'dndSkill', 'image', 'list', 'number', 'resource', 'select',
   'slotTracker', 'stateList', 'table', 'tagList', 'text', 'textarea',
 ]);
 

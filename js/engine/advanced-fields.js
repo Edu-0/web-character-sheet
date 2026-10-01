@@ -403,6 +403,7 @@ function renderItemField(item, key, definition, context, onChange, { hideLabel =
     if (config.type === 'boolean') item[key] = control.checked;
     else if (config.type === 'number') item[key] = numberValue(control);
     else if (config.type === 'die') item[key] = control.value === '' ? null : Number(control.value);
+    else if (config.type === 'select' && config.valueType === 'number') item[key] = control.value === '' ? null : Number(control.value);
     else if (config.type === 'reference' && config.multiple) {
       item[key] = control.value.split(',').map((value) => value.trim()).filter(Boolean);
     }

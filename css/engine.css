@@ -553,6 +553,116 @@
   flex-wrap: wrap;
 }
 
+/* Adaptação visual de D&D sobre a composição declarativa. */
+.engine-dnd-ability {
+  display: grid;
+  grid-template-columns: 1fr minmax(3.5rem, 4.5rem) auto;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-panel-alt);
+}
+
+.engine-dnd-ability__name {
+  color: var(--color-accent-strong);
+  font-family: var(--font-display);
+}
+
+.engine-dnd-ability__score {
+  width: 100%;
+  text-align: center;
+}
+
+.engine-dnd-ability__modifier,
+.engine-dnd-ability__save-roll,
+.engine-dnd-skill__modifier {
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-computed-bg);
+  color: var(--color-computed-text);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.engine-dnd-ability__save {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  grid-column: 1 / 3;
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+}
+
+.engine-dnd-ability__save-roll {
+  font-size: var(--fs-xs);
+}
+
+.engine-dnd-skill {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.engine-dnd-skill__check {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+}
+
+.engine-dnd-skill__name {
+  overflow-wrap: anywhere;
+}
+
+.engine-dnd-skill__ability {
+  color: var(--color-text-faint);
+}
+
+.engine-dnd-derived {
+  display: grid;
+  align-content: center;
+  gap: var(--space-1);
+  width: 100%;
+  min-height: 4.5rem;
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  text-align: center;
+}
+
+.engine-dnd-derived__label {
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.engine-dnd-derived__value {
+  color: var(--color-computed-text);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .engine-dnd-skill {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+  }
+
+  .engine-dnd-skill__ability {
+    display: none;
+  }
+}
+
 /* Pool de dados e resolução */
 .engine-pool {
   display: grid;

@@ -103,6 +103,13 @@
   </section>
 
   <section id="view-sheet" class="shell-view shell-view--sheet" data-app-view="sheet">
+  <div id="dnd-presentation-controls" class="dnd-presentation no-print" role="group" aria-label="Apresentação da ficha D&D" hidden>
+    <span class="dnd-presentation__label">Visualização D&D</span>
+    <button type="button" class="button button--ghost" data-dnd-presentation="legacy">Ficha estática</button>
+    <button type="button" class="button button--ghost" data-dnd-presentation="engine">Ficha modular</button>
+    <button type="button" class="button button--ghost" data-dnd-presentation="compare">Comparar lado a lado</button>
+  </div>
+  <div id="dnd-sheet-surfaces" class="dnd-sheet-surfaces">
   <div id="legacy-dnd-sheet">
   <nav class="tab-nav no-print" role="tablist" aria-label="Seções da ficha">
     <button type="button" id="tab-identity" class="tab" role="tab" aria-controls="panel-identity" aria-selected="true">Identidade</button>
@@ -362,7 +369,11 @@
 
   </main>
 
-  <footer class="dice-tray no-print" id="dice-tray">
+  </div>
+  <div id="generic-sheet-host" class="generic-sheet-host" hidden></div>
+  </div>
+
+  <footer class="dice-tray no-print" id="dice-tray" hidden>
     <button type="button" class="dice-tray__toggle" id="btn-dice-toggle" aria-expanded="false" aria-controls="dice-panel">
       <span id="dice-toggle-icon"></span>
       <span>Dados</span>
@@ -373,9 +384,6 @@
       <ol class="dice-history" id="dice-history"></ol>
     </div>
   </footer>
-
-  </div>
-  <div id="generic-sheet-host" class="generic-sheet-host" hidden></div>
 
   </section>
   </div>
