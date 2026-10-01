@@ -9,7 +9,7 @@ const initialState = {
   currentView: 'sheet',
   ui: {
     activeTab: null,
-    dndPresentation: 'legacy',
+    dndPresentation: 'engine',
   },
 };
 

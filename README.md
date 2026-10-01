@@ -4,13 +4,13 @@
 
 ## 🚧 Status
 
-**Em desenvolvimento — fase 6: ficha D&D modular em comparação com a estática**
+**Em desenvolvimento — fase 7: paridade da ficha D&D modular**
 
 O projeto já possui uma engine declarativa, biblioteca local de sistemas e personagens, temas claro/escuro e testes de interface com Playwright.
 
 A primeira versão está sendo desenvolvida como uma **ficha de personagem web baseada em HTML, CSS e JavaScript**, inicialmente inspirada na estrutura de D&D 5e 2024.
 
-O D&D 5e (2024) pode ser exibido como ficha estática de referência, ficha modular da engine ou comparação lado a lado. A preferência e a aba ativa são preservadas no navegador.
+O D&D 5e (2024) abre pela ficha modular em navegadores novos. A ficha estática permanece isolada como referência, acessível pelo seletor junto ao modo de comparação lado a lado. A preferência e a aba ativa são preservadas no navegador.
 
 ---
 
@@ -90,7 +90,7 @@ data/systems/
 
 O layout define abas, seções, containers e componentes. O renderizador genérico e o registro de componentes montam a ficha para qualquer sistema compatível. Componentes específicos de D&D ficam isolados em `js/systems/dnd2024-fields.js`.
 
-A ficha estática permanece intacta durante a comparação; a próxima etapa é ajustar a paridade visual e funcional antes de considerar sua retirada.
+A ficha estática permanece disponível para comparação, conforme a decisão do projeto. A matriz de paridade, as diferenças visuais menores e como regenerar as capturas estão em [docs/dnd-parity.md](docs/dnd-parity.md). A fase seguinte cobre conteúdo variável extremo e regressão final.
 
 Para executar a aplicação localmente e os testes de interface: `npm install` e `npm run test:e2e`.
 

@@ -42,7 +42,7 @@ registerFieldType('dndAbility', {
     saveRoll.setAttribute('aria-label', `Rolar resistência de ${label}`);
     const refresh = () => {
       modifier.textContent = formatModifier(abilityModifier(getByPath(character, field)));
-      saveRoll.textContent = `Resistência ${formatModifier(savingThrowModifier(character, key))}`;
+      saveRoll.textContent = formatModifier(savingThrowModifier(character, key));
     };
     score.addEventListener('input', () => {
       setByPath(character, field, Number(score.value) || 0);
@@ -54,7 +54,7 @@ registerFieldType('dndAbility', {
     });
     modifier.addEventListener('click', () => rollCheck(label, abilityModifier(getByPath(character, field))));
     saveRoll.addEventListener('click', () => rollCheck(`Resistência de ${label}`, savingThrowModifier(character, key)));
-    save.append(saveInput, node('span', '', 'Proficiência'));
+    save.append(saveInput, node('span', '', 'Resistência'));
     card.append(heading, score, modifier, save, saveRoll);
     context.registerRefresh?.(refresh);
     refresh();
@@ -71,13 +71,13 @@ registerFieldType('dndSkill', {
     proficiencyInput.type = 'checkbox';
     proficiencyInput.checked = Boolean(getByPath(character, field));
     proficiencyInput.setAttribute('aria-label', `Proficiência em ${label}`);
-    proficiency.append(proficiencyInput, node('span', '', 'Prof.'));
+    proficiency.append(proficiencyInput, node('span', 'visually-hidden', 'Proficiência'));
     const expertise = node('label', 'engine-dnd-skill__check');
     const expertiseInput = document.createElement('input');
     expertiseInput.type = 'checkbox';
     expertiseInput.checked = Boolean(getByPath(character, `skills.${key}.expertise`));
     expertiseInput.setAttribute('aria-label', `Especialização em ${label}`);
-    expertise.append(expertiseInput, node('span', '', 'Esp.'));
+    expertise.append(expertiseInput, node('span', 'visually-hidden', 'Especialização'));
     const name = node('span', 'engine-dnd-skill__name', label);
     const abilityLabel = node('small', 'engine-dnd-skill__ability', ability.toUpperCase());
     const modifier = node('button', 'engine-dnd-skill__modifier');

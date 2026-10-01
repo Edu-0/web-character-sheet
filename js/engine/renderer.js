@@ -8,7 +8,8 @@ export function renderSheet(host, layout, character, options = {}) {
   host.innerHTML = '';
   if (!layout) return { activate: () => {}, destroy: () => {} };
 
-  const sheet = element('div', 'engine-sheet');
+  const sheetVariant = safeToken(layout.variant);
+  const sheet = element('div', `engine-sheet${sheetVariant ? ` engine-sheet--${sheetVariant}` : ''}`);
   const header = element('header', 'engine-sheet__header');
   const title = element('h1', 'engine-sheet__title', characterName(character));
   header.append(
@@ -81,7 +82,8 @@ export function renderSheet(host, layout, character, options = {}) {
     options.onTabChange?.(tabs[safeIndex].id);
   }
 
-  sheet.append(header, navigation, panels);
+  if (layout.showHeader !== false) sheet.appendChild(header);
+  sheet.append(navigation, panels);
   host.appendChild(sheet);
   const requestedIndex = tabs.findIndex(({ id }) => id === options.initialTabId);
   activate(requestedIndex >= 0 ? requestedIndex : 0, { focus: false });
@@ -100,7 +102,8 @@ export function renderSheet(host, layout, character, options = {}) {
 }
 
 export function renderTab(tab, character, options = {}) {
-  const panel = element('section', 'engine-panel');
+  const variant = safeToken(tab.variant);
+  const panel = element('section', `engine-panel${variant ? ` engine-panel--${variant}` : ''}`);
   (tab.sections || []).forEach((section) => {
     panel.appendChild(renderSection(section, character, options));
   });
@@ -108,7 +111,8 @@ export function renderTab(tab, character, options = {}) {
 }
 
 function renderSection(section, character, options) {
-  const sectionEl = element('article', 'engine-section');
+  const variant = safeToken(section.variant);
+  const sectionEl = element('article', `engine-section${variant ? ` engine-section--${variant}` : ''}`);
   if (section.title) {
     const header = element('header', 'engine-section__header');
     header.appendChild(element('h2', 'engine-section__title', section.title));
@@ -128,7 +132,8 @@ function renderSection(section, character, options) {
 
 function renderContainer(container, character, options) {
   const layout = container.layout || { type: 'stack' };
-  const content = element('div', `engine-container engine-container--${layout.type || 'stack'}`);
+  const variant = safeToken(container.variant);
+  const content = element('div', `engine-container engine-container--${layout.type || 'stack'}${variant ? ` engine-container--${variant}` : ''}`);
   addLayoutHintClass(content, 'min', layout.min);
   addLayoutHintClass(content, 'gap', layout.gap);
 
@@ -155,6 +160,7 @@ function renderContainer(container, character, options) {
 function renderComponent(component, character, options) {
   const variant = safeToken(component.variant);
   const wrapper = element('div', `engine-component${variant ? ` engine-component--${variant}` : ''}`);
+  if (component.field) wrapper.dataset.field = component.field;
   const fieldType = getFieldType(component.type);
   if (!fieldType) {
     wrapper.classList.add('engine-component--pending');

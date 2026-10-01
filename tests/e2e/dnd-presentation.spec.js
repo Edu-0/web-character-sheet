@@ -1,11 +1,39 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');
 });
 
+test('ficha modular é padrão em um navegador novo', async ({ page }) => {
+  await expect(page.locator('#generic-sheet-host')).toBeVisible();
+  await expect(page.locator('#legacy-dnd-sheet')).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Ficha modular' })).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('ficha modular exporta e reimporta o mesmo personagem JSON', async ({ page }) => {
+  await page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])').getByLabel('Nome do personagem').fill('Lia Exportável');
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.locator('#btn-export').click(),
+  ]);
+  const exported = JSON.parse(await readFile(await download.path(), 'utf8'));
+  expect(exported.identity.name).toBe('Lia Exportável');
+  expect(exported.meta.system).toBe('dnd2024');
+
+  await page.locator('#input-import-file').setInputFiles({
+    name: 'lia.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(exported)),
+  });
+  await expect(page.locator('#shell-current-character')).toHaveText('Lia Exportável');
+  await expect(page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])').getByLabel('Nome do personagem')).toHaveValue('Lia Exportável');
+  await page.reload();
+  await expect(page.locator('#generic-sheet-host')).toBeVisible();
+  await expect(page.locator('#shell-current-character')).toHaveText('Lia Exportável');
+});
+
 test('alterna entre ficha estática e modular sem duplicar o personagem', async ({ page }) => {
+  await page.getByRole('button', { name: 'Ficha estática' }).click();
   await page.locator('#legacy-dnd-sheet [data-bind="identity.name"]').fill('Mirna');
   await page.getByRole('button', { name: 'Ficha modular' }).click();
   await expect(page.locator('#legacy-dnd-sheet')).toBeHidden();
@@ -59,6 +87,58 @@ test('modular oferece perícias, espaços de magia e rolagens funcionais', async
   await slot.getByRole('spinbutton', { name: 'Máximo do nível 1' }).fill('2');
   await slot.getByRole('button', { name: 'Aumentar usos do nível 1' }).click();
   await expect(slot.locator('.engine-slot__count')).toHaveText('1 / 2');
+});
+
+test('habilidades podem ser reordenadas e inventário filtrado', async ({ page }) => {
+  await page.getByRole('button', { name: 'Ficha modular' }).click();
+  await page.locator('#generic-sheet-host').getByRole('tab', { name: 'Habilidades' }).click();
+  const features = page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden]) .engine-entry');
+  await page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])').getByRole('button', { name: 'Adicionar Habilidade' }).click();
+  await features.first().locator('summary').click();
+  await features.first().getByRole('textbox', { name: 'Nome' }).fill('Primeira');
+  await page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])').getByRole('button', { name: 'Adicionar Habilidade' }).click();
+  await features.nth(1).locator('summary').click();
+  await features.nth(1).getByRole('textbox', { name: 'Nome' }).fill('Segunda');
+  await features.first().getByRole('button', { name: 'Mover para baixo: Primeira' }).click();
+  await expect(features.first().locator('.engine-entry__title')).toHaveText('Segunda');
+
+  await page.locator('#generic-sheet-host').getByRole('tab', { name: 'Inventário' }).click();
+  const inventory = page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])');
+  await inventory.getByRole('button', { name: 'Adicionar Item' }).click();
+  await inventory.locator('tbody tr').first().getByLabel('Item').fill('Corda');
+  await inventory.getByRole('searchbox', { name: 'Pesquisar itens' }).fill('espada');
+  await expect(inventory.locator('tbody tr')).toHaveCount(0);
+  await inventory.getByRole('searchbox', { name: 'Pesquisar itens' }).fill('corda');
+  await expect(inventory.locator('tbody tr')).toHaveCount(1);
+});
+
+test('retrato e impressão preservam a referência estática', async ({ page }) => {
+  await page.getByRole('button', { name: 'Comparar lado a lado' }).click();
+  const image = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="red"/></svg>');
+  await page.locator('#generic-sheet-host .engine-image input[type="file"]').setInputFiles({ name: 'retrato.svg', mimeType: 'image/svg+xml', buffer: image });
+  await expect(page.locator('#generic-sheet-host .engine-image__preview')).toBeVisible();
+  await expect(page.locator('#legacy-dnd-sheet #portrait-image')).toBeVisible();
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.locator('#legacy-dnd-sheet')).toBeHidden();
+  await expect(page.locator('#generic-sheet-host')).toBeVisible();
+  await expect(page.locator('#generic-sheet-host [role="tabpanel"]')).toHaveCount(7);
+  for (const panel of await page.locator('#generic-sheet-host [role="tabpanel"]').all()) {
+    await expect(panel).toBeVisible();
+  }
+});
+
+test('valores derivados coincidem entre as duas apresentações', async ({ page }) => {
+  await page.getByRole('button', { name: 'Comparar lado a lado' }).click();
+  await page.locator('#legacy-dnd-sheet [data-bind="identity.level"]').fill('5');
+  await page.locator('#generic-sheet-host .engine-dnd-ability__score').nth(4).fill('16');
+  await expect(page.locator('#legacy-dnd-sheet #stat-proficiency')).toHaveText('+3');
+  await expect(page.locator('#legacy-dnd-sheet #stat-passive-perception')).toHaveText('13');
+  await expect(page.locator('#generic-sheet-host [data-field="combat.ac"] input')).toHaveValue('10');
+  await expect(page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden]) .engine-dnd-derived__value').first()).toHaveText('+3');
+  await page.locator('#generic-sheet-host').getByRole('tab', { name: 'Magias' }).click();
+  await page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden]) select').first().selectOption('wis');
+  await expect(page.locator('#legacy-dnd-sheet #stat-spell-dc')).toHaveText('14');
+  await expect(page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden]) .engine-dnd-derived__value').first()).toHaveText('14');
 });
 
 for (const width of [360, 768, 1280]) {

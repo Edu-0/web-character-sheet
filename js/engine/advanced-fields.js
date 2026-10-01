@@ -74,7 +74,8 @@ registerFieldType('slotTracker', {
     const slots = ensureArray(context.character, context.field);
     slots.forEach((slot) => {
       const row = element('div', 'engine-slot');
-      const label = element('strong', 'engine-slot__label', context.levelLabel?.replace('{level}', slot.level) || `Nível ${slot.level}`);
+      const top = element('div', 'engine-slot__top');
+      const label = element('span', 'engine-slot__label', context.levelLabel?.replace('{level}', slot.level) || `Nível ${slot.level}`);
       const decrement = buttonElement('−', 'engine-counter__button');
       decrement.setAttribute('aria-label', `Reduzir usos do nível ${slot.level}`);
       const count = element('span', 'engine-slot__count');
@@ -85,6 +86,8 @@ registerFieldType('slotTracker', {
       maximum.min = '0';
       maximum.setAttribute('aria-label', `Máximo do nível ${slot.level}`);
       maximum.value = slot.max ?? 0;
+      const maxRow = element('label', 'engine-slot__maximum');
+      maxRow.append(element('span', '', 'Máx.'), maximum);
       const refresh = () => { count.textContent = `${slot.used ?? 0} / ${slot.max ?? 0}`; };
       decrement.addEventListener('click', () => {
         slot.used = Math.max(0, Number(slot.used || 0) - 1);
@@ -103,7 +106,8 @@ registerFieldType('slotTracker', {
         context.onChange?.();
       });
       refresh();
-      row.append(label, decrement, count, increment, maximum);
+      top.append(label, decrement, count, increment);
+      row.append(top, maxRow);
       list.appendChild(row);
     });
     wrap.appendChild(list);
@@ -123,6 +127,8 @@ registerFieldType('image', {
     const preview = document.createElement('img');
     preview.className = 'engine-image__preview';
     preview.alt = context.alt || context.label || 'Imagem do personagem';
+    const placeholder = element('div', 'engine-image__placeholder', context.placeholder || '◇');
+    placeholder.setAttribute('aria-hidden', 'true');
     const controls = element('div', 'engine-image__controls');
     const upload = buttonElement('Escolher imagem', 'button button--ghost');
     const remove = buttonElement('Remover', 'button button--ghost');
@@ -133,6 +139,7 @@ registerFieldType('image', {
     const refresh = () => {
       const source = getByPath(context.character, context.field);
       preview.hidden = !source;
+      placeholder.hidden = Boolean(source);
       remove.hidden = !source;
       if (source) preview.src = source;
     };
@@ -154,7 +161,7 @@ registerFieldType('image', {
       context.onChange?.();
     });
     controls.append(upload, remove, input);
-    wrap.append(preview, controls);
+    wrap.append(preview, placeholder, controls);
     refresh();
     container.appendChild(wrap);
   },
@@ -209,12 +216,13 @@ function renderTagList(container, context) {
 }
 
 function renderList(container, context) {
-  const wrap = fieldBlock(context.label, `engine-collection engine-collection--${context.variant || 'cards'}`);
+  const wrap = fieldBlock(context.toolbarTitle ? null : context.label, `engine-collection engine-collection--${context.variant || 'cards'}`);
   const toolbar = element('div', 'engine-collection__toolbar');
   const count = element('span', 'engine-collection__count');
   const add = buttonElement(context.addLabel || 'Adicionar', 'button button--primary');
   const entries = element('div', 'engine-entry-list');
   const values = ensureArray(context.character, context.field);
+  if (context.toolbarTitle) toolbar.appendChild(element('h2', 'engine-collection__heading', context.heading || context.label));
   toolbar.append(count, add);
 
   const refresh = () => {
@@ -238,12 +246,27 @@ function renderList(container, context) {
 function renderEntry(item, index, values, context, refreshList) {
   const entry = document.createElement('details');
   entry.className = 'engine-entry';
-  entry.open = values.length <= 3;
+  entry.open = context.defaultOpen ?? values.length <= 3;
   const summary = document.createElement('summary');
   summary.className = 'engine-entry__summary';
   const title = element('strong', 'engine-entry__title', entryTitle(item, index));
-  const meta = element('span', 'engine-entry__meta', entryMeta(item));
+  const meta = element('span', 'engine-entry__meta', entryMeta(item, context));
   summary.append(title, meta);
+  if (context.reorderable) {
+    for (const [direction, label] of [[-1, 'Mover para cima'], [1, 'Mover para baixo']]) {
+      const move = buttonElement(direction < 0 ? '↑' : '↓', 'button button--ghost engine-entry__move');
+      move.setAttribute('aria-label', `${label}: ${entryTitle(item, index)}`);
+      move.disabled = index + direction < 0 || index + direction >= values.length;
+      move.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        [values[index], values[index + direction]] = [values[index + direction], values[index]];
+        refreshList();
+        context.onChange?.();
+      });
+      summary.appendChild(move);
+    }
+  }
   if (!Number.isInteger(context.fixedLength) || values.length > context.fixedLength) {
     const remove = buttonElement('Remover', 'button button--ghost engine-entry__remove');
     remove.addEventListener('click', (event) => {
@@ -259,7 +282,7 @@ function renderEntry(item, index, values, context, refreshList) {
   Object.entries(context.itemSchema || {}).forEach(([key, definition]) => {
     body.appendChild(renderItemField(item, key, definition, context, () => {
       title.textContent = entryTitle(item, index);
-      meta.textContent = entryMeta(item);
+      meta.textContent = entryMeta(item, context);
       context.onChange?.();
     }));
   });
@@ -268,7 +291,7 @@ function renderEntry(item, index, values, context, refreshList) {
     const gradeControl = [...body.querySelectorAll('.engine-item-field')]
       .find((field) => field.dataset.itemField === gradeField)?.querySelector('select');
     if (gradeControl) gradeControl.value = String(item[gradeField] ?? '');
-    meta.textContent = entryMeta(item);
+    meta.textContent = entryMeta(item, context);
     context.onChange?.();
   }));
   entry.append(summary, body);
@@ -302,11 +325,23 @@ function renderStateEffect(item, context, onChange) {
 }
 
 function renderTable(container, context) {
-  const wrap = fieldBlock(context.label, 'engine-table');
+  const wrap = fieldBlock(context.toolbarTitle ? null : context.label, 'engine-table');
   const toolbar = element('div', 'engine-collection__toolbar');
   const count = element('span', 'engine-collection__count');
   const add = buttonElement(context.addLabel || 'Adicionar item', 'button button--primary');
-  toolbar.append(count, add);
+  let search = null;
+  if (context.searchable) {
+    search = document.createElement('input');
+    search.type = 'search';
+    search.className = 'engine-table__search';
+    search.placeholder = context.searchPlaceholder || 'Pesquisar itens…';
+    search.setAttribute('aria-label', context.searchLabel || `Pesquisar ${context.label || 'itens'}`);
+    search.addEventListener('input', () => refresh());
+  }
+  if (context.toolbarTitle) toolbar.appendChild(element('h2', 'engine-collection__heading', context.heading || context.label));
+  toolbar.append(count);
+  if (search) toolbar.appendChild(search);
+  toolbar.appendChild(add);
   const scroll = element('div', 'engine-table__scroll');
   const table = document.createElement('table');
   const head = document.createElement('thead');
@@ -326,12 +361,20 @@ function renderTable(container, context) {
   const body = document.createElement('tbody');
   table.append(head, body);
   scroll.appendChild(table);
+  const empty = element('p', 'engine-empty', context.emptyLabel || 'Nenhum item cadastrado.');
   const values = ensureArray(context.character, context.field);
 
   const refresh = () => {
     body.innerHTML = '';
     count.textContent = `${values.length} ${values.length === 1 ? 'item' : 'itens'}`;
-    values.forEach((item, index) => {
+    const query = search?.value.trim().toLocaleLowerCase('pt-BR') || '';
+    const visibleItems = values.map((item, index) => ({ item, index })).filter(({ item }) =>
+      !query || Object.values(item).some((value) => String(value ?? '').toLocaleLowerCase('pt-BR').includes(query)));
+    if (query) count.textContent = `${visibleItems.length} de ${values.length} itens`;
+    scroll.hidden = visibleItems.length === 0;
+    empty.hidden = visibleItems.length !== 0;
+    empty.textContent = values.length ? 'Nenhum item corresponde à pesquisa.' : (context.emptyLabel || 'Nenhum item cadastrado.');
+    visibleItems.forEach(({ item, index }) => {
       const row = document.createElement('tr');
       schema.forEach(([key, definition]) => {
         const config = normalizeDefinition(key, definition);
@@ -342,7 +385,8 @@ function renderTable(container, context) {
       });
       const actionCell = document.createElement('td');
       actionCell.dataset.label = 'Ações';
-      const remove = buttonElement('Remover', 'button button--ghost');
+      const remove = buttonElement(context.removeLabel || 'Remover', 'button button--ghost');
+      remove.setAttribute('aria-label', 'Remover');
       remove.addEventListener('click', () => {
         values.splice(index, 1);
         refresh();
@@ -358,7 +402,7 @@ function renderTable(container, context) {
     refresh();
     context.onChange?.();
   });
-  wrap.append(toolbar, scroll);
+  wrap.append(toolbar, scroll, empty);
   refresh();
   container.appendChild(wrap);
 }
@@ -626,7 +670,10 @@ function entryTitle(item, index) {
   return item.name?.trim() || item.label?.trim() || `Item ${index + 1}`;
 }
 
-function entryMeta(item) {
+function entryMeta(item, context = {}) {
+  if (Array.isArray(context.summaryFields)) {
+    return context.summaryFields.map((field) => item[field]).filter((value) => value !== '' && value != null).join(' · ');
+  }
   const parts = [];
   const sides = item.die ?? item.sides ?? item.currentDie;
   if (sides) parts.push(`d${sides}`);

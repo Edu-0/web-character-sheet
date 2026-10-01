@@ -2,18 +2,22 @@
   "id": "dnd2024-layout",
   "system": "dnd2024",
   "description": "Ficha modular D&D 5e (2024), renderizada pela engine em paralelo à ficha estática de referência.",
+  "variant": "reference",
+  "showHeader": false,
   "schemaVersion": 1,
   "tabs": [
     {
       "id": "identity",
       "label": "Identidade",
+      "variant": "identity",
       "sections": [
         {
           "id": "identity-header",
-          "title": "Identidade",
+          "variant": "profile",
           "containers": [
             {
               "id": "identity-header-container",
+              "variant": "profile",
               "layout": {
                 "type": "grid",
                 "min": "min(100%, 220px)",
@@ -24,12 +28,13 @@
                   "type": "image",
                   "field": "identity.portrait",
                   "label": "Retrato",
-                  "variant": "card"
+                  "variant": "portrait"
                 },
                 {
                   "type": "text",
                   "field": "identity.name",
                   "label": "Nome do personagem",
+                  "placeholder": "Nome do personagem",
                   "variant": "hero"
                 },
                 {
@@ -78,11 +83,11 @@
         },
         {
           "id": "vitals",
-          "title": "Estado Vital",
-          "notes": "combat.hp* ainda são campos legados 'planos' no character.json (não usam o tipo 'resource' current/max ainda). Migrar para um recurso único 'combat.hitPoints' é um passo futuro documentado no resumo da arquitetura.",
+          "variant": "stat-strip",
           "containers": [
             {
               "id": "vitals-container",
+              "variant": "stat-strip",
               "layout": {
                 "type": "grid",
                 "min": "min(100%, 220px)",
@@ -90,34 +95,14 @@
               },
               "components": [
                 {
-                  "type": "number",
-                  "field": "combat.ac",
-                  "label": "Classe de Armadura"
-                },
-                {
-                  "type": "number",
-                  "field": "combat.speed",
-                  "label": "Deslocamento"
-                },
-                {
-                  "type": "number",
-                  "field": "combat.hpCurrent",
-                  "label": "PV Atual"
-                },
-                {
-                  "type": "number",
-                  "field": "combat.hpMax",
-                  "label": "PV Máximo"
-                },
-                {
-                  "type": "number",
-                  "field": "combat.hpTemp",
-                  "label": "PV Temporário"
-                },
-                {
                   "type": "dndDerived",
                   "stat": "proficiency",
                   "label": "Proficiência"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.ac",
+                  "label": "CA"
                 },
                 {
                   "type": "dndDerived",
@@ -125,31 +110,34 @@
                   "label": "Iniciativa"
                 },
                 {
+                  "type": "number",
+                  "field": "combat.speed",
+                  "label": "Deslocamento (m)"
+                },
+                {
                   "type": "dndDerived",
                   "stat": "passivePerception",
                   "label": "Percepção Passiva"
-                },
-                {
-                  "type": "number",
-                  "field": "combat.initiativeBonus",
-                  "label": "Bônus adicional de iniciativa"
-                },
-                {
-                  "type": "number",
-                  "field": "combat.hitDice.total",
-                  "label": "Dados de Vida (total)"
-                },
-                {
-                  "type": "number",
-                  "field": "combat.hitDice.used",
-                  "label": "Dados de Vida (usados)"
-                },
-                {
-                  "type": "select",
-                  "field": "combat.hitDice.die",
-                  "label": "Dado de Vida",
-                  "options": ["d6", "d8", "d10", "d12"]
                 }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hit-points",
+          "variant": "hp-strip",
+          "containers": [
+            {
+              "id": "hit-points-container",
+              "variant": "hp-strip",
+              "layout": { "type": "grid", "min": 140, "gap": 16 },
+              "components": [
+                { "type": "number", "field": "combat.hpCurrent", "label": "PV Atual" },
+                { "type": "number", "field": "combat.hpMax", "label": "PV Máximo" },
+                { "type": "number", "field": "combat.hpTemp", "label": "PV Temporário" },
+                { "type": "number", "field": "combat.hitDice.used", "label": "Dados de Vida (usados)" },
+                { "type": "number", "field": "combat.hitDice.total", "label": "Dados de Vida (total)" },
+                { "type": "select", "field": "combat.hitDice.die", "label": "Dado", "options": ["d6", "d8", "d10", "d12"] }
               ]
             }
           ]
@@ -157,6 +145,7 @@
         {
           "id": "abilities",
           "title": "Atributos",
+          "variant": "traits",
           "containers": [
             {
               "id": "abilities-container",
@@ -183,9 +172,11 @@
         {
           "id": "skills",
           "title": "Perícias",
+          "variant": "skills",
           "containers": [
             {
               "id": "skills-container",
+              "variant": "skill-list",
               "layout": {
                 "type": "grid",
                 "min": "min(100%, 220px)",
@@ -215,6 +206,7 @@
         {
           "id": "attacks",
           "title": "Ataques e Ações",
+          "variant": "toolbar",
           "containers": [
             {
               "id": "attacks-container",
@@ -228,6 +220,12 @@
                   "type": "list",
                   "field": "combat.attacks",
                   "label": "Ataques",
+                  "toolbarTitle": true,
+                  "heading": "Ataques e Ações",
+                  "defaultOpen": false,
+                  "summaryFields": ["damage"],
+                  "addLabel": "Adicionar Ataque",
+                  "emptyLabel": "Nenhum ataque cadastrado. Adicione ataques, feitiços de combate ou ações especiais.",
                   "itemSchema": {
                     "name": { "type": "text", "label": "Nome" },
                     "bonus": { "type": "text", "label": "Bônus" },
@@ -272,6 +270,7 @@
         {
           "id": "features-list",
           "title": "Habilidades e Recursos",
+          "variant": "toolbar",
           "containers": [
             {
               "id": "features-list-container",
@@ -285,13 +284,20 @@
                   "type": "list",
                   "field": "features",
                   "label": "Habilidades",
+                  "toolbarTitle": true,
+                  "heading": "Habilidades e Recursos",
+                  "defaultOpen": false,
+                  "summaryFields": ["source"],
+                  "reorderable": true,
+                  "addLabel": "Adicionar Habilidade",
+                  "emptyLabel": "Nenhuma habilidade cadastrada. Adicione características de classe, espécie, talentos e recursos.",
                   "itemSchema": {
-                    "name": "text",
-                    "source": { "type": "select", "label": "Origem", "options": ["Classe", "Espécie", "Antecedente", "Talento", "Outro"] },
-                    "usesCurrent": "number",
-                    "usesMax": "number",
-                    "description": "textarea",
-                    "notes": "textarea"
+                    "name": { "type": "text", "label": "Nome" },
+                    "source": { "type": "select", "label": "Origem", "options": ["Classe", "Espécie", "Talento", "Antecedente", "Recurso", "Outro"], "default": "Classe" },
+                    "usesCurrent": { "type": "number", "label": "Usos Atuais" },
+                    "usesMax": { "type": "number", "label": "Usos Máximos" },
+                    "description": { "type": "textarea", "label": "Descrição" },
+                    "notes": { "type": "textarea", "label": "Notas" }
                   }
                 }
               ]
@@ -306,7 +312,7 @@
       "sections": [
         {
           "id": "spellcasting-summary",
-          "title": "Conjuração",
+          "variant": "summary",
           "containers": [
             {
               "id": "spellcasting-summary-container",
@@ -365,6 +371,7 @@
         {
           "id": "spell-list",
           "title": "Magias",
+          "variant": "toolbar",
           "containers": [
             {
               "id": "spell-list-container",
@@ -378,16 +385,21 @@
                   "type": "list",
                   "field": "spellcasting.spells",
                   "label": "Magias",
+                  "toolbarTitle": true,
+                  "defaultOpen": false,
+                  "summaryFields": ["level", "school"],
+                  "addLabel": "Adicionar Magia",
+                  "emptyLabel": "Nenhuma magia cadastrada.",
                   "itemSchema": {
-                    "name": "text",
-                    "level": { "type": "select", "label": "Nível", "options": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "default": 0, "valueType": "number" },
-                    "school": "text",
-                    "prepared": "boolean",
-                    "castingTime": "text",
-                    "range": "text",
-                    "duration": "text",
-                    "components": "text",
-                    "description": "textarea"
+                    "name": { "type": "text", "label": "Nome" },
+                    "level": { "type": "select", "label": "Nível", "options": [{ "value": 0, "label": "Truque" }, { "value": 1, "label": "1º nível" }, { "value": 2, "label": "2º nível" }, { "value": 3, "label": "3º nível" }, { "value": 4, "label": "4º nível" }, { "value": 5, "label": "5º nível" }, { "value": 6, "label": "6º nível" }, { "value": 7, "label": "7º nível" }, { "value": 8, "label": "8º nível" }, { "value": 9, "label": "9º nível" }], "default": 0, "valueType": "number" },
+                    "school": { "type": "text", "label": "Escola" },
+                    "prepared": { "type": "boolean", "label": "Preparada" },
+                    "castingTime": { "type": "text", "label": "Tempo de Conjuração" },
+                    "range": { "type": "text", "label": "Alcance" },
+                    "duration": { "type": "text", "label": "Duração" },
+                    "components": { "type": "text", "label": "Componentes" },
+                    "description": { "type": "textarea", "label": "Descrição" }
                   }
                 }
               ]
@@ -403,9 +415,11 @@
         {
           "id": "currency",
           "title": "Moedas",
+          "variant": "currency",
           "containers": [
             {
               "id": "currency-container",
+              "variant": "currency",
               "layout": {
                 "type": "grid",
                 "min": "min(100%, 220px)",
@@ -430,22 +444,12 @@
                 {
                   "type": "number",
                   "field": "inventory.currency.sp",
-                  "label": "PP(prata)"
+                  "label": "PP (prata)"
                 },
                 {
                   "type": "number",
                   "field": "inventory.currency.cp",
                   "label": "PC"
-                },
-                {
-                  "type": "dndDerived",
-                  "stat": "totalInventoryWeight",
-                  "label": "Peso total"
-                },
-                {
-                  "type": "dndDerived",
-                  "stat": "carryCapacity",
-                  "label": "Capacidade de carga"
                 }
               ]
             }
@@ -454,9 +458,11 @@
         {
           "id": "items",
           "title": "Itens",
+          "variant": "items",
           "containers": [
             {
               "id": "items-container",
+              "variant": "items",
               "layout": {
                 "type": "grid",
                 "min": "min(100%, 220px)",
@@ -467,15 +473,33 @@
                   "type": "table",
                   "field": "inventory.items",
                   "label": "Itens",
+                  "toolbarTitle": true,
+                  "addLabel": "Adicionar Item",
+                  "removeLabel": "×",
+                  "emptyLabel": "Nenhum item no inventário.",
+                  "searchable": true,
+                  "searchLabel": "Pesquisar itens",
                   "itemSchema": {
-                    "name": "text",
-                    "qty": "number",
-                    "weight": "number",
-                    "value": "number",
-                    "category": { "type": "select", "label": "Categoria", "options": ["Equipamento", "Arma", "Armadura", "Ferramenta", "Consumível", "Tesouro", "Outro"], "default": "Equipamento" },
-                    "equipped": "boolean",
-                    "notes": "text"
+                    "name": { "type": "text", "label": "Item" },
+                    "qty": { "type": "number", "label": "Qtd", "default": 1 },
+                    "weight": { "type": "number", "label": "Peso" },
+                    "value": { "type": "number", "label": "Valor" },
+                    "category": { "type": "select", "label": "Categoria", "options": ["Equipamento", "Arma", "Armadura", "Item Mágico", "Consumível", "Ferramenta", "Tesouro", "Outro"], "default": "Equipamento" },
+                    "equipped": { "type": "boolean", "label": "Equipado" },
+                    "notes": { "type": "text", "label": "Notas" }
                   }
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "totalInventoryWeight",
+                  "label": "Peso total",
+                  "variant": "inline"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "carryCapacity",
+                  "label": "Capacidade de carga",
+                  "variant": "inline"
                 }
               ]
             }
@@ -489,10 +513,11 @@
       "sections": [
         {
           "id": "personality-fields",
-          "title": "Personalidade",
+          "variant": "bare-grid",
           "containers": [
             {
               "id": "personality-fields-container",
+              "variant": "two-column",
               "layout": {
                 "type": "grid",
                 "min": "min(100%, 220px)",
@@ -502,42 +527,54 @@
                 {
                   "type": "textarea",
                   "field": "personality.traits",
-                  "label": "Traços de Personalidade"
+                  "label": "Traços de Personalidade",
+                  "rows": 4
                 },
                 {
                   "type": "textarea",
                   "field": "personality.ideals",
-                  "label": "Ideais"
+                  "label": "Ideais",
+                  "rows": 4
                 },
                 {
                   "type": "textarea",
                   "field": "personality.bonds",
-                  "label": "Vínculos"
+                  "label": "Vínculos",
+                  "rows": 4
                 },
                 {
                   "type": "textarea",
                   "field": "personality.flaws",
-                  "label": "Defeitos"
+                  "label": "Defeitos",
+                  "rows": 4
                 },
                 {
                   "type": "textarea",
                   "field": "personality.appearance",
-                  "label": "Aparência"
+                  "label": "Aparência",
+                  "variant": "hero",
+                  "rows": 4
                 },
                 {
                   "type": "textarea",
                   "field": "personality.backstory",
-                  "label": "História"
+                  "label": "História",
+                  "variant": "hero",
+                  "rows": 6
                 },
                 {
                   "type": "textarea",
                   "field": "personality.allies",
-                  "label": "Aliados e Organizações"
+                  "label": "Aliados e Organizações",
+                  "variant": "hero",
+                  "rows": 4
                 },
                 {
                   "type": "textarea",
                   "field": "personality.notes",
-                  "label": "Notas"
+                  "label": "Notas",
+                  "variant": "hero",
+                  "rows": 4
                 }
               ]
             }
@@ -551,10 +588,11 @@
       "sections": [
         {
           "id": "proficiency-lists",
-          "title": "Proficiências e Idiomas",
+          "variant": "bare-grid",
           "containers": [
             {
               "id": "proficiency-lists-container",
+              "variant": "two-column",
               "layout": {
                 "type": "grid",
                 "min": "min(100%, 220px)",
@@ -584,7 +622,8 @@
                 {
                   "type": "tagList",
                   "field": "proficiencies.other",
-                  "label": "Outras Proficiências"
+                  "label": "Outras Proficiências",
+                  "variant": "hero"
                 }
               ]
             }

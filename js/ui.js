@@ -43,6 +43,7 @@ function applyBoundValue(el) {
   if (el.type === 'checkbox') value = el.checked;
   else if (el.type === 'number') value = el.value === '' ? 0 : Number(el.value);
   else value = el.value;
+  if (Object.is(state.getPath(path), value)) return;
   state.setPath(path, value);
 }
 

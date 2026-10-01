@@ -44,11 +44,12 @@ registerFieldType('number', {
 });
 
 registerFieldType('text', {
-  render(container, { character, field, label, onChange }) {
+  render(container, { character, field, label, placeholder, onChange }) {
     const wrap = fieldWrapper(label);
     const input = document.createElement('input');
     input.type = 'text';
     input.value = getByPath(character, field) ?? '';
+    if (placeholder) input.placeholder = placeholder;
     input.addEventListener('input', () => {
       setByPath(character, field, input.value);
       onChange?.();
@@ -59,10 +60,10 @@ registerFieldType('text', {
 });
 
 registerFieldType('textarea', {
-  render(container, { character, field, label, onChange }) {
+  render(container, { character, field, label, rows = 3, onChange }) {
     const wrap = fieldWrapper(label);
     const textarea = document.createElement('textarea');
-    textarea.rows = 3;
+    textarea.rows = rows;
     textarea.value = getByPath(character, field) ?? '';
     textarea.addEventListener('input', () => {
       setByPath(character, field, textarea.value);

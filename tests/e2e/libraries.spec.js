@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
   });
   await page.goto('/');
   await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)', { timeout: 15_000 });
+  await page.getByRole('button', { name: 'Ficha estática' }).click();
 });
 
 test.afterEach(async ({ page }) => {

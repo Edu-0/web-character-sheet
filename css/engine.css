@@ -296,6 +296,11 @@
   margin-bottom: var(--space-3);
 }
 
+.engine-collection__heading {
+  margin: 0 auto 0 0;
+  font-size: var(--fs-lg);
+}
+
 .engine-collection__count {
   color: var(--color-text-muted);
   font-size: var(--fs-sm);
@@ -433,6 +438,16 @@
   overflow-x: auto;
 }
 
+.engine-table__search {
+  flex: 0 1 15rem;
+  min-width: 8rem;
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+}
+
 .engine-table table {
   width: 100%;
   border-collapse: collapse;
@@ -517,13 +532,36 @@
 
 .engine-slot {
   display: grid;
-  grid-template-columns: 1fr auto minmax(3.5rem, auto) auto minmax(3.5rem, 5rem);
-  align-items: center;
   gap: var(--space-2);
   padding: var(--space-3);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-panel-alt);
+}
+
+.engine-slot__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(3.5rem, auto) auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.engine-slot__label {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+
+.engine-slot__maximum {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(3.5rem, 5rem);
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--color-border);
+  color: var(--color-text-faint);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
 }
 
 .engine-slot__count {
@@ -552,6 +590,381 @@
   gap: var(--space-2);
   flex-wrap: wrap;
 }
+
+.engine-image__placeholder {
+  display: grid;
+  place-items: center;
+  width: min(100%, 18rem);
+  aspect-ratio: 1;
+  margin-bottom: var(--space-3);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-panel-alt);
+  color: var(--color-text-faint);
+  font-size: 2rem;
+}
+
+/* Variante de ficha clássica: hierarquia próxima à folha de referência,
+   preservando a composição por abas, seções e componentes declarativos. */
+.engine-sheet--reference {
+  gap: var(--space-5);
+}
+
+.engine-sheet--reference .engine-tabs {
+  padding: 0;
+  border: 0;
+  border-bottom: var(--border-width) solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.engine-sheet--reference .engine-tab {
+  padding: var(--space-3) var(--space-4);
+  border-radius: 0;
+  font-weight: 500;
+}
+
+.engine-sheet--reference .engine-tab[aria-selected='true'] {
+  color: var(--color-accent-strong);
+  background: transparent;
+  box-shadow: inset 0 -2px var(--color-accent);
+}
+
+.engine-sheet--reference .engine-section {
+  background: var(--color-panel);
+}
+
+.engine-sheet--reference .engine-section__header {
+  margin: var(--space-5) var(--space-5) 0;
+  padding: 0 0 var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border);
+  background: transparent;
+}
+
+.engine-sheet--reference .engine-section__title {
+  font-size: var(--fs-md);
+}
+
+.engine-sheet--reference .engine-section__body {
+  padding: var(--space-5);
+}
+
+.engine-sheet--reference .engine-panel--identity {
+  grid-template-columns: 1.1fr 1.4fr;
+  align-items: start;
+}
+
+.engine-sheet--reference .engine-panel--identity > :nth-child(-n + 3) {
+  grid-column: 1 / -1;
+}
+
+.engine-sheet--reference .engine-section--profile {
+  container-type: inline-size;
+}
+
+.engine-sheet--reference .engine-container--profile {
+  grid-template-columns: 140px repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--space-3) var(--space-4);
+}
+
+.engine-sheet--reference .engine-component--portrait {
+  grid-column: 1;
+  grid-row: 1 / span 5;
+}
+
+.engine-sheet--reference .engine-container--profile .engine-component--hero {
+  grid-column: 2 / -1;
+}
+
+.engine-sheet--reference .engine-container--profile .engine-component--hero input {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+}
+
+.engine-sheet--reference .engine-component--portrait .engine-image__label {
+  display: none;
+}
+
+.engine-sheet--reference .engine-component--portrait .engine-image__preview,
+.engine-sheet--reference .engine-component--portrait .engine-image__placeholder {
+  width: 140px;
+  height: 140px;
+  margin: 0;
+  border: 2px solid var(--color-border-strong);
+}
+
+.engine-sheet--reference .engine-component--portrait .engine-image__controls {
+  width: 140px;
+  justify-content: center;
+  gap: 0;
+}
+
+.engine-sheet--reference .engine-component--portrait .engine-image__controls .button {
+  padding: var(--space-1);
+  font-size: var(--fs-xs);
+}
+
+.engine-sheet--reference .engine-section--stat-strip {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.engine-sheet--reference .engine-section--stat-strip .engine-section__body {
+  padding: 0;
+}
+
+.engine-sheet--reference .engine-container--stat-strip {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+  gap: var(--space-3);
+}
+
+.engine-sheet--reference .engine-container--stat-strip > .engine-component,
+.engine-sheet--reference .engine-container--stat-strip .engine-dnd-derived {
+  min-height: 5rem;
+}
+
+.engine-sheet--reference .engine-container--stat-strip > .engine-component:has(.field) {
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  text-align: center;
+}
+
+.engine-sheet--reference .engine-container--stat-strip .field input {
+  border: 0;
+  border-bottom: 2px dashed var(--color-border-strong);
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+
+.engine-sheet--reference .engine-container--stat-strip .engine-dnd-derived {
+  background: var(--color-panel);
+}
+
+.engine-sheet--reference .engine-container--hp-strip {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.engine-sheet--reference .engine-container--hp-strip input {
+  text-align: center;
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+.engine-sheet--reference .engine-section--traits .engine-container--grid {
+  --engine-container-min: 240px;
+  gap: var(--space-3);
+}
+
+.engine-sheet--reference .engine-section--skills .engine-container--grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+
+.engine-sheet--reference .engine-dnd-skill__check {
+  display: inline-flex;
+}
+
+.engine-sheet--reference .engine-section--currency .engine-container--grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.engine-sheet--reference .engine-section--items .engine-container--grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  justify-content: start;
+}
+
+.engine-sheet--reference .engine-section--toolbar {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.engine-sheet--reference .engine-section--bare-grid {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.engine-sheet--reference .engine-section--bare-grid .engine-section__body {
+  padding: 0;
+}
+
+.engine-sheet--reference .engine-container--two-column {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.engine-sheet--reference .engine-container--two-column .engine-component:has(.engine-tags) {
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.engine-sheet--reference .engine-container--two-column .engine-tags__label {
+  display: block;
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.engine-sheet--reference .engine-dnd-derived__value {
+  justify-self: center;
+  width: fit-content;
+  padding: .15rem .5rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-computed-bg);
+}
+
+.engine-sheet--reference .engine-section--toolbar .engine-section__header,
+.engine-sheet--reference .engine-section--items .engine-section__header {
+  display: none;
+}
+
+.engine-sheet--reference .engine-section--toolbar .engine-section__body {
+  padding: 0;
+}
+
+.engine-sheet--reference .engine-section--toolbar .engine-collection__toolbar {
+  margin: 0 0 var(--space-5);
+}
+
+.engine-sheet--reference .engine-section--items .engine-collection__toolbar {
+  margin: 0 0 var(--space-3);
+}
+
+.engine-sheet--reference .engine-collection__count {
+  display: none;
+}
+
+.engine-sheet--reference .engine-section--toolbar .engine-empty,
+.engine-sheet--reference .engine-table .engine-empty {
+  border: var(--border-width) dashed var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.engine-sheet--reference .engine-section--items .engine-component:has(.engine-table) {
+  grid-column: 1 / -1;
+}
+
+.engine-sheet--reference .engine-section--items .engine-table table {
+  table-layout: fixed;
+}
+
+.engine-sheet--reference .engine-section--items .engine-table th {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.engine-sheet--reference .engine-section--items .engine-item-field--compact input,
+.engine-sheet--reference .engine-section--items .engine-item-field--compact select,
+.engine-sheet--reference .engine-section--items .engine-item-field--compact textarea {
+  min-width: 0;
+  width: 100%;
+  padding: var(--space-1);
+}
+
+.engine-sheet--reference .engine-component--inline .engine-dnd-derived {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.engine-sheet--reference .engine-component--inline .engine-dnd-derived__label {
+  color: var(--color-text-muted);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.engine-sheet--reference .engine-component--inline .engine-dnd-derived__value {
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+  padding: 0;
+  background: transparent;
+}
+
+.engine-sheet--reference .engine-section--summary .engine-container--grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.engine-sheet--reference .engine-section--summary .engine-dnd-derived {
+  min-height: 4.25rem;
+}
+
+.engine-sheet--reference .engine-section--summary .field select {
+  min-height: 2.5rem;
+}
+
+.engine-sheet--reference .engine-collection__label,
+.engine-sheet--reference .engine-table__label,
+.engine-sheet--reference .engine-slots__label,
+.engine-sheet--reference .engine-tags__label {
+  display: none;
+}
+
+@container (max-width: 900px) {
+  .engine-sheet--reference .engine-panel--identity {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .engine-sheet--reference .engine-container--hp-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 1024px) {
+  .engine-sheet--reference .engine-container--two-column {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container (max-width: 700px) {
+  .engine-sheet--reference .engine-container--profile {
+    grid-template-columns: 140px repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (max-width: 430px) {
+  .engine-sheet--reference .engine-container--profile {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .engine-sheet--reference .engine-component--portrait {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-self: center;
+  }
+
+  .engine-sheet--reference .engine-container--profile .engine-component--hero {
+    grid-column: 1 / -1;
+  }
+
+  .engine-sheet--reference .engine-section--summary .engine-container--grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .engine-sheet--reference .engine-section--currency .engine-container--grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 90px), 1fr));
+  }
+}
+
 
 /* Adaptação visual de D&D sobre a composição declarativa. */
 .engine-dnd-ability {
