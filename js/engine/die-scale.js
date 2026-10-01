@@ -13,8 +13,7 @@ export function getDieScale() {
  * (o sistema não inventa d14) — retorna overflow:true para o chamador decidir
  * o que fazer (ex.: converter em Traço Composto ou em "Ascensão", conforme a regra).
  */
-export function stepUp(sides) {
-  const scale = getDieScale();
+export function stepUp(sides, scale = getDieScale()) {
   const index = scale.indexOf(sides);
   if (index === -1) return { sides, overflow: false, unknown: true };
   if (index === scale.length - 1) return { sides, overflow: true };
@@ -25,8 +24,7 @@ export function stepUp(sides) {
  * Desce um degrau. O piso da escala nunca desaparece (ex.: Reduzir abaixo de
  * d4 continua em d4) — retorna floored:true quando isso acontece.
  */
-export function stepDown(sides) {
-  const scale = getDieScale();
+export function stepDown(sides, scale = getDieScale()) {
   const index = scale.indexOf(sides);
   if (index === -1) return { sides, floored: false, unknown: true };
   if (index === 0) return { sides, floored: true };

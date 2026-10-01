@@ -94,6 +94,8 @@ A ficha estática permanece disponível para comparação, conforme a decisão d
 
 Para executar a aplicação localmente e os testes de interface: `npm install` e `npm run test:e2e`.
 
+O Sistema de RPG possui uma ficha assistida: catálogo compacto de Perícias, orçamento e evolução, traços compostos, repertório e uso de Técnicas, carga, descansos, cura e ações de cena. O visual segue a variante editorial do livro de referência. A cobertura, os limites narrativos e as regras configuráveis estão em [docs/sistema-rpg.md](docs/sistema-rpg.md).
+
 ---
 
 ## 📋 Escopo inicial

@@ -4,6 +4,7 @@
 // podem ser adicionados chamando registerFieldType — o núcleo da engine nunca
 // precisa de um if/else por tipo.
 import { getByPath, setByPath } from './paths.js';
+import { createTraitControl } from './traits.js';
 
 const registry = new Map();
 
@@ -29,13 +30,15 @@ function fieldWrapper(label, className = 'field') {
 }
 
 registerFieldType('number', {
-  render(container, { character, field, label, onChange }) {
+  render(container, { character, field, label, onChange, registerRefresh, default: defaultValue }) {
     const wrap = fieldWrapper(label);
     const input = document.createElement('input');
     input.type = 'number';
-    input.value = getByPath(character, field) ?? 0;
+    if (defaultValue !== undefined && getByPath(character, field) == null) setByPath(character, field, defaultValue);
+    input.value = getByPath(character, field) ?? defaultValue ?? 0;
+    registerRefresh?.(() => { if (document.activeElement !== input) input.value = getByPath(character, field) ?? defaultValue ?? 0; });
     input.addEventListener('input', () => {
-      setByPath(character, field, input.value === '' ? 0 : Number(input.value));
+      setByPath(character, field, input.value === '' ? defaultValue ?? 0 : Number(input.value));
       onChange?.();
     });
     wrap.appendChild(input);
@@ -75,12 +78,13 @@ registerFieldType('textarea', {
 });
 
 registerFieldType('boolean', {
-  render(container, { character, field, label, onChange }) {
+  render(container, { character, field, label, onChange, registerRefresh }) {
     const wrap = document.createElement('label');
     wrap.className = 'field field--checkbox';
     const input = document.createElement('input');
     input.type = 'checkbox';
     input.checked = Boolean(getByPath(character, field));
+    registerRefresh?.(() => { input.checked = Boolean(getByPath(character, field)); });
     input.addEventListener('change', () => {
       setByPath(character, field, input.checked);
       onChange?.();
@@ -94,9 +98,10 @@ registerFieldType('boolean', {
 });
 
 registerFieldType('select', {
-  render(container, { character, field, label, options = [], onChange }) {
+  render(container, { character, field, label, options = [], onChange, registerRefresh }) {
     const wrap = fieldWrapper(label);
     const select = document.createElement('select');
+    select.setAttribute('aria-label', label);
     options.forEach((opt) => {
       const optionEl = document.createElement('option');
       optionEl.value = opt.value ?? opt;
@@ -104,6 +109,7 @@ registerFieldType('select', {
       select.appendChild(optionEl);
     });
     select.value = getByPath(character, field) ?? '';
+    registerRefresh?.(() => { select.value = getByPath(character, field) ?? ''; });
     select.addEventListener('change', () => {
       setByPath(character, field, select.value);
       onChange?.();
@@ -115,7 +121,7 @@ registerFieldType('select', {
 
 // Campo composto: valor atual/máximo (ex: pontos de vida, energia, munição...).
 registerFieldType('resource', {
-  render(container, { character, field, label, onChange }) {
+  render(container, { character, field, label, onChange, registerRefresh }) {
     const wrap = document.createElement('div');
     wrap.className = 'field';
     const span = document.createElement('span');
@@ -139,6 +145,10 @@ registerFieldType('resource', {
     const max = document.createElement('input');
     max.type = 'number';
     max.value = getByPath(character, `${field}.max`) ?? 0;
+    registerRefresh?.(() => {
+      if (document.activeElement !== current) current.value = getByPath(character, `${field}.current`) ?? 0;
+      if (document.activeElement !== max) max.value = getByPath(character, `${field}.max`) ?? 0;
+    });
     max.addEventListener('input', () => {
       setByPath(character, `${field}.max`, max.value === '' ? 0 : Number(max.value));
       onChange?.();
@@ -154,33 +164,21 @@ registerFieldType('resource', {
 // a escala de opções vem de engine/die-scale.js (configurada pelo system.json),
 // não é fixada aqui. Usado por qualquer sistema baseado em dados por Traço.
 registerFieldType('die', {
-  render(container, { character, field, label, onChange, dieScale = [4, 6, 8, 10, 12] }) {
+  render(container, { character, field, label, onChange, registerRefresh, allowComposite, dieScale = [4, 6, 8, 10, 12] }) {
     const wrap = fieldWrapper(label);
-    const select = document.createElement('select');
-    const noneOption = document.createElement('option');
-    noneOption.value = '';
-    noneOption.textContent = '—';
-    select.appendChild(noneOption);
-    dieScale.forEach((sides) => {
-      const option = document.createElement('option');
-      option.value = sides;
-      option.textContent = `d${sides}`;
-      select.appendChild(option);
-    });
-    const current = getByPath(character, field);
-    select.value = current ?? '';
-    select.addEventListener('change', () => {
-      setByPath(character, field, select.value === '' ? null : Number(select.value));
+    const control = createTraitControl(getByPath(character, field), (value) => {
+      setByPath(character, field, value);
       onChange?.();
-    });
-    wrap.appendChild(select);
+    }, { label, scale: dieScale, allowComposite });
+    registerRefresh?.(() => control.update(getByPath(character, field)));
+    wrap.appendChild(control.element);
     container.appendChild(wrap);
   },
 });
 
 // Contador genérico com +/- (ex.: Recurso de Ação, Reação, qualquer "ficha de uso").
 registerFieldType('counter', {
-  render(container, { character, field, label, onChange, min = 0, max = Infinity }) {
+  render(container, { character, field, label, onChange, registerRefresh, min = 0, max = Infinity }) {
     const wrap = fieldWrapper(label);
     const row = document.createElement('div');
     row.className = 'engine-counter';
@@ -213,6 +211,7 @@ registerFieldType('counter', {
     });
 
     refresh();
+    registerRefresh?.(refresh);
     row.append(decBtn, value, incBtn);
     wrap.appendChild(row);
     container.appendChild(wrap);

@@ -13,11 +13,11 @@ import { stepUp } from './die-scale.js';
  * efeito. Efeito igual -> Estado recebe 1 Aprimoramento (um degrau na escala).
  * Efeito menor -> Estado não muda.
  */
-export function applyEffectToGradedState(currentSides, effectSides) {
+export function applyEffectToGradedState(currentSides, effectSides, scale) {
   if (currentSides == null) return { sides: effectSides, changed: true, mode: 'created' };
   if (effectSides > currentSides) return { sides: effectSides, changed: true, mode: 'raised' };
   if (effectSides === currentSides) {
-    const up = stepUp(currentSides);
+    const up = stepUp(currentSides, scale);
     return { sides: up.overflow ? currentSides : up.sides, changed: true, mode: 'upgraded', ascension: up.overflow };
   }
   return { sides: currentSides, changed: false, mode: 'unchanged' };

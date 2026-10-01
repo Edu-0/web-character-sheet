@@ -3,10 +3,21 @@
 // da composição acessível e do vínculo entre componentes e personagem.
 import { getFieldType } from './fields.js';
 import './advanced-fields.js';
+import './point-fields.js';
+import './assisted-fields.js';
+import './technique-fields.js';
+import { getByPath, setByPath } from './paths.js';
+import { appendFieldHelp } from './help.js';
 
 export function renderSheet(host, layout, character, options = {}) {
   host.innerHTML = '';
   if (!layout) return { activate: () => {}, destroy: () => {} };
+  // Defaults antes das fórmulas: a ordem visual não pode alterar os cálculos.
+  (layout.tabs || []).forEach((tab) => (tab.sections || []).forEach((section) => (section.containers || []).forEach((container) => (container.components || []).forEach((component) => {
+    if (component.default !== undefined && component.field && !component.field.includes('{') && getByPath(character, component.field) == null) {
+      setByPath(character, component.field, structuredClone(component.default));
+    }
+  }))));
 
   const sheetVariant = safeToken(layout.variant);
   const sheet = element('div', `engine-sheet${sheetVariant ? ` engine-sheet--${sheetVariant}` : ''}`);
@@ -179,6 +190,15 @@ function renderComponent(component, character, options) {
     dieScale: options.system?.dieScale || options.system?.diceSet,
     onChange: () => options.onChange?.(character, component),
   });
+  if (component.help) appendFieldHelp(wrapper.querySelector('.field') || wrapper, component.help, component.label || component.type);
+  if (component.disabledWhen) {
+    const refresh = () => {
+      const disabled = getByPath(character, component.disabledWhen.field) === component.disabledWhen.equals;
+      wrapper.querySelectorAll('input, select, textarea, button').forEach((control) => { if (!control.matches('.engine-help__trigger')) control.disabled = disabled; });
+    };
+    refresh();
+    options.registerRefresh?.(refresh);
+  }
   return wrapper;
 }
 

@@ -3,6 +3,7 @@
   "system": "sistema-rpg",
   "description": "Layout declarativo da ficha do Sistema de RPG, organizado em abas, seções, containers e componentes genéricos.",
   "schemaVersion": 1,
+  "variant": "editorial",
   "tabs": [
     {
       "id": "identity",
@@ -10,6 +11,7 @@
       "sections": [
         {
           "id": "identity-fields",
+          "title": "Identidade e conceito",
           "containers": [
             {
               "id": "identity-fields-container",
@@ -22,7 +24,9 @@
                 {
                   "type": "text",
                   "field": "name",
-                  "label": "Nome"
+                  "label": "Nome",
+                  "variant": "hero",
+                  "placeholder": "Nome do personagem"
                 },
                 {
                   "type": "text",
@@ -61,6 +65,8 @@
       "sections": [
         {
           "id": "progression-fields",
+          "title": "Construção do personagem",
+          "note": "A Qualidade define o orçamento inicial. Ajustes de campanha incluem Buffs e Debuffs.",
           "containers": [
             {
               "id": "progression-fields-container",
@@ -74,32 +80,71 @@
                   "type": "select",
                   "field": "quality",
                   "label": "Qualidade",
+                  "disabledWhen": {
+                    "field": "progression.phase",
+                    "equals": "play"
+                  },
                   "optionsFrom": "system.qualityPresets"
                 },
                 {
                   "type": "number",
-                  "field": "pointsAvailable",
-                  "label": "Pontos Disponíveis"
-                },
-                {
-                  "type": "number",
-                  "field": "pointsSpent",
-                  "label": "Pontos Gastos"
+                  "field": "creationPointAdjustment",
+                  "label": "Ajuste de pontos de criação",
+                  "disabledWhen": {
+                    "field": "progression.phase",
+                    "equals": "play"
+                  }
                 },
                 {
                   "type": "number",
                   "field": "evolutionPoints",
-                  "label": "Pontos de Evolução"
+                  "label": "Pontos de evolução recebidos"
                 },
                 {
-                  "type": "tagList",
+                  "type": "list",
                   "field": "buffs",
-                  "label": "Buffs"
+                  "label": "Buffs",
+                  "disabledWhen": { "field": "progression.phase", "equals": "play" },
+                  "textEntryField": "name", "textEntryDefaults": { "points": 0 },
+                  "itemSchema": {
+                    "name": { "type": "text", "label": "Nome", "help": "Descreva o benefício de criação combinado com a mesa. Buffs acrescentam pontos, não dados ou bônus às rolagens." },
+                    "points": { "type": "select", "valueType": "number", "label": "Pontos", "default": 1, "help": "Referência opcional do livro: Leve +1, Médio +2, Pesado +4 e Debilitante +8. O valor entra automaticamente nos pontos disponíveis da criação; não repita esse valor no ajuste manual.", "options": [{ "value": 0, "label": "Sem pontos / a definir" }, { "value": 1, "label": "Leve · +1 ponto" }, { "value": 2, "label": "Médio · +2 pontos" }, { "value": 4, "label": "Pesado · +4 pontos" }, { "value": 8, "label": "Debilitante · +8 pontos" }] }
+                  }
                 },
                 {
-                  "type": "tagList",
+                  "type": "list",
                   "field": "debuffs",
-                  "label": "Debuffs"
+                  "label": "Debuffs",
+                  "disabledWhen": { "field": "progression.phase", "equals": "play" },
+                  "textEntryField": "name", "textEntryDefaults": { "points": 0 },
+                  "itemSchema": {
+                    "name": { "type": "text", "label": "Nome", "help": "Descreva a restrição de criação combinada com a mesa. Debuffs retiram pontos, sem acrescentar automaticamente penalidades à Pool ou ao d20." },
+                    "points": { "type": "select", "valueType": "number", "label": "Pontos", "default": 1, "help": "Referência opcional do livro: Leve −1, Médio −2, Pesado −4 e Debilitante −8. Informe a intensidade; a ficha subtrai o valor automaticamente, sem precisar de sinal negativo.", "options": [{ "value": 0, "label": "Sem pontos / a definir" }, { "value": 1, "label": "Leve · −1 ponto" }, { "value": 2, "label": "Médio · −2 pontos" }, { "value": 4, "label": "Pesado · −4 pontos" }, { "value": 8, "label": "Debilitante · −8 pontos" }] }
+                  }
+                },
+                {
+                  "type": "boolean",
+                  "field": "modules.postAscensionCosts",
+                  "label": "Custos opcionais após Ascensão"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "point-budget",
+          "title": "Pontos e evolução",
+          "note": "Técnicas gratuitas custam 0. O custo de uma técnica comprada na criação é informado na própria técnica.",
+          "containers": [
+            {
+              "id": "point-budget-container",
+              "layout": {
+                "type": "stack"
+              },
+              "components": [
+                {
+                  "type": "pointBudget",
+                  "configFrom": "pointBudget"
                 }
               ]
             }
@@ -113,6 +158,8 @@
       "sections": [
         {
           "id": "attribute-fields",
+          "title": "Atributos",
+          "note": "Capacidades fundamentais do personagem.",
           "containers": [
             {
               "id": "attribute-fields-container",
@@ -128,7 +175,9 @@
                 {
                   "type": "die",
                   "field": "attributes.{key}",
-                  "label": "{label}"
+                  "label": "{label}",
+                  "variant": "card",
+                  "allowComposite": true
                 }
               ]
             }
@@ -136,6 +185,8 @@
         },
         {
           "id": "existence-die",
+          "title": "Existência",
+          "note": "d8 em testes de perícias e ações gerais; não participa do combate por padrão.",
           "containers": [
             {
               "id": "existence-die-container",
@@ -153,6 +204,28 @@
               ]
             }
           ]
+        },
+        {
+          "id": "allocation",
+          "title": "Distribuição inicial",
+          "containers": [
+            {
+              "id": "allocation-container",
+              "layout": {
+                "type": "stack"
+              },
+              "components": [
+                {
+                  "type": "traitAllocation",
+                  "disabledWhen": { "field": "progression.phase", "equals": "play" },
+                  "field": "attributes",
+                  "label": "Conjunto de atributos",
+                  "presetsFrom": "attributeSetPresets",
+                  "traitsFrom": "attributes"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -162,6 +235,8 @@
       "sections": [
         {
           "id": "skill-fields",
+          "title": "Competências aprendidas",
+          "note": "Perícias não registradas continuam em d4. Abra o editor para consultar o catálogo completo.",
           "containers": [
             {
               "id": "skill-fields-container",
@@ -170,14 +245,17 @@
                 "min": "min(100%, 220px)",
                 "gap": 16
               },
-              "repeat": {
-                "source": "system.skillCategories[].skills"
-              },
               "components": [
                 {
-                  "type": "die",
-                  "field": "skills.{name}",
-                  "label": "{name}"
+                  "type": "skillCatalog",
+                  "field": "skills",
+                  "label": "Perícias",
+                  "categoriesFrom": "skillCategories",
+                  "baseDieFrom": "skillBaseDie",
+                  "emptyLabel": "Nenhuma perícia acima de d4. Todas as demais permanecem em d4.",
+                  "editLabel": "Editar perícias",
+                  "doneLabel": "Concluir edição",
+                  "allowComposite": true
                 }
               ]
             }
@@ -191,6 +269,8 @@
       "sections": [
         {
           "id": "specialization-list",
+          "title": "Áreas de domínio",
+          "note": "Especializações começam sem dado e fornecem acesso a Técnicas.",
           "containers": [
             {
               "id": "specialization-list-container",
@@ -204,6 +284,7 @@
                   "type": "list",
                   "field": "specializations",
                   "label": "Especializações",
+                  "creationCost": { "baseDie": 0, "valueField": "die", "costsFrom": "improvementCosts.specializations" },
                   "itemSchema": {
                     "name": {
                       "type": "text",
@@ -211,7 +292,9 @@
                     },
                     "die": {
                       "type": "die",
-                      "label": "Dado"
+                      "label": "Dado",
+                      "allowComposite": true,
+                      "help": "Custos por passo: 0 → d4 = 1; d4 → d6 = 2; d6 → d8 = 4; d8 → d10 = 8; d10 → d12 = 16. Na criação, os passos são somados: d4 custa 1; d6, 3; d8, 7; d10, 15; d12, 31. Em jogo, use o registro de evolução para compras; o orçamento inicial permanece congelado."
                     },
                     "techniqueIds": {
                       "type": "reference",
@@ -232,7 +315,8 @@
       "sections": [
         {
           "id": "essence-list",
-          "note": "Sempre exatamente 3 (essences.count/fixedCount no system.json).",
+          "title": "Três aspectos fundamentais",
+          "note": "Cada Essência define sua condição para ganhar e sua habilidade para gastar Recurso de Ação.",
           "containers": [
             {
               "id": "essence-list-container",
@@ -246,6 +330,7 @@
                   "type": "list",
                   "field": "essences",
                   "label": "Essências",
+                  "defaultOpen": false,
                   "fixedLength": 3,
                   "itemSchema": {
                     "name": {
@@ -258,7 +343,8 @@
                     },
                     "die": {
                       "type": "die",
-                      "label": "Dado"
+                      "label": "Dado",
+                      "allowComposite": true
                     },
                     "gainActionResourceCondition": {
                       "type": "textarea",
@@ -290,6 +376,7 @@
       "sections": [
         {
           "id": "resource-fields",
+          "title": "Recursos de cena",
           "containers": [
             {
               "id": "resource-fields-container",
@@ -317,6 +404,31 @@
               ]
             }
           ]
+        },
+        {
+          "id": "scene-actions",
+          "title": "Descanso e ações de cena",
+          "containers": [
+            {
+              "id": "scene-actions-container",
+              "layout": {
+                "type": "stack"
+              },
+              "components": [
+                {
+                  "type": "actionGroup",
+                  "actionsFrom": "sheetActions",
+                  "label": "Resultado da ação",
+                  "note": "Confirme as condições da ação com a mesa. Descanso não cura automaticamente Ferido ou Trauma."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "support-resources", "title": "Recursos de apoio",
+          "note": "Alimento, água e materiais graduados. Reduza o dado quando o teste de manutenção e a regra da campanha exigirem.",
+          "containers": [{ "id": "support-resources-container", "layout": { "type": "stack" }, "components": [{ "type": "list", "field": "resources.traits", "label": "Recursos de apoio", "itemSchema": { "name": { "type": "text", "label": "Nome" }, "die": { "type": "die", "label": "Dado" }, "notes": { "type": "textarea", "label": "Condições de uso e manutenção" } } }] }]
         }
       ]
     },
@@ -326,6 +438,8 @@
       "sections": [
         {
           "id": "technique-list",
+          "title": "Repertório de técnicas",
+          "note": "Dados, efeitos e custos de uso. Pontos de criação e Energia são recursos diferentes.",
           "containers": [
             {
               "id": "technique-list-container",
@@ -342,70 +456,158 @@
                   "itemSchema": {
                     "name": {
                       "type": "text",
-                      "label": "Nome"
+                      "label": "Nome",
+                      "help": "Nome da capacidade: magia, manobra, procedimento, disciplina ou outra técnica ligada a uma Especialização."
                     },
                     "specializationId": {
                       "type": "select",
                       "label": "Especialização",
+                      "help": "Área de domínio que permite aprender e usar esta técnica. O vínculo também organiza seu repertório mínimo garantido.",
                       "optionsFrom": "character.specializations"
                     },
                     "maxDie": {
                       "type": "die",
-                      "label": "Dado máximo"
+                      "label": "Dado máximo",
+                      "help": "Potencial normal da técnica. Não é consumido pela ativação. Em Uso assistido, você pode escolher um dado menor para reduzir o custo padrão de Energia."
                     },
                     "currentDie": {
                       "type": "die",
-                      "label": "Dado atual"
+                      "label": "Dado atual",
+                      "help": "Versão atual registrada para a montagem manual da Pool. Não é uma quantidade de usos. No painel Uso assistido, escolha o Dado escolhido para uso antes de ativar."
                     },
                     "energyCost": {
                       "type": "number",
-                      "label": "Custo de Energia"
+                      "label": "Custo especial de Energia (vazio: tabela)",
+                      "help": "Deixe vazio para usar a tabela: d4 = 0, d6 = 2, d8 = 4, d10 = 8 e d12 = 16. Um número explícito é um custo especial fixo; versões reduzidas com regras próprias precisam do valor combinado com a mesa. Energia é paga na ativação, inclusive em falha, e não representa pontos de criação.",
+                      "default": null
+                    },
+                    "creationPointCost": {
+                      "type": "number",
+                      "label": "Pontos pagos na criação",
+                      "help": "Custo de aquisição inicial combinado com a mesa. Técnicas gratuitas do repertório usam 0. Não confunda com Energia: esse valor entra nos gastos de criação, não em cada ativação.",
+                      "default": 0
                     },
                     "usage": {
                       "type": "text",
-                      "label": "Uso"
+                      "label": "Uso",
+                      "help": "Quando e de que maneira a capacidade pode ser usada: ataque, defesa, utilidade, reação ou procedimento. Descreva os gatilhos relevantes."
                     },
                     "effect": {
                       "type": "textarea",
-                      "label": "Efeito"
+                      "label": "Efeito",
+                      "help": "O que acontece em caso de sucesso e como a Potência se converte em um efeito compatível. Potência não é automaticamente dano: pode gerar proteção, controle, deslocamento, um Estado ou outro resultado."
                     },
                     "roll": {
                       "type": "text",
-                      "label": "Rolagem"
+                      "label": "Rolagem",
+                      "help": "Descreva os Traços relevantes da Pool. O uso direto normalmente reúne Atributo + Especialização + Técnica; procedimentos podem usar Concentração ou outra Perícia, conforme a ficção."
                     },
                     "resolution": {
                       "type": "text",
-                      "label": "Resolução"
+                      "label": "Resolução",
+                      "help": "Defina a oposição e como aplicar sucesso, falha e Potência. A ficha resolve a rolagem; a consequência concreta depende da descrição da técnica e da decisão da mesa."
                     },
                     "activationTime": {
                       "type": "text",
-                      "label": "Tempo de ativação"
+                      "label": "Tempo de ativação",
+                      "help": "Tempo e ação necessários para ativar: ação principal, bônus, reação ou um procedimento mais demorado. A descrição deve estabelecer requisitos especiais."
                     },
                     "duration": {
                       "type": "text",
-                      "label": "Duração"
+                      "label": "Duração",
+                      "help": "Por quanto tempo o efeito permanece e em quais condições termina: instantâneo, rodadas, cena ou outro intervalo definido pela técnica."
                     },
                     "concentration": {
                       "type": "boolean",
-                      "label": "Concentração"
+                      "label": "Concentração",
+                      "help": "Marque se manter o efeito exige Concentração. A manutenção usa Vontade + Concentração + Técnica e ocupa a ação bônus em combate; não paga Energia novamente, salvo exceção descrita pela técnica."
                     },
                     "bonusAction": {
                       "type": "boolean",
-                      "label": "Ação bônus"
+                      "label": "Ação bônus",
+                      "help": "Registra uso da ação bônus definido pela capacidade. Manter Concentração também ocupa essa ação; a ficha não arbitra automaticamente conflitos de ações."
                     },
                     "reaction": {
                       "type": "boolean",
-                      "label": "Reação"
+                      "label": "Reação",
+                      "help": "Indica uma técnica usada como Reação a um gatilho plausível. Há uma Reação por rodada, controlada na aba Recursos. Defesa normal não consome Reação."
                     },
                     "limitations": {
                       "type": "textarea",
-                      "label": "Limitações"
+                      "label": "Limitações",
+                      "help": "Registre requisitos, alvos válidos, materiais, frequência, condições e outras restrições. A presença de dados não torna uma ação impossível permitida."
                     },
                     "reverse": {
                       "type": "textarea",
-                      "label": "Reverso"
+                      "label": "Reverso",
+                      "help": "Consequência adversa da capacidade, quando aplicável. O Uso sem Domínio pode provocar Reverso conforme o risco; descreva a consequência para a mesa aplicá-la sem presumir um efeito universal."
+                    },
+                    "learningSource": {
+                      "type": "select",
+                      "label": "Origem do aprendizado",
+                      "help": "Repertório garantido ocupa a distribuição mínima da Especialização. Narrativa, Pontos e Temporária distinguem aquisições extras; o mínimo não é um limite absoluto. Escolher Pontos não cobra automaticamente: registre o custo na criação ou no histórico de evolução.",
+                      "default": "repertoire",
+                      "options": [
+                        {
+                          "value": "repertoire",
+                          "label": "Repertório garantido"
+                        },
+                        {
+                          "value": "narrative",
+                          "label": "Narrativa"
+                        },
+                        {
+                          "value": "points",
+                          "label": "Pontos"
+                        },
+                        {
+                          "value": "temporary",
+                          "label": "Temporária"
+                        }
+                      ]
+                    },
+                    "range": {
+                      "type": "text",
+                      "label": "Alcance",
+                      "help": "Distância, área e condições para alcançar o alvo: toque, metros, linha de visão ou outro critério definido pela técnica."
                     }
                   }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "repertoire-status",
+          "title": "Distribuição do repertório",
+          "containers": [
+            {
+              "id": "repertoire-status-container",
+              "layout": {
+                "type": "stack"
+              },
+              "components": [
+                {
+                  "type": "repertoire",
+                  "configFrom": "repertoire"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "technique-use",
+          "title": "Uso assistido de técnicas",
+          "containers": [
+            {
+              "id": "technique-use-container",
+              "layout": {
+                "type": "stack"
+              },
+              "components": [
+                {
+                  "type": "techniqueUse",
+                  "configFrom": "techniqueUse"
                 }
               ]
             }
@@ -419,6 +621,7 @@
       "sections": [
         {
           "id": "equipment-list",
+          "title": "Equipamentos",
           "containers": [
             {
               "id": "equipment-list-container",
@@ -432,6 +635,7 @@
                   "type": "table",
                   "field": "inventory",
                   "label": "Armas, Armaduras e Equipamentos",
+                  "searchable": true,
                   "itemSchema": {
                     "name": {
                       "type": "text",
@@ -459,7 +663,8 @@
                     },
                     "quantity": {
                       "type": "number",
-                      "label": "Quantidade"
+                      "label": "Quantidade",
+                      "default": 1
                     },
                     "properties": {
                       "type": "text",
@@ -472,6 +677,15 @@
                     "state": {
                       "type": "text",
                       "label": "Estado"
+                    },
+                    "carried": {
+                      "type": "boolean",
+                      "label": "Carregado",
+                      "default": true
+                    },
+                    "range": {
+                      "type": "text",
+                      "label": "Alcance"
                     }
                   }
                 }
@@ -517,7 +731,32 @@
                     "source": {
                       "type": "text",
                       "label": "Origem"
+                    },
+                    "recoverable": {
+                      "type": "boolean",
+                      "label": "Recuperável por descanso",
+                      "default": true
                     }
+                  },
+                  "recovery": {
+                    "note": "Confirme o sucesso do tratamento antes de aplicar. Descanso curto limita a uma Redução."
+                  },
+                  "overflow": {
+                    "field": "states.trauma",
+                    "startDie": 6,
+                    "defaultName": "Trauma",
+                    "onFirst": [
+                      {
+                        "field": "scene.retired",
+                        "value": true
+                      }
+                    ],
+                    "onLimit": [
+                      {
+                        "field": "scene.deathRisk",
+                        "value": true
+                      }
+                    ]
                   }
                 }
               ]
@@ -549,6 +788,9 @@
                       "type": "die",
                       "label": "Dado"
                     }
+                  },
+                  "recovery": {
+                    "note": "Trauma exige tratamento e condições narrativas apropriadas."
                   }
                 }
               ]
@@ -618,8 +860,38 @@
                     "note": {
                       "type": "text",
                       "label": "Observação"
+                    },
+                    "permanent": {
+                      "type": "boolean",
+                      "label": "Permanente",
+                      "default": true
                     }
                   }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scene-state",
+          "title": "Situação de cena",
+          "note": "A mesa decide exceções e retorno à cena. Características permanentes não são Trauma.",
+          "containers": [
+            {
+              "id": "scene-state-container",
+              "layout": {
+                "type": "stack"
+              },
+              "components": [
+                {
+                  "type": "boolean",
+                  "field": "scene.retired",
+                  "label": "Retirado de cena"
+                },
+                {
+                  "type": "boolean",
+                  "field": "scene.deathRisk",
+                  "label": "Limite letal atingido"
                 }
               ]
             }
@@ -633,6 +905,7 @@
       "sections": [
         {
           "id": "combat-fields",
+          "title": "Preparação de combate",
           "containers": [
             {
               "id": "combat-fields-container",
@@ -653,10 +926,10 @@
                   "label": "Carga Máxima (kg)",
                   "variables": {
                     "strengthSides": {
-                      "field": "attributes.strength"
+                      "traitMaxField": "attributes.strength"
                     },
                     "carryMultiplier": {
-                      "system": "carryMultiplier"
+                      "field": "carryMultiplier"
                     }
                   }
                 },
@@ -682,6 +955,13 @@
                   "type": "boolean",
                   "field": "reaction.available",
                   "label": "Reação Disponível"
+                },
+                {
+                  "type": "number",
+                  "field": "carryMultiplier",
+                  "default": 5,
+                  "label": "Multiplicador de carga",
+                  "min": 0
                 }
               ]
             }
@@ -704,6 +984,7 @@
                   "type": "poolBuilder",
                   "label": "Pool de Ação",
                   "traitSources": [
+                    { "kind": "constant", "id": "ungraded-skill", "label": "Perícia não graduada", "sidesFrom": "skillBaseDie" },
                     {
                       "from": "system",
                       "collection": "attributes",
@@ -726,7 +1007,7 @@
                     {
                       "from": "character",
                       "collection": "specializations",
-              "require": "name",
+                      "require": "name",
                       "id": "specialization:{id}",
                       "label": "{name} (Especialização)",
                       "sides": "die"
@@ -734,7 +1015,7 @@
                     {
                       "from": "character",
                       "collection": "essences",
-              "require": "name",
+                      "require": "name",
                       "id": "essence:{id}",
                       "label": "{name} (Essência)",
                       "sides": "die"
@@ -742,11 +1023,53 @@
                     {
                       "from": "character",
                       "collection": "techniques",
-              "require": "name",
+                      "require": "name",
                       "id": "technique:{id}",
                       "label": "{name} (Técnica)",
                       "sides": "currentDie"
-                    }
+                    },
+                    {
+                      "from": "character",
+                      "collection": "inventory",
+                      "excludeWhen": { "field": "carried", "equals": false },
+                      "require": "name",
+                      "id": "inventory:{id}",
+                      "label": "{name} (Equipamento)",
+                      "sides": "die"
+                    },
+                    {
+                      "from": "character",
+                      "collection": "states.wear",
+                      "require": "name",
+                      "id": "states.wear:{id}",
+                      "label": "{name} (Desgaste)",
+                      "sides": "sides"
+                    },
+                    {
+                      "from": "character",
+                      "collection": "states.trauma",
+                      "require": "name",
+                      "id": "states.trauma:{id}",
+                      "label": "{name} (Trauma)",
+                      "sides": "sides"
+                    },
+                    {
+                      "from": "character",
+                      "collection": "states.characteristics",
+                      "require": "name",
+                      "id": "states.characteristics:{id}",
+                      "label": "{name} (Característica)",
+                      "sides": "sides"
+                    },
+                    {
+                      "from": "character",
+                      "collection": "states.complications",
+                      "require": "name",
+                      "id": "states.complications:{id}",
+                      "label": "{name} (Complicação)",
+                      "sides": "sides"
+                    },
+                    { "from": "character", "collection": "resources.traits", "require": "name", "id": "resource:{id}", "label": "{name} (Recurso)", "sides": "die" }
                   ]
                 }
               ]
@@ -760,7 +1083,31 @@
       "label": "Inventário",
       "sections": [
         {
+          "id": "inventory-summary",
+          "title": "Carga e capacidade",
+          "containers": [
+            {
+              "id": "inventory-summary-container",
+              "layout": {
+                "type": "stack"
+              },
+              "components": [
+                {
+                  "type": "inventorySummary",
+                  "field": "inventory",
+                  "carriedField": "carried",
+                  "weightField": "weight",
+                  "quantityField": "quantity",
+                  "strengthField": "attributes.strength",
+                  "multiplierField": "carryMultiplier"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "inventory-list",
+          "title": "Itens carregados",
           "containers": [
             {
               "id": "inventory-list-container",
@@ -774,6 +1121,7 @@
                   "type": "table",
                   "field": "inventory",
                   "label": "Inventário",
+                  "searchable": true,
                   "itemSchema": {
                     "name": {
                       "type": "text",
@@ -805,7 +1153,8 @@
                     },
                     "quantity": {
                       "type": "number",
-                      "label": "Quantidade"
+                      "label": "Quantidade",
+                      "default": 1
                     },
                     "properties": {
                       "type": "text",
@@ -818,6 +1167,15 @@
                     "state": {
                       "type": "text",
                       "label": "Estado"
+                    },
+                    "carried": {
+                      "type": "boolean",
+                      "label": "Carregado",
+                      "default": true
+                    },
+                    "range": {
+                      "type": "text",
+                      "label": "Alcance"
                     }
                   }
                 }
@@ -833,6 +1191,7 @@
       "sections": [
         {
           "id": "notes-field",
+          "title": "Registro da campanha",
           "containers": [
             {
               "id": "notes-field-container",

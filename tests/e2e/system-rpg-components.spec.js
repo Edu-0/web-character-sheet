@@ -33,14 +33,35 @@ test('todos os tipos usados pelo sistema-rpg estão registrados', async ({ page 
   expect(registeredTypes).toEqual(['list', 'table', 'tagList', 'computed', 'slotTracker', 'poolBuilder', 'stateList', 'image']);
 });
 
-test('tags podem ser adicionadas e removidas', async ({ page }) => {
+test('perícias em d4 ficam ocultas, mas podem ser editadas e removidas da lista', async ({ page }) => {
+  await page.getByRole('tab', { name: 'Perícias' }).click();
+  const catalog = page.locator('.engine-skill-catalog');
+  await expect(catalog).toContainText('Nenhuma perícia acima de d4');
+  await expect(catalog.getByLabel('Atletismo', { exact: true })).toHaveCount(0);
+
+  await catalog.getByRole('button', { name: 'Editar perícias' }).click();
+  await expect(catalog.getByLabel('Atletismo', { exact: true })).toHaveValue('4');
+  await catalog.getByLabel('Atletismo', { exact: true }).selectOption('6');
+  await catalog.getByRole('button', { name: 'Concluir edição' }).click();
+  await expect(catalog.getByLabel('Atletismo', { exact: true })).toHaveValue('6');
+  await expect(catalog.getByLabel('Percepção', { exact: true })).toHaveCount(0);
+
+  await page.reload();
+  await expect(page.getByRole('tab', { name: 'Perícias' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('.engine-skill-catalog').getByLabel('Atletismo', { exact: true })).toHaveValue('6');
+  await page.locator('.engine-skill-catalog').getByLabel('Atletismo', { exact: true }).selectOption('4');
+  await expect(page.locator('.engine-skill-catalog').getByLabel('Atletismo', { exact: true })).toHaveCount(0);
+  await expect(page.locator('.engine-skill-catalog')).toContainText('Nenhuma perícia acima de d4');
+});
+
+test('modificadores de pontos podem ser adicionados e removidos', async ({ page }) => {
   await page.getByRole('tab', { name: 'Progressão' }).click();
-  const buffs = page.locator('.engine-tags').filter({ has: page.getByRole('heading', { name: 'Buffs', exact: true }) });
-  await buffs.getByPlaceholder('Adicionar…').fill('Inspirado');
+  const buffs = page.locator('.engine-component[data-field="buffs"]');
   await buffs.getByRole('button', { name: 'Adicionar' }).click();
-  await expect(buffs.locator('.tag-chip')).toHaveText('Inspirado×');
-  await buffs.getByRole('button', { name: 'Remover Inspirado' }).click();
-  await expect(buffs.locator('.tag-chip')).toHaveCount(0);
+  await buffs.getByLabel('Nome', { exact: true }).fill('Inspirado');
+  await expect(buffs.locator('.engine-entry__title')).toHaveText('Inspirado');
+  await buffs.getByRole('button', { name: 'Remover', exact: true }).click();
+  await expect(buffs.locator('.engine-entry')).toHaveCount(0);
 });
 
 test('listas editáveis adicionam, persistem e removem especializações', async ({ page }) => {
@@ -49,7 +70,7 @@ test('listas editáveis adicionam, persistem e removem especializações', async
   await panel.getByRole('button', { name: 'Adicionar' }).click();
   const entry = panel.locator('.engine-entry').first();
   await entry.getByLabel('Nome').fill('Caminho das Estrelas');
-  await entry.getByLabel('Dado').selectOption('8');
+  await entry.getByLabel('Dado', { exact: true }).selectOption('8');
   await entry.getByLabel('Técnicas relacionadas').fill('tech-a, tech-b');
   await expect(entry.locator('.engine-entry__title')).toHaveText('Caminho das Estrelas');
   await expect(page.locator('#save-indicator')).toHaveText('Salvo');
@@ -58,7 +79,7 @@ test('listas editáveis adicionam, persistem e removem especializações', async
   await expect(page.getByRole('tab', { name: 'Especializações' })).toHaveAttribute('aria-selected', 'true');
   const restored = page.locator('.engine-panel:not([hidden]) .engine-entry').first();
   await expect(restored.getByLabel('Nome')).toHaveValue('Caminho das Estrelas');
-  await expect(restored.getByLabel('Dado')).toHaveValue('8');
+  await expect(restored.getByLabel('Dado', { exact: true })).toHaveValue('8');
   await restored.getByRole('button', { name: 'Remover' }).click();
   await expect(page.locator('.engine-panel:not([hidden]) .engine-entry')).toHaveCount(0);
 });
@@ -92,7 +113,7 @@ test('tabelas adicionam e persistem itens de inventário', async ({ page }) => {
 
 test('estados graduados permanecem editáveis', async ({ page }) => {
   await page.getByRole('tab', { name: 'Estados' }).click();
-  const trauma = page.locator('.engine-section').filter({ hasText: 'Trauma' });
+  const trauma = page.locator('.engine-section').filter({ has: page.getByRole('heading', { name: 'Trauma', exact: true }) });
   await trauma.getByRole('button', { name: 'Adicionar' }).click();
   const entry = trauma.locator('.engine-entry').first();
   await entry.getByLabel('Nome').fill('Assombrado');
@@ -143,7 +164,7 @@ test('Pool reconhece Traços criados durante a edição', async ({ page }) => {
   await panel.getByRole('button', { name: 'Adicionar' }).click();
   const entry = panel.locator('.engine-entry').first();
   await entry.getByLabel('Nome').fill('Caminho das Estrelas');
-  await entry.getByLabel('Dado').selectOption('8');
+  await entry.getByLabel('Dado', { exact: true }).selectOption('8');
 
   await page.getByRole('tab', { name: 'Combate' }).click();
   await expect(page.locator('.engine-pool__trait').filter({ hasText: 'Caminho das Estrelas (Especialização)' })).toBeVisible();

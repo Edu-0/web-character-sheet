@@ -46,7 +46,7 @@ export function resolvePool(rolls) {
   }
   if (rolls.length === 1) {
     const only = rolls[0];
-    return { rolls, apex: only, base: only, weight: only.result * 2, remaining: [], emptyPool: false };
+    return { rolls, apex: only, base: only, weight: only.result, remaining: [], emptyPool: false };
   }
   const { chosen: apex, remaining: afterApex } = pickAndRemove(rolls, 'max');
   const { chosen: base, remaining: afterBase } = pickAndRemove(afterApex, 'min');

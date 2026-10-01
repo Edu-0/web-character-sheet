@@ -6,6 +6,10 @@ import { potencyOptions, resolvePool, rollPool } from './pool.js';
 import { resolveAction } from './resolution.js';
 import { stepUp } from './die-scale.js';
 import { applyEffectToGradedState } from './graded-state.js';
+import { createTraitControl, parseTrait, traitDescriptor, traitDice, traitLabel, traitMaximum } from './traits.js';
+import { healState } from './assistance.js';
+import { stepCost } from './point-budget.js';
+import { appendFieldHelp } from './help.js';
 
 registerFieldType('tagList', {
   render(container, context) {
@@ -16,6 +20,74 @@ registerFieldType('tagList', {
 registerFieldType('list', {
   render(container, context) {
     renderList(container, context);
+  },
+});
+
+// Catálogo compacto: valores no dado-base são implícitos na ficha, mas continuam
+// disponíveis para edição. A configuração (categorias e escala) vem do sistema.
+registerFieldType('skillCatalog', {
+  render(container, context) {
+    const wrap = fieldBlock(context.label, 'engine-skill-catalog');
+    const toolbar = element('div', 'engine-skill-catalog__toolbar');
+    const count = element('span', 'engine-collection__count');
+    const toggle = buttonElement(context.editLabel || 'Editar perícias', 'button button--ghost');
+    toggle.setAttribute('aria-expanded', 'false');
+    const groups = element('div', 'engine-skill-catalog__groups');
+    const baseDie = Number(context.system?.[context.baseDieFrom || 'skillBaseDie']) || 4;
+    const categories = context.system?.[context.categoriesFrom || 'skillCategories'] || [];
+    const scale = (context.dieScale || []).map(Number).filter((die) => die >= baseDie);
+    let editing = false;
+    let signature = '';
+
+    const refresh = () => {
+      groups.replaceChildren();
+      const values = getByPath(context.character, context.field) || {};
+      signature = JSON.stringify(values);
+      let visibleCount = 0;
+      categories.forEach((category) => {
+        const entries = (category.skills || []).filter((name) => editing || traitMaximum(values[name]) > baseDie);
+        if (!entries.length) return;
+        const group = element('section', 'engine-skill-catalog__group');
+        group.appendChild(element('h3', 'engine-skill-catalog__heading', category.label || category.id));
+        const list = element('div', 'engine-skill-catalog__list');
+        entries.forEach((name) => {
+          if (traitMaximum(values[name]) > baseDie) visibleCount += 1;
+          const row = element('label', 'engine-skill-catalog__item');
+          row.appendChild(element('span', 'engine-skill-catalog__name', name));
+          const control = createTraitControl(values[name] || baseDie, (chosen) => {
+            const skills = getByPath(context.character, context.field) || {};
+            if (chosen === baseDie) delete skills[name];
+            else skills[name] = chosen;
+            setByPath(context.character, context.field, skills);
+            if (!editing) refresh();
+            else {
+              signature = JSON.stringify(skills);
+              count.textContent = `${Object.values(skills).filter((value) => traitMaximum(value) > baseDie).length} perícias registradas`;
+            }
+            context.onChange?.();
+          }, { label: name, scale, allowNone: false, allowComposite: context.allowComposite });
+          row.appendChild(control.element);
+          list.appendChild(row);
+        });
+        group.appendChild(list);
+        groups.appendChild(group);
+      });
+      count.textContent = `${visibleCount} ${visibleCount === 1 ? 'perícia registrada' : 'perícias registradas'}`;
+      if (!groups.children.length) groups.appendChild(element('p', 'engine-empty', context.emptyLabel || 'Nenhuma perícia registrada.'));
+      toggle.textContent = editing ? (context.doneLabel || 'Concluir edição') : (context.editLabel || 'Editar perícias');
+      toggle.setAttribute('aria-expanded', String(editing));
+    };
+    toggle.addEventListener('click', () => {
+      editing = !editing;
+      refresh();
+    });
+    toolbar.append(count, toggle);
+    wrap.append(toolbar, groups);
+    refresh();
+    context.registerRefresh?.(() => {
+      if (JSON.stringify(getByPath(context.character, context.field) || {}) !== signature) refresh();
+    });
+    container.appendChild(wrap);
   },
 });
 
@@ -221,16 +293,43 @@ function renderList(container, context) {
   const count = element('span', 'engine-collection__count');
   const add = buttonElement(context.addLabel || 'Adicionar', 'button button--primary');
   const entries = element('div', 'engine-entry-list');
-  const values = ensureArray(context.character, context.field);
+  let values = ensureArray(context.character, context.field);
+  if (context.textEntryField) values.forEach((value, index) => {
+    if (typeof value === 'string') values[index] = { id: createId(), ...defaultsFromSchema(context.itemSchema, context), ...context.textEntryDefaults, [context.textEntryField]: value };
+  });
+  let signature = JSON.stringify(values);
+  const entryRefreshers = new Set();
+  const costTotal = context.creationCost ? element('output', 'engine-collection__cost') : null;
+  if (costTotal) costTotal.setAttribute('aria-label', `Custo de criação de ${context.label}`);
+  const refreshCost = () => {
+    if (!costTotal) return;
+    const costs = values.map((item) => creationItemCost(item, context));
+    costTotal.textContent = costs.includes(null) ? 'Custo a definir com a mesa' : `${costs.reduce((sum, cost) => sum + cost, 0)} pontos · custo cumulativo das escolhas atuais`;
+  };
+  const entryContext = {
+    ...context,
+    registerRefresh(refresh) {
+      entryRefreshers.add(refresh);
+      return () => entryRefreshers.delete(refresh);
+    },
+    onChange() {
+      signature = JSON.stringify(values);
+      context.onChange?.();
+    },
+  };
   if (context.toolbarTitle) toolbar.appendChild(element('h2', 'engine-collection__heading', context.heading || context.label));
   toolbar.append(count, add);
 
   const refresh = () => {
+    entryRefreshers.clear();
+    values = ensureArray(context.character, context.field);
     entries.innerHTML = '';
     count.textContent = `${values.length} ${values.length === 1 ? 'item' : 'itens'}`;
     add.hidden = Number.isInteger(context.fixedLength) && values.length >= context.fixedLength;
     if (!values.length) entries.appendChild(element('p', 'engine-empty', context.emptyLabel || 'Nenhum item cadastrado.'));
-    values.forEach((item, index) => entries.appendChild(renderEntry(item, index, values, context, refresh)));
+    values.forEach((item, index) => entries.appendChild(renderEntry(item, index, values, entryContext, refresh)));
+    signature = JSON.stringify(values);
+    refreshCost();
   };
   add.addEventListener('click', () => {
     if (Number.isInteger(context.fixedLength) && values.length >= context.fixedLength) return;
@@ -238,8 +337,15 @@ function renderList(container, context) {
     refresh();
     context.onChange?.();
   });
-  wrap.append(toolbar, entries);
+  wrap.append(toolbar);
+  if (costTotal) wrap.appendChild(costTotal);
+  wrap.appendChild(entries);
   refresh();
+  context.registerRefresh?.(() => {
+    if (JSON.stringify(getByPath(context.character, context.field)) !== signature) refresh();
+    entryRefreshers.forEach((update) => update());
+    refreshCost();
+  });
   container.appendChild(wrap);
 }
 
@@ -279,6 +385,14 @@ function renderEntry(item, index, values, context, refreshList) {
     summary.appendChild(remove);
   }
   const body = element('div', 'engine-entry__body');
+  if (context.creationCost) {
+    const output = element('output', 'engine-entry__cost');
+    output.setAttribute('aria-label', 'Custo de criação');
+    const update = () => { const cost = creationItemCost(item, context); output.textContent = cost === null ? 'Custo a definir com a mesa' : `${cost} pontos de criação`; };
+    update();
+    context.registerRefresh?.(update);
+    body.appendChild(output);
+  }
   Object.entries(context.itemSchema || {}).forEach(([key, definition]) => {
     body.appendChild(renderItemField(item, key, definition, context, () => {
       title.textContent = entryTitle(item, index);
@@ -293,12 +407,16 @@ function renderEntry(item, index, values, context, refreshList) {
     if (gradeControl) gradeControl.value = String(item[gradeField] ?? '');
     meta.textContent = entryMeta(item, context);
     context.onChange?.();
+  }, () => {
+    values.splice(values.indexOf(item), 1);
+    refreshList();
+    context.onChange?.();
   }));
   entry.append(summary, body);
   return entry;
 }
 
-function renderStateEffect(item, context, onChange) {
+function renderStateEffect(item, context, onChange, onRemove) {
   const gradeField = context.gradeField || 'sides';
   const wrap = fieldBlock(context.effectLabel || 'Aplicar efeito', 'engine-state-effect');
   const controls = element('div', 'engine-state-effect__controls');
@@ -308,7 +426,7 @@ function renderStateEffect(item, context, onChange) {
   const apply = buttonElement('Aplicar efeito', 'button button--ghost');
   const feedback = element('span', 'engine-state-effect__feedback');
   apply.addEventListener('click', () => {
-    const result = applyEffectToGradedState(item[gradeField], Number(selector.value));
+    const result = applyEffectToGradedState(item[gradeField], Number(selector.value), context.dieScale);
     item[gradeField] = result.sides;
     const labels = {
       created: `Estado criado em d${result.sides}.`,
@@ -317,10 +435,57 @@ function renderStateEffect(item, context, onChange) {
       unchanged: `O efeito não altera o Estado d${result.sides}.`,
     };
     feedback.textContent = labels[result.mode];
+    if (result.ascension && context.overflow) {
+      const policy = context.overflow;
+      const next = getByPath(context.character, policy.field) || [];
+      let linked = next.find((state) => state.parentId === item.id);
+      if (!linked) {
+        linked = { id: createId(), parentId: item.id, name: item.name || policy.defaultName, [gradeField]: policy.startDie };
+        next.push(linked);
+        (policy.onFirst || []).forEach((effect) => setByPath(context.character, effect.field, effect.value));
+        feedback.textContent = `Limite de Desgaste: ${linked.name} gera Trauma d${policy.startDie}. Verifique a Retirada de Cena e as exceções da mesa.`;
+      } else {
+        const up = stepUp(linked[gradeField], context.dieScale);
+        if (up.overflow) {
+          (policy.onLimit || []).forEach((effect) => setByPath(context.character, effect.field, effect.value));
+          feedback.textContent = 'Desgaste e Trauma atingiram o limite: a regra indica morte, salvo exceção. Confirme a consequência com a mesa.';
+        } else {
+          linked[gradeField] = up.sides;
+          feedback.textContent = `Trauma elevado para d${up.sides}.`;
+        }
+      }
+      setByPath(context.character, policy.field, next);
+    }
     if (result.changed) onChange();
   });
   controls.append(selector, apply);
   wrap.append(controls, feedback);
+  if (context.recovery) {
+    const recovery = element('div', 'engine-recovery');
+    recovery.appendChild(element('h4', '', 'Cura / redução de estado'));
+    const outcome = document.createElement('select');
+    outcome.setAttribute('aria-label', 'Resultado da cura');
+    outcome.append(optionElement('', 'Escolha o resultado'), optionElement('success', 'Sucesso'), optionElement('failure', 'Falha'));
+    const potency = document.createElement('select');
+    potency.setAttribute('aria-label', 'Potência da cura');
+    (context.dieScale || []).forEach((sides) => potency.appendChild(optionElement(sides, `d${sides}`)));
+    const limited = document.createElement('input');
+    limited.type = 'checkbox';
+    const limitLabel = element('label', 'field field--checkbox');
+    limitLabel.append(limited, element('span', '', 'Limitar a uma Redução (descanso curto)'));
+    const heal = buttonElement('Aplicar cura', 'button button--ghost');
+    const resultText = element('p', 'engine-recovery__feedback');
+    heal.addEventListener('click', () => {
+      if (!outcome.value) { resultText.textContent = 'Informe o resultado do teste de cura já resolvido.'; return; }
+      const grade = healState(item[gradeField], Number(potency.value), outcome.value === 'success', context.dieScale || [], limited.checked);
+      if (grade === null) { onRemove(); return; }
+      item[gradeField] = grade;
+      resultText.textContent = outcome.value === 'success' ? `Estado reduzido para d${grade}.` : 'Falha: o estado permanece sem alteração.';
+      onChange();
+    });
+    recovery.append(outcome, potency, limitLabel, heal, resultText, element('small', '', context.recovery.note || 'Sucesso reduz um nível; Potência maior remove o estado. A mesa confirma as condições para tratar Trauma.'));
+    wrap.appendChild(recovery);
+  }
   return wrap;
 }
 
@@ -412,6 +577,15 @@ function renderItemField(item, key, definition, context, onChange, { hideLabel =
   const wrap = element('label', hideLabel ? 'engine-item-field engine-item-field--compact' : 'field engine-item-field');
   wrap.dataset.itemField = key;
   if (!hideLabel) wrap.appendChild(element('span', '', config.label));
+  if (config.help) appendFieldHelp(wrap, config.help, config.label);
+  if (config.type === 'die') {
+    const control = createTraitControl(item[key], (value) => { item[key] = value; onChange(); }, {
+      label: config.label, scale: context.dieScale || [], allowComposite: config.allowComposite,
+    });
+    wrap.appendChild(control.element);
+    context.registerRefresh?.(() => control.update(item[key]));
+    return wrap;
+  }
   let control;
   if (config.type === 'textarea') {
     control = document.createElement('textarea');
@@ -439,13 +613,13 @@ function renderItemField(item, key, definition, context, onChange, { hideLabel =
     control.type = config.type === 'boolean' ? 'checkbox' : config.type === 'number' ? 'number' : 'text';
   }
 
-  if (config.type === 'boolean') control.checked = Boolean(item[key]);
+  if (config.type === 'boolean') control.checked = Boolean(item[key] ?? config.default);
   else control.value = item[key] ?? '';
   control.setAttribute('aria-label', config.label);
   const eventName = config.type === 'boolean' || config.type === 'select' || config.type === 'die' ? 'change' : 'input';
   control.addEventListener(eventName, () => {
     if (config.type === 'boolean') item[key] = control.checked;
-    else if (config.type === 'number') item[key] = numberValue(control);
+    else if (config.type === 'number') item[key] = config.default === null && control.value === '' ? null : numberValue(control);
     else if (config.type === 'die') item[key] = control.value === '' ? null : Number(control.value);
     else if (config.type === 'select' && config.valueType === 'number') item[key] = control.value === '' ? null : Number(control.value);
     else if (config.type === 'reference' && config.multiple) {
@@ -456,6 +630,11 @@ function renderItemField(item, key, definition, context, onChange, { hideLabel =
   });
   wrap.appendChild(control);
   return wrap;
+}
+
+function creationItemCost(item, context) {
+  const config = context.creationCost;
+  return stepCost(config.baseDie, item[config.valueField] ?? config.baseDie, context.dieScale || [], getByPath(context.system, config.costsFrom));
 }
 
 function renderPoolBuilder(container, context) {
@@ -471,7 +650,7 @@ function renderPoolBuilder(container, context) {
       input.type = 'checkbox';
       input.value = trait.source;
       input.checked = selected.has(trait.source);
-      label.append(input, element('span', '', trait.label), element('strong', '', `d${trait.sides}`));
+      label.append(input, element('span', '', trait.label), element('strong', '', traitLabel(trait.dice ? { dice: trait.dice } : trait.sides)));
       checklist.appendChild(label);
     });
     if (!traits.length) checklist.appendChild(element('p', 'engine-empty', 'Nenhum Traço disponível para a Pool.'));
@@ -480,6 +659,12 @@ function renderPoolBuilder(container, context) {
   context.registerRefresh?.(refreshTraits);
 
   const actions = element('div', 'engine-pool__actions');
+  const extraLabel = fieldLabel('Dados de apoio / ajustes temporários');
+  const extra = document.createElement('input');
+  extra.type = 'text';
+  extra.placeholder = 'd4, d6 (fontes separadas); d12 + d6 (traço composto)';
+  extraLabel.appendChild(extra);
+  const extraNote = element('small', '', 'Somente fontes relevantes, sem repetir um Traço selecionado. Para um Aprimoramento temporário, omita o dado original e informe o substituto; uma Ascensão temporária acrescenta um d6 separado, não um Traço Composto.');
   const rollButton = buttonElement(context.rollLabel || 'Rolar Pool', 'button button--primary');
   const result = element('div', 'engine-pool__result');
   const potency = document.createElement('select');
@@ -492,6 +677,15 @@ function renderPoolBuilder(container, context) {
     const selected = [...checklist.querySelectorAll('input:checked')]
       .map((input) => currentTraits.get(input.value))
       .filter(Boolean);
+    if (extra.value.trim()) {
+      const parsed = extra.value.split(',').map((value) => parseTrait(value.trim(), context.system.dieScale || []));
+      if (parsed.some((value) => value === null)) {
+        result.replaceChildren(element('p', 'engine-callout', 'Dados de apoio inválidos: use dados da escala, separados por vírgula; + compõe um único Traço.'));
+        actorPool = null;
+        return;
+      }
+      selected.push(...parsed.map((value, index) => ({ source: `manual:${index}`, label: `Apoio ${index + 1}`, ...traitDescriptor(value) })));
+    }
     actorPool = selected.length ? rollPool(selected) : resolvePool([]);
     renderActorPoolResult(result, actorPool, potency, context.system);
   });
@@ -509,17 +703,22 @@ function renderPoolBuilder(container, context) {
   const manual = document.createElement('input');
   manual.type = 'number';
   manualLabel.appendChild(manual);
+  const diceLabel = fieldLabel('Dados da oposição (opcional)');
+  const opponentDice = document.createElement('input');
+  opponentDice.type = 'text';
+  opponentDice.placeholder = 'd8, d8, d6 (ex.: cura de estado d6)';
+  diceLabel.appendChild(opponentDice);
   const resolveButton = buttonElement(context.resolveLabel || 'Resolver ação', 'button button--primary');
   const resolution = element('div', 'engine-pool__resolution');
   resolveButton.addEventListener('click', () => {
-    renderResolution(resolution, actorPool, preset.value, manual.value, potency.value, context.system);
+    renderResolution(resolution, actorPool, preset.value, manual.value, potency.value, context.system, opponentDice.value);
   });
-  opposition.append(presetLabel, manualLabel, resolveButton);
-  wrap.append(checklist, actions, result, opposition, resolution);
+  opposition.append(presetLabel, manualLabel, diceLabel, resolveButton);
+  wrap.append(checklist, extraLabel, extraNote, actions, result, opposition, resolution);
   container.appendChild(wrap);
 }
 
-function renderActorPoolResult(container, pool, potency, system) {
+export function renderActorPoolResult(container, pool, potency, system) {
   container.innerHTML = '';
   potency.innerHTML = '';
   if (pool.emptyPool) {
@@ -529,10 +728,12 @@ function renderActorPoolResult(container, pool, potency, system) {
   const rolls = element('div', 'engine-pool__rolls');
   pool.rolls.forEach((roll) => {
     const item = element('span', 'engine-roll');
+    const diceLabel = roll.componentRolls?.length ? roll.componentRolls.map((die) => `d${die.sides}`).join(' + ') : `d${roll.sides}`;
+    const role = pool.apex === roll && pool.base === roll ? 'Ápice e Base' : pool.apex === roll ? 'Ápice' : pool.base === roll ? 'Base' : 'Potência disponível';
     item.append(
       element('span', '', roll.label),
       element('strong', '', `${roll.result}`),
-      element('small', '', pool.apex === roll ? 'Ápice' : pool.base === roll ? 'Base' : `d${roll.sides}`),
+      element('small', 'engine-roll__die', `${diceLabel} · ${role}`),
     );
     rolls.appendChild(item);
   });
@@ -546,7 +747,7 @@ function renderActorPoolResult(container, pool, potency, system) {
   container.append(rolls, summary, potencyLabel);
 }
 
-function renderResolution(container, actorPool, presetId, manualValue, potencyValue, system) {
+export function renderResolution(container, actorPool, presetId, manualValue, potencyValue, system, diceValue = '') {
   container.innerHTML = '';
   if (!actorPool || actorPool.emptyPool) {
     container.appendChild(element('p', 'engine-callout engine-callout--danger', 'Role uma Pool válida primeiro.'));
@@ -554,7 +755,16 @@ function renderResolution(container, actorPool, presetId, manualValue, potencyVa
   }
   let opponentWeight;
   let detail;
-  if (manualValue !== '') {
+  if (diceValue.trim()) {
+    const dice = diceValue.split(',').map((value) => parseTrait(value.trim(), system.dieScale || []));
+    if (dice.some((value) => value === null)) {
+      container.appendChild(element('p', 'engine-callout', 'Dados de oposição inválidos: use dados da escala separados por vírgula.'));
+      return;
+    }
+    const opposition = rollPool(dice.map((value, index) => ({ source: `opponent:${index}`, ...traitDescriptor(value) })));
+    opponentWeight = opposition.weight;
+    detail = `Oposição: ${opposition.rolls.map((roll) => roll.result).join(', ')} · Peso ${opponentWeight}`;
+  } else if (manualValue !== '') {
     opponentWeight = Number(manualValue);
     detail = `Peso manual: ${opponentWeight}`;
   } else {
@@ -581,32 +791,38 @@ function renderResolution(container, actorPool, presetId, manualValue, potencyVa
     element('strong', `engine-outcome engine-outcome--${outcome.success ? 'success' : 'failure'}`, outcomeLabels[outcome.outcome]),
   );
   if (outcome.outcome === 'criticalSuccess' && potencyValue) {
-    const improved = stepUp(Number(potencyValue));
+    const improved = stepUp(Number(potencyValue), system.dieScale);
     const detailText = improved.overflow
       ? `Potência Excepcional: d${potencyValue} + 1 Ascensão.`
       : `Potência aprimorada: d${potencyValue} → d${improved.sides}.`;
     container.appendChild(element('p', 'engine-callout', detailText));
   }
+  return outcome;
 }
 
 function collectTraits(sources, character, system) {
   return sources.flatMap((source) => {
+    if (source.kind === 'constant') {
+      const sides = source.sidesFrom ? getByPath(system, source.sidesFrom) : source.sides;
+      return traitDice(sides).length ? [{ source: source.id, label: source.label, ...traitDescriptor(sides) }] : [];
+    }
     if (source.kind === 'field') {
       const sides = getByPath(character, source.field);
-      return sides ? [{ source: source.id || source.field, label: source.label, sides }] : [];
+      return sides ? [{ source: source.id || source.field, label: source.label, ...traitDescriptor(sides) }] : [];
     }
     if (source.kind === 'entries') {
       const entries = getByPath(character, source.field) || {};
       return Object.entries(entries).flatMap(([key, sides]) => sides ? [{
         source: interpolate(source.id || key, { key, name: key }),
         label: interpolate(source.label || key, { key, name: key }),
-        sides,
+        ...traitDescriptor(sides),
       }] : []);
     }
     const collection = source.from === 'system' ? getByPath(system, source.collection) : getByPath(character, source.collection);
     if (!Array.isArray(collection)) return [];
     return collection.flatMap((item) => {
       if (source.require && !getByPath(item, source.require)) return [];
+      if (source.excludeWhen && getByPath(item, source.excludeWhen.field) === source.excludeWhen.equals) return [];
       const context = item && typeof item === 'object' ? item : { value: item, key: item, name: item, label: item };
       const sidesPath = interpolate(source.sides, context);
       const sides = source.from === 'system' ? getByPath(character, sidesPath) : getByPath(item, sidesPath);
@@ -614,7 +830,7 @@ function collectTraits(sources, character, system) {
       return [{
         source: interpolate(source.id || sidesPath, context),
         label: interpolate(source.label, context),
-        sides,
+        ...traitDescriptor(sides),
       }];
     });
   });
@@ -622,11 +838,12 @@ function collectTraits(sources, character, system) {
 
 function resolveFormulaVariables(definitions = {}, character, system, roll) {
   return Object.fromEntries(Object.entries(definitions).map(([key, definition]) => {
+    if (definition.traitMaxField) return [key, traitMaximum(getByPath(character, definition.traitMaxField))];
     if (definition.field) return [key, getByPath(character, definition.field) ?? 0];
     if (definition.system) return [key, getByPath(system, definition.system) ?? 0];
     if (definition.rollField) {
       const sides = getByPath(character, definition.rollField);
-      return [key, roll && sides ? rollOne(sides) : 0];
+      return [key, roll && sides ? traitDice(sides).reduce((sum, die) => sum + rollOne(die), 0) : 0];
     }
     return [key, definition.value ?? 0];
   }));
@@ -676,7 +893,7 @@ function entryMeta(item, context = {}) {
   }
   const parts = [];
   const sides = item.die ?? item.sides ?? item.currentDie;
-  if (sides) parts.push(`d${sides}`);
+  if (sides) parts.push(traitLabel(sides));
   if (item.type) parts.push(item.type);
   if (item.usage) parts.push(item.usage);
   return parts.join(' · ');

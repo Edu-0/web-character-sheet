@@ -2,6 +2,7 @@ const SCHEMA_VERSION = 1;
 
 export const KNOWN_COMPONENT_TYPES = new Set([
   'boolean',
+  'actionGroup',
   'computed',
   'counter',
   'die',
@@ -9,22 +10,28 @@ export const KNOWN_COMPONENT_TYPES = new Set([
   'dndDerived',
   'dndSkill',
   'image',
+  'inventorySummary',
   'list',
   'number',
   'poolBuilder',
+  'pointBudget',
   'resource',
+  'repertoire',
   'select',
+  'skillCatalog',
   'slotTracker',
   'stateList',
   'table',
   'tagList',
   'text',
   'textarea',
+  'techniqueUse',
+  'traitAllocation',
 ]);
 
 const FIELD_COMPONENT_TYPES = new Set([
   'boolean', 'counter', 'die', 'dndAbility', 'dndSkill', 'image', 'list', 'number', 'resource', 'select',
-  'slotTracker', 'stateList', 'table', 'tagList', 'text', 'textarea',
+  'skillCatalog', 'slotTracker', 'stateList', 'table', 'tagList', 'text', 'textarea', 'traitAllocation', 'inventorySummary',
 ]);
 
 export class SchemaValidationError extends Error {
@@ -186,12 +193,39 @@ function validateComponent(component, path, system, issues) {
     return;
   }
   if (FIELD_COMPONENT_TYPES.has(component.type)) requireString(component.field, `${path}.field`, issues);
+  if (['pointBudget', 'repertoire', 'techniqueUse'].includes(component.type)) {
+    if (requireString(component.configFrom, `${path}.configFrom`, issues) && system) {
+      const config = readConfig(system, component.configFrom);
+      if (requireObject(config, `${path}.configFrom (${component.configFrom})`, issues)) {
+        if (component.type === 'pointBudget') requireArray(config.sources, `${path}.configFrom.sources`, issues);
+        if (component.type === 'repertoire') ['specializationsField', 'gradeField', 'techniquesField', 'linkField', 'progressionFrom'].forEach((key) => requireString(config[key], `${path}.configFrom.${key}`, issues));
+        if (component.type === 'techniqueUse') {
+          ['attributesFrom', 'attributesField', 'skillsField', 'techniquesField', 'specializationsField', 'costsFrom', 'energyField', 'concentrationField', 'lastUseField'].forEach((key) => requireString(config[key], `${path}.configFrom.${key}`, issues));
+          if (requireArray(config.modes, `${path}.configFrom.modes`, issues, { nonEmpty: true })) {
+            validateUniqueIds(config.modes, `${path}.configFrom.modes`, issues);
+            config.modes.forEach((mode, index) => {
+              requireString(mode?.id, `${path}.configFrom.modes[${index}].id`, issues);
+              requireString(mode?.label, `${path}.configFrom.modes[${index}].label`, issues);
+              requireArray(mode?.terms, `${path}.configFrom.modes[${index}].terms`, issues, { nonEmpty: true });
+            });
+          }
+        }
+      }
+    }
+  }
+  if (component.type === 'actionGroup' && requireString(component.actionsFrom, `${path}.actionsFrom`, issues) && system) requireArray(readConfig(system, component.actionsFrom), `${path}.actionsFrom (${component.actionsFrom})`, issues);
+  if (component.type === 'traitAllocation') ['presetsFrom', 'traitsFrom'].forEach((key) => requireString(component[key], `${path}.${key}`, issues));
+  if (component.type === 'inventorySummary') ['weightField', 'quantityField', 'strengthField', 'multiplierField'].forEach((key) => requireString(component[key], `${path}.${key}`, issues));
   if (component.type === 'computed') {
     requireString(component.formula, `${path}.formula`, issues);
     if (system && component.formula && !system.formulas?.[component.formula]) {
       add(issues, `${path}.formula`, `fórmula "${component.formula}" não existe em system.formulas`, 'unknown-formula');
     }
   }
+}
+
+function readConfig(root, path) {
+  return path.split('.').reduce((value, key) => value?.[key], root);
 }
 
 export function validateCharacter(character, { root = 'character', allowMissingId = false, expectedSystem = null } = {}) {

@@ -13,8 +13,11 @@
     "appearance": "",
     "personality": "",
     "quality": "quality-7",
-    "pointsAvailable": 7,
-    "pointsSpent": 0,
+    "creationPointAdjustment": 0,
+    "progression": {
+      "phase": "creation",
+      "history": []
+    },
     "evolutionPoints": 0,
     "buffs": [],
     "debuffs": [],
@@ -67,14 +70,17 @@
         "current": 0
       },
       "energy": {
-        "current": 0,
-        "max": 0
+      "current": 0,
+      "max": 0
       }
     },
     "reaction": {
       "available": true
     },
     "velocity": 9,
+    "carryMultiplier": 5,
+    "modules": { "postAscensionCosts": false },
+    "scene": { "retired": false, "deathRisk": false, "concentrations": [], "lastAction": null, "lastTechniqueUse": null },
     "inventory": [],
     "states": {
       "characteristics": [],
@@ -118,31 +124,76 @@
   "qualityPresets": [
     {
       "id": "quality-7",
+      "label": "d4 · 7 pontos · teto d6",
       "points": 7,
-      "maxDie": null
+      "maxDie": 6
     },
     {
       "id": "quality-14",
+      "label": "d6 · 14 pontos · teto d6",
       "points": 14,
-      "maxDie": null
+      "maxDie": 6
     },
     {
       "id": "quality-21",
+      "label": "d8 · 21 pontos · teto d8",
       "points": 21,
-      "maxDie": null
+      "maxDie": 8
     },
     {
       "id": "quality-30",
+      "label": "d10 · 30 pontos · teto d10",
       "points": 30,
-      "maxDie": null
+      "maxDie": 10
     },
     {
       "id": "quality-44",
+      "label": "d12 · 44 pontos · teto d12",
       "points": 44,
-      "maxDie": null
+      "maxDie": 12
     }
   ],
-  "qualityNote": "A documentação define apenas os pontos (7/14/21/30/44), sem nomear os níveis nem fixar o dado máximo por nível — maxDie fica null (indefinido) até a campanha configurar.",
+  "qualityNote": "O livro define os pontos e o dado máximo de cada Qualidade (d4/d6/d8/d10/d12). A campanha pode estabelecer outras convenções.",
+  "pointBudget": {
+    "field": "progression",
+    "qualityField": "quality",
+    "adjustmentField": "creationPointAdjustment",
+    "evolutionField": "evolutionPoints",
+    "modifiers": [
+      { "field": "buffs", "valueField": "points", "sign": 1, "label": "Buffs" },
+      { "field": "debuffs", "valueField": "points", "sign": -1, "label": "Debuffs" }
+    ],
+    "postAscension": { "enabledField": "modules.postAscensionCosts", "formulaFrom": "evolution.postAscensionFormulaOptional" },
+    "sources": [
+      { "field": "attributes", "kind": "map", "labelsFrom": "attributes", "baseDie": 4, "countCreation": false, "costsFrom": "evolution.costs", "limitByQuality": true, "allowComposite": true },
+      { "field": "essences", "kind": "list", "label": "Essência", "baseDie": 4, "valueField": "die", "countCreation": false, "costsFrom": "evolution.costs", "allowComposite": true },
+      {
+        "field": "skills",
+        "kind": "map",
+        "catalogFrom": "skillCategories",
+        "baseDie": 4,
+        "costsFrom": "improvementCosts.skills",
+        "limitByQuality": true,
+        "allowComposite": true
+      },
+      {
+        "field": "specializations",
+        "kind": "list",
+        "label": "Especialização",
+        "baseDie": 0,
+        "valueField": "die",
+        "costsFrom": "improvementCosts.specializations",
+        "allowComposite": true
+      },
+      {
+        "field": "techniques",
+        "kind": "list",
+        "label": "Técnica",
+        "costField": "creationPointCost",
+        "evolutionValueField": "maxDie"
+      }
+    ]
+  },
   "attributes": [
     {
       "key": "strength",
@@ -299,19 +350,19 @@
   "improvementCosts": {
     "skills": {
       "4->6": 1,
-      "6->8": 1,
-      "8->10": 2,
-      "10->12": 4
+      "6->8": 2,
+      "8->10": 4,
+      "10->12": 8
     },
     "specializations": {
       "0->4": 1,
       "4->6": 2,
-      "6->8": 2,
-      "8->10": 4,
-      "10->12": 8
+      "6->8": 4,
+      "8->10": 8,
+      "10->12": 16
     }
   },
-  "improvementCostsNote": "A documentação menciona uma progressão de custo adicional acima disso para evolução posterior (não criação inicial) — ver evolution.postAscensionFormulaOptional.",
+  "improvementCostsNote": "Custos por passo conforme o livro: Perícias partem gratuitamente de d4; Especializações compram o primeiro d4 por 1 ponto e os passos seguintes custam o dobro.",
   "specializationRule": {
     "startsAt": 0,
     "grantsAccessTo": "techniques"
@@ -509,7 +560,7 @@
     "newTechniqueSameArea": {
       "label": "Técnica nova dentro da mesma área",
       "poolFormula": "attribute + specialization + reducedSpecializationDie",
-      "reductionNote": "Redução correspondente à diferença de domínio (não numericamente fixada pela documentação).",
+      "reductionNote": "Uma Redução na mesma área; duas Reduções para uma técnica nova da mesma Especialização.",
       "risk": "Baixo",
       "onFailure": [
         "Ação falha (sem Reverso automático pelo Risco)"
@@ -645,10 +696,35 @@
   },
   "evolution": {
     "costs": {
+      "4->6": 2,
+      "6->8": 4,
+      "8->10": 8,
       "10->12": 16
     },
     "postAscensionFormulaOptional": "16 + 8 * n",
     "postAscensionNote": "Opcional — não aplicado automaticamente. n = número da evolução após a Ascensão."
+  },
+  "repertoire": { "specializationsField": "specializations", "gradeField": "die", "techniquesField": "techniques", "linkField": "specializationId", "progressionFrom": "techniques.progressionByDie" },
+  "sheetActions": [
+    { "id": "short-rest", "label": "Descanso curto", "note": "Ferimentos exigem tentativa de cura com recuperação limitada. Estados não recuperáveis são preservados.", "operations": [ { "type": "rollResource", "field": "resources.energy", "sourceField": "specializations", "dieField": "die" }, { "type": "reduceNamedStates", "field": "states.wear", "names": ["Exausto"], "gradeField": "sides", "steps": 1 } ] },
+    { "id": "long-rest", "label": "Descanso longo", "note": "Recupera Energia e Exausto recuperável. Ferimentos e Trauma exigem tratamento, não são apagados pelo descanso.", "operations": [ { "type": "restoreResource", "field": "resources.energy" }, { "type": "clearNamedStates", "field": "states.wear", "names": ["Exausto"] } ] },
+    { "id": "new-round", "label": "Nova rodada", "note": "A defesa normal não consome Reação. Efeitos mantidos podem exigir a ação bônus da rodada.", "operations": [ { "type": "set", "field": "reaction.available", "value": true } ] },
+    { "id": "reaction", "label": "Gastar Reação", "requirements": [ { "field": "reaction.available", "equals": true, "message": "A Reação desta rodada já foi usada." } ], "operations": [ { "type": "set", "field": "reaction.available", "value": false } ] },
+    { "id": "gain-ra", "label": "Ganhar RA", "note": "Confirme a condição da Essência ou a concessão do Mestre.", "operations": [ { "type": "add", "field": "resources.actionResource.current", "amount": 1, "min": 0 } ] },
+    { "id": "spend-ra", "label": "Gastar RA", "requirements": [ { "field": "resources.actionResource.current", "min": 1, "message": "Não há RA disponível." } ], "note": "A habilidade de gasto é definida pela Essência.", "operations": [ { "type": "add", "field": "resources.actionResource.current", "amount": -1, "min": 0 } ] },
+    { "id": "concentration-end", "label": "Encerrar concentrações", "operations": [ { "type": "set", "field": "scene.concentrations", "value": [] } ] }
+  ],
+  "techniqueUse": {
+    "attributesFrom": "attributes", "attributesField": "attributes", "skillsField": "skills", "skillBaseDie": 4,
+    "techniquesField": "techniques", "specializationsField": "specializations", "costsFrom": "energyCostByDie", "energyField": "resources.energy", "concentrationField": "scene.concentrations", "lastUseField": "scene.lastTechniqueUse",
+    "modes": [
+      { "id": "trained", "label": "Técnica aprendida", "terms": ["attribute", "specialization", "technique"], "requiresTechnique": true, "requiresSpecialization": true },
+      { "id": "moderate", "label": "Nova técnica da mesma Especialização", "terms": ["attribute", "specialization", "technique"], "techniqueFrom": "specialization", "reductionSteps": 2, "energyFrom": "original", "requiresSpecialization": true, "reverseOnFailure": true, "note": "Risco moderado: duas Reduções no terceiro dado; Energia pelo dado original. Defina o efeito e o Reverso com o Mestre." },
+      { "id": "low", "label": "Nova técnica da mesma área", "terms": ["attribute", "specialization", "technique"], "techniqueFrom": "specialization", "reductionSteps": 1, "energyFrom": "original", "requiresSpecialization": true, "note": "Risco baixo: uma Redução no terceiro dado. Reverso em falha crítica ou exceção da técnica." },
+      { "id": "high", "label": "Especialização desconhecida", "terms": ["attribute", "constant"], "constantDie": 4, "energyFrom": "original", "reverseOnFailure": true, "failureImpact": true, "note": "Risco muito alto: Atributo + d4. Falhar provoca Reverso e Potência Aprimorada contra o personagem." },
+      { "id": "knowledge", "label": "Conhecimento genérico", "terms": ["highestSpecialization", "attribute", "constant"], "constantDie": 6, "defaultAttribute": "intelligence", "free": true, "note": "Pode usar Inteligência ou Vontade. Não substitui uma técnica especializada." },
+      { "id": "maintenance", "label": "Manter concentração", "terms": ["attribute", "skill", "technique"], "skill": "Concentração", "defaultAttribute": "willpower", "requiresTechnique": true, "requiresConcentration": true, "free": true, "note": "Sem novo custo padrão de Energia; exceções da técnica são registradas manualmente. A manutenção pode consumir a ação bônus." }
+    ]
   },
   "schemaVersion": 1
 }
