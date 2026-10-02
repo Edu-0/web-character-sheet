@@ -1,3 +1,4 @@
+import { parseDiceExpression, evaluateDiceExpression } from './engine/dice-expression.js';
 // dice.js
 // Rolador rápido de dados usado pela bandeja de dados da interface. A resolução
 // em si (o que significa "rolar") agora vive em engine/dice-resolver.js — este
@@ -8,12 +9,21 @@ const MAX_HISTORY = 20;
 const history = [];
 
 export function roll({ sides, count = 1, modifier = 0, label = '' }) {
-  const result = resolve({ type: 'dice', sides, count, modifier, label });
+  return record(resolve({ type: 'dice', sides, count, modifier, label }));
+}
+
+export function rollExpression(expression, label = '') {
+  const parsed = typeof expression === 'string' ? parseDiceExpression(expression) : expression;
+  return record({ ...evaluateDiceExpression(parsed), label });
+}
+
+function record(result) {
   const entry = {
     id: Date.now() + Math.random().toString(36).slice(2, 6),
     label: result.label,
     formula: result.formula,
     rolls: result.rolls,
+    ...(result.groups ? { groups: result.groups } : {}),
     modifier: result.modifier,
     total: result.total,
     timestamp: new Date().toISOString(),

@@ -390,5 +390,90 @@
     "spellAttackBonus": "proficiencyBonus + spellAbilityModifier",
     "carryCapacity": "strengthScore * 7.5"
   },
-  "schemaVersion": 1
+  "schemaVersion": 1,
+  "entryRolls": {
+    "attack": {
+      "buttonLabel": "Rolar ataque / ação",
+      "title": "Rolar",
+      "submitLabel": "Rolar ataque",
+      "help": "Configure o teste e role o dano ou efeito quando apropriado.",
+      "check": {
+        "label": "Ataque",
+        "toggleLabel": "Rolar ataque",
+        "expressionLabel": "Dados do ataque",
+        "modifierLabel": "Modificador do ataque",
+        "enabled": true,
+        "expression": {
+          "value": "1d20"
+        },
+        "modifier": {
+          "itemField": "bonus",
+          "fallback": 0
+        }
+      },
+      "effect": {
+        "expression": {
+          "itemField": "damage"
+        }
+      }
+    },
+    "spell": {
+      "buttonLabel": "Lançar",
+      "title": "Lançar",
+      "submitLabel": "Lançar",
+      "noRollMessage": "Magia lançada sem rolagem.",
+      "help": "Configure o aumento conforme a descrição da magia. Ataque e efeito são rolados separadamente; resistências e outros efeitos ficam com a mesa.",
+      "check": {
+        "label": "Ataque",
+        "toggleLabel": "Rolar ataque",
+        "expressionLabel": "Dados do ataque",
+        "modifierLabel": "Modificador do ataque",
+        "enabled": false,
+        "expression": {
+          "value": "1d20"
+        },
+        "modifier": {
+          "resolver": "dnd.spellAttackBonus"
+        }
+      },
+      "scale": {
+        "base": {
+          "itemField": "level"
+        },
+        "min": 1,
+        "max": 9,
+        "step": 1,
+        "label": "Nível do espaço",
+        "incrementLabel": "Dados adicionais por nível de espaço",
+        "noScaleHelp": "Truques não usam espaços. Ajuste os dados conforme o nível do personagem e a descrição da magia."
+      },
+      "resource": {
+        "field": "spellcasting.slots",
+        "matchField": "level",
+        "valueField": "used",
+        "maxField": "max",
+        "mode": "used",
+        "cost": {
+          "value": 1
+        },
+        "label": "Consumir espaço escolhido",
+        "statusLabel": "Espaços disponíveis",
+        "unavailableMessage": "Não há espaço disponível nesse nível. Escolha outro nível ou desmarque o consumo."
+      },
+      "info": [
+        {
+          "label": "CD de magia",
+          "source": {
+            "resolver": "dnd.spellSaveDC"
+          }
+        },
+        {
+          "label": "Ataque mágico",
+          "source": {
+            "resolver": "dnd.spellAttackBonus"
+          }
+        }
+      ]
+    }
+  }
 }

@@ -206,7 +206,7 @@ function renderComponent(component, character, options) {
   if (component.disabledWhen) {
     const refresh = () => {
       const disabled = getByPath(character, component.disabledWhen.field) === component.disabledWhen.equals;
-      wrapper.querySelectorAll('input, select, textarea, button').forEach((control) => { if (!control.matches('.engine-help__trigger')) control.disabled = disabled; });
+      wrapper.querySelectorAll('input, select, textarea, button').forEach((control) => { if (!control.matches('.engine-help__trigger')) control.disabled = disabled || control.dataset.intrinsicDisabled === 'true'; });
     };
     refresh();
     options.registerRefresh?.(refresh);

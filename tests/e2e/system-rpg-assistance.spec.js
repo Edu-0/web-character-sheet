@@ -33,29 +33,29 @@ const active = (page) => page.locator('.engine-panel:not([hidden])');
 test('carga considera quantidade, itens carregados, multiplicador e Força composta', async ({ page }) => {
   await seed(page, { inventory: [{ id: 'item', name: 'Mochila', weight: 20, quantity: 2, carried: true, die: 6 }] });
   await page.getByRole('tab', { name: 'Inventário' }).click();
-  await expect(page.getByLabel('Peso carregado')).toHaveText('40 kg carregados');
-  await expect(page.getByLabel('Capacidade de carga')).toHaveText('30 kg de capacidade');
+  await expect(page.getByLabel('Peso carregado', { exact: true })).toHaveText('40 kg carregados');
+  await expect(page.getByLabel('Capacidade de carga', { exact: true })).toHaveText('30 kg de capacidade');
   await expect(active(page)).toContainText('Sobrecarga de 10 kg');
   await active(page).getByLabel('Carregado', { exact: true }).uncheck();
-  await expect(page.getByLabel('Peso carregado')).toHaveText('0 kg carregados');
+  await expect(page.getByLabel('Peso carregado', { exact: true })).toHaveText('0 kg carregados');
   await active(page).getByLabel('Carregado', { exact: true }).check();
   await page.getByRole('tab', { name: 'Atributos' }).click();
   await page.getByLabel('Força', { exact: true }).selectOption('composite');
   await page.getByLabel('Composição de Força', { exact: true }).fill('d12 + d6');
   await page.getByRole('tab', { name: 'Combate' }).click();
   await page.getByLabel('Multiplicador de carga').fill('8');
-  await expect(active(page).locator('.engine-computed').filter({ hasText: 'Carga Máxima' }).locator('output')).toHaveText('144');
+  await expect(active(page).locator('.engine-computed').filter({ hasText: 'Carga Máxima' }).locator('.engine-computed__value')).toHaveText('144');
   await page.getByRole('tab', { name: 'Inventário' }).click();
-  await expect(page.getByLabel('Capacidade de carga')).toHaveText('144 kg de capacidade');
+  await expect(page.getByLabel('Capacidade de carga', { exact: true })).toHaveText('144 kg de capacidade');
   await page.reload();
-  await expect(page.getByLabel('Peso carregado')).toHaveText('40 kg carregados');
+  await expect(page.getByLabel('Peso carregado', { exact: true })).toHaveText('40 kg carregados');
 });
 
 test('multiplicador ausente usa 5 sem substituir escolhas personalizadas', async ({ page }) => {
   await seed(page, { carryMultiplier: null });
   await page.getByRole('tab', { name: 'Combate' }).click();
   await expect(page.getByLabel('Multiplicador de carga')).toHaveValue('5');
-  const carry = active(page).locator('.engine-computed').filter({ hasText: 'Carga Máxima' }).locator('output');
+  const carry = active(page).locator('.engine-computed').filter({ hasText: 'Carga Máxima' }).locator('.engine-computed__value');
   await expect(carry).toHaveText('30');
   await page.getByLabel('Multiplicador de carga').fill('8');
   await expect(carry).toHaveText('48');

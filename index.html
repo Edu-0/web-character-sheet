@@ -115,6 +115,11 @@
         </div>
         <input type="file" id="input-import-library" class="visually-hidden" accept="application/json,.json" />
       </section>
+      <section class="sheet-editing-settings" aria-labelledby="sheet-editing-title">
+        <h2 id="sheet-editing-title">Edição da ficha</h2>
+        <label class="field field--checkbox"><input id="show-calculation-controls" type="checkbox" aria-describedby="calculation-controls-hint" /><span>Mostrar controles de ajuste de cálculos</span></label>
+        <p id="calculation-controls-hint">Exibe “Ajustar” nos campos compatíveis. Ao ocultar os controles, os ajustes salvos continuam ativos.</p>
+      </section>
       <div class="appearance-tabs" role="tablist" aria-label="Preferências de aparência">
         <button type="button" id="appearance-tab-colors" role="tab" aria-selected="true" aria-controls="appearance-colors">Cores</button>
         <button type="button" id="appearance-tab-dice" role="tab" aria-selected="false" aria-controls="appearance-dice" tabindex="-1">Dados</button>
@@ -442,6 +447,11 @@
     </button>
     <div class="dice-panel" id="dice-panel" hidden>
       <div class="dice-buttons" id="dice-buttons"></div>
+      <form id="dice-expression-form" class="dice-expression-form">
+        <label class="field"><span>Rolagem personalizada</span><input id="dice-expression" type="text" placeholder="3d6 + 4" maxlength="200"></label>
+        <button type="submit" class="button button--ghost">Rolar expressão</button>
+        <p id="dice-expression-error" role="alert"></p>
+      </form>
       <div class="dice-result" id="dice-result" aria-live="polite"></div>
       <ol class="dice-history" id="dice-history"></ol>
     </div>

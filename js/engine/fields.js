@@ -164,12 +164,12 @@ registerFieldType('resource', {
 // a escala de opções vem de engine/die-scale.js (configurada pelo system.json),
 // não é fixada aqui. Usado por qualquer sistema baseado em dados por Traço.
 registerFieldType('die', {
-  render(container, { character, field, label, onChange, registerRefresh, allowComposite, dieScale = [4, 6, 8, 10, 12] }) {
+  render(container, { character, field, label, onChange, registerRefresh, allowComposite, stepControls, system, dieScale = [4, 6, 8, 10, 12] }) {
     const wrap = fieldWrapper(label);
     const control = createTraitControl(getByPath(character, field), (value) => {
       setByPath(character, field, value);
       onChange?.();
-    }, { label, scale: dieScale, allowComposite });
+    }, { label, scale: dieScale, allowComposite, stepControls: stepControls ?? system?.diceSteps === true });
     registerRefresh?.(() => control.update(getByPath(character, field)));
     wrap.appendChild(control.element);
     container.appendChild(wrap);

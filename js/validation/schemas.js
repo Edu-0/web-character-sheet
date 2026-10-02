@@ -1,4 +1,5 @@
-import { getByPath } from '../engine/paths.js';
+import { validateEntryRolls, validateRollOptions } from './entry-rolls.js';
+import { getByPath, pathKeys } from '../engine/paths.js';
 import { validateFormula } from '../engine/formula.js';
 import { inspectJson } from './limits.js';
 import { expandComponents } from '../engine/layout-components.js';
@@ -135,6 +136,10 @@ export function validateSystem(system) {
       else { try { validateFormula(formula); } catch (error) { add(issues, `system.formulas.${key}`, error.message); } }
     });
   }
+  if (system.diceSteps !== undefined && typeof system.diceSteps !== 'boolean') add(issues, 'system.diceSteps', 'deve ser booleano');
+  if (system.diceSteps === true) validateStepScale(system, 'system.dieScale', issues);
+  if (system.entryRolls !== undefined) validateEntryRolls(system.entryRolls, system, issues);
+  if (system.diceTray !== undefined && typeof system.diceTray !== 'boolean') add(issues, 'system.diceTray', 'deve ser booleano');
   return issues;
 }
 
@@ -204,6 +209,17 @@ function validateContainer(container, path, system, issues) {
 function validateComponent(component, path, system, issues) {
   if (!requireObject(component, path, issues)) return;
   validatePrintOptions(component, path, issues, true);
+  validateCalculationOptions(component, path, issues);
+  if (component.entryAction !== undefined && (component.type !== 'list' || !['roll', 'dndSpell', 'dndAttack'].includes(component.entryAction))) add(issues, `${path}.entryAction`, 'ação de lista desconhecida');
+  if (component.entryAction === 'roll') {
+    const rollPreset = component.rollPreset ?? component.rollConfigFrom;
+    if (component.rollPreset !== undefined && component.rollConfigFrom !== undefined) add(issues, `${path}.rollPreset`, 'use somente rollPreset; rollConfigFrom é um nome anterior');
+    if (requireString(rollPreset, `${path}.rollPreset`, issues)) {
+      try { pathKeys(rollPreset); } catch (error) { add(issues, `${path}.rollPreset`, error.message); }
+      if (system && !Object.hasOwn(system.entryRolls || {}, rollPreset)) add(issues, `${path}.rollPreset`, 'configuração de rolagem inexistente no sistema');
+    }
+  } else if (component.rollPreset !== undefined || component.rollConfigFrom !== undefined) add(issues, `${path}.rollPreset`, 'exige entryAction: roll');
+  if (system && component.stepControls === true) validateStepScale(system, `${path}.stepControls`, issues);
   if (!requireString(component.type, `${path}.type`, issues)) return;
   if (!KNOWN_COMPONENT_TYPES.has(component.type)) {
     add(issues, path, `tipo "${component.type}" desconhecido`, 'unknown-component');
@@ -215,6 +231,8 @@ function validateComponent(component, path, system, issues) {
       const type = typeof definition === 'string' ? definition : definition?.type;
       if (!['text', 'textarea', 'number', 'boolean', 'select', 'die', 'reference'].includes(type)) add(issues, `${path}.itemSchema.${key}.type`, 'tipo de campo de item desconhecido');
       if (typeof definition !== 'string' && !isObject(definition)) add(issues, `${path}.itemSchema.${key}`, 'deve ser objeto ou nome de tipo');
+      if (isObject(definition)) validateCalculationOptions(definition, `${path}.itemSchema.${key}`, issues);
+      if (system && definition?.stepControls === true) validateStepScale(system, `${path}.itemSchema.${key}.stepControls`, issues);
       if (isObject(definition)) validateFieldValue(definition.default, definition, `${path}.itemSchema.${key}.default`, issues);
     }
   }
@@ -241,6 +259,12 @@ function validateComponent(component, path, system, issues) {
   }
   if (component.type === 'actionGroup' && requireString(component.actionsFrom, `${path}.actionsFrom`, issues) && system) requireArray(readConfig(system, component.actionsFrom), `${path}.actionsFrom (${component.actionsFrom})`, issues);
   if (component.type === 'traitAllocation') ['presetsFrom', 'traitsFrom'].forEach((key) => requireString(component[key], `${path}.${key}`, issues));
+  if (component.type === 'inventorySummary' && component.overrideKeys !== undefined && requireObject(component.overrideKeys, `${path}.overrideKeys`, issues)) {
+    for (const [stat, key] of Object.entries(component.overrideKeys)) {
+      if (!['weight', 'capacity', 'excess'].includes(stat)) add(issues, `${path}.overrideKeys.${stat}`, 'métrica desconhecida');
+      if (requireString(key, `${path}.overrideKeys.${stat}`, issues)) { try { pathKeys(key); } catch (error) { add(issues, `${path}.overrideKeys.${stat}`, error.message); } }
+    }
+  }
   if (component.type === 'inventorySummary') ['weightField', 'quantityField', 'strengthField', 'multiplierField'].forEach((key) => requireString(component[key], `${path}.${key}`, issues));
   if (component.type === 'computed') {
     requireString(component.formula, `${path}.formula`, issues);
@@ -297,6 +321,16 @@ export function validateCharacter(character, { root = 'character', allowMissingI
   if (expectedSystem && character.meta.system !== expectedSystem) {
     add(issues, `${root}.meta.system`, `deve ser "${expectedSystem}"`, 'system-mismatch');
   }
+  if (character.calculationOverrides !== undefined && requireObject(character.calculationOverrides, `${root}.calculationOverrides`, issues)) {
+    for (const [key, entry] of Object.entries(character.calculationOverrides)) {
+      const path = `${root}.calculationOverrides.${key}`;
+      try { pathKeys(key); } catch (error) { add(issues, path, error.message); }
+      if (!requireObject(entry, path, issues)) continue;
+      if (!['adjust', 'fixed'].includes(entry.mode)) add(issues, `${path}.mode`, 'deve ser adjust ou fixed');
+      if (typeof entry.value !== 'number' || !Number.isFinite(entry.value)) add(issues, `${path}.value`, 'deve ser número finito');
+      for (const field of Object.keys(entry)) if (!['mode', 'value'].includes(field)) add(issues, `${path}.${field}`, 'opção desconhecida');
+    }
+  }
   return issues;
 }
 
@@ -333,6 +367,7 @@ function validateFieldValue(value, definition, path, issues) {
       if (type === 'tagList') { if (typeof item !== 'string') add(issues, `${path}[${i}]`, 'deve ser texto'); return; }
       if (definition.textEntryField && typeof item === 'string') return;
       if (!requireObject(item, `${path}[${i}]`, issues)) return;
+      if (definition.entryAction && item.rollOptions !== undefined) validateRollOptions(item.rollOptions, `${path}[${i}].rollOptions`, issues);
       for (const key of ['name', 'label']) if (item[key] !== undefined && typeof item[key] !== 'string') add(issues, `${path}[${i}].${key}`, 'deve ser texto');
       Object.entries(definition.itemSchema || {}).forEach(([key, field]) => validateFieldValue(item[key], field, `${path}[${i}].${key}`, issues));
     });
@@ -351,4 +386,16 @@ export function validateCharacterForPackage(character, pkg) {
     }
   }
   return issues;
+}
+
+function validateCalculationOptions(definition, path, issues) {
+  for (const key of ['override', 'stepControls']) if (definition[key] !== undefined && typeof definition[key] !== 'boolean') add(issues, `${path}.${key}`, 'deve ser booleano');
+  if (definition.overrideKey !== undefined && requireString(definition.overrideKey, `${path}.overrideKey`, issues)) {
+    try { pathKeys(definition.overrideKey, { template: true }); } catch (error) { add(issues, `${path}.overrideKey`, error.message); }
+  }
+}
+
+function validateStepScale(system, path, issues) {
+  const scale = system.dieScale || system.diceSet;
+  if (!Array.isArray(scale) || !scale.length || scale.some((sides, i) => !Number.isInteger(sides) || sides <= 0 || i > 0 && sides <= scale[i - 1])) add(issues, path, 'step-up/down exige escala positiva, crescente e sem repetições');
 }

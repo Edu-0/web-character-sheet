@@ -1,15 +1,23 @@
+import { calculationValue } from './calculation-overrides.js';
 import { getByPath, setByPath } from './paths.js';
 import { traitDice, traitMaximum } from './traits.js';
 import { rollOne } from './dice-resolver.js';
 
-export function inventoryTotals(character, config) {
+export function inventoryCalculationKey(config, stat) {
+  return config.overrideKeys?.[stat] || `inventory.${config.overrideKey || config.field}.${stat}`;
+}
+
+export function inventoryTotals(character, config, automaticStat = null) {
   const items = getByPath(character, config.field) || [];
-  const weight = items.reduce((sum, item) => {
+  let weight = items.reduce((sum, item) => {
     if (config.carriedField && item[config.carriedField] === false) return sum;
     return sum + Math.max(0, Number(item[config.weightField]) || 0) * Math.max(0, Number(item[config.quantityField]) || 0);
   }, 0);
-  const capacity = traitMaximum(getByPath(character, config.strengthField)) * Math.max(0, Number(getByPath(character, config.multiplierField)) || 0);
-  return { weight, capacity, excess: Math.max(0, weight - capacity) };
+  let capacity = traitMaximum(getByPath(character, config.strengthField)) * Math.max(0, Number(getByPath(character, config.multiplierField)) || 0);
+  const resolve = (stat, value) => automaticStat === stat || config.override === false ? value : calculationValue(character, inventoryCalculationKey(config, stat), value);
+  weight = resolve('weight', weight);
+  capacity = resolve('capacity', capacity);
+  return { weight, capacity, excess: resolve('excess', Math.max(0, weight - capacity)) };
 }
 
 export function repertoireStatus(character, system, config) {

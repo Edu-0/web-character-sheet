@@ -1,8 +1,9 @@
+import { createCalculationControl } from '../engine/calculation-overrides.js';
 // Componentes de apresentação específicos de D&D. O renderizador permanece agnóstico.
 import { registerFieldType } from '../engine/fields.js';
 import { getByPath, setByPath } from '../engine/paths.js';
 import {
-  abilityModifier, carryCapacity, formatModifier, initiativeModifier,
+  abilityModifier, dndCalculation, carryCapacity, formatModifier, initiativeModifier,
   passivePerception, proficiencyBonus, savingThrowModifier, skillModifier,
   spellAttackBonus, spellSaveDC, totalInventoryWeight,
 } from '../calculations.js';
@@ -23,12 +24,12 @@ function rollCheck(label, modifier) {
 registerFieldType('dndAbility', {
   print({ character, field, key, label }) {
     const score = getByPath(character, field) ?? 10;
-    return printStat(label, `${score} · ${formatModifier(abilityModifier(score))}`, `Resistência ${formatModifier(savingThrowModifier(character, key))} · ${getByPath(character, `savingThrows.${key}.proficient`) ? 'Proficiente' : 'Sem proficiência'}`);
+    return printStat(label, `${score} · ${formatModifier(abilityModifier(score, character, key))}`, `Resistência ${formatModifier(savingThrowModifier(character, key))} · ${getByPath(character, `savingThrows.${key}.proficient`) ? 'Proficiente' : 'Sem proficiência'}`);
   },
   search({ character, field, key, label, short }) {
     const score = getByPath(character, field) ?? 10;
     return [
-      { label, value: `${score} · modificador ${formatModifier(abilityModifier(score))}`, keywords: [short || ''] },
+      { label, value: `${score} · modificador ${formatModifier(abilityModifier(score, character, key))}`, keywords: [short || ''] },
       { label: `Resistência de ${label}`, value: formatModifier(savingThrowModifier(character, key)) },
     ];
   },
@@ -52,7 +53,7 @@ registerFieldType('dndAbility', {
     saveRoll.type = 'button';
     saveRoll.setAttribute('aria-label', `Rolar resistência de ${label}`);
     const refresh = () => {
-      modifier.textContent = formatModifier(abilityModifier(getByPath(character, field)));
+      modifier.textContent = formatModifier(abilityModifier(getByPath(character, field), character, key));
       saveRoll.textContent = formatModifier(savingThrowModifier(character, key));
     };
     score.addEventListener('input', () => {
@@ -63,10 +64,11 @@ registerFieldType('dndAbility', {
       setByPath(character, `savingThrows.${key}.proficient`, saveInput.checked);
       onChange?.();
     });
-    modifier.addEventListener('click', () => rollCheck(label, abilityModifier(getByPath(character, field))));
+    modifier.addEventListener('click', () => rollCheck(label, abilityModifier(getByPath(character, field), character, key)));
     saveRoll.addEventListener('click', () => rollCheck(`Resistência de ${label}`, savingThrowModifier(character, key)));
     save.append(saveInput, node('span', '', 'Resistência'));
     card.append(heading, score, modifier, save, saveRoll);
+    card.append(overrideControl(context, `ability.${key}`, `Modificador de ${label}`), overrideControl(context, `save.${key}`, `Resistência de ${label}`));
     context.registerRefresh?.(refresh);
     refresh();
     container.appendChild(card);
@@ -120,6 +122,7 @@ registerFieldType('dndSkill', {
     });
     modifier.addEventListener('click', () => rollCheck(label, skillModifier(character, key)));
     row.append(proficiency, expertise, name, abilityLabel, modifier);
+    row.append(overrideControl(context, `skill.${key}`, label));
     context.registerRefresh?.(refresh);
     refresh();
     container.appendChild(row);
@@ -127,7 +130,7 @@ registerFieldType('dndSkill', {
 });
 
 const derivedValues = {
-  proficiency: (character) => formatModifier(proficiencyBonus(character.identity.level)),
+  proficiency: (character) => formatModifier(proficiencyBonus(character.identity.level, character)),
   initiative: (character) => formatModifier(initiativeModifier(character)),
   passivePerception: (character) => passivePerception(character),
   spellSaveDC: (character) => spellSaveDC(character) ?? '—',
@@ -151,7 +154,7 @@ registerFieldType('dndDerived', {
     const label = node('span', 'engine-dnd-derived__label', context.label);
     const output = node('output', 'engine-dnd-derived__value');
     const refresh = () => { output.textContent = String(derivedValues[context.stat]?.(context.character) ?? '—'); };
-    card.append(label, output);
+    card.append(label, output, overrideControl(context, context.stat, context.label));
     context.registerRefresh?.(refresh);
     refresh();
     container.appendChild(card);
@@ -163,4 +166,9 @@ function printStat(label, value, detail) {
   wrap.append(node('span', 'print-label', label), node('strong', '', String(value)));
   if (detail) wrap.append(node('div', 'print-detail', detail));
   return wrap;
+}
+
+function overrideControl(context, id, label) {
+  return createCalculationControl({ ...context, key: `dnd.${id}`, label,
+    automatic: () => dndCalculation(context.character, id, true) });
 }

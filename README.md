@@ -13,12 +13,14 @@ Seu propósito é dar espaço a diferentes sistemas de RPG: desde uma ficha pree
 - **Seus personagens em um só lugar.** Crie, duplique e organize fichas na biblioteca local. Importe e exporte personagens e pacotes de sistemas em JSON. Em Configurações, **Exportar tudo** salva a biblioteca e **Importar tudo** permite mesclar ou substituir com confirmação.
 - **Encontre sem percorrer todas as abas.** A busca consulta a ficha inteira, mostra os valores atuais e leva você até o campo, com tolerância a erros de digitação.
 - **Acompanhe os recursos da sessão.** Vida, inventário, habilidades, magias e rolagens ficam organizados conforme o sistema escolhido.
+- **Role a partir das entradas da ficha.** Listas configuradas podem oferecer teste e efeito separados, dados, modificadores, escala e consumo opcional. No D&D, abra uma magia e use **Lançar**, com aumento por espaço e prévia; magias sem dados também podem ser lançadas. Nos ataques/ações, role ataque e dano separadamente. A bandeja **Dados** aceita expressões como `3d6 + 4` ou `1d8 + 1d6 - 2` nos sistemas que a exibem.
+- **Ajuste os cálculos da mesa.** Em Configurações → **Edição da ficha**, ative **Mostrar controles de ajuste de cálculos** (ocultos por padrão). Em **Ajustar**, escolha um bônus/penalidade ou um valor fixo e volte ao automático quando quiser. Disponível nos resultados calculados, na carga e nos valores derivados de D&D.
 - **Assistência quando ela ajuda.** Cálculos, criação e evolução têm controles próprios nos sistemas compatíveis. Edição direta durante o jogo não cobra evolução automaticamente.
 - **Consulte também no celular.** Abas, cartões e tabelas se reorganizam para telas menores; as ações do cabeçalho ficam no menu **Mais**.
 
 ## Uma ficha com a sua cara
 
-Escolha entre seis paletas — Clássico, Editorial, Floresta, Rubi, Preto e branco e Pétalas — em modo claro ou escuro. Combine ornamentos, posições e intensidade, ou mantenha uma apresentação simples. Os dados podem aparecer em texto ou com ícones vetoriais acompanhados de texto.
+Escolha entre seis paletas — Clássico, Editorial, Floresta, Rubi, Preto e branco e Pétalas — em modo claro ou escuro. Combine ornamentos, posições e intensidade, ou mantenha uma apresentação simples. Os dados podem aparecer em texto ou com ícones vetoriais acompanhados de texto. Sistemas com passos de dados podem habilitar botões **−/+** para descer ou subir na escala, inclusive cada dado de um traço composto.
 
 <table>
   <tr>
@@ -44,7 +46,7 @@ O documento adapta a identidade visual da ficha ao papel A4 e inclui o conteúdo
 | RPG autoral em desenvolvimento | Ficha assistida com criação por pontos, evolução, técnicas, recursos, estados e Pool. Seu conteúdo tem direitos próprios, separados da engine. |
 | Seus sistemas | Importação de pacotes com dados e layouts configuráveis. Componentes compatíveis podem ser reutilizados; mecânicas novas podem exigir implementação adicional. |
 
-**O projeto está em desenvolvimento**, ainda sem lançamento de produção. A cobertura depende do sistema: não há automação integral de livros, editor visual completo ou ajuste manual universal de resultados calculados.
+**O projeto está em desenvolvimento**, ainda sem lançamento de produção. A cobertura depende do sistema: não há automação integral de livros ou editor visual completo.
 
 ## Seus dados
 
@@ -72,6 +74,10 @@ O servidor é para desenvolvimento e serve o repositório inteiro. Não o exponh
 HTML, CSS e JavaScript com módulos ES, sem framework de interface. A engine declarativa separa **sistema** (dados e regras), **layout** (apresentação) e **personagem** (valores e escolhas). Sistemas usam JSONs distintos de layout e configuração, reunidos em pacotes `rpg-system-package` na importação/exportação, com `schemaVersion`.
 
 A implementação está em `js/engine/`, os repositórios em `js/repositories/` e os contratos em `js/validation/schemas.js`. Regras específicas permanecem em componentes próprios quando necessário. Não se promete representar qualquer livro só com JSON.
+
+Listas podem habilitar o painel genérico com `entryAction: "roll"` e `rollPreset` apontando para uma configuração em `system.entryRolls`. Dados, modificadores por campo/fórmula, escala, textos e consumo opcional vêm do JSON. D&D usa o mesmo painel; somente seus derivados de conjuração têm um resolvedor específico. Consulte o [contrato e exemplo de rolagens configuráveis](data/examples/README.md). A bandeja de expressões atende todos os sistemas; `diceTray: false` a oculta.
+
+`computed` (sem `mode: "roll"`) e `inventorySummary` aceitam `override: false` para desativar ajustes e `overrideKey` para identificar resultados distintos que compartilham a mesma fórmula. Ajustes persistem no personagem em `calculationOverrides`, como `{ "computed.capacity": { "mode": "adjust", "value": 2 } }`; `fixed` substitui o resultado e remover a entrada devolve o automático. `inventorySummary.overrideKeys` permite vincular peso/capacidade/sobrecarga ao ID de outro resultado calculado. No sistema, `diceSteps: true` habilita passos nos campos de dados; `stepControls: false` os desativa por campo, inclusive em `itemSchema`. A escala deve ser positiva, crescente e sem repetições. D&D mantém esses passos desligados.
 
 Os testes usam Playwright com Microsoft Edge instalado. Pare o servidor manual antes de executar:
 

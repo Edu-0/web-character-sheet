@@ -23,7 +23,7 @@ async function openRpg(page) {
 for (const presentation of ['Ficha estática', 'Ficha modular', 'Comparar lado a lado']) {
   test(`busca D&D mostra o bônus atual e navega em ${presentation}`, async ({ page }) => {
     await page.getByRole('button', { name: presentation, exact: true }).click();
-    const score = presentation === 'Ficha estática' ? page.locator('[data-ability="dex"] .ability-card__score') : page.locator('.engine-component[data-field="abilities.dex.score"] input[type="number"]');
+    const score = presentation === 'Ficha estática' ? page.locator('[data-ability="dex"] .ability-card__score') : page.getByRole('spinbutton', { name: 'Valor de Destreza', exact: true });
     await score.fill('16');
     const input = page.locator('#sheet-search-input');
     await input.fill('acrobcaia');

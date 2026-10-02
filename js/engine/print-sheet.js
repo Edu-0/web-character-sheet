@@ -186,7 +186,7 @@ function collection(context, items) {
 function calculated(context) {
   const host = node('div');
   getFieldType(context.type).render(host, { ...context, dieScale: context.system.dieScale || context.system.diceSet });
-  host.querySelectorAll('.engine-budget__evolution, .engine-budget__actions, .engine-budget__feedback, .engine-section__note, small').forEach(el => el.remove());
+  host.querySelectorAll('.engine-calculation-control, .engine-budget__evolution, .engine-budget__actions, .engine-budget__feedback, .engine-section__note, small').forEach(el => el.remove());
   host.querySelectorAll('button').forEach(button => {
     // Bônus D&D são também botões na tela: o valor continua, a ação desaparece.
     if (button.matches('.engine-dnd-ability__modifier, .engine-dnd-ability__save-roll, .engine-dnd-skill__modifier')) button.replaceWith(node('strong', '', button.textContent));

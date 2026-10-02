@@ -1437,3 +1437,36 @@
   }
 }
 
+
+/* Ajustes de resultados e edição rápida de dados. */
+.engine-calculation-control { min-width: 0; width: 100%; font-size: var(--fs-sm); text-align: left; font-weight: normal; }
+.engine-calculation-control summary { cursor: pointer; padding: .35rem 0; overflow-wrap: anywhere; }
+.engine-calculation-control > :not(summary) { display: block; margin-top: .35rem; width: 100%; box-sizing: border-box; }
+.engine-calculation-control:not([open]) > :not(summary):not(.engine-calculation-status) { display: none; }
+.engine-calculation-control input, .engine-calculation-control select { min-width: 0; color: var(--color-text); background: var(--color-panel-alt); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); padding: .4rem; }
+.engine-calculation-control.has-override summary, .engine-calculation-status { color: var(--color-accent-strong); }
+.engine-calculation-status:empty { display: none; }
+.engine-calculation-control summary:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.ability-card > .engine-calculation-control, .skill-row > .engine-calculation-control, .engine-dnd-ability > .engine-calculation-control, .engine-dnd-skill > .engine-calculation-control { grid-column: 1 / -1; }
+.engine-die-steps { display: flex; flex-wrap: wrap; gap: .4rem; }
+.engine-die-steps > div { display: flex; align-items: center; gap: .4rem; }
+.engine-die-steps span { min-width: 2rem; text-align: center; }
+@media print { .engine-calculation-control, .engine-die-steps { display: none !important; } }
+
+.engine-calculation-control summary .engine-calculation-status { margin-left: .5rem; font-size: inherit; font-weight: 600; }
+
+html:not([data-calculation-controls="visible"]) .engine-calculation-control { display: none; }
+
+.source-roll-trigger { justify-self: start; margin-bottom: var(--space-2); }
+.modal:has(.source-roll-panel) { max-width: 620px; max-height: calc(100dvh - 32px); display: flex; flex-direction: column; }
+.modal:has(.source-roll-panel) .modal__body { overflow-y: auto; min-height: 0; }
+.modal:has(.source-roll-panel) .modal__header { gap: var(--space-2); }
+.modal:has(.source-roll-panel) .modal__title { min-width: 0; overflow-wrap: anywhere; }
+.modal:has(.source-roll-panel) .modal__close { flex-shrink: 0; }
+.modal:has(.source-roll-panel) .modal__footer { flex-wrap: wrap; flex-shrink: 0; }
+.source-roll-panel { display: grid; gap: var(--space-3); min-width: 0; }
+.source-roll-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-3); }
+.source-roll-preview, .source-roll-result { overflow-wrap: anywhere; padding: var(--space-3); background: var(--color-panel-alt); border-radius: var(--radius-sm); }
+.source-roll-result:empty, .source-roll-error:empty, .source-roll-resource-status:empty { display: none; }
+.source-roll-error { color: var(--color-danger-strong); }
+.source-roll-panel p { margin: 0; }

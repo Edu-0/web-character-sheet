@@ -219,6 +219,8 @@
                 {
                   "type": "list",
                   "field": "combat.attacks",
+                  "entryAction": "roll",
+                  "rollPreset": "attack",
                   "label": "Ataques",
                   "toolbarTitle": true,
                   "heading": "Ataques e Ações",
@@ -385,6 +387,8 @@
                 {
                   "type": "list",
                   "field": "spellcasting.spells",
+                  "entryAction": "roll",
+                  "rollPreset": "spell",
                   "print": { "compact": { "fields": ["name", "level"], "presentation": "table" } },
                   "label": "Magias",
                   "toolbarTitle": true,

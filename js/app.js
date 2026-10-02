@@ -1,3 +1,4 @@
+import { initCalculationSettings, applyCalculationPreferences } from './calculation-settings.js';
 import { initBackupControls } from './backup-controls.js';
 import { captureFocus } from './focus.js';
 import { recoverTransactions, reportStorageError } from './persistence.js';
@@ -19,7 +20,7 @@ import { initTabs } from './tabs.js';
 import { initTheme, applyTheme, getAvailableThemes } from './theme.js';
 import { notify } from './notifications.js';
 import { confirmDialog } from './modal.js';
-import { roll, getHistory, clearHistory } from './dice.js';
+import { roll, rollExpression, getHistory, clearHistory } from './dice.js';
 import { setSystem, getDiceSet } from './engine/system.js';
 import { setLayout } from './engine/layout.js';
 import { renderSheet } from './engine/renderer.js';
@@ -59,6 +60,7 @@ async function init() {
   }
   initTheme();
   initAppearanceControls();
+  initCalculationSettings();
   initArtworkControls();
   initShell();
   initShellActions();
@@ -71,6 +73,7 @@ async function init() {
       refreshLibraries();
       initTheme();
       applyArtworkPreferences();
+      applyCalculationPreferences();
       const available = characters.listCharacters().filter(character => hasSystem(character.system));
       const next = available.find(character => character.id === previousId) || available[0];
       if (next) await openCharacter(next.id, {view: 'settings'});
@@ -251,7 +254,7 @@ function updateSheetPresentation() {
   $('dnd-presentation-controls').hidden = !isDnd;
   $('legacy-dnd-sheet').hidden = !isDnd || presentation === 'engine';
   $('generic-sheet-host').hidden = isDnd && presentation === 'legacy';
-  $('dice-tray').hidden = !isDnd;
+  $('dice-tray').hidden = activePackage.system.diceTray === false;
   $('dnd-sheet-surfaces').classList.toggle('dnd-sheet-surfaces--compare', compare);
   document.querySelectorAll('[data-dnd-presentation]').forEach((button) => {
     const active = button.dataset.dndPresentation === presentation;
@@ -541,18 +544,28 @@ function wireInventorySearch() {
 function wireDiceTray() {
   const toggle = $('btn-dice-toggle');
   const panel = $('dice-panel');
+  $('dice-expression-form').addEventListener('submit', event => {
+    event.preventDefault();
+    try {
+      const result = rollExpression($('dice-expression').value, 'Rolagem personalizada');
+      $('dice-expression-error').textContent = '';
+      document.dispatchEvent(new CustomEvent('sheet:rolled', { detail: result }));
+    } catch (error) { $('dice-expression-error').textContent = error.message; }
+  });
   toggle.addEventListener('click', () => {
     const expanded = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!expanded));
     panel.hidden = expanded;
   });
-  document.addEventListener('dnd:rolled', (event) => {
+  const displayRoll = (event) => {
     const result = event.detail;
     $('dice-result').textContent = `${result.formula} = ${result.total}`;
     renderDiceHistory();
     panel.hidden = false;
     toggle.setAttribute('aria-expanded', 'true');
-  });
+  };
+  document.addEventListener('dnd:rolled', displayRoll);
+  document.addEventListener('sheet:rolled', displayRoll);
 }
 
 function buildDiceButtons() {
@@ -573,7 +586,7 @@ function renderDiceHistory() {
   const list = $('dice-history');
   list.innerHTML = '';
   getHistory().forEach((entry) => {
-    list.appendChild(element('li', 'dice-history__entry', `${entry.formula} → ${entry.rolls.join(', ')} = ${entry.total}`));
+    list.appendChild(element('li', 'dice-history__entry', `${entry.label ? `${entry.label}: ` : ''}${entry.formula} → ${entry.rolls.join(', ')} = ${entry.total}`));
   });
 }
 

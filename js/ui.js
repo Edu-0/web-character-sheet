@@ -1,3 +1,5 @@
+import { createDndRollButton } from './systems/dnd-item-rolls.js';
+import { createCalculationControl } from './engine/calculation-overrides.js';
 import { safeImageSource } from './images.js';
 // ui.js
 // Renderização e ligação (binding) da interface com o estado do personagem.
@@ -8,6 +10,7 @@ import { getAbilities, getSkills } from './engine/system.js';
 import { icons } from './icons.js';
 import {
   abilityModifier,
+  dndCalculation,
   formatModifier,
   proficiencyBonus,
   savingThrowModifier,
@@ -77,6 +80,7 @@ export function buildAbilities(character) {
     saveCheckbox.addEventListener('change', () => {
       state.setPath(`savingThrows.${ability.key}.proficient`, saveCheckbox.checked);
     });
+    node.append(staticOverride(character, `ability.${ability.key}`, `Modificador de ${ability.label}`), staticOverride(character, `save.${ability.key}`, `Resistência de ${ability.label}`));
     grid.appendChild(node);
   });
   refreshAbilities(character);
@@ -88,12 +92,13 @@ export function refreshAbilities(character) {
     const node = grid.querySelector(`[data-ability="${ability.key}"]`);
     if (!node) return;
     const score = character.abilities[ability.key].score;
-    const mod = abilityModifier(score);
+    const mod = abilityModifier(score, character, ability.key);
     node.querySelector('[data-el="score"]').value = score;
     node.querySelector('[data-el="modifier"]').textContent = formatModifier(mod);
     const saveMod = savingThrowModifier(character, ability.key);
     node.querySelector('[data-el="save-modifier"]').textContent = formatModifier(saveMod);
     node.querySelector('[data-el="save-proficient"]').checked = Boolean(character.savingThrows[ability.key]?.proficient);
+    node.querySelectorAll('.engine-calculation-control').forEach(control => control.refreshOverride());
   });
 }
 
@@ -116,6 +121,7 @@ export function buildSkills(character) {
       state.setPath(`skills.${skill.key}.expertise`, expCb.checked);
       if (expCb.checked) state.setPath(`skills.${skill.key}.proficient`, true);
     });
+    node.append(staticOverride(character, `skill.${skill.key}`, skill.label));
     list.appendChild(node);
   });
   refreshSkills(character);
@@ -130,13 +136,14 @@ export function refreshSkills(character) {
     node.querySelector('[data-el="proficient"]').checked = Boolean(entry.proficient);
     node.querySelector('[data-el="expertise"]').checked = Boolean(entry.expertise);
     node.querySelector('[data-el="modifier"]').textContent = formatModifier(skillModifier(character, skill.key));
+    node.querySelectorAll('.engine-calculation-control').forEach(control => control.refreshOverride());
   });
 }
 
 // ---------- Estatísticas derivadas ----------
 
 export function refreshDerivedStats(character) {
-  $('stat-proficiency').textContent = formatModifier(proficiencyBonus(character.identity.level));
+  $('stat-proficiency').textContent = formatModifier(proficiencyBonus(character.identity.level, character));
   $('stat-initiative').textContent = formatModifier(initiativeModifier(character));
   $('stat-passive-perception').textContent = String(passivePerception(character));
 
@@ -147,6 +154,21 @@ export function refreshDerivedStats(character) {
 
   $('stat-total-weight').textContent = totalInventoryWeight(character).toFixed(1);
   $('stat-carry-capacity').textContent = carryCapacity(character).toFixed(1);
+  for (const [elementId, id, label] of [
+    ['stat-proficiency', 'proficiency', 'Proficiência'], ['stat-initiative', 'initiative', 'Iniciativa'],
+    ['stat-passive-perception', 'passivePerception', 'Percepção passiva'], ['stat-spell-dc', 'spellSaveDC', 'CD de magia'],
+    ['stat-spell-attack', 'spellAttackBonus', 'Ataque mágico'], ['stat-total-weight', 'totalInventoryWeight', 'Peso total'],
+    ['stat-carry-capacity', 'carryCapacity', 'Capacidade de carga'],
+  ]) {
+    const target = $(elementId);
+    let control = target.parentElement.querySelector('.engine-calculation-control');
+    if (!control || control.overrideCharacter !== character) {
+      control?.remove();
+      control = staticOverride(character, id, label);
+      target.parentElement.append(control);
+    }
+    control.refreshOverride();
+  }
 }
 
 // ---------- Ataques ----------
@@ -182,6 +204,7 @@ export function buildAttacks(character) {
       const meta = [attack.bonus && `Ataque ${attack.bonus}`, attack.damage].filter(Boolean).join(' · ');
       node.querySelector('[data-el="meta-display"]').textContent = meta;
     };
+    node.querySelector('.entry-card__body').prepend(createDndRollButton({ item: attack, character, onChange: () => state.notify() }, 'attack'));
     bindCardFields(node, attack, 'combat.attacks', updateSummary);
     updateSummary();
     const removeBtn = node.querySelector('[data-action="remove"]');
@@ -255,6 +278,7 @@ export function buildSpells(character) {
       const level = SPELL_LEVEL_LABEL[Number(spell.level) || 0];
       node.querySelector('[data-el="meta-display"]').textContent = [level, spell.school, spell.prepared ? 'Preparada' : null].filter(Boolean).join(' · ');
     };
+    node.querySelector('.entry-card__body').prepend(createDndRollButton({ item: spell, character, onChange: () => state.notify() }, 'spell'));
     bindCardFields(node, spell, 'spellcasting.spells', updateSummary);
     updateSummary();
     const removeBtn = node.querySelector('[data-action="remove"]');
@@ -468,4 +492,16 @@ export function refreshComputedOnly(character) {
   refreshSkills(character);
   refreshDerivedStats(character);
   refreshSpellSlots(character);
+}
+
+function staticOverride(character, id, label) {
+  let controlRefresh;
+  const control = createCalculationControl({ character, key: `dnd.${id}`, label,
+    automatic: () => dndCalculation(character, id, true),
+    registerRefresh: refresh => { controlRefresh = refresh; },
+    onChange: () => state.setPath('calculationOverrides', structuredClone(character.calculationOverrides || {})),
+  });
+  control.overrideCharacter = character;
+  control.refreshOverride = controlRefresh;
+  return control;
 }

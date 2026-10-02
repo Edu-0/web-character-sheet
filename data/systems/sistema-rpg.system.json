@@ -91,6 +91,7 @@
     "notes": "",
     "schemaVersion": 1
   },
+  "diceSteps": true,
   "dieScale": [
     4,
     6,

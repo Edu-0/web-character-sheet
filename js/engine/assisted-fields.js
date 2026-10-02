@@ -1,6 +1,7 @@
+import { createCalculationControl } from './calculation-overrides.js';
 import { registerFieldType } from './fields.js';
 import { getByPath, setByPath } from './paths.js';
-import { executeSheetAction, inventoryTotals, repertoireStatus, undoSheetAction } from './assistance.js';
+import { executeSheetAction, inventoryCalculationKey, inventoryTotals, repertoireStatus, undoSheetAction } from './assistance.js';
 import { traitLabel } from './traits.js';
 
 registerFieldType('inventorySummary', {
@@ -28,6 +29,10 @@ registerFieldType('inventorySummary', {
       warning.textContent = totals.excess ? `Sobrecarga de ${totals.excess.toLocaleString('pt-BR')} kg. A mesa define as penalidades.` : 'Carga dentro do limite.';
       wrap.classList.toggle('engine-callout--danger', totals.excess > 0);
     };
+    if (context.override !== false) for (const [stat, label] of [['weight', 'Peso carregado'], ['capacity', 'Capacidade de carga'], ['excess', 'Sobrecarga']]) {
+      wrap.append(createCalculationControl({ ...context, key: inventoryCalculationKey(context, stat), label,
+        automatic: () => inventoryTotals(context.character, context, stat)[stat] }));
+    }
     refresh();
     context.registerRefresh?.(refresh);
     container.appendChild(wrap);

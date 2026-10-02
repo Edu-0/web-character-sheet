@@ -1,3 +1,6 @@
+import { createEntryAction } from './entry-actions.js';
+import './entry-rolls.js';
+import { calculationValue, createCalculationControl, getCalculationOverride } from './calculation-overrides.js';
 import { captureFocus } from '../focus.js';
 import { compressPortrait, safeImageSource } from '../images.js';
 import { notify } from '../notifications.js';
@@ -85,7 +88,7 @@ registerFieldType('skillCatalog', {
               count.textContent = `${Object.values(skills).filter((value) => traitMaximum(value) > baseDie).length} perícias registradas`;
             }
             context.onChange?.();
-          }, { label: name, scale, allowNone: false, allowComposite: context.allowComposite });
+          }, { label: name, scale, allowNone: false, allowComposite: context.allowComposite, stepControls: context.stepControls ?? context.system?.diceSteps === true });
           row.appendChild(control.element);
           list.appendChild(row);
         });
@@ -126,9 +129,7 @@ registerFieldType('table', {
 registerFieldType('computed', {
   search(context) {
     // Fórmulas de rolagem só são executadas pelo botão da ficha.
-    const value = context.mode === 'roll' ? 'Rolagem sob demanda' : formatValue(evaluate(context.system.formulas[context.formula], {
-      vars: resolveFormulaVariables(context.variables, context.character, context.system, false), data: context.character,
-    }), context.format);
+    const value = context.mode === 'roll' ? 'Rolagem sob demanda' : formatValue(computedValue(context), context.format);
     return [{ label: context.label, value }];
   },
   render(container, context) {
@@ -136,8 +137,8 @@ registerFieldType('computed', {
     const output = element('output', 'engine-computed__value');
     const refresh = () => {
       try {
-        const variables = resolveFormulaVariables(context.variables, context.character, context.system, false);
-        output.value = formatValue(evaluate(context.system.formulas[context.formula], { vars: variables, data: context.character }), context.format);
+        output.value = formatValue(computedValue(context), context.format);
+        output.title = '';
         output.textContent = output.value;
       } catch (error) {
         output.value = '—';
@@ -163,6 +164,7 @@ registerFieldType('computed', {
       refresh();
       context.registerRefresh?.(refresh);
       wrap.appendChild(output);
+      if (context.override !== false) wrap.append(createCalculationControl({ ...context, key: computedKey(context), automatic: () => computedValue(context, true) }));
     }
     container.appendChild(wrap);
   },
@@ -418,6 +420,10 @@ function renderEntry(item, index, values, context, refreshList) {
     summary.appendChild(remove);
   }
   const body = element('div', 'engine-entry__body');
+  if (context.entryAction) {
+    const action = createEntryAction(context.entryAction, { item, character: context.character, system: context.system, rollPreset: context.rollPreset ?? context.rollConfigFrom, onChange: context.onChange });
+    if (action) body.append(action);
+  }
   if (context.creationCost) {
     const output = element('output', 'engine-entry__cost');
     output.setAttribute('aria-label', 'Custo de criação');
@@ -613,7 +619,7 @@ function renderItemField(item, key, definition, context, onChange, { hideLabel =
   if (config.help) appendFieldHelp(wrap, config.help, config.label);
   if (config.type === 'die') {
     const control = createTraitControl(item[key], (value) => { item[key] = value; onChange(); }, {
-      label: config.label, scale: context.dieScale || [], allowComposite: config.allowComposite,
+      label: config.label, scale: context.dieScale || [], allowComposite: config.allowComposite, stepControls: config.stepControls ?? context.system?.diceSteps === true,
     });
     wrap.appendChild(control.element);
     context.registerRefresh?.(() => control.update(item[key]));
@@ -1000,4 +1006,14 @@ function element(tag, className = '', text = '') {
   if (className) node.className = className;
   if (text !== '') node.textContent = text;
   return node;
+}
+
+export function computedKey(context) { return `computed.${context.overrideKey || context.formula}`; }
+export function computedValue(context, automatic = false) {
+  const entry = getCalculationOverride(context.character, computedKey(context));
+  if (!automatic && context.override !== false && entry?.mode === 'fixed') return entry.value;
+  const value = evaluate(context.system.formulas[context.formula], {
+    vars: resolveFormulaVariables(context.variables, context.character, context.system, false), data: context.character,
+  });
+  return automatic || context.override === false ? value : calculationValue(context.character, computedKey(context), value);
 }

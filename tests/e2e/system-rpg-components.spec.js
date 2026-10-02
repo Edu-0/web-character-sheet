@@ -130,12 +130,12 @@ test('computed recalcula e iniciativa pode ser rolada', async ({ page }) => {
   await page.getByRole('tab', { name: 'Combate' }).click();
   const panel = page.locator('.engine-panel:not([hidden])');
   const carry = panel.locator('.engine-computed').filter({ hasText: 'Carga Máxima' });
-  await expect(carry.locator('output')).toHaveText('30');
+  await expect(carry.locator('.engine-computed__value')).toHaveText('30');
 
   await page.getByRole('tab', { name: 'Atributos' }).click();
   await page.locator('.engine-panel:not([hidden]) label.field').filter({ hasText: /^Força/ }).locator('select').selectOption('10');
   await page.getByRole('tab', { name: 'Combate' }).click();
-  await expect(carry.locator('output')).toHaveText('50');
+  await expect(carry.locator('.engine-computed__value')).toHaveText('50');
 
   const initiative = panel.locator('.engine-computed').filter({ hasText: 'Iniciativa' });
   await initiative.getByRole('button', { name: 'Rolar iniciativa' }).click();
