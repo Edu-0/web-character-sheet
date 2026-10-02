@@ -636,6 +636,7 @@
                 {
                   "type": "table",
                   "field": "inventory",
+                  "itemDetails": { "label": "Usos e recuperação", "fields": ["usesCurrent", "usesMax", "recoverOn"] },
                   "label": "Armas, Armaduras e Equipamentos",
                   "print": { "compact": { "fields": ["name", "die", "quantity", "weight", "carried"], "presentation": "table" } },
                   "searchable": true,
@@ -644,6 +645,9 @@
                       "type": "text",
                       "label": "Nome"
                     },
+                    "usesCurrent": { "type": "number", "label": "Usos atuais", "default": 0 },
+                    "usesMax": { "type": "number", "label": "Usos máximos", "default": 0 },
+                    "recoverOn": { "type": "select", "presentation": "checkboxes", "label": "Recuperar usos em", "options": [{ "value": "", "label": "Ajuste manual" }, { "value": "shortRest", "label": "Descanso curto ou longo" }, { "value": "longRest", "label": "Somente descanso longo" }] },
                     "type": {
                       "type": "select",
                       "label": "Tipo",
@@ -1124,6 +1128,7 @@
                 {
                   "type": "table",
                   "field": "inventory",
+                  "itemDetails": { "label": "Usos e recuperação", "fields": ["usesCurrent", "usesMax", "recoverOn"] },
                   "label": "Inventário",
                   "print": { "compact": { "fields": ["name", "die", "quantity", "weight", "carried"], "presentation": "table" } },
                   "searchable": true,
@@ -1132,6 +1137,9 @@
                       "type": "text",
                       "label": "Nome"
                     },
+                    "usesCurrent": { "type": "number", "label": "Usos atuais", "default": 0 },
+                    "usesMax": { "type": "number", "label": "Usos máximos", "default": 0 },
+                    "recoverOn": { "type": "select", "presentation": "checkboxes", "label": "Recuperar usos em", "options": [{ "value": "", "label": "Ajuste manual" }, { "value": "shortRest", "label": "Descanso curto ou longo" }, { "value": "longRest", "label": "Somente descanso longo" }] },
                     "description": {
                       "type": "text",
                       "label": "Descrição"

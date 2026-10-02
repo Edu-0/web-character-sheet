@@ -1487,3 +1487,19 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .source-roll-result:empty, .source-roll-error:empty, .source-roll-resource-status:empty { display: none; }
 .source-roll-error { color: var(--color-danger-strong); }
 .source-roll-panel p { margin: 0; }
+.engine-option-checkboxes {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+.engine-option-checkboxes legend { margin-bottom: 8px; color: var(--color-text-muted); font-size: .85rem; }
+.engine-option-checkboxes .field--checkbox { justify-content: flex-start; margin: 0; }
+.engine-option-checkboxes small { color: var(--color-text-muted); }
+.engine-item-details { min-width: 0; grid-column: 1 / -1; }
+.engine-item-details summary { cursor: pointer; padding: 8px 0; color: var(--color-text-muted); }
+.engine-item-details__fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; min-width: 0; padding: 8px 0; }
+.engine-table__details-row td { padding-top: 0; }
+.engine-table__details-row td::before { display: none; }

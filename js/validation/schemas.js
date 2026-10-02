@@ -245,7 +245,19 @@ function validateComponent(component, path, system, issues) {
       if (isObject(definition)) validateCalculationOptions(definition, `${path}.itemSchema.${key}`, issues);
       if (system && definition?.stepControls === true) validateStepScale(system, `${path}.itemSchema.${key}.stepControls`, issues);
       if (isObject(definition)) validateFieldValue(definition.default, definition, `${path}.itemSchema.${key}.default`, issues);
+      if (definition?.presentation !== undefined) {
+        if (type !== 'select' || definition.presentation !== 'checkboxes') add(issues, `${path}.itemSchema.${key}.presentation`, 'somente select aceita checkboxes');
+        if (definition.valueType !== undefined && definition.valueType !== 'string') add(issues, `${path}.itemSchema.${key}.valueType`, 'checkboxes salva uma escolha textual');
+        const options = definition.options;
+        if (!Array.isArray(options) || options.length < 2 || options.length > 10 || options.some(option => !isObject(option) || typeof option.value !== 'string' || typeof option.label !== 'string' || !option.label.trim()) || !options.some(option => option.value === '') || new Set(options.map(option => option?.value)).size !== options.length) add(issues, `${path}.itemSchema.${key}.options`, 'checkboxes exige 2–10 opções com valores textuais distintos e uma opção vazia para ajuste manual');
+      }
     }
+  }
+  if (component.itemDetails !== undefined && requireObject(component.itemDetails, `${path}.itemDetails`, issues)) {
+    if (!['list', 'table'].includes(component.type)) add(issues, `${path}.itemDetails`, 'exige list ou table');
+    requireString(component.itemDetails.label, `${path}.itemDetails.label`, issues);
+    const fields = component.itemDetails.fields;
+    if (!Array.isArray(fields) || !fields.length || new Set(fields).size !== fields.length || fields.some(key => typeof key !== 'string' || !Object.hasOwn(component.itemSchema || {}, key))) add(issues, `${path}.itemDetails.fields`, 'exige campos distintos presentes em itemSchema');
   }
   if (component.options !== undefined && !Array.isArray(component.options)) add(issues, `${path}.options`, 'deve ser uma lista');
   if (['pointBudget', 'repertoire', 'techniqueUse'].includes(component.type)) {
@@ -281,7 +293,17 @@ function validateComponent(component, path, system, issues) {
       }
     } catch {} }
   }
-  if (component.type === 'actionGroup' && requireString(component.actionsFrom, `${path}.actionsFrom`, issues) && system) requireArray(readConfig(system, component.actionsFrom), `${path}.actionsFrom (${component.actionsFrom})`, issues);
+  if (component.type === 'actionGroup' && requireString(component.actionsFrom, `${path}.actionsFrom`, issues) && system) {
+    const actions = readConfig(system, component.actionsFrom);
+    if (requireArray(actions, `${path}.actionsFrom (${component.actionsFrom})`, issues)) actions.forEach((action, index) => {
+      const actionPath = `${path}.actionsFrom[${index}]`;
+      if (!requireObject(action, actionPath, issues)) return;
+      const effects = action.effects || action.operations || [];
+      if (!requireArray(effects, `${actionPath}.operations`, issues)) return;
+      const operations = effects.filter(op => isObject(op) && ['restoreCollection', 'setCollection'].includes(op.type));
+      if (operations.length) validateRecoveryActions([{ id: action.id, label: action.label, operations }], system, issues, `${path}.actionsFrom[${index}].collectionRecovery`);
+    });
+  }
   if (component.type === 'traitAllocation') ['presetsFrom', 'traitsFrom'].forEach((key) => requireString(component[key], `${path}.${key}`, issues));
   if (component.type === 'inventorySummary' && component.overrideKeys !== undefined && requireObject(component.overrideKeys, `${path}.overrideKeys`, issues)) {
     for (const [stat, key] of Object.entries(component.overrideKeys)) {

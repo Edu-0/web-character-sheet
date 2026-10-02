@@ -37,7 +37,17 @@
           "grade": 2
         }
       ],
-      "energyMax": 8
+      "energyMax": 8,
+      "devices": [
+        {
+          "id": "lamp",
+          "name": "Lanterna de teste",
+          "charges": 0,
+          "chargeLimit": 3,
+          "recharge": "",
+          "notes": "Recarga definida pela mesa."
+        }
+      ]
     },
     "formulas": {
       "checkBonus": "skill + attribute"
@@ -111,6 +121,17 @@
             "field": "energy",
             "maxField": "energyMax",
             "label": "Energia"
+          },
+          {
+            "type": "restoreCollection",
+            "field": "devices",
+            "valueField": "charges",
+            "maxField": "chargeLimit",
+            "filterField": "recharge",
+            "filterValues": [
+              "pause"
+            ],
+            "label": "Cargas dos dispositivos marcados"
           }
         ]
       }
@@ -172,6 +193,54 @@
                         "impact": "text",
                         "cost": "number",
                         "grade": "number"
+                      }
+                    },
+                    {
+                      "type": "list",
+                      "field": "devices",
+                      "label": "Dispositivos",
+                      "itemDetails": {
+                        "label": "Cargas e recarga",
+                        "fields": [
+                          "charges",
+                          "chargeLimit",
+                          "recharge"
+                        ]
+                      },
+                      "itemSchema": {
+                        "name": {
+                          "type": "text",
+                          "label": "Nome"
+                        },
+                        "notes": {
+                          "type": "textarea",
+                          "label": "Notas"
+                        },
+                        "charges": {
+                          "type": "number",
+                          "label": "Cargas atuais",
+                          "default": 0
+                        },
+                        "chargeLimit": {
+                          "type": "number",
+                          "label": "Limite de cargas",
+                          "default": 0
+                        },
+                        "recharge": {
+                          "type": "select",
+                          "presentation": "checkboxes",
+                          "label": "Recarregar em",
+                          "options": [
+                            {
+                              "value": "",
+                              "label": "Manual"
+                            },
+                            {
+                              "value": "pause",
+                              "label": "Recarregar na pausa"
+                            }
+                          ]
+                        }
                       }
                     }
                   ]

@@ -293,3 +293,63 @@ for (const theme of ['light', 'dark']) {
     }
   });
 }
+
+test('itens e artefatos recuperam apenas usos marcados, com editor recolhido e desfazer', async ({ page }, testInfo) => {
+  await seed(page, { inventory: [
+    { id: 'artifact', name: 'Artefato da mesa', weight: 1, quantity: 1, carried: true, usesCurrent: 0, usesMax: 3 },
+    { id: 'long', name: 'Item longo', usesCurrent: 1, usesMax: 4, recoverOn: 'longRest' },
+    { id: 'manual', name: 'Item manual', usesCurrent: 0, usesMax: 5 },
+  ] });
+  await page.getByRole('tab', { name: 'Inventário', exact: true }).click();
+  const row = active(page).locator('.engine-table__details-row').first();
+  await expect(row.getByLabel('Usos atuais', { exact: true })).not.toBeVisible();
+  await row.locator('summary').click();
+  await row.getByRole('checkbox', { name: 'Descanso curto ou longo', exact: true }).check();
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
+  for (const mode of ['light', 'dark']) {
+    await page.evaluate(mode => document.documentElement.dataset.theme = mode, mode);
+    for (const width of [360, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await page.screenshot({ path: testInfo.outputPath(`item-recovery-${mode}-${width}.png`), fullPage: true });
+    }
+  }
+  await row.locator('summary').click();
+  await page.locator('#sheet-search-input').fill('Artefato da mesa usos atuais');
+  await page.locator('#sheet-search-list button').filter({ has: page.locator('.sheet-search__name', { hasText: /^Artefato da mesa · Usos atuais$/ }) }).first().click();
+  await expect(page.locator('.search-target')).toBeVisible();
+  await expect(page.locator('.search-target input')).toHaveValue('0');
+  await page.locator('#sheet-search-input').fill('');
+  await page.getByRole('tab', { name: 'Recursos', exact: true }).click();
+  await page.getByRole('button', { name: 'Descanso curto', exact: true }).click();
+  expect((await stored(page)).inventory.map(item => item.usesCurrent)).toEqual([3, 1, 0]);
+  await page.getByRole('tab', { name: 'Equipamentos', exact: true }).click();
+  await active(page).locator('.engine-table__details-row').first().locator('summary').click();
+  await expect(active(page).getByLabel('Usos atuais', { exact: true }).first()).toHaveValue('3');
+  await page.getByRole('tab', { name: 'Recursos', exact: true }).click();
+  await page.getByRole('button', { name: 'Desfazer última ação', exact: true }).click();
+  expect((await stored(page)).inventory.map(item => item.usesCurrent)).toEqual([0, 1, 0]);
+  await page.getByRole('button', { name: 'Descanso longo', exact: true }).click();
+  expect((await stored(page)).inventory.map(item => item.usesCurrent)).toEqual([3, 4, 0]);
+  await page.reload(); await expect(page.locator('.engine-sheet')).toBeVisible();
+  expect((await stored(page)).inventory[0].recoverOn).toBe('shortRest');
+  await page.getByRole('tab', { name: 'Recursos', exact: true }).click();
+  await page.getByRole('button', { name: 'Desfazer última ação', exact: true }).click();
+  expect((await stored(page)).inventory.map(item => item.usesCurrent)).toEqual([0, 1, 0]);
+});
+
+test('usos inválidos em item marcado bloqueiam descanso sem alterar energia ou estados', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const { executeSheetAction } = await import('/js/engine/assistance.js');
+    const { getSystemPackage } = await import('/js/repositories/system-repository.js');
+    const pkg = await getSystemPackage('sistema-rpg');
+    const character = structuredClone(pkg.system.characterTemplate);
+    character.inventory = [{ usesCurrent: 0, usesMax: -1, recoverOn: 'shortRest' }];
+    const before = JSON.stringify(character); let blocked = false;
+    try { executeSheetAction(character, pkg.system.sheetActions.find(action => action.id === 'short-rest'), pkg.system); } catch { blocked = true; }
+    const copy = structuredClone(pkg); copy.system.sheetActions[0].operations[0].filterField = '__proto__.bad';
+    const { validateSystemPackage } = await import('/js/validation/schemas.js');
+    return { blocked, preserved: before === JSON.stringify(character), invalid: validateSystemPackage(copy).length };
+  });
+  expect(result.blocked).toBe(true); expect(result.preserved).toBe(true); expect(result.invalid).toBeGreaterThan(0);
+});

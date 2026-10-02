@@ -134,8 +134,13 @@ test('outro sistema configura recuperação com seus campos e sem resolvedor D&D
   await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
   await page.locator('#input-import-system').setInputFiles({ name: 'pause.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(pkg)) });
   await page.locator('#systems-list .library-card').filter({ hasText: pkg.system.name }).getByRole('button', { name: 'Abrir', exact: true }).click();
+  const device = page.locator('.engine-entry').filter({ hasText: 'Lanterna de teste' });
+  if (await device.getAttribute('open') === null) await device.locator('summary').first().click();
+  await device.locator('.engine-item-details summary').click();
+  await device.getByRole('checkbox', { name: 'Recarregar na pausa', exact: true }).check();
   await page.getByRole('button', { name: 'Pausa', exact: true }).click(); await apply(page.getByRole('dialog'));
   expect((await values(page)).energy).toBe(8);
+  expect((await values(page)).devices[0].charges).toBe(3);
 });
 
 for (const theme of ['light', 'dark']) test(`descansos e profundidade cabem em celular e desktop em ${theme}`, async ({ page }, testInfo) => {
@@ -151,4 +156,46 @@ for (const theme of ['light', 'dark']) test(`descansos e profundidade cabem em c
     await expect(dialog.getByRole('button', { name: 'Fechar', exact: true })).toBeFocused();
     await dialog.screenshot({ path: testInfo.outputPath(`recovery-${theme}-${width}.png`) }); await page.keyboard.press('Escape');
   }
+});
+
+for (const host of ['#generic-sheet-host', '#legacy-dnd-sheet']) test(`caixas de recuperação persistem e sincronizam habilidades em ${host}`, async ({ page }, testInfo) => {
+  await page.getByRole('button', { name: 'Comparar lado a lado' }).click();
+  await page.locator(host).getByRole('tab', { name: 'Habilidades', exact: true }).click();
+  const card = page.locator(host).locator('details').filter({ hasText: 'Recurso manual' }).first();
+  await card.locator('summary').first().click();
+  const short = card.getByRole('checkbox', { name: 'Descanso curto ou longo', exact: true });
+  const long = card.getByRole('checkbox', { name: 'Somente descanso longo', exact: true });
+  await expect(short).not.toBeChecked(); await expect(long).not.toBeChecked();
+  await short.check(); expect((await values(page)).features[2].recoverOn).toBe('shortRest');
+  await long.check(); await expect(short).not.toBeChecked();
+  expect((await values(page)).features[2].recoverOn).toBe('longRest');
+  await long.uncheck(); expect((await values(page)).features[2].recoverOn).toBe('');
+  await short.check(); await expect(page.locator('#save-indicator')).toHaveText('Salvo');
+  for (const theme of ['light', 'dark']) {
+    await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
+    for (const width of [360, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      await card.screenshot({ path: testInfo.outputPath(`feature-recovery-${theme}-${width}.png`) });
+    }
+  }
+  await page.reload(); await expect(page.locator('#generic-sheet-host .engine-sheet')).toBeVisible();
+  expect((await values(page)).features[2].recoverOn).toBe('shortRest');
+  const dialog = await panel(page, 'Descanso curto', host); await apply(dialog);
+  expect((await values(page)).features[2].usesCurrent).toBe(4);
+});
+
+test('configurações de caixas e campos recolhidos são validadas', async ({ page }) => {
+  const counts = await page.evaluate(async () => {
+    const { validateSystemPackage } = await import('/js/validation/schemas.js');
+    const { getSystemPackage } = await import('/js/repositories/system-repository.js');
+    const pkg = await getSystemPackage('dnd2024');
+    const mutations = [
+      config => { config.itemSchema.recoverOn.presentation = 'invalid'; },
+      config => { config.itemSchema.recoverOn.options = [{ value: 'a', label: 'A' }]; },
+      config => { config.itemSchema.recoverOn.options = [{ value: '', label: 'Manual' }, { value: '', label: 'Duplicado' }]; },
+      config => { config.itemDetails = { label: 'Detalhes', fields: ['missing'] }; },
+    ];
+    return mutations.map(mutate => { const copy = structuredClone(pkg); mutate(copy.layouts[0].tabs.find(tab => tab.id === 'features').sections[0].containers[0].components[0]); return validateSystemPackage(copy).length; });
+  });
+  counts.forEach(count => expect(count).toBeGreaterThan(0));
 });

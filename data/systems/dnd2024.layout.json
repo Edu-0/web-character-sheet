@@ -322,7 +322,7 @@
                     "source": { "type": "select", "label": "Origem", "options": ["Classe", "Espécie", "Talento", "Antecedente", "Recurso", "Outro"], "default": "Classe" },
                     "usesCurrent": { "type": "number", "label": "Usos Atuais" },
                     "usesMax": { "type": "number", "label": "Usos Máximos" },
-                    "recoverOn": { "type": "select", "label": "Recuperar usos em", "options": [{ "value": "", "label": "Ajuste manual" }, { "value": "shortRest", "label": "Descanso curto ou longo" }, { "value": "longRest", "label": "Descanso longo" }] },
+                    "recoverOn": { "type": "select", "presentation": "checkboxes", "label": "Recuperar usos em", "options": [{ "value": "", "label": "Ajuste manual" }, { "value": "shortRest", "label": "Descanso curto ou longo" }, { "value": "longRest", "label": "Somente descanso longo" }] },
                     "description": { "type": "textarea", "label": "Descrição" },
                     "notes": { "type": "textarea", "label": "Notas" }
                   }

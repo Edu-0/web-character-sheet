@@ -1,3 +1,4 @@
+import { recoverCollection } from './collection-recovery.js';
 import { getByPath, setByPath } from './paths.js';
 import { rollValue } from './entry-rolls.js';
 import { parseDiceExpression } from './dice-expression.js';
@@ -53,16 +54,7 @@ export function recoveryPlan(context, config, rolls = []) {
       write(op.field, max, op.label || 'Recurso');
     } else if (op.type === 'set') write(op.field, structuredClone(op.value), op.label || 'Recurso');
     else if (op.type === 'restoreCollection' || op.type === 'setCollection') {
-      const list = getByPath(draft, op.field);
-      if (!Array.isArray(list)) throw new Error('Lista de recursos indisponível.');
-      const updated = structuredClone(list);
-      let count = 0;
-      for (const item of updated) {
-        if (op.filterField && !op.filterValues.includes(getByPath(item, op.filterField))) continue;
-        const current = integer(getByPath(item, op.valueField), op.label || 'Recurso');
-        const value = op.type === 'restoreCollection' ? integer(getByPath(item, op.maxField), op.label || 'Máximo') : integer(op.value, op.label || 'Valor');
-        if (current !== value) { setByPath(item, op.valueField, value); count += 1; }
-      }
+      const { updated, count } = recoverCollection(getByPath(draft, op.field), op);
       if (count) write(op.field, updated, `${op.label || 'Recursos'} (${count})`);
     } else throw new Error(`Operação de recuperação desconhecida: ${op.type}.`);
   }

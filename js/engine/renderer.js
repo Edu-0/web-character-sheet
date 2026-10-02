@@ -115,9 +115,16 @@ export function renderSheet(host, layout, character, options = {}) {
         // Uma pesquisa local na tabela não pode esconder o resultado global.
         const filter = wrapper.querySelector('input[type="search"]');
         if (filter?.value) { filter.value = ''; filter.dispatchEvent(new Event('input', { bubbles: true })); }
-        target = wrapper.querySelectorAll('.engine-entry, tbody > tr, .engine-slot')[entry.itemIndex] || wrapper;
+        target = wrapper.querySelectorAll('.engine-entry, tbody > tr:not(.engine-table__details-row), .engine-slot')[entry.itemIndex] || wrapper;
         if (target.matches('details')) target.open = true;
+        if (entry.component.itemDetails && target.matches('tr')) {
+          const secondary = target.nextElementSibling;
+          if (secondary?.classList.contains('engine-table__details-row') && entry.component.itemDetails.fields.includes(entry.itemField)) target = secondary;
+        }
         if (entry.itemField) target = [...target.querySelectorAll('[data-item-field]')].find((node) => node.dataset.itemField === entry.itemField) || target;
+      }
+      for (let ancestor = target.parentElement; ancestor && ancestor !== wrapper; ancestor = ancestor.parentElement) {
+        if (ancestor.matches('details')) ancestor.open = true;
       }
       highlightSearchTarget(target);
     },

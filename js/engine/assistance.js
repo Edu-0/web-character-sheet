@@ -1,3 +1,4 @@
+import { recoverCollection } from './collection-recovery.js';
 import { calculationValue } from './calculation-overrides.js';
 import { getByPath, setByPath } from './paths.js';
 import { traitDice, traitMaximum } from './traits.js';
@@ -62,6 +63,11 @@ export function executeSheetAction(character, action, system) {
     touched.add(effect.field);
     if (effect.type === 'set') setByPath(draft, effect.field, structuredClone(effect.value));
     else if (effect.type === 'add') setByPath(draft, effect.field, Math.max(effect.min ?? -Infinity, (Number(getByPath(draft, effect.field)) || 0) + effect.amount));
+    else if (effect.type === 'restoreCollection' || effect.type === 'setCollection') {
+      const { updated, count } = recoverCollection(getByPath(draft, effect.field), effect);
+      setByPath(draft, effect.field, updated);
+      details.push(`${effect.label || 'Recursos'}: ${count} recuperado(s).`);
+    }
     else if (effect.type === 'restoreResource' || effect.type === 'rollResource') {
       const resource = getByPath(draft, effect.field);
       if (!resource) throw new Error('Recurso não encontrado.');

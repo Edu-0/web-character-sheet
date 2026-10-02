@@ -1,3 +1,4 @@
+import { createOptionCheckboxes } from './option-checkboxes.js';
 import { createEntryAction } from './entry-actions.js';
 import './entry-rolls.js';
 import { calculationValue, createCalculationControl, getCalculationOverride } from './calculation-overrides.js';
@@ -448,12 +449,14 @@ function renderEntry(item, index, values, context, refreshList) {
     body.appendChild(output);
   }
   Object.entries(context.itemSchema || {}).forEach(([key, definition]) => {
+    if (context.itemDetails?.fields.includes(key)) return;
     body.appendChild(renderItemField(item, key, definition, context, () => {
       title.textContent = entryTitle(item, index);
       meta.textContent = entryMeta(item, context);
       context.onChange?.();
     }));
   });
+  if (context.itemDetails) body.appendChild(renderItemDetails(item, context, () => context.onChange?.()));
   if (context.type === 'stateList') body.appendChild(renderStateEffect(item, context, () => {
     const gradeField = context.gradeField || 'sides';
     const gradeControl = [...body.querySelectorAll('.engine-item-field')]
@@ -565,7 +568,7 @@ function renderTable(container, context) {
   const table = document.createElement('table');
   const head = document.createElement('thead');
   const headRow = document.createElement('tr');
-  const schema = Object.entries(context.itemSchema || {});
+  const schema = Object.entries(context.itemSchema || {}).filter(([key]) => !context.itemDetails?.fields.includes(key));
   schema.forEach(([key, definition]) => {
     const cell = document.createElement('th');
     cell.scope = 'col';
@@ -581,9 +584,13 @@ function renderTable(container, context) {
   table.append(head, body);
   scroll.appendChild(table);
   const empty = element('p', 'engine-empty', context.emptyLabel || 'Nenhum item cadastrado.');
-  const values = ensureArray(context.character, context.field);
+  let values = ensureArray(context.character, context.field);
 
+  let signature = JSON.stringify(values);
+  const fieldRefreshers = new Set();
+  const entryContext = { ...context, registerRefresh(refresh) { fieldRefreshers.add(refresh); }, onChange() { signature = JSON.stringify(values); context.onChange?.(); } };
   const refresh = () => {
+    fieldRefreshers.clear();
     body.innerHTML = '';
     count.textContent = `${values.length} ${values.length === 1 ? 'item' : 'itens'}`;
     const query = search?.value.trim().toLocaleLowerCase('pt-BR') || '';
@@ -599,7 +606,7 @@ function renderTable(container, context) {
         const config = normalizeDefinition(key, definition);
         const cell = document.createElement('td');
         cell.dataset.label = config.label;
-        cell.appendChild(renderItemField(item, key, definition, context, () => context.onChange?.(), { hideLabel: true }));
+        cell.appendChild(renderItemField(item, key, definition, entryContext, () => entryContext.onChange(), { hideLabel: true }));
         row.appendChild(cell);
       });
       const actionCell = document.createElement('td');
@@ -614,7 +621,13 @@ function renderTable(container, context) {
       actionCell.appendChild(remove);
       row.appendChild(actionCell);
       body.appendChild(row);
+      if (context.itemDetails) {
+        const detailsRow = document.createElement('tr'); detailsRow.className = 'engine-table__details-row';
+        const cell = document.createElement('td'); cell.colSpan = schema.length + 1;
+        cell.append(renderItemDetails(item, entryContext, () => entryContext.onChange())); detailsRow.append(cell); body.append(detailsRow);
+      }
     });
+    signature = JSON.stringify(values);
   };
   add.addEventListener('click', () => {
     values.push({ id: createId(), ...defaultsFromSchema(context.itemSchema, context) });
@@ -623,11 +636,31 @@ function renderTable(container, context) {
   });
   wrap.append(toolbar, scroll, empty);
   refresh();
+  context.registerRefresh?.(() => {
+    const current = getByPath(context.character, context.field);
+    if (current !== values || JSON.stringify(current) !== signature) { values = current || []; refresh(); }
+    else fieldRefreshers.forEach(refresh => refresh());
+  });
   container.appendChild(wrap);
+}
+
+function renderItemDetails(item, context, onChange) {
+  const details = element('details', 'engine-item-details');
+  details.append(element('summary', '', context.itemDetails.label));
+  const fields = element('div', 'engine-item-details__fields');
+  for (const key of context.itemDetails.fields) fields.append(renderItemField(item, key, context.itemSchema[key], context, onChange));
+  details.append(fields);
+  return details;
 }
 
 function renderItemField(item, key, definition, context, onChange, { hideLabel = false } = {}) {
   const config = normalizeDefinition(key, definition);
+  if (config.type === 'select' && config.presentation === 'checkboxes') {
+    const control = createOptionCheckboxes({ label: config.label, options: config.options, value: item[key], onChange: value => { item[key] = value; onChange(); } });
+    control.element.classList.add('engine-item-field'); control.element.dataset.itemField = key;
+    context.registerRefresh?.(() => control.update(item[key]));
+    return control.element;
+  }
   const wrap = element('label', hideLabel ? 'engine-item-field engine-item-field--compact' : 'field engine-item-field');
   wrap.dataset.itemField = key;
   if (!hideLabel) wrap.appendChild(element('span', '', config.label));

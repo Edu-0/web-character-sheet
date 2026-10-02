@@ -68,3 +68,36 @@ As escolhas e rolagens ficam na prévia. Cancelar não grava cura, gastos nem re
 Os comandos ficam junto de PV e Dados de Vida nas apresentações estática e modular. Descanso curto oferece dados um por vez com Constituição e recupera habilidades marcadas para descanso curto ou longo. Descanso longo recupera PV, todos os Dados de Vida, espaços e habilidades marcadas; encerra PV temporários. Habilidades sem marcação continuam com ajuste manual.
 
 Esses presets seguem as regras de 2024 consultadas no [glossário oficial](https://www.dndbeyond.com/sources/dnd/br-2024/rules-glossary), com [espaços de magia](https://www.dndbeyond.com/sources/dnd/br-2024/spells) e [PV temporários](https://www.dndbeyond.com/sources/dnd/br-2024/playing-the-game). A mesa confirma duração, sono, interrupções e intervalos. Exaustão e restauração de valores originais de PV máximo/atributos exigem ajuste manual, pois a ficha não representa esses valores originais ou os níveis da condição. Exceções de classe, como Magia de Pacto e recuperação parcial, não são deduzidas automaticamente.
+
+
+## Marcação por entrada e campos opcionais
+
+Uma habilidade ou item pode armazenar a escolha em um campo textual, sem códigos do sistema na engine. Para exibir caixas de marcação, configure um campo `select` do `itemSchema` com `presentation: "checkboxes"`:
+
+```json
+"recoverOn": {
+  "type": "select",
+  "presentation": "checkboxes",
+  "label": "Recuperar usos em",
+  "options": [
+    { "value": "", "label": "Ajuste manual" },
+    { "value": "shortRest", "label": "Descanso curto ou longo" },
+    { "value": "longRest", "label": "Somente descanso longo" }
+  ]
+}
+```
+
+As caixas representam uma única escolha opcional: marcar outra substitui a anterior, e desmarcar devolve o ajuste manual. O contrato exige 2–10 opções explícitas, valores textuais distintos e uma opção vazia. Os nomes `shortRest`/`longRest` são escolhas dos presets; outro sistema pode usar outros valores e rótulos. O valor salvo continua simples, compatível com `filterField`/`filterValues` de `restoreCollection`.
+
+Em `list` ou `table`, `itemDetails` recolhe campos secundários sem criar mais colunas:
+
+```json
+"itemDetails": {
+  "label": "Usos e recuperação",
+  "fields": ["usesCurrent", "usesMax", "recoverOn"]
+}
+```
+
+Todos os campos devem existir em `itemSchema`. A busca revela a área recolhida; a impressão completa conserva os campos e a compacta respeita sua seleção habitual. No RPG autoral, Equipamentos e Inventário compartilham esses dados. Abra **Usos e recuperação** somente nos itens ou artefatos que têm cargas, informe atuais/máximos e marque o descanso autorizado pela mesa. Nenhuma marcação é inferida do nome ou tipo do item; entradas existentes sem marcação permanecem manuais.
+
+`actionGroup` também aceita `restoreCollection`/`setCollection` com os mesmos caminhos e filtros de `recoveryGroup`, permitindo combinar recarga de itens com outras operações do sistema e desfazer a transação inteira. Um recurso marcado inválido bloqueia toda a ação, sem alterações parciais. Recuperação parcial, recarga diária ou dependente de condições especiais continua manual quando não foi declarada por um preset.
