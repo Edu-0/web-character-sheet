@@ -1,6 +1,6 @@
 # Artes selecionadas para a interface
 
-Este diretório contém cópias adaptadas de artes autorais, autorizadas pelo autor para esta integração em 1º de outubro de 2026. A inclusão na aplicação não abre o livro nem concede uma licença aberta sobre as artes. Os direitos permanecem reservados aos respectivos titulares, conforme a separação já prevista em LICENSE e docs/licensing.md.
+Este diretório contém cópias adaptadas de artes autorais, autorizadas pelo autor para esta integração em 1º de outubro de 2026. A inclusão na aplicação não abre o livro nem concede uma licença aberta sobre as artes. Os direitos permanecem reservados aos respectivos titulares, conforme a separação prevista em [LICENSE](../../LICENSE) e [avisos de terceiros](../../THIRD_PARTY_NOTICES.md).
 
 `book-vectors.js` preserva a geometria dos seis dados d4, d6, d8, d10, d12 e d20 e dos símbolos Ápice, Base, Peso e Potência fornecidos nas referências locais do livro. Foram extraídos apenas os caminhos vetoriais desses arquivos selecionados. A aplicação não carrega nem distribui a pasta de referências.
 

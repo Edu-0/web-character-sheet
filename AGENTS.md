@@ -4,7 +4,9 @@ Este arquivo aponta para a memória do projeto; não autoriza executar tarefas f
 
 ## Leitura inicial
 
-Leia `README.md`, `docs/continuidade.md` e `docs/arquitetura.md` ao retomar. Para componentes/layouts, leia `docs/componentes.md`; para regras autorais, `docs/sistema-rpg.md`; para D&D, `docs/dnd-parity.md`. Inspecione os arquivos reais pertinentes antes de editar: a documentação pode envelhecer.
+Leia `README.md`, `docs/private/continuidade.md` e `docs/private/arquitetura.md` ao retomar. Para componentes/layouts, leia `docs/private/componentes.md`; para regras autorais, `docs/private/sistema-rpg.md`; para D&D, `docs/private/dnd-parity.md`. Inspecione os arquivos reais pertinentes antes de editar: a documentação pode envelhecer.
+
+A memória, os planos e os relatórios são privados e ignorados pelo Git em `docs/private/`; não os inclua em commits nem em hospedagem. Em um clone sem esses arquivos, consulte README e código; peça apenas o contexto necessário à tarefa quando faltar informação. Não recrie ou exponha a memória privada para corrigir links públicos.
 
 ## Invariantes
 
@@ -15,7 +17,7 @@ Leia `README.md`, `docs/continuidade.md` e `docs/arquitetura.md` ao retomar. Par
 - Edição direta durante jogo não cobra evolução automaticamente. Criação, evolução paga e narrativa têm registros separados.
 - Teste mudanças funcionais com Playwright e confira temas/responsividade quando relevantes. Não rode suítes concorrentes na porta 4173.
 - Não publique referências privadas em `docs/references/`. `.gitignore` não as protege se a pasta inteira for hospedada.
-- Não altere a licença não comercial, abra o RPG ou prometa proteção jurídica garantida sem nova decisão do usuário. Consulte `LICENSE`, `docs/licensing.md` e `THIRD_PARTY_NOTICES.md`.
-- Busca global, override universal de cálculos e editor visual são propostas, não funcionalidades prontas ou tarefas automaticamente autorizadas.
+- Não altere a licença não comercial, abra o RPG ou prometa proteção jurídica garantida sem nova decisão do usuário. Consulte `LICENSE`, `docs/private/licensing.md` (quando disponível) e `THIRD_PARTY_NOTICES.md`.
+- A busca na ficha atual inteira está implementada em `js/engine/search.js` e `js/sheet-search.js`; consulte `docs/private/busca-e-temas.md`. Override universal de cálculos e editor visual continuam propostas, não funcionalidades prontas ou tarefas automaticamente autorizadas.
 
 Atualize a documentação quando contratos, escopo ou decisões mudarem. Relate verificações realizadas e diferencie testes atuais de resultados históricos.

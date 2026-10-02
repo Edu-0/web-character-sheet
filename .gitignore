@@ -5,6 +5,8 @@ tmp/
 output/
 docs/references/
 docs/private/
+# Memória, planejamento e relatórios são locais; apresentação pública fica no README.
+docs/
 backups/
 exports/private/
 .env

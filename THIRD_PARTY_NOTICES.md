@@ -21,4 +21,4 @@ O livro original do Sistema de RPG é conteúdo autoral separado da engine. Refe
 
 As artes autorais selecionadas em `assets/artwork/` foram integradas com autorização do autor e mantêm direitos separados da licença da engine. O [registro de artes](assets/artwork/README.md) identifica as adaptações dos dados e símbolos e as composições decorativas locais. A aplicação não carrega a pasta de referências do livro.
 
-Veja [Direitos e distribuição](docs/licensing.md) para a política pretendida e as pendências antes da publicação.
+Consulte a [licença da aplicação](LICENSE). A documentação interna de direitos e as pendências de distribuição ficam na memória privada do projeto, sem integrar o repositório público.
