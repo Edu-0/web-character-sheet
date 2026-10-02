@@ -105,3 +105,5 @@ export function validateRollOptions(options, label, issues) {
     try { parseDiceExpression(options[key], { allowEmpty: true }); } catch (error) { add(issues, `${label}.${key}`, error.message); }
   }
 }
+
+export { source as validateRollValueSource };

@@ -143,6 +143,29 @@
           ]
         },
         {
+          "id": "recovery",
+          "title": "Descansos",
+          "variant": "recovery",
+          "print": {
+            "compact": {
+              "include": false
+            }
+          },
+          "containers": [
+            {
+              "id": "recovery-actions",
+              "components": [
+                {
+                  "type": "recoveryGroup",
+                  "actionsFrom": "recoveryActions",
+                  "historyField": "recovery.lastAction",
+                  "label": "Descansos"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "abilities",
           "title": "Atributos",
           "variant": "traits",
@@ -299,6 +322,7 @@
                     "source": { "type": "select", "label": "Origem", "options": ["Classe", "Espécie", "Talento", "Antecedente", "Recurso", "Outro"], "default": "Classe" },
                     "usesCurrent": { "type": "number", "label": "Usos Atuais" },
                     "usesMax": { "type": "number", "label": "Usos Máximos" },
+                    "recoverOn": { "type": "select", "label": "Recuperar usos em", "options": [{ "value": "", "label": "Ajuste manual" }, { "value": "shortRest", "label": "Descanso curto ou longo" }, { "value": "longRest", "label": "Descanso longo" }] },
                     "description": { "type": "textarea", "label": "Descrição" },
                     "notes": { "type": "textarea", "label": "Notas" }
                   }

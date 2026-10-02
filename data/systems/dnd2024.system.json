@@ -392,6 +392,88 @@
     "carryCapacity": "strengthScore * 7.5"
   },
   "schemaVersion": 1,
+  "recoveryActions": [
+    {
+      "id": "shortRest",
+      "label": "Descanso curto",
+      "help": "Confirme que o descanso de pelo menos 1 hora foi concluído sem interrupção. Você precisa ter pelo menos 1 PV para iniciá-lo. Gaste Dados de Vida um por vez; a rolagem soma Constituição, com mínimo de 1 PV por dado. O resultado informado já deve incluir o modificador. A prévia só é gravada ao aplicar. Recursos especiais, como Magia de Pacto, ficam para ajuste manual.",
+      "confirmLabel": "Confirmo que o descanso curto foi concluído nas condições da mesa",
+      "unavailableMessage": "É necessário ter pelo menos 1 PV para iniciar este descanso.",
+      "healing": {
+        "field": "combat.hpCurrent",
+        "maxField": "combat.hpMax",
+        "totalField": "combat.hitDice.total",
+        "usedField": "combat.hitDice.used",
+        "dieField": "combat.hitDice.die",
+        "modifier": {
+          "resolver": "dnd.constitutionModifier"
+        },
+        "minimum": 1,
+        "requireCurrentMin": 1,
+        "label": "PV"
+      },
+      "operations": [
+        {
+          "type": "restoreCollection",
+          "field": "features",
+          "valueField": "usesCurrent",
+          "maxField": "usesMax",
+          "filterField": "recoverOn",
+          "filterValues": [
+            "shortRest"
+          ],
+          "label": "Habilidades"
+        }
+      ]
+    },
+    {
+      "id": "longRest",
+      "label": "Descanso longo",
+      "help": "Confirme duração, sono, interrupções e intervalo entre descansos conforme a mesa. D&D 2024 recupera todos os PV e Dados de Vida. Este comando recupera espaços e habilidades marcadas, e encerra os PV temporários. Confira manualmente Exaustão (redução de um nível quando permitida), reduções de PV máximo ou atributos, e exceções de classe. A ficha não guarda os valores originais dessas reduções.",
+      "confirmLabel": "Confirmo que o descanso longo foi concluído nas condições da mesa",
+      "unavailableMessage": "É necessário ter pelo menos 1 PV para iniciar este descanso.",
+      "operations": [
+        {
+          "type": "restoreValue",
+          "field": "combat.hpCurrent",
+          "maxField": "combat.hpMax",
+          "requireCurrentMin": 1,
+          "label": "PV"
+        },
+        {
+          "type": "set",
+          "field": "combat.hitDice.used",
+          "value": 0,
+          "label": "Dados de Vida usados"
+        },
+        {
+          "type": "set",
+          "field": "combat.hpTemp",
+          "value": 0,
+          "label": "PV temporários"
+        },
+        {
+          "type": "setCollection",
+          "field": "spellcasting.slots",
+          "valueField": "used",
+          "value": 0,
+          "label": "Espaços de magia"
+        },
+        {
+          "type": "restoreCollection",
+          "field": "features",
+          "valueField": "usesCurrent",
+          "maxField": "usesMax",
+          "filterField": "recoverOn",
+          "filterValues": [
+            "shortRest",
+            "longRest"
+          ],
+          "label": "Habilidades"
+        }
+      ]
+    }
+  ],
   "entryRolls": {
     "attack": {
       "buttonLabel": "Rolar ataque / ação",

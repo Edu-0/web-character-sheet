@@ -28,12 +28,12 @@
 .sheet-heading__art [data-position='right'] { grid-column: 3; grid-row: 1 / span 2; }
 .sheet-heading:has(.sheet-heading__art[hidden]) { display: block; }
 .engine-sheet { gap: 12px; }
-.engine-section { box-shadow: none; border-color: transparent; }
+.engine-section { box-shadow: var(--engine-card-depth); border-color: var(--color-border); }
 .engine-section__header { padding: 12px var(--section-inset); background: none; }
 .engine-section__title { font-size: 1.125rem; }
 .engine-section__body { padding: var(--section-inset); gap: 16px; }
-.engine-entry, .engine-callout, .engine-skill-catalog__group { box-shadow: none; }
-.engine-entry { border-inline: 0; border-radius: 0; }
+.engine-callout, .engine-skill-catalog__group { box-shadow: none; }
+.engine-entry { border-inline: 1px solid var(--color-border); border-radius: var(--radius-md); }
 .engine-entry__body { border: 0; }
 .engine-component--card { border-color: transparent; padding: 10px; }
 .engine-entry__summary { min-height: 44px; }
@@ -41,7 +41,7 @@
 .engine-component--hero input, .engine-sheet--editorial .engine-component--hero input { font-size: 1.3rem; padding-block: 8px; }
 .engine-component input:not([type='checkbox']), .engine-component select { min-height: 40px; }
 .engine-computed__value, .engine-dnd-derived__value { font-weight: 700; }
-.engine-budget__metric, .engine-slot { box-shadow: none; }
+.engine-budget__metric { box-shadow: none; }
 .appearance-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--color-border); margin-block: 20px; }
 .appearance-tabs button { flex: 1; background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px; color: var(--color-text-muted); font-weight: 600; }
 .appearance-tabs [aria-selected='true'] { color: var(--color-accent-strong); border-bottom-color: currentColor; }

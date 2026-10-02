@@ -1,3 +1,4 @@
+import { validateRecoveryActions } from './recovery.js';
 import { validateEntryRolls, validateRollOptions } from './entry-rolls.js';
 import { getByPath, pathKeys } from '../engine/paths.js';
 import { validateFormula } from '../engine/formula.js';
@@ -8,6 +9,7 @@ const SCHEMA_VERSION = 1;
 export const KNOWN_COMPONENT_TYPES = new Set([
   'boolean',
   'actionGroup',
+  'recoveryGroup',
   'computed',
   'counter',
   'die',
@@ -138,6 +140,7 @@ export function validateSystem(system) {
   }
   if (system.diceSteps !== undefined && typeof system.diceSteps !== 'boolean') add(issues, 'system.diceSteps', 'deve ser booleano');
   if (system.diceSteps === true) validateStepScale(system, 'system.dieScale', issues);
+  if (system.recoveryActions !== undefined) validateRecoveryActions(system.recoveryActions, system, issues);
   if (system.entryRolls !== undefined) validateEntryRolls(system.entryRolls, system, issues);
   if (system.diceTray !== undefined && typeof system.diceTray !== 'boolean') add(issues, 'system.diceTray', 'deve ser booleano');
   return issues;
@@ -264,6 +267,19 @@ function validateComponent(component, path, system, issues) {
         }
       }
     }
+  }
+  if (component.type === 'recoveryGroup') {
+    for (const key of ['actionsFrom', 'historyField']) { try { pathKeys(component[key]); } catch (error) { add(issues, `${path}.${key}`, error.message); } }
+    if (system) { try {
+      const actions = getByPath(system, component.actionsFrom);
+      if (requireArray(actions, `${path}.actionsFrom`, issues)) {
+        if (component.actionsFrom !== 'recoveryActions') validateRecoveryActions(actions, system, issues, `${path}.actionsFrom`);
+        for (const action of actions) {
+          const fields = [...(action.operations || []).map(op => op.field), ...(action.healing ? [action.healing.field, action.healing.usedField] : [])];
+          if (typeof component.historyField === 'string' && fields.some(field => typeof field === 'string' && (field === component.historyField || field.startsWith(`${component.historyField}.`) || component.historyField.startsWith(`${field}.`)))) add(issues, `${path}.historyField`, 'deve ser independente dos recursos alterados');
+        }
+      }
+    } catch {} }
   }
   if (component.type === 'actionGroup' && requireString(component.actionsFrom, `${path}.actionsFrom`, issues) && system) requireArray(readConfig(system, component.actionsFrom), `${path}.actionsFrom (${component.actionsFrom})`, issues);
   if (component.type === 'traitAllocation') ['presetsFrom', 'traitsFrom'].forEach((key) => requireString(component[key], `${path}.${key}`, issues));

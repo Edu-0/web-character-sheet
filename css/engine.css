@@ -6,6 +6,7 @@
 }
 
 .engine-sheet {
+  --engine-card-depth: var(--shadow-sm), 0 5px 14px rgb(0 0 0 / .06), inset 0 1px 0 color-mix(in srgb, var(--color-text) 7%, transparent), inset 0 -1px 0 rgb(0 0 0 / .04);
   --engine-container-min: 220px;
   --engine-container-gap: var(--space-4);
   display: grid;
@@ -87,7 +88,7 @@
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-panel);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--engine-card-depth);
 }
 
 .engine-section__header {
@@ -797,6 +798,16 @@
 
 .engine-sheet--reference .engine-section {
   background: var(--color-panel);
+}
+
+.engine-sheet--reference .engine-section--recovery {
+  grid-column: 1 / -1;
+}
+
+.engine-entry,
+.engine-slot,
+.engine-dnd-ability {
+  box-shadow: var(--engine-card-depth);
 }
 
 .engine-sheet--reference .engine-section__header {

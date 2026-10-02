@@ -5,6 +5,7 @@ import { getFieldType } from './fields.js';
 import './advanced-fields.js';
 import './point-fields.js';
 import './assisted-fields.js';
+import './recovery-fields.js';
 import './technique-fields.js';
 import { getByPath, setByPath } from './paths.js';
 import { appendFieldHelp } from './help.js';

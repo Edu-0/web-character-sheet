@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "kind": "rpg-system-package",
+  "system": {
+    "schemaVersion": 1,
+    "id": "example-recovery",
+    "name": "Exemplo de recuperação",
+    "diceSet": [
+      6,
+      8,
+      100
+    ],
+    "characterTemplate": {
+      "schemaVersion": 1,
+      "meta": {
+        "system": "example-recovery"
+      },
+      "name": "",
+      "expertise": 3,
+      "attributeBonus": 1,
+      "energy": 5,
+      "techniques": [
+        {
+          "id": "example-strike",
+          "name": "Golpe de teste",
+          "impact": "1d8 + 2",
+          "cost": 0,
+          "grade": 2
+        }
+      ],
+      "powers": [
+        {
+          "id": "example-power",
+          "name": "Pulso de teste",
+          "impact": "2d6 + 1",
+          "cost": 2,
+          "grade": 2
+        }
+      ],
+      "energyMax": 8
+    },
+    "formulas": {
+      "checkBonus": "skill + attribute"
+    },
+    "entryRolls": {
+      "skillCheck": {
+        "buttonLabel": "Usar técnica",
+        "submitLabel": "Testar",
+        "check": {
+          "label": "Teste",
+          "expression": {
+            "value": "2d6"
+          },
+          "modifier": {
+            "formula": "checkBonus",
+            "variables": {
+              "skill": {
+                "field": "expertise"
+              },
+              "attribute": {
+                "field": "attributeBonus"
+              }
+            }
+          }
+        },
+        "effect": {
+          "expression": {
+            "itemField": "impact"
+          }
+        }
+      },
+      "power": {
+        "buttonLabel": "Ativar poder",
+        "submitLabel": "Ativar",
+        "noRollMessage": "Poder ativado sem dados.",
+        "effect": {
+          "expression": {
+            "itemField": "impact"
+          }
+        },
+        "scale": {
+          "base": {
+            "itemField": "grade"
+          },
+          "min": 0,
+          "max": 20,
+          "step": 2,
+          "label": "Potência",
+          "increment": {
+            "value": "1d6"
+          }
+        },
+        "resource": {
+          "field": "energy",
+          "mode": "remaining",
+          "cost": {
+            "itemField": "cost"
+          },
+          "label": "Consumir energia"
+        }
+      }
+    },
+    "recoveryActions": [
+      {
+        "id": "pause",
+        "label": "Pausa",
+        "help": "Confira com a mesa se esta pausa recupera a energia do personagem.",
+        "operations": [
+          {
+            "type": "restoreValue",
+            "field": "energy",
+            "maxField": "energyMax",
+            "label": "Energia"
+          }
+        ]
+      }
+    ]
+  },
+  "layouts": [
+    {
+      "schemaVersion": 1,
+      "id": "generic-roll-example-layout",
+      "system": "example-recovery",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Principal",
+          "sections": [
+            {
+              "id": "actions",
+              "title": "Ações",
+              "containers": [
+                {
+                  "id": "actions",
+                  "components": [
+                    {
+                      "type": "text",
+                      "field": "name",
+                      "label": "Nome"
+                    },
+                    {
+                      "type": "number",
+                      "field": "expertise",
+                      "label": "Especialidade"
+                    },
+                    {
+                      "type": "number",
+                      "field": "energy",
+                      "label": "Energia"
+                    },
+                    {
+                      "type": "list",
+                      "field": "techniques",
+                      "label": "Técnicas",
+                      "entryAction": "roll",
+                      "rollPreset": "skillCheck",
+                      "itemSchema": {
+                        "name": "text",
+                        "impact": "text",
+                        "cost": "number",
+                        "grade": "number"
+                      }
+                    },
+                    {
+                      "type": "list",
+                      "field": "powers",
+                      "label": "Poderes",
+                      "entryAction": "roll",
+                      "rollPreset": "power",
+                      "itemSchema": {
+                        "name": "text",
+                        "impact": "text",
+                        "cost": "number",
+                        "grade": "number"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "recovery",
+              "title": "Recuperação",
+              "containers": [
+                {
+                  "id": "recovery-actions",
+                  "components": [
+                    {
+                      "type": "recoveryGroup",
+                      "actionsFrom": "recoveryActions",
+                      "historyField": "scene.recovery"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

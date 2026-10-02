@@ -1,3 +1,5 @@
+import { renderRecoveryGroup } from './engine/recovery-fields.js';
+import { getSystem } from './engine/system.js';
 import { createDndRollButton } from './systems/dnd-item-rolls.js';
 import { createCalculationControl } from './engine/calculation-overrides.js';
 import { safeImageSource } from './images.js';
@@ -480,6 +482,8 @@ export function renderAll(character) {
   buildFeatures(character);
   buildSpells(character);
   buildSpellSlots(character);
+  const recovery = $('dnd-recovery-actions'); recovery.replaceChildren();
+  renderRecoveryGroup(recovery, { character, system: getSystem(), actionsFrom: 'recoveryActions', historyField: 'recovery.lastAction', onChange: () => { state.notify(); renderAll(character); } });
   buildCurrency(character);
   buildInventory(character);
   buildAllTagLists(character);

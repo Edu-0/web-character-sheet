@@ -185,7 +185,7 @@ registerFieldType('slotTracker', {
     }
     const list = element('div', 'engine-slots__grid');
     const slots = ensureArray(context.character, context.field);
-    slots.forEach((slot) => {
+    slots.forEach((slot, index) => {
       const row = element('div', 'engine-slot');
       const top = element('div', 'engine-slot__top');
       const label = element('span', 'engine-slot__label', context.levelLabel?.replace('{level}', slot.level) || `Nível ${slot.level}`);
@@ -201,7 +201,11 @@ registerFieldType('slotTracker', {
       maximum.value = slot.max ?? 0;
       const maxRow = element('label', 'engine-slot__maximum');
       maxRow.append(element('span', '', 'Máx.'), maximum);
-      const refresh = () => { count.textContent = `${remaining ? Math.max(0, (slot.max ?? 0) - (slot.used ?? 0)) : slot.used ?? 0} / ${slot.max ?? 0}`; };
+      const refresh = () => {
+        slot = getByPath(context.character, context.field)?.[index] || slot;
+        count.textContent = `${remaining ? Math.max(0, (slot.max ?? 0) - (slot.used ?? 0)) : slot.used ?? 0} / ${slot.max ?? 0}`;
+        if (document.activeElement !== maximum) maximum.value = slot.max ?? 0;
+      };
       decrement.addEventListener('click', () => {
         slot.used = remaining ? Math.min(Number(slot.max || 0), Number(slot.used || 0) + 1) : Math.max(0, Number(slot.used || 0) - 1);
         refresh();
