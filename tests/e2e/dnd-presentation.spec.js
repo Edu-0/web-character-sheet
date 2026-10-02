@@ -118,13 +118,18 @@ test('retrato e impressão preservam a referência estática', async ({ page }) 
   await page.locator('#generic-sheet-host .engine-image input[type="file"]').setInputFiles({ name: 'retrato.svg', mimeType: 'image/svg+xml', buffer: image });
   await expect(page.locator('#generic-sheet-host .engine-image__preview')).toBeVisible();
   await expect(page.locator('#legacy-dnd-sheet #portrait-image')).toBeVisible();
+  const source = await page.locator('#legacy-dnd-sheet #portrait-image').getAttribute('src');
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
   await page.emulateMedia({ media: 'print' });
   await expect(page.locator('#legacy-dnd-sheet')).toBeHidden();
-  await expect(page.locator('#generic-sheet-host')).toBeVisible();
-  await expect(page.locator('#generic-sheet-host [role="tabpanel"]')).toHaveCount(7);
-  for (const panel of await page.locator('#generic-sheet-host [role="tabpanel"]').all()) {
-    await expect(panel).toBeVisible();
-  }
+  await expect(page.locator('#generic-sheet-host')).toBeHidden();
+  await expect(page.locator('#print-root img')).toHaveAttribute('src', source);
+  await expect(page.locator('#print-root .print-chapter')).toHaveCount(7);
+  await expect(page.locator('#print-root .print-sheet')).toHaveCount(1);
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  await page.emulateMedia({ media: 'screen' });
+  await expect(page.locator('#legacy-dnd-sheet #portrait-image')).toBeVisible();
+  await expect(page.locator('#generic-sheet-host .engine-image__preview')).toBeVisible();
 });
 
 test('valores derivados coincidem entre as duas apresentações', async ({ page }) => {

@@ -21,6 +21,10 @@ function rollCheck(label, modifier) {
 }
 
 registerFieldType('dndAbility', {
+  print({ character, field, key, label }) {
+    const score = getByPath(character, field) ?? 10;
+    return printStat(label, `${score} · ${formatModifier(abilityModifier(score))}`, `Resistência ${formatModifier(savingThrowModifier(character, key))} · ${getByPath(character, `savingThrows.${key}.proficient`) ? 'Proficiente' : 'Sem proficiência'}`);
+  },
   search({ character, field, key, label, short }) {
     const score = getByPath(character, field) ?? 10;
     return [
@@ -70,6 +74,10 @@ registerFieldType('dndAbility', {
 });
 
 registerFieldType('dndSkill', {
+  print({ character, key, label }) {
+    const skill = character.skills[key];
+    return printStat(label, formatModifier(skillModifier(character, key)), skill?.expertise ? 'Especialização' : skill?.proficient ? 'Proficiente' : 'Sem proficiência');
+  },
   search({ character, key, label }) {
     return [{ label, value: formatModifier(skillModifier(character, key)) }];
   },
@@ -132,6 +140,9 @@ const derivedValues = {
 };
 
 registerFieldType('dndDerived', {
+  print(context) {
+    return printStat(context.label, derivedValues[context.stat]?.(context.character) ?? '—');
+  },
   search(context) {
     return [{ label: context.label, value: derivedValues[context.stat]?.(context.character) ?? '—' }];
   },
@@ -146,3 +157,10 @@ registerFieldType('dndDerived', {
     container.appendChild(card);
   },
 });
+
+function printStat(label, value, detail) {
+  const wrap = node('div', 'print-field');
+  wrap.append(node('span', 'print-label', label), node('strong', '', String(value)));
+  if (detail) wrap.append(node('div', 'print-detail', detail));
+  return wrap;
+}

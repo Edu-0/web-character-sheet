@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="css/responsive.css" />
 <link rel="stylesheet" href="css/appearance-search.css" />
 <link rel="stylesheet" href="css/artwork.css" />
+<link rel="stylesheet" href="css/refinement.css" />
 <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
@@ -46,13 +47,16 @@
 
     <div class="shell-header__actions">
       <button type="button" id="btn-theme-toggle" class="icon-button" aria-label="Alternar tema claro/escuro" title="Alternar tema"></button>
+      <button type="button" id="btn-more" class="button button--ghost" aria-expanded="false" aria-controls="secondary-actions">Mais</button>
+      <div id="secondary-actions" class="secondary-actions">
       <button type="button" id="btn-new-character" class="button button--ghost">Novo</button>
       <button type="button" id="btn-clear-character" class="button button--ghost">Limpar</button>
       <button type="button" id="btn-save-character" class="button button--ghost">Salvar</button>
-      <button type="button" id="btn-export" class="button button--ghost">Exportar</button>
-      <button type="button" id="btn-import" class="button button--ghost">Importar</button>
+      <button type="button" id="btn-export" class="button button--ghost">Exportar JSON</button>
+      <button type="button" id="btn-import" class="button button--ghost">Importar JSON</button>
       <input type="file" id="input-import-file" accept="application/json" hidden />
-      <button type="button" id="btn-print" class="button button--primary">Imprimir</button>
+      <button type="button" id="btn-print" class="button button--primary">Imprimir / PDF</button>
+      </div>
       <span id="save-indicator" class="save-indicator" role="status" aria-live="polite">Salvo</span>
     </div>
   </header>
@@ -101,17 +105,24 @@
       <p class="shell-stub__eyebrow">Configurações</p>
       <h1>Preferências da aplicação</h1>
       <p>Escolha as cores e o modo de leitura para toda a aplicação. Suas preferências ficam salvas neste navegador.</p>
+      <div class="appearance-tabs" role="tablist" aria-label="Preferências de aparência">
+        <button type="button" id="appearance-tab-colors" role="tab" aria-selected="true" aria-controls="appearance-colors">Cores</button>
+        <button type="button" id="appearance-tab-dice" role="tab" aria-selected="false" aria-controls="appearance-dice" tabindex="-1">Dados</button>
+        <button type="button" id="appearance-tab-ornaments" role="tab" aria-selected="false" aria-controls="appearance-ornaments" tabindex="-1">Ornamentos</button>
+      </div>
+      <section id="appearance-colors" role="tabpanel" aria-labelledby="appearance-tab-colors">
       <label class="field appearance-mode"><span>Modo de leitura</span><select id="appearance-mode"></select></label>
       <h2 class="appearance-title">Paleta de cores</h2>
       <div id="appearance-palettes" class="palette-choices" role="group" aria-label="Paleta de cores"></div>
       <p class="appearance-note">Cada paleta tem uma versão clara e uma escura. O botão no cabeçalho alterna entre elas.</p>
-      <section class="appearance-section" aria-labelledby="dice-display-title">
+      </section>
+      <section id="appearance-dice" class="appearance-section" role="tabpanel" aria-labelledby="appearance-tab-dice" hidden>
         <h2 id="dice-display-title">Apresentação dos dados</h2>
         <label class="field"><span>Exibir dados como</span><select id="dice-display-mode"><option value="text">Texto · d6, d8…</option><option value="illustrated">Ícone vetorial com texto</option></select></label>
         <div id="dice-display-preview" class="dice-display-preview" aria-label="Prévia dos dados"></div>
         <p>O texto identifica cada dado nos dois modos. Essa escolha é independente dos ornamentos.</p>
       </section>
-      <section class="appearance-section" aria-labelledby="ornament-title">
+      <section id="appearance-ornaments" class="appearance-section" role="tabpanel" aria-labelledby="appearance-tab-ornaments" hidden>
         <h2 id="ornament-title">Ornamentos da ficha</h2>
         <label class="field field--checkbox"><input id="ornament-enabled" type="checkbox" /><span>Mostrar ornamentos</span></label>
         <p>Combine até três artes, uma por posição no topo da ficha. A combinação acompanha todas as paletas.</p>
@@ -119,7 +130,7 @@
           <label class="field"><span>Começar com uma combinação</span><select id="ornament-preset"><option value="custom">Personalizada</option></select></label>
           <label class="field"><span>Intensidade</span><select id="ornament-intensity"><option value="subtle">Discreta</option><option value="soft">Suave</option><option value="strong">Destacada</option></select></label>
         </div>
-        <div class="ornament-composition-preview"><div id="ornament-preview" class="sheet-ornaments" aria-hidden="true"></div><p id="ornament-preview-state"></p></div>
+        <div class="ornament-composition-preview"><div class="sheet-heading sheet-heading--preview"><div id="ornament-preview" class="sheet-ornaments sheet-heading__art" aria-hidden="true"></div><div class="sheet-heading__text"><p>Prévia</p><strong>Nome do personagem</strong></div></div><p id="ornament-preview-state"></p></div>
         <p class="appearance-note">Escolher uma posição ocupada substitui a arte anterior. Desativar os ornamentos guarda sua combinação.</p>
         <div id="ornament-families"></div>
         <p id="ornament-notice" class="ornament-notice" role="status" aria-live="polite"></p>
@@ -140,7 +151,10 @@
       <ul id="sheet-search-list" aria-label="Resultados da busca"></ul>
     </div>
   </search>
-  <div id="sheet-ornaments" class="sheet-ornaments no-print" aria-hidden="true" hidden></div>
+  <header id="sheet-heading" class="sheet-heading">
+    <div id="sheet-ornaments" class="sheet-ornaments sheet-heading__art no-print" aria-hidden="true" hidden></div>
+    <div class="sheet-heading__text"><p id="sheet-heading-system"></p><h1 id="sheet-heading-name"></h1></div>
+  </header>
   <div id="dnd-presentation-controls" class="dnd-presentation no-print" role="group" aria-label="Apresentação da ficha D&D" hidden>
     <span class="dnd-presentation__label">Visualização D&D</span>
     <button type="button" class="button button--ghost" data-dnd-presentation="legacy">Ficha estática</button>

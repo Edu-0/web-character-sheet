@@ -4,13 +4,13 @@ Implementação inicial autorizada pelo autor em 1º de outubro de 2026, após a
 
 ## Uso
 
-Em **Configurações → Apresentação dos dados**, escolha **Texto · d6, d8…** (padrão) ou **Ícone vetorial com texto**. O texto identifica os dados nos dois modos; formas desconhecidas, como d30 de um sistema importado, continuam textuais. Desativar os ornamentos não desativa esses ícones.
+Em **Configurações → Dados**, escolha **Texto · d6, d8…** (padrão) ou **Ícone vetorial com texto**. O texto identifica os dados nos dois modos; formas desconhecidas, como d30 de um sistema importado, continuam textuais. Desativar os ornamentos não desativa esses ícones.
 
-Em **Ornamentos da ficha**, ative a faixa decorativa e selecione as artes individualmente. Há nove peças em três famílias: Dados e facetas, Botânico, Geométrico e arcano. As combinações **Aventura**, **Jardim arcano** e **Minimalista** servem como ponto de partida; a composição pode misturar famílias. Aplicar uma combinação pronta ativa os ornamentos.
+Em **Configurações → Ornamentos**, ative a composição e selecione as artes individualmente. Há nove peças em três famílias recolhíveis: Dados e facetas, Botânico, Geométrico e arcano. Seus resumos indicam as peças selecionadas; recolher não as desativa. As combinações **Aventura**, **Jardim arcano** e **Minimalista** servem como ponto de partida; a composição pode misturar famílias. Aplicar uma combinação pronta ativa os ornamentos.
 
 Cada peça selecionada pode ocupar o topo à esquerda, ao centro ou à direita. Há uma arte por posição, até três simultâneas. Ativar uma peça procura uma posição livre; quando todas estão ocupadas, substitui a arte na posição preferida da nova peça. Escolher manualmente uma posição ocupada substitui a ocupante, com aviso. **Discreta**, **Suave** e **Destacada** controlam a intensidade global. Desativar a faixa preserva a combinação para reativar depois. Uma combinação vazia não ocupa espaço na ficha.
 
-As posições são predefinidas, sem arrastar ou sobrepor campos. A faixa tem espaço próprio acima da ficha e é compartilhada pelas apresentações D&D estática, modular e comparação, e pelos demais sistemas. Ela acompanha a cor de destaque escolhida, reduz sua altura no celular e é omitida na impressão. Os ícones funcionais permanecem conforme a preferência e usam preto na impressão.
+As posições são predefinidas, sem arrastar ou sobrepor campos. A composição integra o cabeçalho compartilhado da ficha: esquerda e direita flanqueiam o nome; centro ocupa uma célula reservada acima. Há uma única área também na comparação D&D. A prévia usa a mesma organização. No celular, as peças diminuem sem desaparecer; desligar ou esvaziar remove o espaço reservado. A cor acompanha a paleta. Após a segunda revisão, a [impressão dedicada](impressao-pdf.md) inclui a decoração ativa em uma faixa reservada do cabeçalho e mantém ícones funcionais com texto, usando o acento da versão clara da paleta escolhida.
 
 ## Artes do livro utilizadas
 

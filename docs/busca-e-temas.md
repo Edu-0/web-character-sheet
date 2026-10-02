@@ -39,6 +39,10 @@ D&D usa um único índice para a apresentação estática, a modular e a compara
 
 ## Aparência
 
+Configurações está dividida nas abas **Cores**, **Dados** e **Ornamentos**. As setas movem entre abas; Home/End vão à primeira/última. Paleta e modo ficam em Cores; as outras escolhas não dependem desse painel. Famílias de ornamentos podem ser recolhidas sem desativar peças, com a seleção indicada no resumo e prévia próxima.
+
+Até 900 px, **Mais** reúne Novo, Limpar, Salvar, Exportar JSON, Importar JSON e Imprimir / PDF. Escape, clique externo, escolha de comando ou saída de foco fecham a abertura; Escape retorna ao botão. Tema, contexto e salvamento permanecem no cabeçalho. O cabeçalho da ficha permite quebra de nomes longos e integra uma composição ornamental única. Consulte [impressão/PDF](impressao-pdf.md) para o documento de leitura independente da busca.
+
 Em **Configurações**, a paleta (Clássico, Editorial, Floresta, Rubi, Preto e branco ou Pétalas) e o modo de leitura (Claro ou Escuro) são escolhas independentes. Rubi usa vermelho/vinho; Preto e branco usa tons de cinza inclusive nos estados da interface, que continuam identificados por texto; Pétalas usa rosa, malva e lilás. O botão do cabeçalho alterna somente o modo. Ambas as preferências são gravadas em `ficha-rpg:settings`, preservando as outras configurações. Preferências antigas com apenas `theme` mantêm esse modo e usam Clássico. Chaves desconhecidas voltam a Clássico/Escuro.
 
 `js/theme.js` aplica `data-palette` e `data-theme` no elemento raiz. Os tokens ficam em `css/variables.css`; a paleta escolhida vale para o shell e para as duas fichas. A variante de layout `editorial` define tipografia e hierarquia, sem substituir cores. Adicionar uma paleta requer registrar a opção em `js/data.js`, definir seus tokens nos dois modos e acrescentar a amostra em `css/appearance-search.css`. As cores de sucesso, perigo e informação mantêm seus papéis semânticos.

@@ -422,8 +422,8 @@ export function mountStaticIcons() {
   $('btn-theme-toggle').innerHTML = icons.sun;
   $('btn-portrait-upload').innerHTML = icons.upload;
   $('btn-portrait-remove').innerHTML = icons.trash;
-  $('btn-export').innerHTML = `${icons.download} Exportar`;
-  $('btn-import').innerHTML = `${icons.upload} Importar`;
+  $('btn-export').innerHTML = `${icons.download} Exportar JSON`;
+  $('btn-import').innerHTML = `${icons.upload} Importar JSON`;
   $('dice-toggle-icon').innerHTML = icons.dice;
   $('portrait-placeholder').innerHTML = icons.image;
 }

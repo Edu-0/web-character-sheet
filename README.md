@@ -19,6 +19,8 @@ Aplicação web para criar, preencher e organizar fichas de RPG de mesa. Uma eng
 - Fichas modulares com abas, cartões, listas, tabelas e ajuda contextual flutuante.
 - Paletas Clássico, Editorial, Floresta, Rubi, Preto e branco e Pétalas, cada uma com modo claro/escuro; responsividade e impressão pelo navegador, inclusive salvar como PDF.
 - Ornamentos opcionais de dados, botânicos e geométricos, com combinações, posições e intensidade; dados em texto ou vetores acompanhados de texto, independentes das cores.
+- Cabeçalho compacto com ações em **Mais** no celular; Configurações divididas em Cores, Dados e Ornamentos, com famílias recolhíveis e prévia.
+- [Impressão A4/PDF de leitura](docs/impressao-pdf.md), com a identidade da ficha adaptada para papel, paleta, cartões e ornamentos; inclui todas as abas e coleções do personagem atual, independente dos filtros e cartões recolhidos.
 - Busca na ficha atual inteira, entre abas, com valores atuais, tolerância a erros de digitação e navegação até o campo.
 - Rolagens, fórmulas e assistência configuráveis conforme o sistema.
 - Persistência por `localStorage`, sem backend ou conta de usuário.
@@ -98,6 +100,8 @@ No repositório, cada sistema tem arquivos `*.system.json` e `*.layout.json`. Na
 Os contratos são verificados em `js/validation/schemas.js`. As definições incluídas são exemplos executáveis; há uma [referência inicial da biblioteca](docs/componentes.md), mas ainda não existe um editor visual completo ou uma especificação exaustiva de todos os parâmetros.
 
 Consulte [Busca na ficha e aparência](docs/busca-e-temas.md) para usar a pesquisa, escolher paletas e estender os resultados de componentes específicos.
+
+O [relatório de refinamento de design e PDF](docs/refinamento-design-pdf-resultados.md) registra decisões, amostras fictícias e verificações da implementação.
 
 Regras compatíveis reutilizam a biblioteca. Mecânicas novas podem exigir novos componentes JavaScript: não se promete representar qualquer livro apenas com JSON.
 

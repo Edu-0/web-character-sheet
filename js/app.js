@@ -27,6 +27,8 @@ import { buildSearchIndex } from './engine/search.js';
 import { revealDndSearchResult } from './systems/dnd2024-search.js';
 import { initArtworkControls } from './artwork.js';
 import { createDiceLabel } from './dice-display.js';
+import { initPrinting } from './printing.js';
+import { initShellActions } from './shell-actions.js';
 
 const $ = (id) => document.getElementById(id);
 const DND_SYSTEM_ID = 'dnd2024';
@@ -53,7 +55,11 @@ async function init() {
   initAppearanceControls();
   initArtworkControls();
   initShell();
+  initShellActions();
   initLegacyControls(session.activeTab);
+  initPrinting(() => activePackage && getAppState().currentCharacter ? {
+    layout: activePackage.layouts[0], system: activePackage.system, character: state.get(),
+  } : null);
   sheetSearch = initSheetSearch({
     getIndex: () => activeCharacterId && activePackage ? buildSearchIndex(activePackage.layouts[0], state.get(), activePackage.system) : [],
     onShortcut: () => setAppState('currentView', 'sheet'),
@@ -129,6 +135,9 @@ function renderShell(appState) {
 
   $('shell-current-system').textContent = appState.currentSystem?.name || 'Nenhum sistema';
   $('shell-current-character').textContent = appState.currentCharacter?.name || 'Sem personagem';
+  $('sheet-heading-system').textContent = appState.currentSystem?.name || '';
+  $('sheet-heading-name').textContent = appState.currentCharacter?.name || 'Sem personagem';
+  $('sheet-heading').dataset.variant = activePackage?.layouts[0]?.variant || '';
   $('btn-clear-character').disabled = !appState.currentCharacter;
   $('btn-save-character').disabled = !appState.currentCharacter;
   $('btn-export').disabled = !appState.currentCharacter;
@@ -229,6 +238,7 @@ function renderGenericSheet(character) {
   mountingGenericSheet = true;
   try {
     genericSheetController = renderSheet(host, activePackage.layouts[0], character, {
+      showHeader: false,
       system: activePackage.system,
       initialTabId: getAppState().ui.activeTab,
       onTabChange: (tabId) => {

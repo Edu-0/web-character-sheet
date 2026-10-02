@@ -1,6 +1,20 @@
 import { applyPalette, applyTheme, getAvailablePalettes, getAvailableThemes } from './theme.js';
 
 export function initAppearanceControls() {
+  const tabs = [...document.querySelectorAll('.appearance-tabs [role="tab"]')];
+  const activate = (index, focus = false) => tabs.forEach((tab, i) => {
+    tab.setAttribute('aria-selected', String(index === i));
+    tab.tabIndex = index === i ? 0 : -1;
+    document.getElementById(tab.getAttribute('aria-controls')).hidden = index !== i;
+    if (index === i && focus) tab.focus();
+  });
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activate(index));
+    tab.addEventListener('keydown', event => {
+      const next = { ArrowRight: (index + 1) % tabs.length, ArrowLeft: (index + tabs.length - 1) % tabs.length, Home: 0, End: tabs.length - 1 }[event.key];
+      if (next != null) { event.preventDefault(); activate(next, true); }
+    });
+  });
   const mode = document.getElementById('appearance-mode');
   const palettes = document.getElementById('appearance-palettes');
   getAvailableThemes().forEach((theme) => {

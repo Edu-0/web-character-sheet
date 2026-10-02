@@ -95,7 +95,7 @@ export function renderSheet(host, layout, character, options = {}) {
     options.onTabChange?.(tabs[safeIndex].id);
   }
 
-  if (layout.showHeader !== false) sheet.appendChild(header);
+  if (layout.showHeader !== false && options.showHeader !== false) sheet.appendChild(header);
   sheet.append(navigation, panels);
   host.appendChild(sheet);
   const requestedIndex = tabs.findIndex(({ id }) => id === options.initialTabId);

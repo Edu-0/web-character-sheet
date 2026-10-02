@@ -37,7 +37,7 @@ export function applyArtworkPreferences({ artwork, diceDisplay } = {}) {
   return { artwork: settings.artwork, diceDisplay: settings.diceDisplay };
 }
 
-function createOrnament(art) {
+export function createOrnament(art) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 240 100');
   svg.setAttribute('aria-hidden', 'true');
@@ -55,7 +55,7 @@ function createOrnament(art) {
 function renderComposition(host, artwork, { preview = false } = {}) {
   host.replaceChildren();
   host.dataset.intensity = artwork.intensity;
-  host.hidden = !preview && (!artwork.enabled || !artwork.selected.length);
+  host.hidden = !artwork.selected.length || (!preview && !artwork.enabled);
   for (const position of ORNAMENT_POSITIONS) {
     const slot = document.createElement('div');
     slot.className = 'sheet-ornaments__slot';
@@ -83,9 +83,10 @@ export function initArtworkControls() {
     update({ selected, preset: 'custom' }, displacedName ? `${displacedName} deu lugar a ${art.label} nessa posição.` : 'Combinação atualizada.');
   }
   for (const family of ORNAMENT_FAMILIES) {
-    const group = document.createElement('fieldset');
+    const group = document.createElement('details');
     group.className = 'ornament-family';
-    const legend = document.createElement('legend');
+    group.dataset.family = family.id;
+    const legend = document.createElement('summary');
     legend.textContent = family.label;
     group.appendChild(legend);
     const grid = document.createElement('div');
@@ -148,6 +149,11 @@ export function initArtworkControls() {
       card.classList.toggle('ornament-choice--selected', Boolean(selected));
     }
     renderComposition($('sheet-ornaments'), artwork);
+    document.querySelectorAll('.ornament-family').forEach(group => {
+      const family = ORNAMENT_FAMILIES.find(item => item.id === group.dataset.family);
+      const names = artwork.selected.map(item => ORNAMENTS.find(art => art.id === item.id)).filter(art => art.family === family.id).map(art => art.label);
+      group.querySelector('summary').textContent = `${family.label} · ${names.length ? names.join(', ') : 'nenhuma selecionada'}`;
+    });
     renderComposition($('ornament-preview'), artwork, { preview: true });
     $('ornament-preview-state').textContent = !artwork.selected.length ? 'Nenhuma arte selecionada.' : artwork.enabled ? 'Esta combinação aparece no topo da ficha.' : 'Prévia da combinação guardada. Ative os ornamentos para exibi-la na ficha.';
   }

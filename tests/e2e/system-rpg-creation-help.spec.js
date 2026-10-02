@@ -102,7 +102,9 @@ test('ajuda dos campos de Técnicas abre por mouse, teclado e toque sem editar v
   expect(box.y).toBeGreaterThanOrEqual(0);
   expect(box.y + box.height).toBeLessThanOrEqual(950);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
-  await page.screenshot({ path: testInfo.outputPath('help-mobile.png'), fullPage: true });
+  // A ajuda pertence à viewport/top layer. Uma captura da página inteira pode
+  // reposicionar/fechar o popover ao redimensionar temporariamente a superfície.
+  await page.screenshot({ path: testInfo.outputPath('help-mobile.png'), fullPage: false });
   await button.click();
   await expect(tooltip).toBeHidden();
   expect(errors).toEqual([]);

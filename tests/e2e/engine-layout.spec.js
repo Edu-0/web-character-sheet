@@ -27,7 +27,7 @@ test('monta abas acessíveis e persiste campos do sistema-rpg', async ({ page })
 
   const name = page.locator('.engine-panel:not([hidden])').getByLabel('Nome', { exact: true });
   await name.fill('Aurora Declarativa');
-  await expect(page.locator('.engine-sheet__title')).toHaveText('Aurora Declarativa');
+  await expect(page.locator('#sheet-heading-name')).toHaveText('Aurora Declarativa');
   await expect(page.locator('#shell-current-character')).toHaveText('Aurora Declarativa');
 
   await page.getByRole('tab', { name: 'Atributos' }).click();
