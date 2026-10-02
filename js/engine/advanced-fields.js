@@ -1,3 +1,6 @@
+import { captureFocus } from '../focus.js';
+import { compressPortrait, safeImageSource } from '../images.js';
+import { notify } from '../notifications.js';
 import { registerFieldType } from './fields.js';
 import { getByPath, setByPath } from './paths.js';
 import { evaluate } from './formula.js';
@@ -148,10 +151,12 @@ registerFieldType('computed', {
       output.textContent = '—';
       const button = buttonElement(context.actionLabel || 'Rolar', 'button button--ghost');
       button.addEventListener('click', () => {
+        try {
         const variables = resolveFormulaVariables(context.variables, context.character, context.system, true);
         const value = evaluate(context.system.formulas[context.formula], { vars: variables, data: context.character });
         output.value = formatValue(value, context.format);
         output.textContent = output.value;
+        } catch (error) { output.value = '—'; output.textContent = '—'; output.title = error.message; notify(error.message, {type: 'error'}); }
       });
       wrap.append(output, button);
     } else {
@@ -233,23 +238,24 @@ registerFieldType('image', {
     input.accept = 'image/*';
     input.className = 'visually-hidden';
     const refresh = () => {
-      const source = getByPath(context.character, context.field);
+      const raw = getByPath(context.character, context.field);
+      const source = safeImageSource(raw);
+      placeholder.textContent = raw && !source ? 'Retrato externo preservado; não carregado automaticamente.' : (context.placeholder || '◇');
       preview.hidden = !source;
       placeholder.hidden = Boolean(source);
       remove.hidden = !source;
-      if (source) preview.src = source;
+      if (source) preview.src = source; else preview.removeAttribute('src');
     };
     upload.addEventListener('click', () => input.click());
-    input.addEventListener('change', () => {
+    input.addEventListener('change', async () => {
       const [file] = input.files;
       if (!file) return;
-      const reader = new FileReader();
-      reader.addEventListener('load', () => {
-        setByPath(context.character, context.field, reader.result);
+      try {
+        setByPath(context.character, context.field, await compressPortrait(file));
         refresh();
         context.onChange?.();
-      });
-      reader.readAsDataURL(file);
+      } catch (error) { notify(error.message, {type: 'error'}); }
+      finally { input.value = ''; }
     });
     remove.addEventListener('click', () => {
       setByPath(context.character, context.field, null);
@@ -347,6 +353,7 @@ function renderList(container, context) {
   const refresh = () => {
     entryRefreshers.clear();
     values = ensureArray(context.character, context.field);
+    const restoreFocus = captureFocus(entries);
     entries.innerHTML = '';
     count.textContent = `${values.length} ${values.length === 1 ? 'item' : 'itens'}`;
     add.hidden = Number.isInteger(context.fixedLength) && values.length >= context.fixedLength;
@@ -354,6 +361,7 @@ function renderList(container, context) {
     values.forEach((item, index) => entries.appendChild(renderEntry(item, index, values, entryContext, refresh)));
     signature = JSON.stringify(values);
     refreshCost();
+    restoreFocus();
   };
   add.addEventListener('click', () => {
     if (Number.isInteger(context.fixedLength) && values.length >= context.fixedLength) return;
@@ -376,6 +384,7 @@ function renderList(container, context) {
 function renderEntry(item, index, values, context, refreshList) {
   const entry = document.createElement('details');
   entry.className = 'engine-entry';
+  entry.dataset.entryId = item.id || String(index);
   entry.open = context.defaultOpen ?? values.length <= 3;
   const summary = document.createElement('summary');
   summary.className = 'engine-entry__summary';

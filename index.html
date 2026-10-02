@@ -105,6 +105,16 @@
       <p class="shell-stub__eyebrow">Configurações</p>
       <h1>Preferências da aplicação</h1>
       <p>Escolha as cores e o modo de leitura para toda a aplicação. Suas preferências ficam salvas neste navegador.</p>
+      <section class="library-backup-controls" aria-labelledby="backup-title">
+        <h2 id="backup-title">Backup e recuperação</h2>
+        <p>Salve seus personagens, sistemas importados e preferências em um arquivo. Ao restaurar, você escolhe mesclar ou substituir.</p>
+        <div class="library-card__actions">
+          <button type="button" id="btn-export-library" class="button button--primary">Exportar tudo</button>
+          <button type="button" id="btn-import-library" class="button button--ghost">Importar tudo</button>
+          <button type="button" id="btn-export-recovery" class="button button--ghost">Exportar recuperação</button>
+        </div>
+        <input type="file" id="input-import-library" class="visually-hidden" accept="application/json,.json" />
+      </section>
       <div class="appearance-tabs" role="tablist" aria-label="Preferências de aparência">
         <button type="button" id="appearance-tab-colors" role="tab" aria-selected="true" aria-controls="appearance-colors">Cores</button>
         <button type="button" id="appearance-tab-dice" role="tab" aria-selected="false" aria-controls="appearance-dice" tabindex="-1">Dados</button>

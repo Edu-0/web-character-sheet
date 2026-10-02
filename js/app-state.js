@@ -1,6 +1,8 @@
 // app-state.js
 // Estado da aplicação global. Não contém dados completos do personagem nem regras do sistema.
 
+import { getByPath, setByPath, pathKeys } from './engine/paths.js';
+
 const initialState = {
   currentSystem: null,
   currentCharacter: null,
@@ -21,17 +23,11 @@ function clone(value) {
 }
 
 function getPath(path) {
-  return path.split('.').reduce((obj, key) => (obj == null ? undefined : obj[key]), appState);
+  return getByPath(appState, path);
 }
 
 function setPath(path, value) {
-  const keys = path.split('.');
-  const last = keys.pop();
-  const target = keys.reduce((obj, key) => {
-    if (obj[key] == null || typeof obj[key] !== 'object') obj[key] = {};
-    return obj[key];
-  }, appState);
-  target[last] = value;
+  setByPath(appState, path, value);
   notify();
 }
 
@@ -50,6 +46,7 @@ export function setAppState(path, value) {
 
 export function updateAppState(patch) {
   Object.entries(patch).forEach(([key, value]) => {
+    pathKeys(key);
     appState[key] = clone(value);
   });
   notify();

@@ -93,7 +93,7 @@ export function evolutionTargets(character, system, config) {
       label: labels.find((label) => label.key === entry.name)?.label || entry.name || `${source.label || source.field} ${index + 1}`,
       die: entry[source.evolutionValueField || source.valueField || 'die'] || source.baseDie || system.dieScale?.[0],
       allowComposite: source.allowComposite === true,
-      costs: getByPath(system, source.costsFrom || '') || {},
+      costs: (source.costsFrom ? getByPath(system, source.costsFrom) : undefined) || {},
     }));
   });
 }

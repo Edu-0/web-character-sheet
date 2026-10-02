@@ -1,3 +1,5 @@
+import { readJson, transact, storageKeys } from '../persistence.js';
+import { LIMITS, readJsonFile } from '../validation/limits.js';
 import { createId } from '../data.js';
 import { assertValid, validateCharacter } from '../validation/schemas.js';
 
@@ -9,16 +11,11 @@ function clone(value) {
 }
 
 function readIndex() {
-  try {
-    const value = JSON.parse(localStorage.getItem(INDEX_KEY) || '[]');
-    return Array.isArray(value) ? value : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeIndex(index) {
-  localStorage.setItem(INDEX_KEY, JSON.stringify(index));
+  const index = readJson(INDEX_KEY, [], value => Array.isArray(value) && value.every(entry => entry && typeof entry.id === 'string' && typeof entry.system === 'string' && typeof entry.name === 'string' && Number.isFinite(Date.parse(entry.updatedAt))));
+  // Documentos válidos que perderam o índice continuam visíveis e exportáveis.
+  const summaries = new Map(index.map(entry => [entry.id, entry]));
+  for (const character of allCharacters()) if (!summaries.has(character.meta.id)) summaries.set(character.meta.id, toSummary(character));
+  return [...summaries.values()];
 }
 
 function displayName(character) {
@@ -30,7 +27,7 @@ function toSummary(character) {
     id: character.meta.id,
     system: character.meta.system,
     name: displayName(character),
-    updatedAt: character.meta.updatedAt,
+    updatedAt: character.meta.updatedAt || '1970-01-01T00:00:00.000Z',
   };
 }
 
@@ -39,12 +36,19 @@ export function listCharacters() {
 }
 
 export function getCharacter(id) {
-  try {
-    const raw = localStorage.getItem(`${CHARACTER_PREFIX}${id}`);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
+  return readJson(`${CHARACTER_PREFIX}${id}`, null, value => validateCharacter(value).length === 0 && value.meta.id === id);
+}
+
+export function allCharacters() {
+  return storageKeys().filter(key => key.startsWith(CHARACTER_PREFIX) && key !== INDEX_KEY).map(key => getCharacter(key.slice(CHARACTER_PREFIX.length))).filter(Boolean);
+}
+
+export function characterChanges(characters, { replace = false } = {}) {
+  const changes = [];
+  if (replace) for (const key of storageKeys().filter(key => key.startsWith(CHARACTER_PREFIX) && key !== INDEX_KEY)) changes.push([key, null]);
+  for (const character of characters) changes.push([`${CHARACTER_PREFIX}${character.meta.id}`, JSON.stringify(character)]);
+  changes.push([INDEX_KEY, JSON.stringify(characters.map(toSummary))]);
+  return [...new Map(changes)];
 }
 
 export function saveCharacter(character) {
@@ -52,10 +56,9 @@ export function saveCharacter(character) {
   stored.meta ||= {};
   stored.meta.updatedAt = new Date().toISOString();
   assertValid(stored, validateCharacter, 'personagem');
-  localStorage.setItem(`${CHARACTER_PREFIX}${stored.meta.id}`, JSON.stringify(stored));
   const index = readIndex().filter((entry) => entry.id !== stored.meta.id);
   index.push(toSummary(stored));
-  writeIndex(index);
+  transact([[`${CHARACTER_PREFIX}${stored.meta.id}`, JSON.stringify(stored)], [INDEX_KEY, JSON.stringify(index)]]);
   return stored;
 }
 
@@ -84,20 +87,15 @@ export function duplicateCharacter(id) {
 }
 
 export function removeCharacter(id) {
-  localStorage.removeItem(`${CHARACTER_PREFIX}${id}`);
-  writeIndex(readIndex().filter((entry) => entry.id !== id));
+  transact([[`${CHARACTER_PREFIX}${id}`, null], [INDEX_KEY, JSON.stringify(readIndex().filter(entry => entry.id !== id))]]);
 }
 
-export async function importCharacter(file) {
-  let character;
-  try {
-    character = JSON.parse(await file.text());
-  } catch {
-    throw new Error('O arquivo do personagem não contém JSON válido.');
-  }
+export async function importCharacter(file, { validate } = {}) {
+  const character = await readJsonFile(file, LIMITS.characterBytes, 'character');
   assertValid(character, (value) => validateCharacter(value, { allowMissingId: true }), 'personagem');
   character.meta.id = createId();
   character.meta.createdAt ||= new Date().toISOString();
+  await validate?.(character);
   return saveCharacter(character);
 }
 

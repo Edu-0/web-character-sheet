@@ -116,7 +116,7 @@ registerFieldType('techniqueUse', {
           attribute: chosenAttribute,
           specialization: spec?.die,
           technique: rule.techniqueFrom === 'specialization' ? shiftTrait(spec?.die, -(rule.reductionSteps || 0), context.system.dieScale) : value,
-          skill: getByPath(context.character, `${config.skillsField}.${rule.skill || ''}`) || config.skillBaseDie,
+          skill: (rule.skill ? getByPath(context.character, `${config.skillsField}.${rule.skill}`) : undefined) || config.skillBaseDie,
           highestSpecialization: specs.reduce((best, current) => traitMaximum(current.die) > traitMaximum(best) ? current.die : best, null),
           constant: rule.constantDie,
         };

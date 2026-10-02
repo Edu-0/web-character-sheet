@@ -1,3 +1,4 @@
+import { safeImageSource } from './images.js';
 // ui.js
 // Renderização e ligação (binding) da interface com o estado do personagem.
 // Não contém fórmulas — apenas exibe valores já calculados por calculations.js.
@@ -433,13 +434,15 @@ export function mountStaticIcons() {
 export function updatePortrait(character) {
   const img = $('portrait-image');
   const placeholder = $('portrait-placeholder');
-  if (character.identity.portrait) {
-    img.src = character.identity.portrait;
+  if (safeImageSource(character.identity.portrait)) {
+    img.src = safeImageSource(character.identity.portrait);
     img.hidden = false;
     placeholder.hidden = true;
   } else {
     img.hidden = true;
+    img.removeAttribute('src');
     placeholder.hidden = false;
+    placeholder.title = character.identity.portrait ? 'Retrato externo preservado; não carregado automaticamente.' : '';
   }
 }
 

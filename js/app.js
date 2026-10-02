@@ -1,3 +1,7 @@
+import { initBackupControls } from './backup-controls.js';
+import { captureFocus } from './focus.js';
+import { recoverTransactions, reportStorageError } from './persistence.js';
+import { assertValid, validateCharacterForPackage } from './validation/schemas.js';
 // app.js — shell global, bibliotecas e apresentações da ficha ativa.
 import { state } from './state.js';
 import * as storage from './storage.js';
@@ -25,7 +29,7 @@ import { initAppearanceControls } from './appearance.js';
 import { initSheetSearch } from './sheet-search.js';
 import { buildSearchIndex } from './engine/search.js';
 import { revealDndSearchResult } from './systems/dnd2024-search.js';
-import { initArtworkControls } from './artwork.js';
+import { initArtworkControls, applyArtworkPreferences } from './artwork.js';
 import { createDiceLabel } from './dice-display.js';
 import { initPrinting } from './printing.js';
 import { initShellActions } from './shell-actions.js';
@@ -36,6 +40,7 @@ const DND_SYSTEM_ID = 'dnd2024';
 let activePackage = null;
 let activeCharacterId = null;
 let saveTimeout = null;
+let unsavedCharacter = false;
 let suppressCharacterEffects = false;
 let appPersistenceEnabled = false;
 let genericSheetController = null;
@@ -46,6 +51,7 @@ let mountingGenericSheet = false;
 let sheetSearch = null;
 
 async function init() {
+  try { recoverTransactions(); } catch { /* adapter mantém bloqueio e journal para recuperação */ }
   const session = storage.loadAppSession();
   if (session.activeTab) setAppState('ui.activeTab', session.activeTab);
   if (['legacy', 'engine', 'compare'].includes(session.dndPresentation)) {
@@ -56,6 +62,26 @@ async function init() {
   initArtworkControls();
   initShell();
   initShellActions();
+  initBackupControls({
+    getCurrentCharacter: () => activeCharacterId ? state.get() : null,
+    onRestored: async () => {
+      clearTimeout(saveTimeout); saveTimeout = null; unsavedCharacter = false;
+      const previousId = activeCharacterId;
+      activeCharacterId = null;
+      refreshLibraries();
+      initTheme();
+      applyArtworkPreferences();
+      const available = characters.listCharacters().filter(character => hasSystem(character.system));
+      const next = available.find(character => character.id === previousId) || available[0];
+      if (next) await openCharacter(next.id, {view: 'settings'});
+      else {
+        genericSheetController?.destroy(); genericSheetController = null;
+        await activateSystem(DND_SYSTEM_ID);
+        updateAppState({currentCharacter: null, currentSystem: systemSummary(activePackage.system), currentView: 'characters'});
+      }
+      $('save-indicator').textContent = 'Salvo';
+    },
+  });
   initLegacyControls(session.activeTab);
   initPrinting(() => activePackage && getAppState().currentCharacter ? {
     layout: activePackage.layouts[0], system: activePackage.system, character: state.get(),
@@ -148,10 +174,14 @@ function renderShell(appState) {
 
 async function activateSystem(systemId) {
   const pkg = await getSystemPackage(systemId);
+  useSystemPackage(pkg);
+  return pkg;
+}
+
+function useSystemPackage(pkg) {
   activePackage = pkg;
   setSystem(pkg.system);
   setLayout(pkg.layouts[0] ?? null);
-  return pkg;
 }
 
 async function openCharacter(id, { view = 'sheet' } = {}) {
@@ -164,7 +194,9 @@ async function openCharacter(id, { view = 'sheet' } = {}) {
     return;
   }
 
-  const pkg = await activateSystem(character.meta.system);
+  const pkg = await getSystemPackage(character.meta.system);
+  assertValid(character, value => validateCharacterForPackage(value, pkg), 'personagem');
+  useSystemPackage(pkg);
   activeCharacterId = character.meta.id;
   suppressCharacterEffects = true;
   state.load(character);
@@ -267,9 +299,11 @@ function onCharacterChange(character) {
       ui.refreshComputedOnly(character);
       ui.updatePortrait(character);
       if (genericSheetController && getAppState().ui.dndPresentation !== 'legacy') {
+        const restoreFocus = captureFocus($('generic-sheet-host'));
         genericSheetController.destroy();
         genericSheetController = null;
         renderGenericSheet(character);
+        restoreFocus();
       }
     }
   }
@@ -284,20 +318,26 @@ function scheduleCharacterSave(character) {
   const snapshot = structuredClone(character);
   saveTimeout = setTimeout(() => {
     saveTimeout = null;
-    const saved = characters.saveCharacter(snapshot);
-    refreshLibraries();
-    updateAppState({ currentCharacter: characterSummary(saved) });
-    $('save-indicator').textContent = 'Salvo';
+    try {
+      const saved = characters.saveCharacter(snapshot);
+      unsavedCharacter = false;
+      refreshLibraries();
+      updateAppState({ currentCharacter: characterSummary(saved) });
+      $('save-indicator').textContent = 'Salvo';
+    } catch (error) { unsavedCharacter = true; $('save-indicator').textContent = 'Não salvo — exporte seus dados'; reportStorageError(error); }
   }, 300);
 }
 
 function flushCharacterSave({ force = false } = {}) {
-  if ((!saveTimeout && !force) || !activeCharacterId) return;
+  if ((!saveTimeout && !force && !unsavedCharacter) || !activeCharacterId) return;
   clearTimeout(saveTimeout);
   saveTimeout = null;
   const current = state.get();
-  if (current.meta?.id === activeCharacterId) characters.saveCharacter(current);
-  $('save-indicator').textContent = 'Salvo';
+  try {
+    if (current.meta?.id === activeCharacterId) characters.saveCharacter(current);
+    unsavedCharacter = false;
+    $('save-indicator').textContent = 'Salvo';
+  } catch (error) { unsavedCharacter = true; $('save-indicator').textContent = 'Não salvo — exporte seus dados'; throw error; }
 }
 
 function refreshLibraries() {
@@ -403,15 +443,15 @@ function wireToolbar() {
     notify('Ficha restaurada.');
   }));
 
-  $('btn-save-character').addEventListener('click', () => {
+  $('btn-save-character').addEventListener('click', () => runAction(() => {
     flushCharacterSave({ force: true });
     refreshLibraries();
     notify('Personagem salvo.');
-  });
+  }));
 
   $('btn-export').addEventListener('click', () => {
     if (!activeCharacterId) return;
-    flushCharacterSave();
+    try { flushCharacterSave(); } catch (error) { reportStorageError(error); }
     const exported = characters.exportCharacter(state.get());
     storage.downloadJson(exported.data, exported.filename);
     notify('Personagem exportado.');
@@ -422,7 +462,9 @@ function wireToolbar() {
     const file = event.target.files[0];
     if (!file) return;
     await runAction(async () => {
-      const character = await characters.importCharacter(file);
+      const character = await characters.importCharacter(file, { validate: async value => {
+        if (hasSystem(value.meta.system)) { const pkg = await getSystemPackage(value.meta.system); assertValid(value, item => validateCharacterForPackage(item, pkg), 'personagem'); }
+      } });
       refreshLibraries();
       if (hasSystem(character.meta.system)) await openCharacter(character.meta.id);
       else {
@@ -438,7 +480,13 @@ function wireToolbar() {
     const file = event.target.files[0];
     if (!file) return;
     await runAction(async () => {
-      const pkg = await importSystemPackage(file);
+      let pkg;
+      try { pkg = await importSystemPackage(file); }
+      catch (error) {
+        if (error.code !== 'system-conflict') throw error;
+        if (!await confirmDialog('Substituir este sistema? Personagens existentes serão preservados, mas o novo layout pode ser incompatível.', {title: 'Sistema já existente', confirmLabel: 'Substituir sistema'})) return;
+        pkg = await importSystemPackage(file, {replace: true});
+      }
       refreshLibraries();
       notify(`Sistema "${pkg.system.name}" importado.`);
     });
@@ -579,7 +627,14 @@ async function runAction(action) {
   }
 }
 
-window.addEventListener('beforeunload', flushCharacterSave);
+window.addEventListener('beforeunload', event => {
+  try { flushCharacterSave(); } catch { event.preventDefault(); event.returnValue = ''; }
+});
+let lastStorageMessage = ''; let lastStorageWarning = 0;
+window.addEventListener('storage:problem', event => {
+  const message = event.detail.message;
+  if (message !== lastStorageMessage || Date.now() - lastStorageWarning > 10000) { notify(message, {type: 'error', duration: 10000}); lastStorageMessage = message; lastStorageWarning = Date.now(); }
+});
 
 init().catch((error) => {
   console.error(error);

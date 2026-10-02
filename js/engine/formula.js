@@ -7,7 +7,9 @@
 // lógicos (&& || !), literais numéricos/booleanos, identificadores (podem ter pontos,
 // ex. "abilities.strength.score") e chamadas de função: floor, ceil, round, abs,
 // sqrt, min, max, if(cond, a, b).
-import { getByPath } from './paths.js';
+import { getByPath, pathKeys } from './paths.js';
+
+export const FORMULA_LIMITS = Object.freeze({ length: 4096, tokens: 2048, nodes: 2048, depth: 64, operations: 10000, cache: 256 });
 
 const FUNCTIONS = {
   floor: Math.floor,
@@ -25,12 +27,15 @@ function tokenize(expression) {
   const src = expression;
   let i = 0;
   while (i < src.length) {
+    if (tokens.length >= FORMULA_LIMITS.tokens) throw new Error('Fórmula excede 2048 tokens.');
     const ch = src[i];
     if (/\s/.test(ch)) { i += 1; continue; }
     if (/[0-9]/.test(ch)) {
       const start = i;
       while (i < src.length && /[0-9.]/.test(src[i])) i += 1;
-      tokens.push({ type: 'number', value: parseFloat(src.slice(start, i)) });
+      const literal = src.slice(start, i);
+      if (!/^\d+(?:\.\d+)?$/.test(literal)) throw new Error(`Número inválido na fórmula: "${literal}"`);
+      tokens.push({ type: 'number', value: Number(literal) });
       continue;
     }
     if (/[A-Za-z_]/.test(ch)) {
@@ -56,6 +61,7 @@ class Parser {
   constructor(tokens) {
     this.tokens = tokens;
     this.pos = 0;
+    this.depth = 0;
   }
 
   peek() { return this.tokens[this.pos]; }
@@ -123,9 +129,12 @@ class Parser {
   }
 
   parseUnary() {
-    if (this.peek().type === '-') { this.next(); return { op: 'neg', value: this.parseUnary() }; }
-    if (this.peek().type === '!') { this.next(); return { op: 'not', value: this.parseUnary() }; }
-    return this.parsePrimary();
+    if (++this.depth > FORMULA_LIMITS.depth) throw new Error('Fórmula excede profundidade 64.');
+    try {
+      if (this.peek().type === '-') { this.next(); return { op: 'neg', value: this.parseUnary() }; }
+      if (this.peek().type === '!') { this.next(); return { op: 'not', value: this.parseUnary() }; }
+      return this.parsePrimary();
+    } finally { this.depth -= 1; }
   }
 
   parsePrimary() {
@@ -158,6 +167,7 @@ class Parser {
 }
 
 function evalNode(node, scope) {
+  if (++scope.operations > FORMULA_LIMITS.operations) throw new Error('Fórmula excede o orçamento de operações.');
   switch (node.op) {
     case 'literal': return node.value;
     case 'identifier': return resolveIdentifier(node.name, scope);
@@ -165,7 +175,7 @@ function evalNode(node, scope) {
     case 'not': return !evalNode(node.value, scope);
     case 'call': {
       const fn = FUNCTIONS[node.name];
-      if (!fn) throw new Error(`Função desconhecida na fórmula: "${node.name}"`);
+      if (!Object.hasOwn(FUNCTIONS, node.name)) throw new Error(`Função desconhecida na fórmula: "${node.name}"`);
       return fn(...node.args.map((a) => evalNode(a, scope)));
     }
     case '+': return evalNode(node.left, scope) + evalNode(node.right, scope);
@@ -196,6 +206,25 @@ function resolveIdentifier(name, scope) {
 
 const astCache = new Map();
 
+export function validateFormula(expression) {
+  if (typeof expression !== 'string' || !expression.trim() || expression.length > FORMULA_LIMITS.length) throw new Error('Fórmula deve conter de 1 a 4096 caracteres.');
+  const parser = new Parser(tokenize(expression));
+  const ast = parser.parseExpression();
+  parser.expect('eof');
+  const pending = [{ node: ast, depth: 1 }];
+  let count = 0;
+  while (pending.length) {
+    const {node, depth} = pending.pop();
+    if (++count > FORMULA_LIMITS.nodes || depth > FORMULA_LIMITS.depth) throw new Error('Fórmula excede limites de nós ou profundidade.');
+    if (node.op === 'call' && !Object.hasOwn(FUNCTIONS, node.name)) throw new Error(`Função desconhecida na fórmula: "${node.name}"`);
+    if (node.op === 'identifier') pathKeys(node.name);
+    for (const child of [node.left, node.right, typeof node.value === 'object' ? node.value : null, ...(node.args || [])]) {
+      if (child) pending.push({node: child, depth: depth + 1});
+    }
+  }
+  return ast;
+}
+
 /**
  * Avalia uma expressão de fórmula contra um escopo de variáveis.
  * scope = { vars: { nome: valor, ... }, data: objetoOpcionalParaCaminhosPontilhados }
@@ -203,8 +232,11 @@ const astCache = new Map();
 export function evaluate(expression, scope = {}) {
   let ast = astCache.get(expression);
   if (!ast) {
-    ast = new Parser(tokenize(expression)).parseExpression();
+    ast = validateFormula(expression);
+    if (astCache.size >= FORMULA_LIMITS.cache) astCache.delete(astCache.keys().next().value);
     astCache.set(expression, ast);
   }
-  return evalNode(ast, scope);
+  const result = evalNode(ast, { ...scope, operations: 0 });
+  if (typeof result !== 'boolean' && (typeof result !== 'number' || !Number.isFinite(result))) throw new Error('Fórmula deve produzir um número finito ou booleano.');
+  return result;
 }

@@ -2,6 +2,7 @@
 // Fonte única da verdade dos dados do personagem. Independente de HTML/CSS.
 // As chaves de atributos/perícias vêm do system.json carregado (engine/system.js),
 // não de uma lista fixa de D&D — outro sistema gera outra forma de personagem.
+import { getByPath, setByPath } from './engine/paths.js';
 import { createId } from './data.js';
 import { getSystem } from './engine/system.js';
 
@@ -32,17 +33,11 @@ class CharacterState {
   }
 
   getPath(path) {
-    return path.split('.').reduce((obj, key) => (obj == null ? undefined : obj[key]), this.character);
+    return getByPath(this.character, path);
   }
 
   setPath(path, value) {
-    const keys = path.split('.');
-    const last = keys.pop();
-    const target = keys.reduce((obj, key) => {
-      if (obj[key] == null) obj[key] = {};
-      return obj[key];
-    }, this.character);
-    target[last] = value;
+    setByPath(this.character, path, value);
     this.notify();
   }
 

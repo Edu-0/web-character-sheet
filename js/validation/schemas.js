@@ -1,3 +1,7 @@
+import { getByPath } from '../engine/paths.js';
+import { validateFormula } from '../engine/formula.js';
+import { inspectJson } from './limits.js';
+import { expandComponents } from '../engine/layout-components.js';
 const SCHEMA_VERSION = 1;
 
 export const KNOWN_COMPONENT_TYPES = new Set([
@@ -117,7 +121,8 @@ export function validateManifest(manifest) {
 }
 
 export function validateSystem(system) {
-  const issues = [];
+  const issues = inspectJson(system, 'system');
+  if (issues.length) return issues;
   if (!requireObject(system, 'system', issues)) return issues;
   validateVersion(system, 'system', issues);
   requireString(system.id, 'system.id', issues);
@@ -127,13 +132,15 @@ export function validateSystem(system) {
   if (system.formulas !== undefined && requireObject(system.formulas, 'system.formulas', issues)) {
     Object.entries(system.formulas).forEach(([key, formula]) => {
       if (typeof formula !== 'string' || formula.trim() === '') add(issues, `system.formulas.${key}`, 'deve ser uma fórmula não vazia');
+      else { try { validateFormula(formula); } catch (error) { add(issues, `system.formulas.${key}`, error.message); } }
     });
   }
   return issues;
 }
 
 export function validateLayout(layout, { system = null } = {}) {
-  const issues = [];
+  const issues = inspectJson(layout, 'layout');
+  if (issues.length) return issues;
   if (!requireObject(layout, 'layout', issues)) return issues;
   validateVersion(layout, 'layout', issues);
   requireString(layout.id, 'layout.id', issues);
@@ -184,6 +191,13 @@ function validateContainer(container, path, system, issues) {
   }
   if (requireArray(container.components, `${path}.components`, issues, { nonEmpty: true })) {
     container.components.forEach((component, index) => validateComponent(component, `${path}.components[${index}]`, system, issues));
+    if (system) {
+      try { expandComponents(container, system).forEach((component, index) => {
+        const safety = inspectJson(component, `${path}.expanded[${index}]`);
+        issues.push(...safety);
+        if (!safety.length && component.field) validateFieldValue(component.default ?? getByPath(system.characterTemplate, component.field), component, `${path}.expanded[${index}].field`, issues);
+      }); } catch (error) { add(issues, path, error.message); }
+    }
   }
 }
 
@@ -196,6 +210,15 @@ function validateComponent(component, path, system, issues) {
     return;
   }
   if (FIELD_COMPONENT_TYPES.has(component.type)) requireString(component.field, `${path}.field`, issues);
+  if (component.itemSchema !== undefined && requireObject(component.itemSchema, `${path}.itemSchema`, issues)) {
+    for (const [key, definition] of Object.entries(component.itemSchema)) {
+      const type = typeof definition === 'string' ? definition : definition?.type;
+      if (!['text', 'textarea', 'number', 'boolean', 'select', 'die', 'reference'].includes(type)) add(issues, `${path}.itemSchema.${key}.type`, 'tipo de campo de item desconhecido');
+      if (typeof definition !== 'string' && !isObject(definition)) add(issues, `${path}.itemSchema.${key}`, 'deve ser objeto ou nome de tipo');
+      if (isObject(definition)) validateFieldValue(definition.default, definition, `${path}.itemSchema.${key}.default`, issues);
+    }
+  }
+  if (component.options !== undefined && !Array.isArray(component.options)) add(issues, `${path}.options`, 'deve ser uma lista');
   if (['pointBudget', 'repertoire', 'techniqueUse'].includes(component.type)) {
     if (requireString(component.configFrom, `${path}.configFrom`, issues) && system) {
       const config = readConfig(system, component.configFrom);
@@ -221,7 +244,7 @@ function validateComponent(component, path, system, issues) {
   if (component.type === 'inventorySummary') ['weightField', 'quantityField', 'strengthField', 'multiplierField'].forEach((key) => requireString(component[key], `${path}.${key}`, issues));
   if (component.type === 'computed') {
     requireString(component.formula, `${path}.formula`, issues);
-    if (system && component.formula && !system.formulas?.[component.formula]) {
+    if (system && component.formula && !Object.hasOwn(system.formulas || {}, component.formula)) {
       add(issues, `${path}.formula`, `fórmula "${component.formula}" não existe em system.formulas`, 'unknown-formula');
     }
   }
@@ -255,16 +278,22 @@ function validatePrintOptions(definition, path, issues, component = false) {
 }
 
 function readConfig(root, path) {
-  return path.split('.').reduce((value, key) => value?.[key], root);
+  try { return getByPath(root, path); } catch { return undefined; }
 }
 
 export function validateCharacter(character, { root = 'character', allowMissingId = false, expectedSystem = null } = {}) {
-  const issues = [];
+  const issues = inspectJson(character, root);
+  if (issues.length) return issues;
   if (!requireObject(character, root, issues)) return issues;
   validateVersion(character, root, issues);
   if (!requireObject(character.meta, `${root}.meta`, issues)) return issues;
   if (!allowMissingId) requireString(character.meta.id, `${root}.meta.id`, issues);
+  if (character.meta.id === 'index') add(issues, `${root}.meta.id`, 'ID reservado ao índice da biblioteca');
   requireString(character.meta.system, `${root}.meta.system`, issues);
+  for (const [path, value] of [['name', character.name], ['identity.name', character.identity?.name]]) {
+    if (value !== undefined && typeof value !== 'string') add(issues, `${root}.${path}`, 'deve ser texto');
+  }
+  for (const key of ['createdAt', 'updatedAt']) if (character.meta[key] !== undefined && (typeof character.meta[key] !== 'string' || !Number.isFinite(Date.parse(character.meta[key])))) add(issues, `${root}.meta.${key}`, 'deve ser uma data válida');
   if (expectedSystem && character.meta.system !== expectedSystem) {
     add(issues, `${root}.meta.system`, `deve ser "${expectedSystem}"`, 'system-mismatch');
   }
@@ -272,7 +301,8 @@ export function validateCharacter(character, { root = 'character', allowMissingI
 }
 
 export function validateSystemPackage(pkg) {
-  const issues = [];
+  const issues = inspectJson(pkg, 'package');
+  if (issues.length) return issues;
   if (!requireObject(pkg, 'package', issues)) return issues;
   validateVersion(pkg, 'package', issues);
   if (pkg.kind !== 'rpg-system-package') add(issues, 'package.kind', 'deve ser "rpg-system-package"');
@@ -288,4 +318,37 @@ export function assertValid(value, validator, label) {
   const issues = validator(value);
   if (issues.length) throw new SchemaValidationError(label, issues);
   return value;
+}
+
+function validateFieldValue(value, definition, path, issues) {
+  if (value == null) return;
+  const type = typeof definition === 'string' ? definition : definition.type;
+  if (['text', 'textarea', 'image'].includes(type) && typeof value !== 'string') add(issues, path, 'deve ser texto');
+  if (['number', 'counter', 'dndAbility'].includes(type) && (typeof value !== 'number' || !Number.isFinite(value))) add(issues, path, 'deve ser número finito');
+  if (['boolean', 'dndSkill'].includes(type) && typeof value !== 'boolean') add(issues, path, 'deve ser booleano');
+  if (type === 'select' && !['string', 'number', 'boolean'].includes(typeof value)) add(issues, path, 'deve ser um valor simples de seleção');
+  if (['list', 'table', 'stateList', 'tagList', 'slotTracker'].includes(type)) {
+    if (!Array.isArray(value)) { add(issues, path, 'deve ser lista'); return; }
+    value.forEach((item, i) => {
+      if (type === 'tagList') { if (typeof item !== 'string') add(issues, `${path}[${i}]`, 'deve ser texto'); return; }
+      if (definition.textEntryField && typeof item === 'string') return;
+      if (!requireObject(item, `${path}[${i}]`, issues)) return;
+      for (const key of ['name', 'label']) if (item[key] !== undefined && typeof item[key] !== 'string') add(issues, `${path}[${i}].${key}`, 'deve ser texto');
+      Object.entries(definition.itemSchema || {}).forEach(([key, field]) => validateFieldValue(item[key], field, `${path}[${i}].${key}`, issues));
+    });
+  }
+  if (['resource', 'skillCatalog', 'traitAllocation'].includes(type)) requireObject(value, path, issues);
+  if (type === 'resource' && isObject(value)) for (const key of ['current', 'max']) if (value[key] !== undefined && (typeof value[key] !== 'number' || !Number.isFinite(value[key]))) add(issues, `${path}.${key}`, 'deve ser número finito');
+}
+
+export function validateCharacterForPackage(character, pkg) {
+  const issues = validateCharacter(character, {expectedSystem: pkg.system.id});
+  if (issues.length) return issues;
+  for (const layout of pkg.layouts) for (const tab of layout.tabs) for (const section of tab.sections) for (const container of section.containers) {
+    for (const component of expandComponents(container, pkg.system)) if (component.field) {
+      try { validateFieldValue(getByPath(character, component.field), component, `character.${component.field}`, issues); }
+      catch (error) { add(issues, `character.${component.field}`, error.message); }
+    }
+  }
+  return issues;
 }

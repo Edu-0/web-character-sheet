@@ -1,3 +1,5 @@
+import { readJson, writeJson } from '../persistence.js';
+import { LIMITS, readJsonFile } from '../validation/limits.js';
 import { assertValid, validateManifest, validateSystemPackage } from '../validation/schemas.js';
 
 const MANIFEST_URL = './data/systems/index.json';
@@ -17,24 +19,18 @@ async function fetchJson(url, label) {
 }
 
 function loadImportedSystems() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(IMPORTED_SYSTEMS_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+  return readJson(IMPORTED_SYSTEMS_KEY, [], value => Array.isArray(value) && value.every(pkg => validateSystemPackage(pkg).length === 0));
 }
 
-function persistImportedSystems() {
-  localStorage.setItem(IMPORTED_SYSTEMS_KEY, JSON.stringify(importedSystems));
-}
+export function importedPackages() { return clone(importedSystems); }
+export function importedSystemsChange(packages) { return [IMPORTED_SYSTEMS_KEY, JSON.stringify(packages)]; }
+export function reloadImportedSystems() { importedSystems = loadImportedSystems(); }
 
 export async function initSystemRepository() {
   const manifest = await fetchJson(MANIFEST_URL, 'o manifesto de sistemas');
   assertValid(manifest, validateManifest, 'manifest');
   manifestSystems = manifest.systems.map((entry) => ({ ...entry, source: 'builtin' }));
-  importedSystems = loadImportedSystems().filter((pkg) => validateSystemPackage(pkg).length === 0);
-  persistImportedSystems();
+  importedSystems = loadImportedSystems();
   return listSystems();
 }
 
@@ -76,20 +72,16 @@ export async function getSystemPackage(id) {
   );
 }
 
-export async function importSystemPackage(file) {
-  let pkg;
-  try {
-    pkg = JSON.parse(await file.text());
-  } catch {
-    throw new Error('O arquivo do sistema não contém JSON válido.');
-  }
+export async function importSystemPackage(file, { replace = false } = {}) {
+  const pkg = await readJsonFile(file, LIMITS.systemBytes, 'package');
   assertValid(pkg, validateSystemPackage, 'pacote de sistema');
   if (manifestSystems.some((entry) => entry.id === pkg.system.id)) {
     throw new Error(`O ID "${pkg.system.id}" pertence a um sistema embutido.`);
   }
-  importedSystems = importedSystems.filter((item) => item.system.id !== pkg.system.id);
-  importedSystems.push(clone(pkg));
-  persistImportedSystems();
+  if (!replace && importedSystems.some(item => item.system.id === pkg.system.id)) { const error = new Error('Já existe um sistema com este ID. Confirme a substituição.'); error.code = 'system-conflict'; throw error; }
+  const next = [...importedSystems.filter(item => item.system.id !== pkg.system.id), clone(pkg)];
+  writeJson(IMPORTED_SYSTEMS_KEY, next);
+  importedSystems = next;
   return clone(pkg);
 }
 

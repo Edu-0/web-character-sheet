@@ -39,7 +39,7 @@ export function getResourceDef(key) {
 }
 
 export function getFormula(key) {
-  return currentSystem?.formulas?.[key];
+  return Object.hasOwn(currentSystem?.formulas || {}, key) ? currentSystem.formulas[key] : undefined;
 }
 
 /**

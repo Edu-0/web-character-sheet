@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.js';
 // dice-pool-test.js
 // Prova real de generalidade: monta Pools, resolve Ápice/Base/Peso/Potência,
 // calcula Dificuldade e resolve com d20 — tudo através dos módulos genéricos do
@@ -33,14 +34,14 @@ function renderCharacterSummary() {
   const attrs = Object.entries(character.attributes).map(([k, v]) => `${labelFor(k)}: d${v}`).join(' · ');
   const skills = Object.entries(character.skills).map(([k, v]) => `${k}: d${v}`).join(' · ');
   el.innerHTML = `
-    <p><strong>${character.name}</strong> — ${character.origin}</p>
-    <p>Atributos: ${attrs}</p>
-    <p>Dado de Existência: d${character.existenceDie}</p>
-    <p>Perícias: ${skills}</p>
-    <p>Especializações: ${character.specializations.map((s) => `${s.name} (d${s.die})`).join(', ')}</p>
-    <p>Essências: ${character.essences.map((e) => `${e.name} (d${e.die})`).join(', ')}</p>
-    <p>Técnicas: ${character.techniques.map((t) => `${t.name} (d${t.currentDie})`).join(', ')}</p>
-    <p>Energia: ${character.resources.energy.current}/${character.resources.energy.max} · RA: ${character.resources.actionResource.current}</p>
+    <p><strong>${escapeHtml(character.name)}</strong> — ${escapeHtml(character.origin)}</p>
+    <p>Atributos: ${escapeHtml(attrs)}</p>
+    <p>Dado de Existência: d${escapeHtml(character.existenceDie)}</p>
+    <p>Perícias: ${escapeHtml(skills)}</p>
+    <p>Especializações: ${escapeHtml(character.specializations.map((s) => `${s.name} (d${s.die})`).join(', '))}</p>
+    <p>Essências: ${escapeHtml(character.essences.map((e) => `${e.name} (d${e.die})`).join(', '))}</p>
+    <p>Técnicas: ${escapeHtml(character.techniques.map((t) => `${t.name} (d${t.currentDie})`).join(', '))}</p>
+    <p>Energia: ${escapeHtml(character.resources.energy.current)}/${escapeHtml(character.resources.energy.max)} · RA: ${escapeHtml(character.resources.actionResource.current)}</p>
   `;
 }
 
@@ -103,7 +104,7 @@ function renderPoolResult(poolResult, containerId) {
     let badge = '';
     if (poolResult.apex === r) badge = '<span class="result-badge apex">Ápice</span>';
     else if (poolResult.base === r) badge = '<span class="result-badge base">Base</span>';
-    return `<li>${r.label || r.source} — d${r.sides}${r.composite ? ' (Composto)' : ''} = ${r.result} ${badge}</li>`;
+    return `<li>${escapeHtml(r.label || r.source)} — d${escapeHtml(r.sides)}${r.composite ? ' (Composto)' : ''} = ${escapeHtml(r.result)} ${badge}</li>`;
   }).join('');
   el.innerHTML = `
     <ul>${rollsHtml}</ul>
@@ -136,7 +137,7 @@ function wireButtons() {
       return;
     }
     const options = potencyOptions(lastActorPoolResult, system.dieScale[0]);
-    const selectHtml = options.map((o) => `<option value="${o.sides}">d${o.sides}${o.source ? ` (${o.source})` : ' (forçado)'}</option>`).join('');
+    const selectHtml = options.map((o) => `<option value="${o.sides}">d${o.sides}${o.source ? ` (${escapeHtml(o.source)})` : ' (forçado)'}</option>`).join('');
     el.innerHTML += `<label class="field"><span>Potência</span><select id="potency-choice">${selectHtml}</select></label>`;
   });
 
@@ -158,7 +159,7 @@ function wireButtons() {
       const oppRolls = resolve({ type: 'dicePool', dice: preset.dice.map((s) => ({ sides: s })) });
       const oppPool = resolvePool(oppRolls.rolls.map((r) => ({ ...r, source: 'opposition' })));
       opponentWeight = oppPool.weight;
-      oppositionDetail = `${preset.label}: rolagens [${oppRolls.rolls.map((r) => r.result).join(', ')}] → Peso ${opponentWeight}`;
+      oppositionDetail = `${escapeHtml(preset.label)}: rolagens [${oppRolls.rolls.map((r) => r.result).join(', ')}] → Peso ${opponentWeight}`;
     } else {
       resultEl.innerHTML = '<p>Escolha um preset de oposição ou informe um peso manual.</p>';
       return;
@@ -196,7 +197,7 @@ function wireButtons() {
       `Ápice: ${result.apex.source} (d${result.apex.sides}) = ${result.apex.result}\n` +
       `Base: ${result.base.source} (d${result.base.sides}) = ${result.base.result}\n` +
       `Peso: ${result.weight}\n` +
-      `Restante para Potência: ${result.remaining.map((r) => `${r.source} (d${r.sides})`).join(', ')}`;
+      `Restante para Potência: ${result.remaining.map((r) => `${r.source} (d${escapeHtml(r.sides)})`).join(', ')}`;
   });
 
   document.getElementById('btn-empty-pool').addEventListener('click', () => {
@@ -219,6 +220,6 @@ function wireButtons() {
 }
 
 main().catch((err) => {
-  document.body.insertAdjacentHTML('afterbegin', `<p style="color:red">Erro: ${err.message}</p>`);
+  const message = document.createElement('p'); message.textContent = `Erro: ${err.message}`; message.style.color = 'red'; document.body.prepend(message);
   console.error(err);
 });

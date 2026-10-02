@@ -1,3 +1,4 @@
+import { getByPath } from '../engine/paths.js';
 // Destinos da busca para a apresentação estática; o índice é o mesmo da modular.
 import { highlightSearchTarget } from '../engine/search.js';
 
@@ -22,7 +23,7 @@ export function revealDndSearchResult(entry, character, controller) {
       const filter = document.getElementById('inventory-search');
       if (filter.value) { filter.value = ''; filter.dispatchEvent(new Event('input', { bubbles: true })); }
     }
-    const item = component.field.split('.').reduce((data, key) => data?.[key], character)?.[entry.itemIndex];
+    const item = getByPath(character, component.field)?.[entry.itemIndex];
     target = item?.id ? [...collection.querySelectorAll('[data-id]')].find((node) => node.dataset.id === item.id) : collection.children[entry.itemIndex];
     target ||= collection;
     if (target.matches('details')) target.open = true;

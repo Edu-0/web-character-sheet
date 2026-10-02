@@ -94,7 +94,7 @@ registerFieldType('pointBudget', {
       compositionField.hidden = die.value !== 'composite';
       cost.disabled = source.value === 'narrative';
       let suggested = item ? stepCost(item.die, chosenValue(), context.system.dieScale || [], item.costs) : null;
-      if (item && traitDice(item.die).length > 1 && getByPath(context.character, config.postAscension?.enabledField || '') && config.postAscension?.formulaFrom) {
+      if (item && traitDice(item.die).length > 1 && (config.postAscension?.enabledField && getByPath(context.character, config.postAscension.enabledField)) && config.postAscension?.formulaFrom) {
         const previous = pointBudget(context.character, context.system, config).history.filter((event) => event.targetKey === item.key && traitDice(event.from).length > 1).length;
         suggested = evaluate(getByPath(context.system, config.postAscension.formulaFrom), { vars: { n: previous + 1 } });
       }

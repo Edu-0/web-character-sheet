@@ -1,3 +1,12 @@
+.library-backup-controls {
+  margin-block: var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-panel-alt);
+}
+.library-backup-controls p { overflow-wrap: anywhere; }
+
 /* engine-shell.css — Fase 1: shell global da aplicação.
    Prefixo shell-* para não interferir na ficha D&D legada. */
 

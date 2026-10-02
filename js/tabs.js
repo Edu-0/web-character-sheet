@@ -1,3 +1,4 @@
+import { readRaw, tryWriteJson } from './persistence.js';
 // tabs.js
 // Navegação entre seções (abas) da ficha, acessível via teclado.
 export function initTabs(root = document, { initialTabId = null, onChange } = {}) {
@@ -16,7 +17,7 @@ export function initTabs(root = document, { initialTabId = null, onChange } = {}
       panels[i]?.toggleAttribute('hidden', !selected);
     });
     if (focus) tabs[index].focus();
-    localStorage.setItem('ficha-rpg:last-tab', tabs[index].id);
+    tryWriteJson('ficha-rpg:last-tab', tabs[index].id);
     onChange?.(tabs[index].id.replace(/^tab-/, ''));
   }
 
@@ -41,7 +42,8 @@ export function initTabs(root = document, { initialTabId = null, onChange } = {}
     });
   });
 
-  const lastTabId = localStorage.getItem('ficha-rpg:last-tab');
+  let lastTabId;
+  try { const raw = readRaw('ficha-rpg:last-tab'); lastTabId = raw?.startsWith('\"') ? JSON.parse(raw) : raw; } catch { lastTabId = null; }
   const requestedId = initialTabId ? `tab-${initialTabId}` : lastTabId;
   const restoreIndex = tabs.findIndex((t) => t.id === requestedId);
   activate(restoreIndex >= 0 ? restoreIndex : 0, { focus: false });

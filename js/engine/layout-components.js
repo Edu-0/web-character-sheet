@@ -1,12 +1,13 @@
+import { pathKeys } from './paths.js';
 // Expansão compartilhada pela renderização e pelo índice de busca.
 export function resolveSource(root, path) {
   if (!root || !path) return [];
   let values = [root];
-  path.replace(/^system\./, '').split('.').forEach((segment) => {
+  pathKeys(path.replace(/^system\./, ''), { source: true }).forEach((segment) => {
     const flatten = segment.endsWith('[]');
     const key = flatten ? segment.slice(0, -2) : segment;
     values = values.flatMap((value) => {
-      const next = value?.[key];
+      const next = value != null && Object.hasOwn(Object(value), key) ? value[key] : undefined;
       if (next == null) return [];
       return flatten && Array.isArray(next) ? next : [next];
     });
@@ -23,6 +24,7 @@ function interpolate(value, context) {
 
 export function expandComponents(container, system) {
   const items = container.repeat ? resolveSource(system, container.repeat.source) : [null];
+  if (items.length * (container.components || []).length > 10000) throw new Error('Expansão de componentes excede 10000 entradas.');
   return items.flatMap((item, index) => {
     const context = item && typeof item === 'object' ? { index, ...item } : { index, key: item, name: item, label: item, value: item };
     return (container.components || []).map((definition) => {
@@ -33,6 +35,7 @@ export function expandComponents(container, system) {
           return { value: option.value ?? option.id ?? option.key ?? optionIndex, label: option.label ?? option.name ?? (option.points != null ? `${option.points} pontos` : String(option.id ?? optionIndex + 1)) };
         });
       }
+      if (component.field) pathKeys(component.field);
       return component;
     });
   });

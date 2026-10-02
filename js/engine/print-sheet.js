@@ -1,3 +1,4 @@
+import { safeImageSource } from '../images.js';
 // Documento de leitura independente de abas, filtros e apresentação da tela.
 import { getFieldType } from './fields.js';
 import { getByPath } from './paths.js';
@@ -28,7 +29,7 @@ export function buildPrintSheet(layout, source, system, appearance = {}) {
     if (printOptions(section, profile).include === false) continue;
     for (const container of section.containers || []) for (const component of expand(container)) {
       if (component.itemSchema && component.field) collectionSchemas.set(component.field, { ...collectionSchemas.get(component.field), ...component.itemSchema });
-      if (!portraitField && component.type === 'image' && getByPath(character, component.field)) portraitField = component.field;
+      if (!portraitField && component.type === 'image' && safeImageSource(getByPath(character, component.field))) portraitField = component.field;
     }
   }
   const document = node('article', 'print-sheet');
@@ -41,7 +42,7 @@ export function buildPrintSheet(layout, source, system, appearance = {}) {
   header.append(heading);
   if (portraitField) {
     const portrait = node('img', 'print-heading__portrait');
-    portrait.src = getByPath(character, portraitField); portrait.alt = 'Retrato do personagem';
+    portrait.src = safeImageSource(getByPath(character, portraitField)); portrait.alt = 'Retrato do personagem';
     header.append(portrait);
   }
   if (appearance.artwork?.enabled && appearance.artwork.selected.length) {
@@ -102,15 +103,15 @@ function field(label, value, definition, context) {
 
 function printComponent(context) {
   const { type, character, system, label, itemSchema } = context;
-  const value = getByPath(character, context.field || '');
+  const value = getByPath(character, context.field);
   const custom = getFieldType(type)?.print;
   if (custom) return custom(context);
   if (type === 'poolBuilder' || type === 'traitAllocation') return null;
   if (type === 'computed' && context.mode === 'roll') return field(label, 'Rolagem sob demanda', {}, context);
   if (type === 'image') {
-    if (!value) return field(label, 'Sem retrato', {}, context);
+    if (!safeImageSource(value)) return field(label, 'Sem retrato', {}, context);
     const wrap = node('figure', 'print-portrait');
-    const img = node('img'); img.src = value; img.alt = label || 'Retrato';
+    const img = node('img'); img.src = safeImageSource(value); img.alt = label || 'Retrato';
     wrap.append(img); return wrap;
   }
   if (type === 'skillCatalog') {
