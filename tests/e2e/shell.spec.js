@@ -61,10 +61,10 @@ test('preserva interações centrais da ficha D&D', async ({ page }) => {
   await page.getByRole('tab', { name: 'Magias' }).click();
   const firstSlot = page.locator('.spell-slot-row').first();
   await firstSlot.locator('[data-el="max"]').fill('2');
-  await firstSlot.locator('[data-action="increment"]').click();
-  await expect(firstSlot.locator('[data-el="count"]')).toHaveText('1 / 2');
   await firstSlot.locator('[data-action="decrement"]').click();
-  await expect(firstSlot.locator('[data-el="count"]')).toHaveText('0 / 2');
+  await expect(firstSlot.locator('[data-el="count"]')).toHaveText('1 / 2');
+  await firstSlot.locator('[data-action="increment"]').click();
+  await expect(firstSlot.locator('[data-el="count"]')).toHaveText('2 / 2');
 
   await page.locator('#btn-dice-toggle').click();
   await page.getByRole('button', { name: 'd20', exact: true }).click();

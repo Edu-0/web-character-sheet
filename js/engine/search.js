@@ -30,7 +30,7 @@ function defaultEntries(component, character, system) {
     ];
   }
   if (component.type === 'tagList' && Array.isArray(value)) return [{ label, value: value.join(', ') || '—' }, ...value.map((item) => ({ label: String(item), value: label }))];
-  if (component.type === 'slotTracker' && Array.isArray(value)) return value.map((slot, itemIndex) => ({ label: `${label} · Nível ${slot.level}`, value: `${slot.used ?? 0} / ${slot.max ?? 0} usados`, itemIndex }));
+  if (component.type === 'slotTracker' && Array.isArray(value)) return value.map((slot, itemIndex) => ({ label: `${label} · Nível ${slot.level}`, value: `${component.display === 'remaining' ? Math.max(0, (slot.max ?? 0) - (slot.used ?? 0)) : slot.used ?? 0} / ${slot.max ?? 0} ${component.display === 'remaining' ? 'disponíveis' : 'usados'}`, itemIndex }));
   return [{ label, value: formatSearchValue(value ?? component.default ?? (['number', 'counter'].includes(component.type) ? 0 : undefined), component, { character, system }) }];
 }
 

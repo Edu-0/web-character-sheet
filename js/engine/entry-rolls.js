@@ -110,7 +110,7 @@ export function openEntryRollPanel(context, config, trigger) {
     extra.placeholder = 'Ex.: 1d6 · vazio se não houver aumento';
   } else if (config.scale?.noScaleHelp) content.append(node('p', config.scale.noScaleHelp));
   const resource = config.resource && (!config.resource.matchField || scaling) ? config.resource : null;
-  if (resource) consume = input(resource.label || 'Consumir recurso', 'checkbox');
+  if (resource && !resource.consumeField) consume = input(resource.label || 'Consumir recurso', 'checkbox');
   const preview = node('output'); preview.className = 'source-roll-preview'; preview.setAttribute('aria-label', 'Prévia da rolagem');
   const resourceStatus = node('p'); resourceStatus.className = 'source-roll-resource-status';
   const error = node('p'); error.className = 'source-roll-error'; error.setAttribute('role', 'alert');
@@ -182,7 +182,8 @@ export function openEntryRollPanel(context, config, trigger) {
     { label: 'Salvar configuração', className: 'button button--ghost', closeOnClick: false, onClick: () => run(() => { validate(); save(); result.textContent = 'Configuração salva.'; }) },
     { label: config.submitLabel || 'Rolar', className: 'button button--primary', closeOnClick: false, onClick: () => run(() => {
       const expressions = validate();
-      const payment = consume?.checked ? cost() : null;
+      const shouldConsume = resource?.consumeField ? getByPath(character, resource.consumeField) === true : consume?.checked;
+      const payment = shouldConsume ? cost() : null;
       payment?.apply(); save();
       if (expressions.check) showRoll(expressions.check, checkConfig.label || 'Teste');
       else if (expressions.effect) showRoll(expressions.effect, config.effect?.resultLabel || 'Dano/efeito');

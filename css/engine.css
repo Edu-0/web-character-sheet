@@ -1082,6 +1082,12 @@
   display: none;
 }
 
+.engine-sheet--reference .engine-slots--remaining .engine-slots__label {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: normal;
+}
+
 @container (max-width: 900px) {
   .engine-sheet--reference .engine-panel--identity {
     grid-template-columns: minmax(0, 1fr);

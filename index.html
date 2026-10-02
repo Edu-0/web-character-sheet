@@ -338,6 +338,8 @@
 
       <div class="card">
         <h2 class="card__title">Espaços de Magia</h2>
+        <p>Espaços disponíveis por nível</p>
+        <label class="field field--checkbox"><span>Consumir espaço ao lançar magia</span><input type="checkbox" data-bind="spellcasting.consumeSlots" /></label>
         <div class="spell-slots" id="spell-slots"></div>
       </div>
 
@@ -604,9 +606,9 @@
 <template id="tpl-spell-slot-row">
   <div class="spell-slot-row">
     <span class="spell-slot-row__label" data-el="label"></span>
-    <button type="button" class="icon-button" data-action="decrement" aria-label="Reduzir espaços usados"></button>
+    <button type="button" class="icon-button" data-action="decrement" aria-label="Reduzir espaços disponíveis"></button>
     <span class="spell-slot-row__count" data-el="count">0 / 0</span>
-    <button type="button" class="icon-button" data-action="increment" aria-label="Aumentar espaços usados"></button>
+    <button type="button" class="icon-button" data-action="increment" aria-label="Aumentar espaços disponíveis"></button>
     <label class="field field--inline"><span>Máx.</span><input type="number" min="0" class="input--narrow" data-el="max" /></label>
   </div>
 </template>

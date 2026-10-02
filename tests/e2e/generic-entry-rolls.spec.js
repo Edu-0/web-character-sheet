@@ -22,6 +22,28 @@ async function open(page, label = 'Ativar poder') {
 }
 const energy = page => page.evaluate(async () => (await import('/js/state.js')).state.get().energy);
 
+test('consumo compartilhado pode ser configurado em outro campo do sistema sem controle na entrada', async ({ page }) => {
+  const pkg = structuredClone(fixture);
+  pkg.system.characterTemplate.consumeEnergy = false;
+  pkg.system.entryRolls.power.resource.consumeField = 'consumeEnergy';
+  pkg.layouts[0].tabs[0].sections[0].containers[0].components.unshift({ type: 'boolean', field: 'consumeEnergy', label: 'Gastar energia ao ativar poderes' });
+  await importFixture(page, pkg);
+  await page.getByLabel('Gastar energia ao ativar poderes').check();
+  let dialog = await open(page);
+  await expect(dialog.getByLabel('Consumir energia')).toHaveCount(0);
+  await dialog.getByRole('button', { name: 'Ativar', exact: true }).click();
+  expect(await energy(page)).toBe(3);
+  await dialog.getByRole('button', { name: 'Rolar dano / efeito' }).click();
+  expect(await energy(page)).toBe(3);
+  await page.keyboard.press('Escape');
+  await page.reload();
+  await expect(page.getByLabel('Gastar energia ao ativar poderes')).toBeChecked();
+  await page.getByLabel('Gastar energia ao ativar poderes').uncheck();
+  dialog = await open(page);
+  await dialog.getByRole('button', { name: 'Ativar', exact: true }).click();
+  expect(await energy(page)).toBe(3);
+});
+
 test('terceiro sistema usa 2d6, fórmula da ficha, dados editáveis e modificador manual', async ({ page }) => {
   const pkg = structuredClone(fixture);
   pkg.system.entryRolls.skillCheck.check.modifier.overrideKey = 'computed.checkBonus';
@@ -209,6 +231,8 @@ test('contratos rejeitam configurações malformadas e caminhos inseguros', asyn
       value => { value.system.entryRolls.power.scale.step = 0; },
       value => { value.system.entryRolls.power.resource.field = '__proto__.bad'; },
       value => { value.system.entryRolls.power.resource.cost = { value: -1 }; },
+      value => { value.system.entryRolls.power.resource.consumeField = 'constructor.bad'; },
+      value => { value.system.entryRolls.power.resource.consumeField = 'energy'; },
       value => { value.system.entryRolls.power.resource.mode = 'unknown'; },
       value => { value.system.entryRolls.power.scale.base = { field: 'energy', itemField: 'grade' }; },
       value => { value.system.entryRolls.power.scale.base = { formula: 'missing' }; },

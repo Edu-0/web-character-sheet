@@ -365,7 +365,10 @@
                 {
                   "type": "slotTracker",
                   "field": "spellcasting.slots",
-                  "label": "Espaços por nível"
+                  "label": "Espaços disponíveis por nível",
+                  "display": "remaining",
+                  "consumeField": "spellcasting.consumeSlots",
+                  "consumeLabel": "Consumir espaço ao lançar magia"
                 }
               ]
             }

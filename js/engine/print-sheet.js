@@ -136,7 +136,7 @@ function printComponent(context) {
     const wrap = node('div', 'print-wide');
     wrap.append(node('h4', '', label));
     const group = node('div', 'print-fields');
-    for (const slot of value || []) group.append(field(`Nível ${slot.level}`, `${slot.used ?? 0} / ${slot.max ?? 0} usados`, {}, context));
+    for (const slot of value || []) group.append(field(`Nível ${slot.level}`, `${context.display === 'remaining' ? Math.max(0, (slot.max ?? 0) - (slot.used ?? 0)) : slot.used ?? 0} / ${slot.max ?? 0} ${context.display === 'remaining' ? 'disponíveis' : 'usados'}`, {}, context));
     wrap.append(group); return wrap;
   }
   if (type === 'actionGroup') {

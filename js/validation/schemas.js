@@ -219,6 +219,14 @@ function validateComponent(component, path, system, issues) {
       if (system && !Object.hasOwn(system.entryRolls || {}, rollPreset)) add(issues, `${path}.rollPreset`, 'configuração de rolagem inexistente no sistema');
     }
   } else if (component.rollPreset !== undefined || component.rollConfigFrom !== undefined) add(issues, `${path}.rollPreset`, 'exige entryAction: roll');
+  if (component.type === 'slotTracker') {
+    if (component.display !== undefined && !['used', 'remaining'].includes(component.display)) add(issues, `${path}.display`, 'use used ou remaining');
+    if (component.consumeField !== undefined) {
+      try { pathKeys(component.consumeField); } catch (error) { add(issues, `${path}.consumeField`, error.message); }
+      if (system) { try { validateFieldValue(getByPath(system.characterTemplate, component.consumeField), 'boolean', `${path}.consumeField`, issues); } catch {} }
+    }
+    if (component.consumeLabel !== undefined) requireString(component.consumeLabel, `${path}.consumeLabel`, issues);
+  }
   if (system && component.stepControls === true) validateStepScale(system, `${path}.stepControls`, issues);
   if (!requireString(component.type, `${path}.type`, issues)) return;
   if (!KNOWN_COMPONENT_TYPES.has(component.type)) {
@@ -381,9 +389,16 @@ export function validateCharacterForPackage(character, pkg) {
   if (issues.length) return issues;
   for (const layout of pkg.layouts) for (const tab of layout.tabs) for (const section of tab.sections) for (const container of section.containers) {
     for (const component of expandComponents(container, pkg.system)) if (component.field) {
-      try { validateFieldValue(getByPath(character, component.field), component, `character.${component.field}`, issues); }
+      try {
+        validateFieldValue(getByPath(character, component.field), component, `character.${component.field}`, issues);
+        if (component.type === 'slotTracker' && component.consumeField) validateFieldValue(getByPath(character, component.consumeField), 'boolean', `character.${component.consumeField}`, issues);
+      }
       catch (error) { add(issues, `character.${component.field}`, error.message); }
     }
+  }
+  for (const config of Object.values(pkg.system.entryRolls || {})) if (config.resource?.consumeField) {
+    try { validateFieldValue(getByPath(character, config.resource.consumeField), 'boolean', `character.${config.resource.consumeField}`, issues); }
+    catch (error) { add(issues, `character.${config.resource.consumeField}`, error.message); }
   }
   return issues;
 }

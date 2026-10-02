@@ -172,7 +172,17 @@ registerFieldType('computed', {
 
 registerFieldType('slotTracker', {
   render(container, context) {
-    const wrap = fieldBlock(context.label, 'engine-slots');
+    const remaining = context.display === 'remaining';
+    const wrap = fieldBlock(context.label, remaining ? 'engine-slots engine-slots--remaining' : 'engine-slots');
+    if (context.consumeField) {
+      const label = element('label', 'field field--checkbox');
+      const toggle = document.createElement('input'); toggle.type = 'checkbox';
+      toggle.checked = getByPath(context.character, context.consumeField) === true;
+      context.registerRefresh?.(() => { toggle.checked = getByPath(context.character, context.consumeField) === true; });
+      label.append(element('span', '', context.consumeLabel || 'Consumir recurso ao usar uma ação'), toggle);
+      toggle.addEventListener('change', () => { setByPath(context.character, context.consumeField, toggle.checked); context.onChange?.(); });
+      wrap.append(label);
+    }
     const list = element('div', 'engine-slots__grid');
     const slots = ensureArray(context.character, context.field);
     slots.forEach((slot) => {
@@ -180,10 +190,10 @@ registerFieldType('slotTracker', {
       const top = element('div', 'engine-slot__top');
       const label = element('span', 'engine-slot__label', context.levelLabel?.replace('{level}', slot.level) || `Nível ${slot.level}`);
       const decrement = buttonElement('−', 'engine-counter__button');
-      decrement.setAttribute('aria-label', `Reduzir usos do nível ${slot.level}`);
+      decrement.setAttribute('aria-label', `${remaining ? 'Reduzir espaços disponíveis' : 'Reduzir usos'} do nível ${slot.level}`);
       const count = element('span', 'engine-slot__count');
       const increment = buttonElement('+', 'engine-counter__button');
-      increment.setAttribute('aria-label', `Aumentar usos do nível ${slot.level}`);
+      increment.setAttribute('aria-label', `${remaining ? 'Aumentar espaços disponíveis' : 'Aumentar usos'} do nível ${slot.level}`);
       const maximum = document.createElement('input');
       maximum.type = 'number';
       maximum.min = '0';
@@ -191,14 +201,14 @@ registerFieldType('slotTracker', {
       maximum.value = slot.max ?? 0;
       const maxRow = element('label', 'engine-slot__maximum');
       maxRow.append(element('span', '', 'Máx.'), maximum);
-      const refresh = () => { count.textContent = `${slot.used ?? 0} / ${slot.max ?? 0}`; };
+      const refresh = () => { count.textContent = `${remaining ? Math.max(0, (slot.max ?? 0) - (slot.used ?? 0)) : slot.used ?? 0} / ${slot.max ?? 0}`; };
       decrement.addEventListener('click', () => {
-        slot.used = Math.max(0, Number(slot.used || 0) - 1);
+        slot.used = remaining ? Math.min(Number(slot.max || 0), Number(slot.used || 0) + 1) : Math.max(0, Number(slot.used || 0) - 1);
         refresh();
         context.onChange?.();
       });
       increment.addEventListener('click', () => {
-        slot.used = Math.min(Number(slot.max || 0), Number(slot.used || 0) + 1);
+        slot.used = remaining ? Math.max(0, Number(slot.used || 0) - 1) : Math.min(Number(slot.max || 0), Number(slot.used || 0) + 1);
         refresh();
         context.onChange?.();
       });
@@ -208,6 +218,7 @@ registerFieldType('slotTracker', {
         refresh();
         context.onChange?.();
       });
+      context.registerRefresh?.(refresh);
       refresh();
       top.append(label, decrement, count, increment);
       row.append(top, maxRow);

@@ -1,4 +1,4 @@
-import { pathKeys } from '../engine/paths.js';
+import { pathKeys, getByPath } from '../engine/paths.js';
 import { parseDiceExpression } from '../engine/dice-expression.js';
 
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -68,12 +68,16 @@ export function validateEntryRolls(definitions, system, issues) {
       const step = scale.step ?? 1;
       if (!Number.isInteger(scale.min) || scale.min < 0 || !Number.isInteger(scale.max) || scale.max > 1000 || scale.max < scale.min || !Number.isInteger(step) || step < 1 || (scale.max - scale.min) % step !== 0 || (scale.max - scale.min) / step > 100) add(issues, `${label}.scale`, 'escala inteira de 0 a 1000, passo positivo e até 101 opções, com extremos alinhados');
     }
-    if (config.resource !== undefined && keys(config.resource, ['field', 'mode', 'matchField', 'valueField', 'maxField', 'cost', 'label', 'statusLabel', 'unavailableMessage'], `${label}.resource`, issues)) {
+    if (config.resource !== undefined && keys(config.resource, ['field', 'mode', 'matchField', 'valueField', 'maxField', 'cost', 'label', 'statusLabel', 'unavailableMessage', 'consumeField'], `${label}.resource`, issues)) {
       const resource = config.resource;
       labels(resource, ['label', 'statusLabel', 'unavailableMessage'], `${label}.resource`, issues);
       path(resource.field, `${label}.resource.field`, issues);
       if (!['remaining', 'used'].includes(resource.mode)) add(issues, `${label}.resource.mode`, 'use remaining ou used');
-      for (const key of ['matchField', 'valueField', 'maxField']) if (key in resource) path(resource[key], `${label}.resource.${key}`, issues);
+      for (const key of ['matchField', 'valueField', 'maxField', 'consumeField']) if (key in resource) path(resource[key], `${label}.resource.${key}`, issues);
+      if (system && resource.consumeField) {
+        let value; try { value = getByPath(system.characterTemplate, resource.consumeField); } catch {}
+        if (value !== undefined && typeof value !== 'boolean') add(issues, `${label}.resource.consumeField`, 'deve apontar para um booleano');
+      }
       if (resource.mode === 'used' && !resource.maxField) add(issues, `${label}.resource.maxField`, 'obrigatório em used');
       if (resource.matchField && (!resource.valueField || !config.scale)) add(issues, `${label}.resource`, 'recurso em lista exige valueField e scale');
       if (resource.valueField && !resource.matchField) add(issues, `${label}.resource.valueField`, 'exige matchField');

@@ -52,6 +52,10 @@ O personagem precisa fornecer os campos usados, como `expertise` e `techniques`.
 
 A ação principal rola o teste quando marcado; caso contrário, rola o efeito ou registra a ação sem dados. O botão de efeito é separado: não consome recurso. Salvar configuração também não rola nem consome. Recursos começam desmarcados; dados, limites e disponibilidade são conferidos antes do gasto.
 
+Para controlar o consumo junto dos recursos gerais, configure `resource.consumeField` com o caminho de um booleano do personagem. O painel lê esse campo ao executar a ação e deixa de oferecer a marcação por entrada. Um componente `boolean` pode editar essa preferência; `slotTracker` também aceita `consumeField` e `consumeLabel` para exibi-la junto dos contadores. Sem `consumeField`, o painel conserva a marcação local. O campo ausente equivale a desligado; a preferência definida acompanha JSON e backup.
+
+`slotTracker.display: "remaining"` mostra `max - used` disponíveis e faz os botões −/+ diminuir/aumentar a disponibilidade. O padrão `"used"` continua mostrando usos. Os dados salvos mantêm `used` e `max` nos dois modos. D&D usa espaços disponíveis e a preferência compartilhada **Consumir espaço ao lançar magia** nos cards gerais; cada magia escolhe o nível do espaço, sem um contador próprio.
+
 ## Fontes de valores
 
 Escolha **uma origem** em cada fonte:

@@ -149,6 +149,7 @@
     },
     "spellcasting": {
       "ability": "",
+      "consumeSlots": false,
       "slots": [
         {
           "level": 1,
@@ -449,6 +450,7 @@
       },
       "resource": {
         "field": "spellcasting.slots",
+        "consumeField": "spellcasting.consumeSlots",
         "matchField": "level",
         "valueField": "used",
         "maxField": "max",
@@ -458,7 +460,7 @@
         },
         "label": "Consumir espaço escolhido",
         "statusLabel": "Espaços disponíveis",
-        "unavailableMessage": "Não há espaço disponível nesse nível. Escolha outro nível ou desmarque o consumo."
+        "unavailableMessage": "Não há espaço disponível nesse nível. Escolha outro nível ou desative o consumo nos cards de espaços."
       },
       "info": [
         {

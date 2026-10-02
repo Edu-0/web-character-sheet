@@ -85,7 +85,7 @@ test('modular oferece perícias, espaços de magia e rolagens funcionais', async
   await expect(page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden]) .engine-dnd-derived__value').first()).toHaveText('13');
   const slot = page.locator('#generic-sheet-host .engine-slot').first();
   await slot.getByRole('spinbutton', { name: 'Máximo do nível 1' }).fill('2');
-  await slot.getByRole('button', { name: 'Aumentar usos do nível 1' }).click();
+  await slot.getByRole('button', { name: 'Reduzir espaços disponíveis do nível 1' }).click();
   await expect(slot.locator('.engine-slot__count')).toHaveText('1 / 2');
 });
 

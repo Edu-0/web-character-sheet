@@ -306,7 +306,7 @@ export function buildSpellSlots(character) {
     const maxInput = node.querySelector('[data-el="max"]');
     maxInput.value = slot.max;
     const refreshCount = () => {
-      node.querySelector('[data-el="count"]').textContent = `${slot.used} / ${slot.max}`;
+      node.querySelector('[data-el="count"]').textContent = `${Math.max(0, slot.max - slot.used)} / ${slot.max}`;
       maxInput.value = slot.max;
     };
     maxInput.addEventListener('input', () => {
@@ -316,14 +316,14 @@ export function buildSpellSlots(character) {
       state.notify();
     });
     node.querySelector('[data-action="decrement"]').addEventListener('click', () => {
-      if (slot.used > 0) {
-        character.spellcasting.slots[index].used -= 1;
+      if (slot.used < slot.max) {
+        character.spellcasting.slots[index].used += 1;
         state.notify();
       }
     });
     node.querySelector('[data-action="increment"]').addEventListener('click', () => {
-      if (slot.used < slot.max) {
-        character.spellcasting.slots[index].used += 1;
+      if (slot.used > 0) {
+        character.spellcasting.slots[index].used -= 1;
         state.notify();
       }
     });
@@ -338,7 +338,7 @@ export function refreshSpellSlots(character) {
   character.spellcasting.slots.forEach((slot, index) => {
     const node = rows[index];
     if (!node) return;
-    node.querySelector('[data-el="count"]').textContent = `${slot.used} / ${slot.max}`;
+    node.querySelector('[data-el="count"]').textContent = `${Math.max(0, slot.max - slot.used)} / ${slot.max}`;
   });
 }
 

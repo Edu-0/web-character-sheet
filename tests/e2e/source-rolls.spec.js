@@ -22,6 +22,46 @@ async function open(page, spell = true, host = '#generic-sheet-host') {
   return page.getByRole('dialog');
 }
 
+for (const presentation of ['Ficha modular', 'Ficha estática']) test(`espaços compartilhados atualizam nos cards ao lançar duas magias em ${presentation}`, async ({ page }) => {
+  await page.evaluate(async () => {
+    const { state } = await import('/js/state.js');
+    state.get().spellcasting.slots[0].max = 5;
+    state.get().spellcasting.slots[0].used = 2;
+    state.get().spellcasting.spells.push({ id: 'other', name: 'Outra magia', level: 1 });
+    state.notify();
+    (await import('/js/ui.js')).renderAll(state.get());
+  });
+  await page.getByRole('button', { name: 'Comparar lado a lado' }).click();
+  const host = presentation === 'Ficha modular' ? '#generic-sheet-host' : '#legacy-dnd-sheet';
+  await page.locator(host).getByRole('tab', { name: 'Magias', exact: true }).click();
+  const modular = page.locator('#generic-sheet-host .engine-slot__count').first();
+  const legacy = page.locator('#spell-slots [data-el="count"]').first();
+  await expect(modular).toHaveText('3 / 5'); await expect(legacy).toHaveText('3 / 5');
+  await page.locator(host).getByLabel('Consumir espaço ao lançar magia').check();
+  let dialog = await open(page, true, host);
+  await expect(dialog.getByLabel('Consumir espaço escolhido')).toHaveCount(0);
+  await expect(dialog.locator('.source-roll-resource-status')).toContainText('3 / 5');
+  await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
+  await expect(modular).toHaveText('2 / 5'); await expect(legacy).toHaveText('2 / 5');
+  await expect(dialog.locator('.source-roll-resource-status')).toContainText('2 / 5');
+  await page.keyboard.press('Escape');
+  const second = page.locator(`${host} ${host.includes('generic') ? '.engine-entry:visible' : '.entry-card:visible'}`).nth(1);
+  await second.locator('summary').click();
+  await second.getByRole('button', { name: 'Lançar', exact: true }).click();
+  dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
+  await expect(modular).toHaveText('1 / 5'); await expect(legacy).toHaveText('1 / 5');
+  await page.keyboard.press('Escape');
+  await page.locator(host).getByLabel('Consumir espaço ao lançar magia').uncheck();
+  dialog = await open(page, true, host);
+  await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
+  await expect(modular).toHaveText('1 / 5'); await expect(legacy).toHaveText('1 / 5');
+  await page.keyboard.press('Escape'); await page.reload();
+  await page.locator(host).getByRole('tab', { name: 'Magias', exact: true }).click();
+  await expect(modular).toHaveText('1 / 5'); await expect(legacy).toHaveText('1 / 5');
+  await expect(page.locator(host).getByLabel('Consumir espaço ao lançar magia')).not.toBeChecked();
+});
+
 test('ataque e dano separados, configuração persistida e sincronizada com a estática', async ({ page }) => {
   let dialog = await open(page, false);
   await expect(dialog.getByLabel('Prévia da rolagem')).toHaveText('Ataque: 1d20 + 5 · Dano/efeito: 1d12 + 3');
@@ -56,7 +96,7 @@ test('espaço maior altera prévia e dados; consumo opcional e bloqueio sem espa
   await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
   await expect(dialog.locator('.source-roll-result')).toContainText('5d6 + 4 = 24');
   await expect(dialog.locator('.source-roll-resource-status')).toContainText('1 / 1');
-  await dialog.getByLabel('Consumir espaço escolhido').check();
+  await page.evaluate(async () => (await import('/js/state.js')).state.setPath('spellcasting.consumeSlots', true));
   await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
   await expect(dialog.locator('.source-roll-resource-status')).toContainText('0 / 1');
   await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
@@ -69,7 +109,7 @@ test('espaço maior altera prévia e dados; consumo opcional e bloqueio sem espa
 
 test('magia sem dados lança sem histórico, pode consumir espaço, e truque não oferece espaços', async ({ page }) => {
   let dialog = await open(page);
-  await dialog.getByLabel('Consumir espaço escolhido').check();
+  await page.evaluate(async () => (await import('/js/state.js')).state.setPath('spellcasting.consumeSlots', true));
   await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
   await expect(dialog.locator('.source-roll-result')).toHaveText('Magia lançada sem rolagem.');
   await expect(page.locator('#dice-history li')).toHaveCount(0);
@@ -91,7 +131,7 @@ test('ataque mágico usa ajustes ativos; dados inválidos não consomem espaço 
   await dialog.getByLabel('Rolar ataque', { exact: true }).check();
   await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
   await expect(dialog.locator('.source-roll-result')).toContainText('1d20 + 7 = 18');
-  await dialog.getByLabel('Consumir espaço escolhido').check();
+  await page.evaluate(async () => (await import('/js/state.js')).state.setPath('spellcasting.consumeSlots', true));
   for (const expression of ['alert(1)', '101d6', '-1d6', '1d1', '1d6 +']) {
     await dialog.getByLabel('Dados de dano ou efeito').fill(expression);
     await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
