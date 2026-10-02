@@ -1,0 +1,15 @@
+# Texto consistente entre Windows, Linux e macOS.
+* text=auto eol=lf
+
+# Artefatos binários não devem passar por conversão de fim de linha.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.zip binary
