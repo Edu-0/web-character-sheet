@@ -109,3 +109,14 @@
 .sheet-heading--preview { margin: 0; border-radius: 0; padding: 12px; background: none; }
 .sheet-heading--preview .sheet-heading__text p { padding: 0; }
 .ornament-composition-preview .sheet-heading__art { height: auto; padding: 0; }
+
+.print-options { padding: 0; margin: auto; width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; color: var(--color-text); }
+.print-options::backdrop { background: rgba(10, 11, 14, .65); }
+.print-options__choices { border: 0; padding: 0; margin: 0; }
+.print-options__choices legend { font-weight: 600; margin-bottom: 12px; }
+.print-options__choices label { display: flex; gap: 12px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--color-border); border-radius: var(--radius-md); cursor: pointer; }
+.print-options__choices label:has(:checked) { border-color: var(--color-accent-strong); background: var(--color-computed-bg); }
+.print-options__choices input { align-self: flex-start; margin-top: 4px; }
+.print-options__choices strong, .print-options__choices small { display: block; }
+.print-options__choices small, #print-options-hint { color: var(--color-text-muted); font-size: 13px; line-height: 1.5; }
+#print-options-hint { margin: 12px 0 0; }

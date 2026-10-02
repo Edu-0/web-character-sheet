@@ -36,6 +36,7 @@
                 {
                   "type": "textarea",
                   "field": "description",
+                  "print": { "compact": { "include": false } },
                   "label": "Descrição"
                 },
                 {
@@ -452,6 +453,7 @@
                 {
                   "type": "list",
                   "field": "techniques",
+                  "print": { "compact": { "fields": ["name", "maxDie", "currentDie", "energyCost", "concentration"], "presentation": "table" } },
                   "label": "Técnicas",
                   "itemSchema": {
                     "name": {
@@ -635,6 +637,7 @@
                   "type": "table",
                   "field": "inventory",
                   "label": "Armas, Armaduras e Equipamentos",
+                  "print": { "compact": { "fields": ["name", "die", "quantity", "weight", "carried"], "presentation": "table" } },
                   "searchable": true,
                   "itemSchema": {
                     "name": {
@@ -1121,6 +1124,7 @@
                   "type": "table",
                   "field": "inventory",
                   "label": "Inventário",
+                  "print": { "compact": { "fields": ["name", "die", "quantity", "weight", "carried"], "presentation": "table" } },
                   "searchable": true,
                   "itemSchema": {
                     "name": {
@@ -1204,6 +1208,7 @@
                 {
                   "type": "textarea",
                   "field": "notes",
+                  "print": { "compact": { "include": false } },
                   "label": "Notas"
                 }
               ]

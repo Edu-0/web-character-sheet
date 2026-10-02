@@ -76,6 +76,7 @@ test('impressão fora da ficha, repetição e edição anterior ao debounce pres
   }
   await page.evaluate(() => { window.print = () => { window.dispatchEvent(new Event('beforeprint')); window.dispatchEvent(new Event('afterprint')); }; });
   await page.locator('#btn-print').click();
+  await page.locator('#print-options').getByRole('button', { name: 'Imprimir / salvar PDF', exact: true }).click();
   await expect(page.locator('#print-root')).toBeEmpty();
 });
 

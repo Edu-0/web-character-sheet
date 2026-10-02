@@ -445,7 +445,6 @@ function wireToolbar() {
     event.target.value = '';
   });
 
-  $('btn-print').addEventListener('click', () => window.print());
 }
 
 function wirePortrait() {

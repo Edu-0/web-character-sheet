@@ -67,4 +67,16 @@
   #print-root tr { break-inside: avoid; }
   #print-root p, #print-root span { orphans: 3; widows: 3; }
   #print-root .dice-glyph { width: 1.4em; height: 1.4em; color: var(--paper-accent) !important; }
+  .print-sheet[data-print-profile='compact'] .print-heading { padding: 3mm; margin-bottom: 3mm; }
+  #print-root .print-sheet[data-print-profile='compact'] h1 { font-size: 20pt; }
+  .print-sheet[data-print-profile='compact'] .print-heading__portrait { width: 20mm; height: 24mm; }
+  .print-sheet[data-print-profile='compact'] .print-heading__art > div, .print-sheet[data-print-profile='compact'] .print-heading__art svg { height: 6mm; }
+  #print-root .print-sheet[data-print-profile='compact'] h2 { font-size: 14pt; padding: 1.5mm 2mm; margin-top: 3mm; }
+  .print-sheet[data-print-profile='compact'] .print-section { padding: 2mm; margin-bottom: 2mm; }
+  .print-sheet[data-print-profile='compact'] .print-field { padding: 1mm 1.5mm; margin-bottom: 1mm; }
+  .print-sheet[data-print-profile='compact'] .print-entry--compact .print-field { padding: .5mm 0; }
+  .print-sheet[data-print-profile='compact'] .print-long { padding: 1mm 0 1mm 2mm; }
+  .print-sheet[data-print-profile='compact'] .print-label { margin-bottom: .3mm; }
+  .print-section--inline .print-field, .print-fields--inline > .print-field { width: auto; min-width: 17%; margin: 0 2% 1mm 0; padding: 1mm 1.5mm; }
+  .print-section--inline .print-field > span:not(.print-label) { font-size: 11pt; }
 }

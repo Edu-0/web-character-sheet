@@ -598,6 +598,20 @@
   </span>
 </template>
 
+<dialog id="print-options" class="modal print-options" aria-labelledby="print-options-title" aria-describedby="print-options-hint">
+  <form id="print-options-form">
+    <div class="modal__header"><h2 id="print-options-title" class="modal__title">Imprimir / salvar PDF</h2></div>
+    <div class="modal__body">
+      <fieldset class="print-options__choices">
+        <legend>Formato da ficha</legend>
+        <label><input type="radio" name="print-profile" value="full" checked /><span><strong>Completo</strong><small>Todas as informações, descrições e registros.</small></span></label>
+        <label><input type="radio" name="print-profile" value="compact" /><span><strong>Compacto</strong><small>Consulta rápida, com resumos quando disponíveis. Seus dados permanecem na ficha.</small></span></label>
+      </fieldset>
+      <p id="print-options-hint">Ctrl/Cmd+P usa o último formato escolhido. O padrão é Completo.</p>
+    </div>
+    <div class="modal__footer"><button type="button" id="print-options-cancel" class="button button--ghost">Cancelar</button><button type="submit" class="button button--primary">Imprimir / salvar PDF</button></div>
+  </form>
+</dialog>
 <script type="module" src="js/app.js"></script>
 </body>
 </html>

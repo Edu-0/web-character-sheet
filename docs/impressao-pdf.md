@@ -4,11 +4,13 @@ Implementado e verificado em 1º–2 de outubro de 2026, conforme as etapas 0–
 
 ## Uso
 
-Use **Imprimir / PDF** (em **Mais** nas telas de até 900 px), ou o comando de impressão do navegador, inclusive Ctrl/Cmd+P. Escolha A4, escala 100% e salvar como PDF. Desative os cabeçalhos/rodapés automáticos do navegador para não acrescentar data e URL. Fundos podem ficar desligados. O aplicativo não baixa um PDF automaticamente.
+Use **Imprimir / PDF** (em **Mais** nas telas de até 900 px) e escolha **Completo** ou **Compacto** antes de abrir a impressão do navegador. Completo inclui todas as informações; Compacto é uma versão de consulta com os resumos disponíveis. Confirmar lembra o formato em `ficha-rpg:settings.printProfile`, preservando as outras preferências. Cancelar essa escolha não grava nada. Ctrl/Cmd+P e o comando nativo usam o último formato confirmado; sem escolha anterior, usam Completo.
 
-A impressão contém o personagem aberto, mesmo quando a tela atual é Configurações ou uma biblioteca. Abas, filtros de inventário, busca e cartões recolhidos não limitam o documento. As apresentações D&D estática, modular e comparação produzem a mesma ficha de leitura, uma única vez. Sem personagem aberto, aparece apenas essa informação.
+Escolha A4, escala 100% e salvar como PDF. Desative os cabeçalhos/rodapés automáticos do navegador para não acrescentar data e URL. Fundos podem ficar desligados. O aplicativo não baixa um PDF automaticamente.
 
-Os valores são os atuais em memória, inclusive antes do debounce de salvamento. Preparar, cancelar ou repetir a impressão não salva alterações, não muda a navegação, não rola dados e não cobra custos. Exportar JSON continua sendo o backup completo e reimportável; PDF é uma apresentação para leitura.
+A impressão contém o personagem aberto, mesmo quando a tela atual é Configurações ou uma biblioteca. Abas, filtros de inventário, busca e cartões recolhidos não limitam o documento. As apresentações D&D estática, modular e comparação produzem o mesmo documento para o formato escolhido, uma única vez. Sem personagem aberto, aparece apenas essa informação. O Compacto identifica a versão de consulta no cabeçalho e no rodapé; não promete conter todos os detalhes do Completo.
+
+Os valores são os atuais em memória, inclusive antes do debounce de salvamento. Preparar, cancelar ou repetir a impressão não altera o personagem, não muda a navegação, não rola dados e não cobra custos. A preferência de formato só muda ao confirmar a escolha no aplicativo. Exportar JSON continua sendo o backup completo e reimportável; PDF é uma apresentação para leitura.
 
 ## Contrato de conteúdo
 
@@ -21,7 +23,11 @@ Os valores são os atuais em memória, inclusive antes do debounce de salvamento
 - Uma coleção vinculada ao mesmo campo em várias abas é impressa uma vez, com a união dos campos de seus esquemas. No autoral, isso reúne Equipamentos e Inventário sem perder Descrição.
 - Tabelas de até seis colunas e células curtas mantêm cabeçalho repetido. Coleções largas ou células extensas viram registros. Registros curtos ficam juntos; registros longos podem continuar por várias páginas.
 
-Componentes novos podem implementar `print(context)` no registro de campos, retornando um nó de leitura ou `null` para um componente exclusivamente operacional. O método deve ser determinístico e não executar ações nem alterar estado global. Campos de dados básicos têm formato genérico; um componente com mecânica nova precisa definir sua saída legível.
+Componentes novos podem implementar `print(context)` no registro de campos, retornando um nó de leitura ou `null` para um componente exclusivamente operacional. O contexto inclui `printProfile` (`full` ou `compact`) e `printPresentation`. O método deve ser determinístico e não executar ações nem alterar estado global. Campos de dados básicos têm formato genérico; um componente com mecânica nova precisa definir sua saída legível.
+
+## Resumos configuráveis
+
+A configuração pertence ao layout, em `print.compact`. Não há testes de ID de sistema, nomes de abas ou caminhos de magias/moedas no gerador. Consulte [perfis de impressão](perfis-impressao.md) para o contrato, exemplos e verificações. Sem metadados, Compacto conserva o conteúdo e aplica apenas menor espaçamento. O perfil Completo ignora as omissões e projeções do compacto.
 
 ## Papel e identidade visual
 

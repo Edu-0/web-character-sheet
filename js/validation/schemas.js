@@ -160,6 +160,7 @@ function validateTab(tab, tabIndex, system, issues) {
 
 function validateSection(section, path, system, issues) {
   if (!requireObject(section, path, issues)) return;
+  validatePrintOptions(section, path, issues);
   requireString(section.id, `${path}.id`, issues);
   if (requireArray(section.containers, `${path}.containers`, issues, { nonEmpty: true })) {
     validateUniqueIds(section.containers, `${path}.containers`, issues);
@@ -169,6 +170,7 @@ function validateSection(section, path, system, issues) {
 
 function validateContainer(container, path, system, issues) {
   if (!requireObject(container, path, issues)) return;
+  validatePrintOptions(container, path, issues);
   if (container.id !== undefined) requireString(container.id, `${path}.id`, issues);
   if (container.layout !== undefined && requireObject(container.layout, `${path}.layout`, issues)) {
     const allowed = new Set(['grid', 'flex', 'stack']);
@@ -187,6 +189,7 @@ function validateContainer(container, path, system, issues) {
 
 function validateComponent(component, path, system, issues) {
   if (!requireObject(component, path, issues)) return;
+  validatePrintOptions(component, path, issues, true);
   if (!requireString(component.type, `${path}.type`, issues)) return;
   if (!KNOWN_COMPONENT_TYPES.has(component.type)) {
     add(issues, path, `tipo "${component.type}" desconhecido`, 'unknown-component');
@@ -220,6 +223,33 @@ function validateComponent(component, path, system, issues) {
     requireString(component.formula, `${path}.formula`, issues);
     if (system && component.formula && !system.formulas?.[component.formula]) {
       add(issues, `${path}.formula`, `fórmula "${component.formula}" não existe em system.formulas`, 'unknown-formula');
+    }
+  }
+}
+
+function validatePrintOptions(definition, path, issues, component = false) {
+  if (definition.print === undefined) return;
+  if (!requireObject(definition.print, `${path}.print`, issues)) return;
+  for (const key of Object.keys(definition.print)) if (key !== 'compact') add(issues, `${path}.print.${key}`, 'perfil desconhecido');
+  const options = definition.print.compact;
+  if (options === undefined || !requireObject(options, `${path}.print.compact`, issues)) return;
+  const optionPath = `${path}.print.compact`;
+  for (const key of Object.keys(options)) if (!['include', 'fields', 'presentation'].includes(key)) add(issues, `${optionPath}.${key}`, 'opção desconhecida');
+  if (options.include !== undefined && typeof options.include !== 'boolean') add(issues, `${optionPath}.include`, 'deve ser booleano');
+  if (options.presentation !== undefined) {
+    const allowed = component && definition.itemSchema ? ['table', 'records'] : ['cards', 'inline'];
+    if (!allowed.includes(options.presentation)) add(issues, `${optionPath}.presentation`, `deve ser ${allowed.join(' ou ')}`);
+    if (component && !definition.itemSchema) add(issues, `${optionPath}.presentation`, 'configure a apresentação do grupo na seção ou container');
+  }
+  if (options.fields !== undefined) {
+    if (!component || !isObject(definition.itemSchema)) { add(issues, `${optionPath}.fields`, 'exige uma coleção com itemSchema'); return; }
+    if (requireArray(options.fields, `${optionPath}.fields`, issues, { nonEmpty: true })) {
+      const seen = new Set();
+      options.fields.forEach((key, i) => {
+        if (typeof key !== 'string' || !Object.hasOwn(definition.itemSchema, key)) add(issues, `${optionPath}.fields[${i}]`, 'campo ausente em itemSchema');
+        if (seen.has(key)) add(issues, `${optionPath}.fields[${i}]`, 'campo repetido');
+        seen.add(key);
+      });
     }
   }
 }

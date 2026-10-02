@@ -1,12 +1,12 @@
 // Documento de leitura independente de abas, filtros e apresentação da tela.
 import { getFieldType } from './fields.js';
-import { expandComponents } from './layout-components.js';
 import { getByPath } from './paths.js';
 import { traitDice } from './traits.js';
 import { createDiceLabel } from '../dice-display.js';
 import { formatFieldValue } from './value-format.js';
 import { createOrnament } from '../artwork.js';
 import { ORNAMENTS } from '../../assets/artwork/ornaments.js';
+import { normalizePrintProfile, printOptions, componentsForPrint } from './print-profile.js';
 
 const node = (tag, className = '', text) => {
   const el = document.createElement(tag);
@@ -16,22 +16,28 @@ const node = (tag, className = '', text) => {
 };
 
 export function buildPrintSheet(layout, source, system, appearance = {}) {
+  const profile = normalizePrintProfile(appearance.printProfile);
+  const expand = container => componentsForPrint(container, system, profile);
   // Componentes existentes podem normalizar defaults ao renderizar. A cópia nunca
   // é inscrita no estado, e nenhum callback de edição ou de rolagem é chamado.
   const character = structuredClone(source);
   const collectionSchemas = new Map();
   const printedCollections = new Set();
   let portraitField;
-  for (const tab of layout?.tabs || []) for (const section of tab.sections || []) for (const container of section.containers || []) for (const component of expandComponents(container, system)) {
-    if (component.itemSchema && component.field) collectionSchemas.set(component.field, { ...collectionSchemas.get(component.field), ...component.itemSchema });
-    if (!portraitField && component.type === 'image' && getByPath(character, component.field)) portraitField = component.field;
+  for (const tab of layout?.tabs || []) for (const section of tab.sections || []) {
+    if (printOptions(section, profile).include === false) continue;
+    for (const container of section.containers || []) for (const component of expand(container)) {
+      if (component.itemSchema && component.field) collectionSchemas.set(component.field, { ...collectionSchemas.get(component.field), ...component.itemSchema });
+      if (!portraitField && component.type === 'image' && getByPath(character, component.field)) portraitField = component.field;
+    }
   }
   const document = node('article', 'print-sheet');
   document.dataset.variant = layout?.variant || '';
+  document.dataset.printProfile = profile;
   const name = character.identity?.name?.trim() || character.name?.trim() || 'Personagem sem nome';
   const header = node('header', 'print-heading');
   const heading = node('div', 'print-heading__text');
-  heading.append(node('p', 'print-heading__system', system.name), node('h1', '', name), node('p', 'print-heading__caption', 'Ficha de personagem'));
+  heading.append(node('p', 'print-heading__system', system.name), node('h1', '', name), node('p', 'print-heading__caption', profile === 'compact' ? 'Ficha de personagem · Compacta — versão de consulta' : 'Ficha de personagem · Completa'));
   header.append(heading);
   if (portraitField) {
     const portrait = node('img', 'print-heading__portrait');
@@ -55,11 +61,14 @@ export function buildPrintSheet(layout, source, system, appearance = {}) {
     const chapter = node('section', 'print-chapter');
     chapter.append(node('h2', '', tab.label));
     for (const section of tab.sections || []) {
+      if (printOptions(section, profile).include === false) continue;
       const group = node('section', 'print-section');
+      if (printOptions(section, profile).presentation === 'inline') group.classList.add('print-section--inline');
       if (section.title) group.append(node('h3', '', section.title));
       const fields = node('div', 'print-fields');
       for (const container of section.containers || []) {
-        for (const component of expandComponents(container, system)) {
+        const target = printOptions(container, profile).presentation === 'inline' ? node('div', 'print-fields print-fields--inline') : fields;
+        for (const component of expand(container)) {
           if (component.type === 'image' && component.field === portraitField) continue;
           if (component.itemSchema && component.field) {
             if (printedCollections.has(component.field)) continue;
@@ -68,8 +77,9 @@ export function buildPrintSheet(layout, source, system, appearance = {}) {
           }
           const content = printComponent({ ...component, character, system });
           if (content) content.dataset.fieldType = component.type;
-          if (content) fields.append(content);
+          if (content) target.append(content);
         }
+        if (target !== fields && target.children.length) fields.append(target);
       }
       if (fields.children.length) { group.append(fields); chapter.append(group); }
     }
@@ -146,7 +156,7 @@ function collection(context, items) {
   const schema = Object.entries(context.itemSchema).map(([key, def]) => [key, typeof def === 'string' ? { type: def, label: key } : def]);
   // Tabelas estreitas com linhas curtas podem repetir cabeçalho. Tabelas largas
   // ou células extensas viram registros fluidos, sem fonte minúscula nem corte.
-  const tableSafe = context.type === 'table' && schema.length <= 6 && items.every(item => schema.every(([key]) => String(item[key] ?? '').length < 160));
+  const tableSafe = (context.printPresentation === 'table' || (context.type === 'table' && context.printPresentation !== 'records')) && schema.length <= 6 && items.every(item => schema.every(([key]) => String(item[key] ?? '').length < 160));
   if (tableSafe) {
     const table = node('table'); const head = node('thead'); const row = node('tr');
     schema.forEach(([key, def]) => row.append(node('th', '', def.label || key)));
@@ -161,7 +171,7 @@ function collection(context, items) {
   items.forEach((item, index) => {
     const entry = node('section', context.type === 'table' ? 'print-entry print-entry--compact' : 'print-entry');
     if (schema.length <= 15 && schema.reduce((length, [key]) => length + String(item[key] ?? '').length, 0) < 600) entry.classList.add('print-entry--short');
-    entry.append(node('h5', '', item.name || `Registro ${index + 1}`));
+    entry.append(node('h5', '', (schema.some(([key]) => key === 'name') && item.name) || `Registro ${index + 1}`));
     const fields = node('div', 'print-fields');
     schema.forEach(([key, def]) => {
       if (key === 'name') return;

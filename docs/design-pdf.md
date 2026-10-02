@@ -1,5 +1,7 @@
 # PDF com a identidade da ficha
 
+Este relatório registra a revisão anterior ao checkpoint `2249f83`. A implementação posterior de Completo/Compacto e suas verificações atuais estão em [perfis de impressão](perfis-impressao.md).
+
 Segunda revisão, em 2 de outubro de 2026, após o pedido do usuário para que o PDF deixasse a aparência de documento administrativo e herdasse o design da página. Substitui a decisão inicial de impressão monocromática sem ornamentos. O conteúdo continua independente da navegação, dos filtros e da apresentação D&D.
 
 ## Composição

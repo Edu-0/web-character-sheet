@@ -97,6 +97,7 @@ test('combinações, posição ocupada, intensidade e ativação preservam a fic
   await page.reload();
   await expect(page.locator('#sheet-ornaments')).toHaveAttribute('data-intensity', 'strong');
   expect((await preferences(page)).artwork.selected).toEqual(selected);
+  await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');
   await openRpg(page);
   await expect(page.locator('#sheet-ornaments svg')).toHaveCount(3);
   await expect(page.locator('html')).toHaveAttribute('data-dice-display', 'illustrated');

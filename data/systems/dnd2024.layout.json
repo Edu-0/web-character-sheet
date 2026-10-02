@@ -283,6 +283,7 @@
                 {
                   "type": "list",
                   "field": "features",
+                  "print": { "compact": { "fields": ["name", "source", "usesCurrent", "usesMax"], "presentation": "table" } },
                   "label": "Habilidades",
                   "toolbarTitle": true,
                   "heading": "Habilidades e Recursos",
@@ -384,6 +385,7 @@
                 {
                   "type": "list",
                   "field": "spellcasting.spells",
+                  "print": { "compact": { "fields": ["name", "level"], "presentation": "table" } },
                   "label": "Magias",
                   "toolbarTitle": true,
                   "defaultOpen": false,
@@ -414,6 +416,7 @@
       "sections": [
         {
           "id": "currency",
+          "print": { "compact": { "presentation": "inline" } },
           "title": "Moedas",
           "variant": "currency",
           "containers": [
@@ -472,6 +475,7 @@
                 {
                   "type": "table",
                   "field": "inventory.items",
+                  "print": { "compact": { "fields": ["name", "qty", "weight", "equipped"], "presentation": "table" } },
                   "label": "Itens",
                   "toolbarTitle": true,
                   "addLabel": "Adicionar Item",
@@ -558,6 +562,7 @@
                 {
                   "type": "textarea",
                   "field": "personality.backstory",
+                  "print": { "compact": { "include": false } },
                   "label": "História",
                   "variant": "hero",
                   "rows": 6
@@ -572,6 +577,7 @@
                 {
                   "type": "textarea",
                   "field": "personality.notes",
+                  "print": { "compact": { "include": false } },
                   "label": "Notas",
                   "variant": "hero",
                   "rows": 4

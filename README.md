@@ -20,7 +20,7 @@ Aplicação web para criar, preencher e organizar fichas de RPG de mesa. Uma eng
 - Paletas Clássico, Editorial, Floresta, Rubi, Preto e branco e Pétalas, cada uma com modo claro/escuro; responsividade e impressão pelo navegador, inclusive salvar como PDF.
 - Ornamentos opcionais de dados, botânicos e geométricos, com combinações, posições e intensidade; dados em texto ou vetores acompanhados de texto, independentes das cores.
 - Cabeçalho compacto com ações em **Mais** no celular; Configurações divididas em Cores, Dados e Ornamentos, com famílias recolhíveis e prévia.
-- [Impressão A4/PDF de leitura](docs/impressao-pdf.md), com a identidade da ficha adaptada para papel, paleta, cartões e ornamentos; inclui todas as abas e coleções do personagem atual, independente dos filtros e cartões recolhidos.
+- [Impressão A4/PDF](docs/impressao-pdf.md) em formatos Completo e Compacto, com a identidade da ficha adaptada para papel, paleta, cartões e ornamentos; os resumos são configuráveis por layout e não dependem dos filtros ou cartões recolhidos da tela.
 - Busca na ficha atual inteira, entre abas, com valores atuais, tolerância a erros de digitação e navegação até o campo.
 - Rolagens, fórmulas e assistência configuráveis conforme o sistema.
 - Persistência por `localStorage`, sem backend ou conta de usuário.
