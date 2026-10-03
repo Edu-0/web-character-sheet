@@ -18,6 +18,7 @@ Seu propósito é dar espaço a diferentes sistemas de RPG: desde uma ficha pree
 - **Ajuste os cálculos da mesa.** Em Configurações → **Edição da ficha**, ative **Mostrar controles de ajuste de cálculos** (ocultos por padrão). Em **Ajustar**, escolha um bônus/penalidade ou um valor fixo e volte ao automático quando quiser. Disponível nos resultados calculados, na carga e nos valores derivados de D&D.
 - **Assistência quando ela ajuda.** Cálculos, criação e evolução têm controles próprios nos sistemas compatíveis. Edição direta durante o jogo não cobra evolução automaticamente.
 - **Consulte também no celular.** Abas, cartões e tabelas se reorganizam para telas menores; as ações do cabeçalho ficam no menu **Mais**.
+- **Escolha a apresentação para a sessão.** Em **Layout da ficha**, alterne entre Padrão e **Modo mesa** nos sistemas embutidos. A versão de mesa reúne recursos, ações e consulta rápida com os mesmos dados. A escolha fica salva por sistema; campos fora dela continuam acessíveis pela busca e pelo layout completo.
 
 ## Uma ficha com a sua cara
 
@@ -74,7 +75,7 @@ O servidor é para desenvolvimento e serve o repositório inteiro. Não o exponh
 
 HTML, CSS e JavaScript com módulos ES, sem framework de interface. A engine declarativa separa **sistema** (dados e regras), **layout** (apresentação) e **personagem** (valores e escolhas). Sistemas usam JSONs distintos de layout e configuração, reunidos em pacotes `rpg-system-package` na importação/exportação, com `schemaVersion`.
 
-A implementação está em `js/engine/`, os repositórios em `js/repositories/` e os contratos em `js/validation/schemas.js`. Regras específicas permanecem em componentes próprios quando necessário. Não se promete representar qualquer livro só com JSON.
+A implementação está em `js/engine/`, os repositórios em `js/repositories/` e os contratos em `js/validation/schemas.js`. Regras específicas permanecem em componentes próprios quando necessário. Não se promete representar qualquer livro só com JSON. Pacotes podem oferecer vários layouts selecionáveis, com `name` opcional e `mode: "table"` para mesa; consulte o [contrato de layouts e modo mesa](data/examples/layouts.md).
 
 Listas podem habilitar o painel genérico com `entryAction: "roll"` e `rollPreset` apontando para uma configuração em `system.entryRolls`. Dados, modificadores por campo/fórmula, escala, textos e consumo opcional vêm do JSON. D&D usa o mesmo painel; somente seus derivados de conjuração têm um resolvedor específico. Consulte o [contrato e exemplo de rolagens configuráveis](data/examples/README.md). A bandeja de expressões atende todos os sistemas; `diceTray: false` a oculta.
 

@@ -7,6 +7,38 @@
 }
 .library-backup-controls p { overflow-wrap: anywhere; }
 
+.sheet-layout-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-3) var(--space-5);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+}
+.sheet-layout-controls label { font-weight: 600; }
+.sheet-layout-controls select { width: min(100%, 240px); min-height: 44px; }
+#sheet-layout-hint { flex: 1 1 260px; color: var(--color-text-muted); font-size: var(--fs-sm); }
+
+/* O layout de mesa mantém os componentes e alvos de toque da ficha completa. */
+[data-sheet-mode="table"] .engine-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+[data-sheet-mode="table"] .engine-section:has(.engine-collection, .engine-pool, .engine-technique-use, .engine-table) { grid-column: 1 / -1; }
+[data-sheet-mode="table"] .engine-sheet .engine-section--stat-strip,
+[data-sheet-mode="table"] .engine-sheet .engine-section--hp-strip { grid-column: 1 / -1; }
+[data-sheet-mode="table"] .engine-sheet .engine-section--recovery { grid-column: auto; }
+[data-sheet-mode="table"] .engine-section { min-width: 0; margin-bottom: 0; }
+
+@media (max-width: 700px) {
+  .sheet-layout-controls { margin-inline: var(--space-3); }
+  [data-sheet-mode="table"] .engine-panel { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* engine-shell.css — Fase 1: shell global da aplicação.
    Prefixo shell-* para não interferir na ficha D&D legada. */
 

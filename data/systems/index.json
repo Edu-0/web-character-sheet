@@ -6,7 +6,16 @@
       "name": "D&D 5e (2024)",
       "system": "./dnd2024.system.json",
       "layouts": [
-        { "id": "default", "name": "Padrão", "file": "./dnd2024.layout.json" }
+        {
+          "id": "default",
+          "name": "Padrão",
+          "file": "./dnd2024.layout.json"
+        },
+        {
+          "id": "dnd2024-table",
+          "name": "Modo mesa",
+          "file": "./dnd2024.table-layout.json"
+        }
       ]
     },
     {
@@ -14,7 +23,16 @@
       "name": "Sistema de RPG",
       "system": "./sistema-rpg.system.json",
       "layouts": [
-        { "id": "default", "name": "Padrão", "file": "./sistema-rpg.layout.json" }
+        {
+          "id": "default",
+          "name": "Padrão",
+          "file": "./sistema-rpg.layout.json"
+        },
+        {
+          "id": "sistema-rpg-table",
+          "name": "Modo mesa",
+          "file": "./sistema-rpg.table-layout.json"
+        }
       ]
     }
   ]

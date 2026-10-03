@@ -28,7 +28,7 @@ import './systems/dnd2024-fields.js';
 import { getAppState, setAppState, updateAppState, subscribeAppState } from './app-state.js';
 import { initAppearanceControls } from './appearance.js';
 import { initSheetSearch } from './sheet-search.js';
-import { buildSearchIndex } from './engine/search.js';
+import { preferredLayout, rememberLayout, layoutName, printLayout, layoutSearchIndex } from './sheet-layouts.js';
 import { revealDndSearchResult } from './systems/dnd2024-search.js';
 import { initArtworkControls, applyArtworkPreferences } from './artwork.js';
 import { createDiceLabel } from './dice-display.js';
@@ -39,6 +39,7 @@ const $ = (id) => document.getElementById(id);
 const DND_SYSTEM_ID = 'dnd2024';
 
 let activePackage = null;
+let activeLayout = null;
 let activeCharacterId = null;
 let saveTimeout = null;
 let unsavedCharacter = false;
@@ -87,13 +88,16 @@ async function init() {
   });
   initLegacyControls(session.activeTab);
   initPrinting(() => activePackage && getAppState().currentCharacter ? {
-    layout: activePackage.layouts[0], system: activePackage.system, character: state.get(),
+    layout: printLayout(activePackage, activeLayout), system: activePackage.system, character: state.get(),
   } : null);
   sheetSearch = initSheetSearch({
-    getIndex: () => activeCharacterId && activePackage ? buildSearchIndex(activePackage.layouts[0], state.get(), activePackage.system) : [],
+    getIndex: () => activeCharacterId && activePackage ? layoutSearchIndex(activePackage,
+      activePackage.system.id === DND_SYSTEM_ID && getAppState().ui.dndPresentation === 'legacy' ? activePackage.layouts[0] : activeLayout, state.get()) : [],
     onShortcut: () => setAppState('currentView', 'sheet'),
     onNavigate: (entry) => {
       if (!activeCharacterId || !getAppState().currentCharacter) return;
+      if (entry.layoutId !== activeLayout.id) selectSheetLayout(entry.layoutId, { preservePresentation: true });
+      if (activePackage.system.id === DND_SYSTEM_ID && entry.layoutId !== activePackage.layouts[0].id && getAppState().ui.dndPresentation === 'legacy') setAppState('ui.dndPresentation', 'engine');
       if (activePackage?.system.id === DND_SYSTEM_ID && getAppState().ui.dndPresentation === 'legacy') revealDndSearchResult(entry, state.get(), legacyTabsController);
       else genericSheetController?.revealSearchResult(entry);
     },
@@ -139,6 +143,7 @@ function initLegacyControls(initialTabId) {
 }
 
 function initShell() {
+  $('sheet-layout-select').addEventListener('change', event => selectSheetLayout(event.target.value));
   document.querySelectorAll('[data-app-view-target]').forEach((button) => {
     button.addEventListener('click', () => setAppState('currentView', button.dataset.appViewTarget));
   });
@@ -166,7 +171,9 @@ function renderShell(appState) {
   $('shell-current-character').textContent = appState.currentCharacter?.name || 'Sem personagem';
   $('sheet-heading-system').textContent = appState.currentSystem?.name || '';
   $('sheet-heading-name').textContent = appState.currentCharacter?.name || 'Sem personagem';
-  $('sheet-heading').dataset.variant = activePackage?.layouts[0]?.variant || '';
+  $('sheet-heading').dataset.variant = activeLayout?.variant || '';
+  $('sheet-layout-controls').hidden = !appState.currentCharacter;
+  $('sheet-layout-select').disabled = !appState.currentCharacter;
   $('btn-clear-character').disabled = !appState.currentCharacter;
   $('btn-save-character').disabled = !appState.currentCharacter;
   $('btn-export').disabled = !appState.currentCharacter;
@@ -183,8 +190,36 @@ async function activateSystem(systemId) {
 
 function useSystemPackage(pkg) {
   activePackage = pkg;
+  activeLayout = preferredLayout(pkg);
   setSystem(pkg.system);
-  setLayout(pkg.layouts[0] ?? null);
+  setLayout(activeLayout);
+  renderLayoutControls();
+}
+
+function renderLayoutControls() {
+  const select = $('sheet-layout-select');
+  select.replaceChildren(...activePackage.layouts.map(layout => {
+    const option = element('option', '', layoutName(layout));
+    option.value = layout.id;
+    return option;
+  }));
+  select.value = activeLayout.id;
+  $('view-sheet').dataset.sheetMode = activeLayout.mode || 'sheet';
+}
+
+function selectSheetLayout(id, { preservePresentation = false } = {}) {
+  const next = activePackage?.layouts.find(layout => layout.id === id);
+  if (!next) return;
+  genericSheetController?.destroy();
+  genericSheetController = null;
+  activeLayout = next;
+  setLayout(next);
+  rememberLayout(activePackage.system.id, next.id);
+  renderLayoutControls();
+  if (!preservePresentation && activePackage.system.id === DND_SYSTEM_ID && getAppState().ui.dndPresentation === 'legacy') setAppState('ui.dndPresentation', 'engine');
+  if (!genericSheetController && (activePackage.system.id !== DND_SYSTEM_ID || getAppState().ui.dndPresentation !== 'legacy')) renderGenericSheet(state.get());
+  renderShell(getAppState());
+  sheetSearch?.refresh();
 }
 
 async function openCharacter(id, { view = 'sheet' } = {}) {
@@ -250,6 +285,10 @@ function updateSheetPresentation() {
   if (!activePackage) return;
   const isDnd = activePackage.system.id === DND_SYSTEM_ID;
   const presentation = getAppState().ui.dndPresentation;
+  $('sheet-layout-hint').textContent = isDnd && presentation === 'legacy'
+    ? 'Escolher um layout abre a ficha modular.' : activeLayout.mode === 'table'
+      ? 'Recursos e ações para a sessão. Outros campos continuam na busca e no layout completo.'
+      : 'Todos os campos desta apresentação.';
   const compare = isDnd && presentation === 'compare';
   $('dnd-presentation-controls').hidden = !isDnd;
   $('legacy-dnd-sheet').hidden = !isDnd || presentation === 'engine';
@@ -272,7 +311,7 @@ function renderGenericSheet(character) {
   const host = $('generic-sheet-host');
   mountingGenericSheet = true;
   try {
-    genericSheetController = renderSheet(host, activePackage.layouts[0], character, {
+    genericSheetController = renderSheet(host, activeLayout, character, {
       showHeader: false,
       system: activePackage.system,
       initialTabId: getAppState().ui.activeTab,

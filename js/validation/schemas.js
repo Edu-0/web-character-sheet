@@ -153,6 +153,8 @@ export function validateLayout(layout, { system = null } = {}) {
   validateVersion(layout, 'layout', issues);
   requireString(layout.id, 'layout.id', issues);
   requireString(layout.system, 'layout.system', issues);
+  if (layout.name !== undefined) requireString(layout.name, 'layout.name', issues);
+  if (layout.mode !== undefined && !['sheet', 'table'].includes(layout.mode)) add(issues, 'layout.mode', 'deve ser sheet ou table');
   if (system && layout.system !== system.id) add(issues, 'layout.system', `deve corresponder ao sistema "${system.id}"`, 'system-mismatch');
 
   if (requireArray(layout.tabs, 'layout.tabs', issues, { nonEmpty: true })) {

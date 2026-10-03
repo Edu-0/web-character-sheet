@@ -1,0 +1,772 @@
+{
+  "schemaVersion": 1,
+  "id": "dnd2024-table",
+  "name": "Modo mesa",
+  "mode": "table",
+  "system": "dnd2024",
+  "variant": "reference",
+  "showHeader": false,
+  "description": "Recursos, ações e consulta rápida durante a sessão. Compartilha os dados com a ficha completa.",
+  "tabs": [
+    {
+      "id": "combat",
+      "label": "Em jogo",
+      "sections": [
+        {
+          "id": "vitals",
+          "variant": "stat-strip",
+          "containers": [
+            {
+              "id": "vitals-container",
+              "variant": "stat-strip",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "dndDerived",
+                  "stat": "proficiency",
+                  "label": "Proficiência"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.ac",
+                  "label": "CA"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "initiative",
+                  "label": "Iniciativa"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.speed",
+                  "label": "Deslocamento (m)"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "passivePerception",
+                  "label": "Percepção Passiva"
+                },
+                {
+                  "type": "boolean",
+                  "field": "identity.inspiration",
+                  "label": "Inspiração"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hit-points",
+          "variant": "hp-strip",
+          "containers": [
+            {
+              "id": "hit-points-container",
+              "variant": "hp-strip",
+              "layout": {
+                "type": "grid",
+                "min": 140,
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "number",
+                  "field": "combat.hpCurrent",
+                  "label": "PV Atual"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.hpMax",
+                  "label": "PV Máximo"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.hpTemp",
+                  "label": "PV Temporário"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.hitDice.used",
+                  "label": "Dados de Vida (usados)"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.hitDice.total",
+                  "label": "Dados de Vida (total)"
+                },
+                {
+                  "type": "select",
+                  "field": "combat.hitDice.die",
+                  "label": "Dado",
+                  "options": [
+                    "d6",
+                    "d8",
+                    "d10",
+                    "d12"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "recovery",
+          "title": "Descansos",
+          "variant": "recovery",
+          "print": {
+            "compact": {
+              "include": false
+            }
+          },
+          "containers": [
+            {
+              "id": "recovery-actions",
+              "components": [
+                {
+                  "type": "recoveryGroup",
+                  "actionsFrom": "recoveryActions",
+                  "historyField": "recovery.lastAction",
+                  "label": "Descansos"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "conditions",
+          "title": "Condições Ativas",
+          "containers": [
+            {
+              "id": "conditions-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "tagList",
+                  "field": "combat.conditions",
+                  "label": "Condições"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "attacks",
+          "title": "Ataques e Ações",
+          "variant": "toolbar",
+          "containers": [
+            {
+              "id": "attacks-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "combat.attacks",
+                  "entryAction": "roll",
+                  "rollPreset": "attack",
+                  "label": "Ataques",
+                  "toolbarTitle": true,
+                  "heading": "Ataques e Ações",
+                  "defaultOpen": false,
+                  "summaryFields": [
+                    "damage"
+                  ],
+                  "addLabel": "Adicionar Ataque",
+                  "emptyLabel": "Nenhum ataque cadastrado. Adicione ataques, feitiços de combate ou ações especiais.",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "bonus": {
+                      "type": "text",
+                      "label": "Bônus"
+                    },
+                    "damage": {
+                      "type": "text",
+                      "label": "Dano"
+                    },
+                    "damageType": {
+                      "type": "text",
+                      "label": "Tipo de dano"
+                    },
+                    "range": {
+                      "type": "text",
+                      "label": "Alcance"
+                    },
+                    "properties": {
+                      "type": "text",
+                      "label": "Propriedades"
+                    },
+                    "notes": {
+                      "type": "textarea",
+                      "label": "Notas"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "traits",
+      "label": "Traços",
+      "sections": [
+        {
+          "id": "abilities",
+          "title": "Atributos",
+          "variant": "traits",
+          "containers": [
+            {
+              "id": "abilities-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "repeat": {
+                "source": "system.abilities"
+              },
+              "components": [
+                {
+                  "type": "dndAbility",
+                  "field": "abilities.{key}.score",
+                  "key": "{key}",
+                  "label": "{label}",
+                  "short": "{short}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "skills",
+          "title": "Perícias",
+          "variant": "skills",
+          "containers": [
+            {
+              "id": "skills-container",
+              "variant": "skill-list",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "repeat": {
+                "source": "system.skills"
+              },
+              "components": [
+                {
+                  "type": "dndSkill",
+                  "field": "skills.{key}.proficient",
+                  "key": "{key}",
+                  "label": "{label}",
+                  "ability": "{ability}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "features",
+      "label": "Habilidades",
+      "sections": [
+        {
+          "id": "features-list",
+          "title": "Habilidades e Recursos",
+          "variant": "toolbar",
+          "containers": [
+            {
+              "id": "features-list-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "features",
+                  "print": {
+                    "compact": {
+                      "fields": [
+                        "name",
+                        "source",
+                        "usesCurrent",
+                        "usesMax"
+                      ],
+                      "presentation": "table"
+                    }
+                  },
+                  "label": "Habilidades",
+                  "toolbarTitle": true,
+                  "heading": "Habilidades e Recursos",
+                  "defaultOpen": false,
+                  "summaryFields": [
+                    "source"
+                  ],
+                  "reorderable": true,
+                  "addLabel": "Adicionar Habilidade",
+                  "emptyLabel": "Nenhuma habilidade cadastrada. Adicione características de classe, espécie, talentos e recursos.",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "source": {
+                      "type": "select",
+                      "label": "Origem",
+                      "options": [
+                        "Classe",
+                        "Espécie",
+                        "Talento",
+                        "Antecedente",
+                        "Recurso",
+                        "Outro"
+                      ],
+                      "default": "Classe"
+                    },
+                    "usesCurrent": {
+                      "type": "number",
+                      "label": "Usos Atuais"
+                    },
+                    "usesMax": {
+                      "type": "number",
+                      "label": "Usos Máximos"
+                    },
+                    "recoverOn": {
+                      "type": "select",
+                      "presentation": "checkboxes",
+                      "label": "Recuperar usos em",
+                      "options": [
+                        {
+                          "value": "",
+                          "label": "Ajuste manual"
+                        },
+                        {
+                          "value": "shortRest",
+                          "label": "Descanso curto ou longo"
+                        },
+                        {
+                          "value": "longRest",
+                          "label": "Somente descanso longo"
+                        }
+                      ]
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    },
+                    "notes": {
+                      "type": "textarea",
+                      "label": "Notas"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spells",
+      "label": "Magias",
+      "sections": [
+        {
+          "id": "spellcasting-summary",
+          "variant": "summary",
+          "containers": [
+            {
+              "id": "spellcasting-summary-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "select",
+                  "field": "spellcasting.ability",
+                  "label": "Atributo de Conjuração",
+                  "options": [
+                    {
+                      "value": "",
+                      "label": "Nenhum"
+                    },
+                    {
+                      "value": "int",
+                      "label": "Inteligência"
+                    },
+                    {
+                      "value": "wis",
+                      "label": "Sabedoria"
+                    },
+                    {
+                      "value": "cha",
+                      "label": "Carisma"
+                    }
+                  ]
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "spellSaveDC",
+                  "label": "CD de Magia"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "spellAttackBonus",
+                  "label": "Bônus de Ataque"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "spell-slots",
+          "title": "Espaços de Magia",
+          "containers": [
+            {
+              "id": "spell-slots-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "slotTracker",
+                  "field": "spellcasting.slots",
+                  "label": "Espaços disponíveis por nível",
+                  "display": "remaining",
+                  "consumeField": "spellcasting.consumeSlots",
+                  "consumeLabel": "Consumir espaço ao lançar magia"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "spell-list",
+          "title": "Magias",
+          "variant": "toolbar",
+          "containers": [
+            {
+              "id": "spell-list-container",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "spellcasting.spells",
+                  "entryAction": "roll",
+                  "rollPreset": "spell",
+                  "print": {
+                    "compact": {
+                      "fields": [
+                        "name",
+                        "level"
+                      ],
+                      "presentation": "table"
+                    }
+                  },
+                  "label": "Magias",
+                  "toolbarTitle": true,
+                  "defaultOpen": false,
+                  "summaryFields": [
+                    "level",
+                    "school"
+                  ],
+                  "addLabel": "Adicionar Magia",
+                  "emptyLabel": "Nenhuma magia cadastrada.",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "level": {
+                      "type": "select",
+                      "label": "Nível",
+                      "options": [
+                        {
+                          "value": 0,
+                          "label": "Truque"
+                        },
+                        {
+                          "value": 1,
+                          "label": "1º nível"
+                        },
+                        {
+                          "value": 2,
+                          "label": "2º nível"
+                        },
+                        {
+                          "value": 3,
+                          "label": "3º nível"
+                        },
+                        {
+                          "value": 4,
+                          "label": "4º nível"
+                        },
+                        {
+                          "value": 5,
+                          "label": "5º nível"
+                        },
+                        {
+                          "value": 6,
+                          "label": "6º nível"
+                        },
+                        {
+                          "value": 7,
+                          "label": "7º nível"
+                        },
+                        {
+                          "value": 8,
+                          "label": "8º nível"
+                        },
+                        {
+                          "value": 9,
+                          "label": "9º nível"
+                        }
+                      ],
+                      "default": 0,
+                      "valueType": "number"
+                    },
+                    "school": {
+                      "type": "text",
+                      "label": "Escola"
+                    },
+                    "prepared": {
+                      "type": "boolean",
+                      "label": "Preparada"
+                    },
+                    "castingTime": {
+                      "type": "text",
+                      "label": "Tempo de Conjuração"
+                    },
+                    "range": {
+                      "type": "text",
+                      "label": "Alcance"
+                    },
+                    "duration": {
+                      "type": "text",
+                      "label": "Duração"
+                    },
+                    "components": {
+                      "type": "text",
+                      "label": "Componentes"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inventory",
+      "label": "Inventário",
+      "sections": [
+        {
+          "id": "items",
+          "title": "Itens",
+          "variant": "items",
+          "containers": [
+            {
+              "id": "items-container",
+              "variant": "items",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "table",
+                  "field": "inventory.items",
+                  "print": {
+                    "compact": {
+                      "fields": [
+                        "name",
+                        "qty",
+                        "weight",
+                        "equipped"
+                      ],
+                      "presentation": "table"
+                    }
+                  },
+                  "label": "Itens",
+                  "toolbarTitle": true,
+                  "addLabel": "Adicionar Item",
+                  "removeLabel": "×",
+                  "emptyLabel": "Nenhum item no inventário.",
+                  "searchable": true,
+                  "searchLabel": "Pesquisar itens",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Item"
+                    },
+                    "qty": {
+                      "type": "number",
+                      "label": "Qtd",
+                      "default": 1
+                    },
+                    "weight": {
+                      "type": "number",
+                      "label": "Peso"
+                    },
+                    "value": {
+                      "type": "number",
+                      "label": "Valor"
+                    },
+                    "category": {
+                      "type": "select",
+                      "label": "Categoria",
+                      "options": [
+                        "Equipamento",
+                        "Arma",
+                        "Armadura",
+                        "Item Mágico",
+                        "Consumível",
+                        "Ferramenta",
+                        "Tesouro",
+                        "Outro"
+                      ],
+                      "default": "Equipamento"
+                    },
+                    "equipped": {
+                      "type": "boolean",
+                      "label": "Equipado"
+                    },
+                    "notes": {
+                      "type": "text",
+                      "label": "Notas"
+                    }
+                  }
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "totalInventoryWeight",
+                  "label": "Peso total",
+                  "variant": "inline"
+                },
+                {
+                  "type": "dndDerived",
+                  "stat": "carryCapacity",
+                  "label": "Capacidade de carga",
+                  "variant": "inline"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "currency",
+          "print": {
+            "compact": {
+              "presentation": "inline"
+            }
+          },
+          "title": "Moedas",
+          "variant": "currency",
+          "containers": [
+            {
+              "id": "currency-container",
+              "variant": "currency",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "number",
+                  "field": "inventory.currency.pp",
+                  "label": "PP"
+                },
+                {
+                  "type": "number",
+                  "field": "inventory.currency.gp",
+                  "label": "PO"
+                },
+                {
+                  "type": "number",
+                  "field": "inventory.currency.ep",
+                  "label": "PE"
+                },
+                {
+                  "type": "number",
+                  "field": "inventory.currency.sp",
+                  "label": "PP (prata)"
+                },
+                {
+                  "type": "number",
+                  "field": "inventory.currency.cp",
+                  "label": "PC"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notas",
+      "sections": [
+        {
+          "id": "personality-fields",
+          "variant": "bare-grid",
+          "containers": [
+            {
+              "id": "personality-fields-container",
+              "variant": "two-column",
+              "layout": {
+                "type": "grid",
+                "min": "min(100%, 220px)",
+                "gap": 16
+              },
+              "components": [
+                {
+                  "type": "textarea",
+                  "field": "personality.notes",
+                  "print": {
+                    "compact": {
+                      "include": false
+                    }
+                  },
+                  "label": "Notas",
+                  "variant": "hero",
+                  "rows": 4
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
