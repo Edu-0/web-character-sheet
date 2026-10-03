@@ -34,6 +34,8 @@ import { initArtworkControls, applyArtworkPreferences } from './artwork.js';
 import { createDiceLabel } from './dice-display.js';
 import { initPrinting } from './printing.js';
 import { initShellActions } from './shell-actions.js';
+import { initCharacterHistoryControls } from './character-history-controls.js';
+import { initPwa } from './pwa.js';
 
 const $ = (id) => document.getElementById(id);
 const DND_SYSTEM_ID = 'dnd2024';
@@ -51,6 +53,7 @@ let engineChangeInProgress = false;
 let synchronizingTabs = false;
 let mountingGenericSheet = false;
 let sheetSearch = null;
+let characterHistoryControls = null;
 
 async function init() {
   try { recoverTransactions(); } catch { /* adapter mantém bloqueio e journal para recuperação */ }
@@ -65,9 +68,14 @@ async function init() {
   initArtworkControls();
   initShell();
   initShellActions();
+  characterHistoryControls = initCharacterHistoryControls({
+    isAvailable: () => Boolean(activeCharacterId && getAppState().currentCharacter && getAppState().currentView === 'sheet'),
+    validate: character => assertValid(character, value => validateCharacterForPackage(value, activePackage), 'personagem'),
+  });
   initBackupControls({
     getCurrentCharacter: () => activeCharacterId ? state.get() : null,
     onRestored: async () => {
+      state.clearHistory();
       clearTimeout(saveTimeout); saveTimeout = null; unsavedCharacter = false;
       const previousId = activeCharacterId;
       activeCharacterId = null;
@@ -117,6 +125,7 @@ async function init() {
   }
   appPersistenceEnabled = true;
   persistAppState(getAppState());
+  initPwa({ beforeReload: () => flushCharacterSave({ force: true }) });
 }
 
 function initLegacyControls(initialTabId) {
@@ -173,6 +182,8 @@ function renderShell(appState) {
   $('sheet-heading-name').textContent = appState.currentCharacter?.name || 'Sem personagem';
   $('sheet-heading').dataset.variant = activeLayout?.variant || '';
   $('sheet-layout-controls').hidden = !appState.currentCharacter;
+  $('sheet-history-controls').hidden = !appState.currentCharacter;
+  characterHistoryControls?.refresh();
   $('sheet-layout-select').disabled = !appState.currentCharacter;
   $('btn-clear-character').disabled = !appState.currentCharacter;
   $('btn-save-character').disabled = !appState.currentCharacter;
@@ -221,6 +232,7 @@ function selectSheetLayout(id, { preservePresentation = false } = {}) {
   if (!preservePresentation && activePackage.system.id === DND_SYSTEM_ID && getAppState().ui.dndPresentation === 'legacy') setAppState('ui.dndPresentation', 'engine');
   if (!genericSheetController && (activePackage.system.id !== DND_SYSTEM_ID || getAppState().ui.dndPresentation !== 'legacy')) renderGenericSheet(state.get());
   renderShell(getAppState());
+  state.syncHistoryBaseline();
   sheetSearch?.refresh();
 }
 
@@ -248,6 +260,7 @@ async function openCharacter(id, { view = 'sheet' } = {}) {
     currentView: view,
   });
   mountActiveSheet(character);
+  state.syncHistoryBaseline();
   refreshLibraries();
 }
 
@@ -337,7 +350,22 @@ function renderGenericSheet(character) {
 
 function onCharacterChange(character) {
   if (suppressCharacterEffects || !activeCharacterId || character.meta?.id !== activeCharacterId) return;
-  if (activePackage?.system.id === DND_SYSTEM_ID) {
+  if (state.replayingHistory) {
+    const host = $('generic-sheet-host');
+    const restoreFocus = captureFocus(host);
+    const openEntries = [...host.querySelectorAll('details[data-entry-id][open]')].map(entry => ({
+      id: entry.dataset.entryId, component: entry.closest('[data-search-key]')?.dataset.searchKey,
+    }));
+    if (activePackage?.system.id === DND_SYSTEM_ID) ui.renderAll(character);
+    if (genericSheetController) {
+      genericSheetController.destroy(); genericSheetController = null;
+      renderGenericSheet(character);
+      for (const entry of host.querySelectorAll('details[data-entry-id]')) {
+        if (openEntries.some(open => open.id === entry.dataset.entryId && open.component === entry.closest('[data-search-key]')?.dataset.searchKey)) entry.open = true;
+      }
+      restoreFocus();
+    }
+  } else if (activePackage?.system.id === DND_SYSTEM_ID) {
     if (engineChangeInProgress) ui.renderAll(character);
     else {
       ui.refreshComputedOnly(character);
@@ -482,8 +510,9 @@ function wireToolbar() {
     if (!ok) return;
     const reset = structuredClone(activePackage.system.characterTemplate);
     reset.meta = { ...reset.meta, ...state.get().meta, updatedAt: new Date().toISOString() };
-    state.load(reset);
+    state.load(reset, { record: true, label: 'Limpar ficha' });
     mountActiveSheet(reset);
+    state.syncHistoryBaseline();
     notify('Ficha restaurada.');
   }));
 

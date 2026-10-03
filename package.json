@@ -5,7 +5,9 @@
   "scripts": {
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "check:docs": "node scripts/check-doc-links.mjs"
+    "check:docs": "node scripts/check-doc-links.mjs",
+    "build:offline": "node scripts/build-offline.mjs",
+    "check:offline": "node scripts/build-offline.mjs --check"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0"

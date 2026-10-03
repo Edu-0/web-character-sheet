@@ -29,7 +29,12 @@
 .sheet-heading:has(.sheet-heading__art[hidden]) { display: block; }
 #sheet-heading:has(.sheet-heading__art[hidden]) { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; }
 #sheet-heading:has(.sheet-heading__art[hidden]) .sheet-heading__text { flex: 1 1 128px; }
-#sheet-heading:has(.sheet-heading__art:not([hidden])) .sheet-layout-controls { grid-column: 1 / -1; grid-row: 3; justify-self: end; margin-top: 8px; }
+#sheet-heading:has(.sheet-heading__art:not([hidden])) .sheet-tools { grid-column: 1 / -1; grid-row: 3; justify-self: end; margin-top: 8px; }
+.sheet-tools { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; max-width: 100%; margin-left: auto; }
+.sheet-history-controls { display: flex; align-items: center; gap: 2px; }
+.sheet-history-controls .icon-button { width: 44px; height: 44px; min-height: 44px; border: 0; background: transparent; color: var(--color-text-muted); }
+.sheet-history-controls .icon-button:hover:enabled { color: var(--color-accent-strong); background: var(--color-panel-alt); }
+.sheet-history-controls .icon-button:disabled { opacity: .35; cursor: default; }
 .engine-sheet { gap: 12px; }
 .engine-section { box-shadow: var(--engine-card-depth); border-color: var(--color-border); }
 .engine-section__header { padding: 12px var(--section-inset); background: none; }

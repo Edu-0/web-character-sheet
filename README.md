@@ -19,6 +19,8 @@ Seu propósito é dar espaço a diferentes sistemas de RPG: desde uma ficha pree
 - **Assistência quando ela ajuda.** Cálculos, criação e evolução têm controles próprios nos sistemas compatíveis. Edição direta durante o jogo não cobra evolução automaticamente.
 - **Consulte também no celular.** Abas, cartões e tabelas se reorganizam para telas menores; as ações do cabeçalho ficam no menu **Mais**.
 - **Escolha a apresentação para a sessão.** Em **Layout da ficha**, alterne entre Padrão e **Modo mesa** nos sistemas embutidos. A versão de mesa reúne recursos, ações e consulta rápida com os mesmos dados. A escolha fica salva por sistema; campos fora dela continuam acessíveis pela busca e pelo layout completo.
+- **Corrija edições com desfazer e refazer.** Use as setas junto ao layout ou Ctrl/⌘ Z e Ctrl/⌘ Shift Z. O histórico guarda até 50 operações por personagem durante a sessão da página, incluindo recursos e registros de ações; recarregar a página reinicia o histórico, mantendo a ficha salva. Consulte [cobertura e limites](data/examples/history.md).
+- **Leve o app para uma sessão sem rede.** Em Configurações → **Instalar e usar offline**, aguarde a preparação e reabra o app. Sistemas embutidos, pacotes já importados, edições e arquivos locais funcionam offline. Instale pelo botão quando o navegador oferecer ou pelo seu menu. Consulte [instalação, atualizações e limites](data/examples/offline.md).
 
 ## Uma ficha com a sua cara
 
@@ -68,6 +70,8 @@ node tests/static-server.mjs
 ```
 
 Abra [http://127.0.0.1:4173](http://127.0.0.1:4173). Encerre o servidor com `Ctrl+C`. Use HTTP: abrir `index.html` diretamente por `file://` não é o fluxo suportado.
+
+Instalação e uso offline exigem HTTPS ou um endereço local confiável, além de um navegador compatível. Após alterar o runtime, regenere o worker com `npm run build:offline` e verifique com `npm run check:offline`. Uma atualização preparada entra quando todas as janelas antigas do app são fechadas; seus dados locais permanecem. Os testes fazem essa geração automaticamente antes de iniciar o servidor.
 
 O servidor é para desenvolvimento e serve o repositório inteiro. Não o exponha à internet nem hospede a pasta inteira: memória interna, referências e dados privados não devem integrar uma distribuição.
 

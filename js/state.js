@@ -5,6 +5,7 @@
 import { getByPath, setByPath } from './engine/paths.js';
 import { createId } from './data.js';
 import { getSystem } from './engine/system.js';
+import { CharacterHistory } from './character-history.js';
 
 export function createDefaultCharacter() {
   const system = getSystem();
@@ -21,11 +22,18 @@ class CharacterState {
     // criar o personagem padrão aqui exigiria abilities/skills do sistema já carregados.
     this.character = {};
     this.listeners = new Set();
+    this.history = new CharacterHistory();
+    this.historyListeners = new Set();
+    this.historyContext = null;
+    this.replayingHistory = false;
+    this.notifying = false;
   }
 
-  load(character) {
+  load(character, { record = false, label = 'Substituir campos da ficha' } = {}) {
+    if (record && (character.meta?.id !== this.character.meta?.id || character.meta?.system !== this.character.meta?.system)) throw new Error('A edição deve preservar a identidade do personagem.');
     this.character = character;
-    this.notify();
+    if (!record) this.history.activate(character);
+    this.notify(record ? { label } : null);
   }
 
   get() {
@@ -76,8 +84,26 @@ class CharacterState {
     return () => this.listeners.delete(fn);
   }
 
-  notify() {
-    this.listeners.forEach((fn) => fn(this.character));
+  syncHistoryBaseline() { if (!this.notifying) this.history.rebase(this.character); }
+  subscribeHistory(fn) { this.historyListeners.add(fn); return () => this.historyListeners.delete(fn); }
+  historyStatus() { return this.history.status(); }
+  clearHistory() { this.history.clear(); this.historyListeners.forEach(fn => fn(this.history.status())); }
+  replayHistory(direction, validate) {
+    if (!this.history.apply(this.character, direction, validate)) return false;
+    this.replayingHistory = true;
+    try { this.notify(); } finally { this.replayingHistory = false; }
+    return true;
+  }
+
+  notify(context = this.historyContext) {
+    this.notifying = true;
+    try { this.listeners.forEach((fn) => fn(this.character)); }
+    finally {
+      this.notifying = false;
+      if (!this.replayingHistory) this.history.record(this.character, context || {});
+      else this.history.rebase(this.character);
+      this.historyListeners.forEach(fn => fn(this.history.status()));
+    }
   }
 }
 
