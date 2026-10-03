@@ -102,13 +102,13 @@ test('descanso em mesa altera o mesmo recurso e desfazer continua após trocar l
   expect((await values(page)).combat.hpCurrent).toBe(2);
 });
 
-test('pacote importado permite layouts arbitrários; preferência removida volta ao primeiro', async ({ page }) => {
+test('pacote importado permite layouts arbitrários; preferência removida volta ao primeiro', async ({ page }, testInfo) => {
   const systemId = 'multiple-test';
   const layout = (id, label, field, mode = 'sheet') => ({ schemaVersion: 1, id, name: label, mode, system: systemId, tabs: [
     { id: 'main', label: 'Principal', sections: [{ id: 'main', containers: [{ components: [{ type: 'text', field, label }] }] }] },
   ] });
   const pkg = { schemaVersion: 1, kind: 'rpg-system-package', system: { schemaVersion: 1, id: systemId, name: 'Múltiplos', characterTemplate: { schemaVersion: 1, meta: { system: systemId }, name: '', notes: '' } },
-    layouts: [layout('full', 'Criação', 'name'), layout('play', 'Consulta', 'notes', 'table'), layout('other', 'Anotações', 'notes')] };
+    layouts: [layout('full', 'Criação', 'name'), layout('play', 'Consulta', 'notes', 'table'), layout('other', 'Anotações', 'notes'), layout('monk', 'Monge · Ki e disciplina', 'notes')] };
   await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
   await page.locator('#input-import-system').setInputFiles({ name: 'multiple.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(pkg)) });
   await page.locator('#systems-list .library-card').filter({ hasText: 'Múltiplos' }).getByRole('button', { name: 'Abrir', exact: true }).click();
@@ -120,6 +120,12 @@ test('pacote importado permite layouts arbitrários; preferência removida volta
   await page.reload();
   await expect(page.locator(select)).toHaveValue('other');
   expect((await values(page)).name).toBe('Exploradora');
+  await page.setViewportSize({ width: 360, height: 900 });
+  await expect(page.locator(select).locator('option')).toHaveCount(4);
+  await page.locator(select).selectOption('monk');
+  await expect(page.locator(host).getByLabel('Monge · Ki e disciplina', { exact: true })).toHaveValue('Dados compartilhados');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('four-layouts-long-name-mobile.png'), fullPage: false });
   await page.evaluate(async () => {
     const storage = await import('/js/storage.js');
     storage.saveSettings({ ...storage.loadSettings(), layoutSelections: [{ systemId: 'multiple-test', layoutId: 'removed-layout' }] });

@@ -9,18 +9,33 @@
 
 .sheet-layout-controls {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3);
-  margin: var(--space-3) var(--space-5);
-  padding: var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-panel);
+  flex: 0 1 auto;
+  gap: 6px;
+  max-width: 100%;
+  margin-left: auto;
+  color: var(--color-text-muted);
 }
-.sheet-layout-controls label { font-weight: 600; }
-.sheet-layout-controls select { width: min(100%, 240px); min-height: 44px; }
-#sheet-layout-hint { flex: 1 1 260px; color: var(--color-text-muted); font-size: var(--fs-sm); }
+.sheet-layout-icon { flex: 0 0 auto; }
+.sheet-layout-controls select {
+  width: var(--layout-select-width, 18ch);
+  max-width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding-inline: 8px;
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+.sheet-layout-controls select:hover,
+.sheet-layout-controls select:focus-visible {
+  border-color: var(--color-border);
+  background-color: var(--color-panel-alt);
+  color: var(--color-text);
+}
+.sheet-layout-controls option { background: var(--color-panel); color: var(--color-text); }
 
 /* O layout de mesa mantém os componentes e alvos de toque da ficha completa. */
 [data-sheet-mode="table"] .engine-panel {
@@ -35,7 +50,6 @@
 [data-sheet-mode="table"] .engine-section { min-width: 0; margin-bottom: 0; }
 
 @media (max-width: 700px) {
-  .sheet-layout-controls { margin-inline: var(--space-3); }
   [data-sheet-mode="table"] .engine-panel { grid-template-columns: minmax(0, 1fr); }
 }
 

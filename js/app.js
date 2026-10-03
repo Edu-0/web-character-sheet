@@ -204,6 +204,8 @@ function renderLayoutControls() {
     return option;
   }));
   select.value = activeLayout.id;
+  select.title = `Layout da ficha: ${layoutName(activeLayout)}`;
+  select.style.setProperty('--layout-select-width', `${Math.min(32, Math.max(18, ...activePackage.layouts.map(layout => layoutName(layout).length + 5)))}ch`);
   $('view-sheet').dataset.sheetMode = activeLayout.mode || 'sheet';
 }
 

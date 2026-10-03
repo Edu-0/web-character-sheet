@@ -169,12 +169,13 @@
   <header id="sheet-heading" class="sheet-heading">
     <div id="sheet-ornaments" class="sheet-ornaments sheet-heading__art no-print" aria-hidden="true" hidden></div>
     <div class="sheet-heading__text"><p id="sheet-heading-system"></p><h1 id="sheet-heading-name"></h1></div>
-  </header>
   <div id="sheet-layout-controls" class="sheet-layout-controls no-print" hidden>
-    <label for="sheet-layout-select">Layout da ficha</label>
+    <label for="sheet-layout-select" class="visually-hidden">Layout da ficha</label>
+    <svg class="sheet-layout-icon" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="2.5" y="3" width="15" height="14" rx="2"/><path d="M2.5 7.5h15M8 7.5V17"/></svg>
     <select id="sheet-layout-select" class="input" aria-describedby="sheet-layout-hint"></select>
-    <span id="sheet-layout-hint"></span>
+    <span id="sheet-layout-hint" class="visually-hidden"></span>
   </div>
+  </header>
   <div id="dnd-presentation-controls" class="dnd-presentation no-print" role="group" aria-label="Apresentação da ficha D&D" hidden>
     <span class="dnd-presentation__label">Visualização D&D</span>
     <button type="button" class="button button--ghost" data-dnd-presentation="legacy">Ficha estática</button>

@@ -1,6 +1,6 @@
 # Layouts múltiplos e modo mesa
 
-Um pacote de sistema pode incluir vários documentos em `layouts`. O seletor **Layout da ficha** mostra todos eles. Alternar layouts mantém o mesmo personagem, suas entradas e seus recursos; não cria cópias nem lança evolução. A preferência fica salva por sistema neste navegador e acompanha **Exportar tudo**.
+Um pacote de sistema pode incluir vários documentos em `layouts`. O seletor **Layout da ficha** fica no cabeçalho do personagem, identificado por um ícone de layout e pelo nome da apresentação atual. Sua largura acompanha os nomes das opções, com limite responsivo. Mostra todos os layouts do pacote. Alternar layouts mantém o mesmo personagem, suas entradas e seus recursos; não cria cópias nem lança evolução. A preferência fica salva por sistema neste navegador e acompanha **Exportar tudo**.
 
 Cada layout tem `id` único dentro do pacote, `system` igual ao ID do sistema e suas próprias `tabs`. Os campos dos componentes continuam apontando para o mesmo documento de personagem.
 
