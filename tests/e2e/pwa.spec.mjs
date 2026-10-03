@@ -105,7 +105,14 @@ test('duas janelas permanecem na versão antiga até fechar; atualização conse
     await expect(page.locator('#pwa-update-status')).toContainText('Atualização pronta');
     await page.reload(); expect(await page.title()).toBe(oldTitle); await second.reload(); expect(await second.title()).toBe(oldTitle);
     const cachesReady = await versions(page); expect(cachesReady).toHaveLength(2); expect(cachesReady.some(name => name.endsWith(next.version))).toBe(true);
+    // Observe outside the app scope so reopening cannot interrupt activation.
+    const observer = await context.newPage(); await observer.goto(new URL('/', server.url).href);
     await second.close(); await page.close();
+    await expect.poll(() => observer.evaluate(async url => {
+      const registration = await navigator.serviceWorker.getRegistration(url);
+      return !registration?.waiting && registration?.active?.state === 'activated';
+    }, server.url)).toBe(true);
+    await observer.close();
     const reopened = await context.newPage(); await context.setOffline(true); await reopened.goto(server.url);
     await expect(reopened).toHaveTitle('Ficha RPG atualizada'); await sheet(reopened);
     await expect(reopened.locator(host).getByLabel('Nome do personagem', { exact: true })).toHaveValue('Conservada na atualização');

@@ -190,6 +190,7 @@ test('histórico separado por personagem e reiniciado na recarga', async ({ page
   await name.fill('Segunda pessoa');
   await page.getByRole('button', { name: 'Personagens', exact: true }).click();
   await page.locator('#characters-list .library-card').filter({ hasText: 'Primeira pessoa' }).getByRole('button', { name: 'Abrir', exact: true }).click();
+  await expect(name).toHaveValue('Primeira pessoa');
   expect((await values(page)).meta.id).toBe(id); await expect(page.locator(undo)).toBeEnabled();
   await page.locator(undo).click(); await page.locator(redo).click(); await expect(name).toHaveValue('Primeira pessoa');
   await expect(page.locator('#save-indicator')).toHaveText('Salvo'); await page.reload();

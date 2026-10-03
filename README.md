@@ -1,5 +1,7 @@
 # Ficha RPG
 
+**Versão 0.2.0 — pré-lançamento.** Novidades e limites em [Histórico de versões](CHANGELOG.md).
+
 **Fichas bonitas, organizadas e prontas para a sessão.**
 
 Crie seus personagens, encontre o que precisa durante o jogo e leve a ficha para o papel. O Ficha RPG reúne organização, personalização e assistência às regras em uma interface feita para computador e celular.
