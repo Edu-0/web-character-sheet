@@ -8,7 +8,7 @@ test.beforeEach(async ({page}) => {
   await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');
 });
 
-test('importação rejeita caminhos perigosos e catálogo interpolado sem poluir protótipos', async ({page}) => {
+test('importação rejeita caminhos perigosos e catálogo interpolado sem poluir protótipos @smoke', async ({page}) => {
   for (const field of ['__proto__.__robustTest', 'constructor.prototype.__robustTest', 'prototype.x', 'name..x', '.name']) {
     await page.locator('#input-import-system').setInputFiles(upload('unsafe.json', pkg(field)));
     await expect(page.locator('.toast').last()).toContainText('Caminho inseguro');
@@ -35,45 +35,13 @@ test('personagem com chave reservada ou tipo inválido não deixa documento órf
   expect(await page.evaluate(() => Object.keys(localStorage).sort())).toEqual(before);
 });
 
-test('limites recusam bytes antes da leitura e profundidade/coleções/strings com caminho', async ({page}) => {
-  const result = await page.evaluate(async () => {
-    const {inspectJson, readJsonFile, LIMITS} = await import('/js/validation/limits.js');
-    let read = false; let bytes;
-    try { await readJsonFile({size: LIMITS.characterBytes + 1, text: async () => {read = true; return '{}';}}, LIMITS.characterBytes, 'character'); } catch (error) {bytes = error.message;}
-    let deep = {}; let cursor = deep;
-    for (let i = 0; i < 34; i++) { cursor.next = {}; cursor = cursor.next; }
-    return {read, bytes, depth: inspectJson(deep, 'character')[0], items: inspectJson({items: Array(10001).fill(0)}, 'character')[0], string: inspectJson({notes: 'x'.repeat(100001)}, 'character')[0], boundary: inspectJson({notes: 'x'.repeat(100000), items: Array(10000).fill(0)}, 'character')};
-  });
-  expect(result.read).toBe(false); expect(result.bytes).toContain('2 MiB');
-  expect(result.depth.path).toContain('character.next'); expect(result.depth.message).toContain('profundidade');
-  expect(result.items.path).toBe('character.items'); expect(result.string.path).toBe('character.notes'); expect(result.boundary).toEqual([]);
-});
-
-test('helpers não leem herança e rejeitam caminhos vazios/reservados em todas as escritas', async ({page}) => {
-  const result = await page.evaluate(async () => {
-    const {getByPath,setByPath} = await import('/js/engine/paths.js');
-    const errors = [];
-    for (const path of ['__proto__.x','constructor.prototype.x','a..b','']) for (const fn of [getByPath,setByPath]) try {fn({},path,1);} catch (error) {errors.push(error.message);}
-    const target = Object.create({inherited: 1}); setByPath(target,'own.0.value',9);
-    return {errors: errors.length, missingInherited: getByPath(target,'inherited') === undefined, value: getByPath(target,'own.0.value'), polluted: Object.hasOwn(Object.prototype,'x')};
-  });
-  expect(result).toEqual({errors: 8, missingInherited: true, value: 9, polluted: false});
-});
-
-test('fórmulas exigem EOF, whitelist, números finitos e orçamento sem RangeError', async ({page}) => {
-  const result = await page.evaluate(async () => {
-    const {evaluate} = await import('/js/engine/formula.js');
-    const rejected = ['1 2','1.2.3','toString()','constructor()','__proto__.x','1/0','sqrt(-1)','('.repeat(100)+'1'+')'.repeat(100),'1+'.repeat(100)+'1','1'.repeat(4097)];
-    return {errors: rejected.map(expression => {try {return {value: evaluate(expression)};} catch (error) {return {name: error.name, message: error.message};}}), valid: evaluate('if(score >= 10, floor((score - 10) / 2), -1)', {vars: {score: 15}}), boolean: evaluate('true && !false')};
-  });
-  expect(result.errors.every(e => e.message && e.name !== 'RangeError')).toBe(true);
-  expect(result.valid).toBe(2); expect(result.boolean).toBe(true);
+test('importação informa o caminho de fórmula inválida', async ({page}) => {
   const bad = pkg(); bad.system.formulas = {bad: '1 2'};
   await page.locator('#input-import-system').setInputFiles(upload('formula.json',bad));
   await expect(page.locator('.toast').last()).toContainText('system.formulas.bad');
 });
 
-test('quota no índice reverte save e exclusão; recarga não cria órfãos', async ({page}) => {
+test('quota no índice reverte save e exclusão; recarga não cria órfãos @smoke', async ({page}) => {
   const result = await page.evaluate(async () => {
     const repo = await import('/js/repositories/character-repository.js');
     const original = Storage.prototype.setItem; const before = repo.listCharacters();

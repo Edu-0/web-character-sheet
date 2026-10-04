@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "id": "ordem-paranormal-table",
+  "system": "ordem-paranormal",
+  "name": "Modo mesa",
+  "mode": "table",
+  "tabs": [
+    {
+      "id": "play",
+      "label": "Em jogo",
+      "sections": [
+        {
+          "id": "resources",
+          "title": "Recursos e defesa",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "resource",
+                  "field": "hp",
+                  "label": "Pontos de vida"
+                },
+                {
+                  "type": "resource",
+                  "field": "effort",
+                  "label": "Pontos de esforço"
+                },
+                {
+                  "type": "resource",
+                  "field": "sanity",
+                  "label": "Sanidade"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.effortPerRound",
+                  "label": "PE por rodada"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.defense",
+                  "label": "Defesa total — manual"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.defenseGear",
+                  "label": "Defesa: equipamento"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.defenseOther",
+                  "label": "Defesa: outros"
+                },
+                {
+                  "type": "text",
+                  "field": "combat.movement",
+                  "label": "Deslocamento"
+                },
+                {
+                  "type": "text",
+                  "field": "combat.protection",
+                  "label": "Proteção"
+                },
+                {
+                  "type": "textarea",
+                  "field": "combat.resistances",
+                  "label": "Resistências"
+                },
+                {
+                  "type": "textarea",
+                  "field": "combat.conditions",
+                  "label": "Condições"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "attacks",
+          "title": "Ataques",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "attacks",
+                  "label": "Ataques",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "test": {
+                      "type": "text",
+                      "label": "Teste"
+                    },
+                    "damage": {
+                      "type": "text",
+                      "label": "Dano"
+                    },
+                    "critical": {
+                      "type": "text",
+                      "label": "Crítico"
+                    },
+                    "range": {
+                      "type": "text",
+                      "label": "Alcance"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Especial"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "skills",
+          "title": "Perícias — valores informados pela mesa",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "skills",
+                  "label": "Perícias",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Perícia"
+                    },
+                    "dice": {
+                      "type": "text",
+                      "label": "Dados"
+                    },
+                    "training": {
+                      "type": "number",
+                      "label": "Treino"
+                    },
+                    "other": {
+                      "type": "number",
+                      "label": "Outros"
+                    },
+                    "bonus": {
+                      "type": "number",
+                      "label": "Bônus total — manual"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notas e cobertura",
+      "sections": [
+        {
+          "id": "notes",
+          "title": "Registros da mesa",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "textarea",
+                  "field": "notes",
+                  "label": "Notas da sessão"
+                },
+                {
+                  "type": "list",
+                  "field": "advances",
+                  "label": "Criação e evolução — registro manual",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "note": "Ficha preenchível baseada nos campos da ficha oficial pública da Jambô. Todas as regras são manuais: criação, NEX, treinamento, testes, defesa, recursos, carga, categorias, custos, rituais, recuperação e evolução. Não reproduz o livro nem automatiza regras não verificadas. Preencha totais e expressões conforme o livro usado pela mesa. Não inclui Sobrevivendo ao Horror."
+        }
+      ]
+    }
+  ]
+}

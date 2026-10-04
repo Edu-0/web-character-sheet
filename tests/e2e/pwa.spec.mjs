@@ -61,6 +61,12 @@ test('offline abre sistemas ainda não visitados, salva, desfaz e reabre em outr
   await page.getByRole('tab', { name: 'Notas', exact: true }).click(); await page.locator(host).locator('textarea:visible').fill('Anotação sem rede');
   await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   await page.reload(); await expect(page.locator(host).locator('textarea:visible')).toHaveValue('Anotação sem rede');
+  const manifest = JSON.parse(await readFile('data/systems/index.json', 'utf8'));
+  for (const system of manifest.systems.filter(s => !['dnd2024', 'sistema-rpg'].includes(s.id))) {
+    await openSystem(page, system.name);
+    await page.locator('#sheet-layout-select').selectOption(`${system.id}-table`);
+    await expect(page.locator(host).getByRole('tab', { name: 'Em jogo', exact: true })).toBeVisible();
+  }
   await openSystem(page, 'D&D 5e (2024)'); expect((await values(page)).meta.id).toBe(id); await expect(name).toHaveValue('Viajante offline');
   const second = await context.newPage(); await second.goto('/'); await expect(second.locator(host).getByLabel('Nome do personagem', { exact: true })).toHaveValue('Viajante offline');
   await second.close(); await settings(page); await expect(page.locator('#offline-status')).toContainText('Você está offline');

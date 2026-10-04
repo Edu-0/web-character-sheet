@@ -1503,3 +1503,9 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .engine-item-details__fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; min-width: 0; padding: 8px 0; }
 .engine-table__details-row td { padding-top: 0; }
 .engine-table__details-row td::before { display: none; }
+/* Testes sob demanda, compartilhados por sistemas com algoritmos compatíveis. */
+.engine-check { min-width: 0; }
+.engine-container > .engine-component:has(.engine-check) { grid-column: 1 / -1; }
+.engine-check__controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; margin-bottom: 12px; }
+.engine-check__controls select, .engine-check__controls input:not([type="checkbox"]) { width: 100%; min-width: 0; }
+.engine-check__result { overflow-wrap: anywhere; }

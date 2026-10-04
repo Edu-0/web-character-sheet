@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "id": "swade-table",
+  "system": "swade",
+  "name": "Modo mesa",
+  "mode": "table",
+  "tabs": [
+    {
+      "id": "play",
+      "label": "Em jogo",
+      "sections": [
+        {
+          "id": "traits",
+          "title": "Atributos e testes",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "die",
+                  "field": "attributes.agility",
+                  "label": "Agilidade"
+                },
+                {
+                  "type": "die",
+                  "field": "attributes.smarts",
+                  "label": "Astúcia"
+                },
+                {
+                  "type": "die",
+                  "field": "attributes.spirit",
+                  "label": "Espírito"
+                },
+                {
+                  "type": "die",
+                  "field": "attributes.strength",
+                  "label": "Força"
+                },
+                {
+                  "type": "die",
+                  "field": "attributes.vigor",
+                  "label": "Vigor"
+                },
+                {
+                  "type": "checkRoll",
+                  "configFrom": "checks.trait",
+                  "label": "Teste de traço"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "resources",
+          "title": "Recursos de jogo",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "number",
+                  "field": "combat.pace",
+                  "label": "Movimentação"
+                },
+                {
+                  "type": "number",
+                  "field": "combat.armor",
+                  "label": "Armadura do torso"
+                },
+                {
+                  "type": "computed",
+                  "label": "Aparar",
+                  "formula": "parry"
+                },
+                {
+                  "type": "computed",
+                  "label": "Resistência",
+                  "formula": "toughness"
+                },
+                {
+                  "type": "counter",
+                  "field": "bennies",
+                  "label": "Benes",
+                  "min": 0
+                },
+                {
+                  "type": "counter",
+                  "field": "combat.wounds",
+                  "label": "Ferimentos",
+                  "min": 0,
+                  "max": 3
+                },
+                {
+                  "type": "counter",
+                  "field": "combat.fatigue",
+                  "label": "Fadiga",
+                  "min": 0,
+                  "max": 2
+                },
+                {
+                  "type": "boolean",
+                  "field": "combat.shaken",
+                  "label": "Abalado"
+                },
+                {
+                  "type": "boolean",
+                  "field": "combat.incapacitated",
+                  "label": "Incapacitado"
+                },
+                {
+                  "type": "text",
+                  "field": "combat.actionCard",
+                  "label": "Carta de iniciativa"
+                },
+                {
+                  "type": "resource",
+                  "field": "powerPoints",
+                  "label": "Pontos de poder"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "damage",
+          "title": "Dano",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "combat.damage",
+                  "label": "Expressão de dano"
+                },
+                {
+                  "type": "checkRoll",
+                  "configFrom": "checks.damage",
+                  "label": "Rolagem de dano"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notas e cobertura",
+      "sections": [
+        {
+          "id": "notes",
+          "title": "Registros da mesa",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "textarea",
+                  "field": "notes",
+                  "label": "Notas da sessão"
+                },
+                {
+                  "type": "list",
+                  "field": "advances",
+                  "label": "Criação e evolução — registro manual",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "note": "Base: Savage Worlds Test Drive SWADE 2020, regras centrais. Testes de traço/dano explosivos, dado selvagem opcional, não treinado e ampliações. Criação, avanços, vantagens/complicações, custos de poderes e Benes, cartas de iniciativa, penalidades, absorção, ferimentos/fadiga e recuperação são manuais. Não inclui regras especiais de cenário nem catálogo do livro."
+        }
+      ]
+    }
+  ]
+}

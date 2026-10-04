@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "id": "ordem-paranormal",
+  "name": "Ordem Paranormal",
+  "description": "Ficha preenchível baseada nos campos da ficha oficial pública da Jambô. Todas as regras são manuais: criação, NEX, treinamento, testes, defesa, recursos, carga, categorias, custos, rituais, recuperação e evolução. Não reproduz o livro nem automatiza regras não verificadas. Preencha totais e expressões conforme o livro usado pela mesa. Não inclui Sobrevivendo ao Horror.",
+  "characterTemplate": {
+    "schemaVersion": 1,
+    "meta": {
+      "system": "ordem-paranormal"
+    },
+    "identity": {
+      "name": "",
+      "player": "",
+      "description": "",
+      "origin": "",
+      "class": "",
+      "path": "",
+      "nex": 0,
+      "appearance": "",
+      "personality": "",
+      "history": "",
+      "goal": ""
+    },
+    "attributes": {
+      "agi": 0,
+      "for": 0,
+      "int": 0,
+      "pre": 0,
+      "vig": 0
+    },
+    "hp": {
+      "current": 0,
+      "max": 0
+    },
+    "effort": {
+      "current": 0,
+      "max": 0
+    },
+    "sanity": {
+      "current": 0,
+      "max": 0
+    },
+    "combat": {
+      "defense": 0,
+      "defenseGear": 0,
+      "defenseOther": 0,
+      "effortPerRound": 0,
+      "movement": "",
+      "resistances": "",
+      "protection": "",
+      "conditions": ""
+    },
+    "skills": [
+      {
+        "id": "skill-1",
+        "name": "Acrobacia",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-2",
+        "name": "Adestramento",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-3",
+        "name": "Artes",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-4",
+        "name": "Atletismo",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-5",
+        "name": "Atualidades",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-6",
+        "name": "Ciências",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-7",
+        "name": "Crime",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-8",
+        "name": "Diplomacia",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-9",
+        "name": "Enganação",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-10",
+        "name": "Fortitude",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-11",
+        "name": "Furtividade",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-12",
+        "name": "Iniciativa",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-13",
+        "name": "Intimidação",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-14",
+        "name": "Intuição",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-15",
+        "name": "Investigação",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-16",
+        "name": "Luta",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-17",
+        "name": "Medicina",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-18",
+        "name": "Ocultismo",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-19",
+        "name": "Percepção",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-20",
+        "name": "Pilotagem",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-21",
+        "name": "Pontaria",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-22",
+        "name": "Profissão",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-23",
+        "name": "Profissão",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-24",
+        "name": "Reflexos",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-25",
+        "name": "Religião",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-26",
+        "name": "Sobrevivência",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-27",
+        "name": "Tática",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-28",
+        "name": "Tecnologia",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      },
+      {
+        "id": "skill-29",
+        "name": "Vontade",
+        "dice": "",
+        "training": 0,
+        "other": 0,
+        "bonus": 0
+      }
+    ],
+    "attacks": [],
+    "abilities": [],
+    "rituals": [],
+    "inventory": [],
+    "prestige": 0,
+    "rank": "",
+    "credit": "",
+    "categoryLimits": "",
+    "capacity": 0,
+    "proficiencies": "",
+    "advances": [],
+    "notes": ""
+  }
+}

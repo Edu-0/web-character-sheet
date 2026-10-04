@@ -50,9 +50,17 @@ O documento adapta a identidade visual da ficha ao papel A4 e inclui o conteúdo
 | --- | --- |
 | D&D 5e (2024) | Ficha modular com atributos, perícias, recursos, magias, inventário e cálculos. Também oferece a ficha estática e a comparação lado a lado, com os mesmos dados. |
 | RPG autoral em desenvolvimento | Ficha assistida com criação por pontos, evolução, técnicas, recursos, estados e Pool. Seu conteúdo tem direitos próprios, separados da engine. |
+| Fate Acelerado | Aspectos, abordagens, façanhas, estresse e consequências; teste de 4dF contra oposição. |
+| Cthulhu 7e | Investigador, perícias e recursos; testes percentuais com bônus/penalidade, conforme o Quick-Start consultado. |
+| Blades in the Dark | Ações, resistências calculadas, estresse, dano e relógios; pools de d6 do SRD original. |
+| Savage Worlds SWADE | Traços, recursos e derivados; dados explosivos, dado selvagem e ampliações, conforme o Test Drive 2020. |
+| Ironsworn | Recursos, ímpeto e trilhas; testes de ação e progresso do SRD original. |
+| Ordem Paranormal | Ficha preenchível baseada nos campos da ficha oficial pública. Regras e totais manuais. |
 | Seus sistemas | Importação de pacotes com dados e layouts configuráveis. Componentes compatíveis podem ser reutilizados; mecânicas novas podem exigir implementação adicional. |
 
 **O projeto está em desenvolvimento**, ainda sem lançamento de produção. A cobertura depende do sistema: não há automação integral de livros ou editor visual completo.
+
+Os seis sistemas adicionais oferecem Padrão e Modo mesa. Consulte [referências, cobertura e regras manuais](data/examples/additional-systems.md): criação, evolução, custos e decisões narrativas não são aplicados automaticamente.
 
 ## Seus dados
 
@@ -87,16 +95,20 @@ Listas podem habilitar o painel genérico com `entryAction: "roll"` e `rollPrese
 
 O componente `recoveryGroup` apresenta ações declaradas em `system.recoveryActions`, com recuperação por dados, valores e listas. Regras D&D ficam no JSON e em seu resolvedor de Constituição. Consulte o [contrato e exemplo de recuperações](data/examples/recovery.md).
 
+`checkRoll` usa algoritmos de teste configurados em `system.checks`, com fontes de campos, coleções ou fórmulas. Resultados entram no histórico de rolagens sem modificar o personagem. Consulte o [contrato e exemplo importável](data/examples/additional-systems.md#contrato-de-testes-sob-demanda).
+
 `computed` (sem `mode: "roll"`) e `inventorySummary` aceitam `override: false` para desativar ajustes e `overrideKey` para identificar resultados distintos que compartilham a mesma fórmula. Ajustes persistem no personagem em `calculationOverrides`, como `{ "computed.capacity": { "mode": "adjust", "value": 2 } }`; `fixed` substitui o resultado e remover a entrada devolve o automático. `inventorySummary.overrideKeys` permite vincular peso/capacidade/sobrecarga ao ID de outro resultado calculado. No sistema, `diceSteps: true` habilita passos nos campos de dados; `stepControls: false` os desativa por campo, inclusive em `itemSchema`. A escala deve ser positiva, crescente e sem repetições. D&D mantém esses passos desligados.
 
 Os testes usam Playwright com Microsoft Edge instalado. Pare o servidor manual antes de executar:
 
 ```sh
-npm run test:e2e
-npm run check:docs
+npm run test:quick
+npm run test:full
 ```
 
 Não execute suítes concorrentes na porta 4173. Para usar Chromium, ajuste o `channel` em `playwright.config.js` e instale o navegador correspondente pelo Playwright. Capturas e traces de testes ficam em `test-results/`, sem versionamento. Os prints de apresentação podem ser regenerados com `node scripts/capture-readme.mjs`, que usa a porta 4175.
+
+`test:unit` verifica regras e contratos sem navegador. `test:quick` acrescenta os percursos essenciais; `test:full` inclui todos os Playwright, documentação e cache offline. A [organização dos testes](data/examples/testing.md) explica a seleção e a cobertura preservada.
 
 A documentação de trabalho, os planos e os relatórios ficam privados e não acompanham o clone. Este README apresenta o produto e os passos essenciais para executá-lo.
 

@@ -6,13 +6,10 @@ test.beforeEach(async ({ page }) => {
   await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');
 });
 
-test('ficha modular é padrão em um navegador novo', async ({ page }) => {
+test('ficha modular padrão exporta e reimporta o mesmo personagem JSON @smoke', async ({ page }) => {
   await expect(page.locator('#generic-sheet-host')).toBeVisible();
   await expect(page.locator('#legacy-dnd-sheet')).toBeHidden();
   await expect(page.getByRole('button', { name: 'Ficha modular' })).toHaveAttribute('aria-pressed', 'true');
-});
-
-test('ficha modular exporta e reimporta o mesmo personagem JSON', async ({ page }) => {
   await page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])').getByLabel('Nome do personagem').fill('Lia Exportável');
   const [download] = await Promise.all([
     page.waitForEvent('download'),
@@ -49,7 +46,7 @@ test('alterna entre ficha estática e modular sem duplicar o personagem', async 
   await expect(page.locator('#legacy-dnd-sheet [data-bind="identity.name"]')).toHaveValue('Mirna da Névoa');
 });
 
-test('compara a mesma aba e sincroniza atributos nos dois sentidos', async ({ page }) => {
+test('compara a mesma aba e sincroniza atributos nos dois sentidos @smoke', async ({ page }) => {
   await page.getByRole('button', { name: 'Comparar lado a lado' }).click();
   await expect(page.locator('#legacy-dnd-sheet')).toBeVisible();
   await expect(page.locator('#generic-sheet-host')).toBeVisible();

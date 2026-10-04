@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "id": "ironsworn-table",
+  "system": "ironsworn",
+  "name": "Modo mesa",
+  "mode": "table",
+  "tabs": [
+    {
+      "id": "play",
+      "label": "Em jogo",
+      "sections": [
+        {
+          "id": "stats",
+          "title": "Atributos e ação",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "number",
+                  "field": "stats.edge",
+                  "label": "Agilidade",
+                  "help": "Base: Ironsworn original, SRD de Shawn Tomkin. Distribua 3, 2, 2, 1, 1 entre os atributos e escolha ativos com a mesa. Testes de ação/progresso, recursos, debilidades e registros. Gatilhos e efeitos dos movimentos, queima de ímpeto, progressão por desafio, vínculos, experiência e aquisição de ativos são manuais. Sem Delve, Starforged ou catálogos de oráculos/ativos."
+                },
+                {
+                  "type": "number",
+                  "field": "stats.heart",
+                  "label": "Coração",
+                  "help": "Base: Ironsworn original, SRD de Shawn Tomkin. Distribua 3, 2, 2, 1, 1 entre os atributos e escolha ativos com a mesa. Testes de ação/progresso, recursos, debilidades e registros. Gatilhos e efeitos dos movimentos, queima de ímpeto, progressão por desafio, vínculos, experiência e aquisição de ativos são manuais. Sem Delve, Starforged ou catálogos de oráculos/ativos."
+                },
+                {
+                  "type": "number",
+                  "field": "stats.iron",
+                  "label": "Ferro",
+                  "help": "Base: Ironsworn original, SRD de Shawn Tomkin. Distribua 3, 2, 2, 1, 1 entre os atributos e escolha ativos com a mesa. Testes de ação/progresso, recursos, debilidades e registros. Gatilhos e efeitos dos movimentos, queima de ímpeto, progressão por desafio, vínculos, experiência e aquisição de ativos são manuais. Sem Delve, Starforged ou catálogos de oráculos/ativos."
+                },
+                {
+                  "type": "number",
+                  "field": "stats.shadow",
+                  "label": "Sombra",
+                  "help": "Base: Ironsworn original, SRD de Shawn Tomkin. Distribua 3, 2, 2, 1, 1 entre os atributos e escolha ativos com a mesa. Testes de ação/progresso, recursos, debilidades e registros. Gatilhos e efeitos dos movimentos, queima de ímpeto, progressão por desafio, vínculos, experiência e aquisição de ativos são manuais. Sem Delve, Starforged ou catálogos de oráculos/ativos."
+                },
+                {
+                  "type": "number",
+                  "field": "stats.wits",
+                  "label": "Astúcia",
+                  "help": "Base: Ironsworn original, SRD de Shawn Tomkin. Distribua 3, 2, 2, 1, 1 entre os atributos e escolha ativos com a mesa. Testes de ação/progresso, recursos, debilidades e registros. Gatilhos e efeitos dos movimentos, queima de ímpeto, progressão por desafio, vínculos, experiência e aquisição de ativos são manuais. Sem Delve, Starforged ou catálogos de oráculos/ativos."
+                },
+                {
+                  "type": "checkRoll",
+                  "configFrom": "checks.action",
+                  "label": "Teste de ação"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "resources",
+          "title": "Condição e ímpeto",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "counter",
+                  "field": "health",
+                  "label": "Saúde",
+                  "min": 0,
+                  "max": 5
+                },
+                {
+                  "type": "counter",
+                  "field": "spirit",
+                  "label": "Espírito",
+                  "min": 0,
+                  "max": 5
+                },
+                {
+                  "type": "counter",
+                  "field": "supply",
+                  "label": "Suprimentos",
+                  "min": 0,
+                  "max": 5
+                },
+                {
+                  "type": "counter",
+                  "field": "momentum",
+                  "label": "Ímpeto",
+                  "min": -6,
+                  "max": 10
+                },
+                {
+                  "type": "computed",
+                  "label": "Ímpeto máximo",
+                  "formula": "momentumMax"
+                },
+                {
+                  "type": "computed",
+                  "label": "Restauração de ímpeto",
+                  "formula": "momentumReset"
+                },
+                {
+                  "type": "boolean",
+                  "field": "debilities.wounded",
+                  "label": "Ferido"
+                },
+                {
+                  "type": "boolean",
+                  "field": "debilities.shaken",
+                  "label": "Abalado"
+                },
+                {
+                  "type": "boolean",
+                  "field": "debilities.unprepared",
+                  "label": "Despreparado"
+                },
+                {
+                  "type": "boolean",
+                  "field": "debilities.encumbered",
+                  "label": "Sobrecarregado"
+                },
+                {
+                  "type": "boolean",
+                  "field": "debilities.maimed",
+                  "label": "Mutilado"
+                },
+                {
+                  "type": "boolean",
+                  "field": "debilities.corrupted",
+                  "label": "Corrompido"
+                },
+                {
+                  "type": "boolean",
+                  "field": "debilities.cursed",
+                  "label": "Amaldiçoado"
+                },
+                {
+                  "type": "boolean",
+                  "field": "debilities.tormented",
+                  "label": "Atormentado"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "progress",
+          "title": "Votos, viagens e combate",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "progress",
+                  "label": "Trilhas de progresso",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Objetivo"
+                    },
+                    "rank": {
+                      "type": "select",
+                      "label": "Grau",
+                      "options": [
+                        "Incômodo",
+                        "Perigoso",
+                        "Formidável",
+                        "Extremo",
+                        "Épico"
+                      ]
+                    },
+                    "ticks": {
+                      "type": "number",
+                      "label": "Marcas (0–40)"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Marcos e resolução"
+                    }
+                  },
+                  "help": "Marque conforme o grau e movimento: 12 / 8 / 4 / 2 / 1 marcas por progresso. Uma caixa tem 4 marcas. Não avance apenas por clicar para rolar."
+                },
+                {
+                  "type": "number",
+                  "field": "bondsTicks",
+                  "label": "Marcas de vínculos (0–40)"
+                },
+                {
+                  "type": "checkRoll",
+                  "configFrom": "checks.progress",
+                  "label": "Teste de progresso"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notas e cobertura",
+      "sections": [
+        {
+          "id": "notes",
+          "title": "Registros da mesa",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "textarea",
+                  "field": "notes",
+                  "label": "Notas da sessão"
+                },
+                {
+                  "type": "list",
+                  "field": "advances",
+                  "label": "Criação e evolução — registro manual",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "note": "Base: Ironsworn original, SRD de Shawn Tomkin. Distribua 3, 2, 2, 1, 1 entre os atributos e escolha ativos com a mesa. Testes de ação/progresso, recursos, debilidades e registros. Gatilhos e efeitos dos movimentos, queima de ímpeto, progressão por desafio, vínculos, experiência e aquisição de ativos são manuais. Sem Delve, Starforged ou catálogos de oráculos/ativos."
+        }
+      ]
+    }
+  ]
+}

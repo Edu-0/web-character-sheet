@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "kind": "rpg-system-package",
+  "system": {
+    "schemaVersion": 1,
+    "id": "check-example",
+    "name": "Exemplo de testes configuráveis",
+    "characterTemplate": {
+      "schemaVersion": 1,
+      "meta": { "system": "check-example" },
+      "identity": { "name": "Exemplo" },
+      "score": 2,
+      "skills": [{ "id": "practice", "name": "Prática", "rating": 3 }]
+    },
+    "formulas": { "adjusted": "score + 1" },
+    "checks": {
+      "action": {
+        "algorithm": "fate",
+        "note": "Exemplo fictício de 4dF. Custos e efeitos são manuais.",
+        "sources": [
+          { "label": "Base", "field": "score" },
+          { "label": "Total ajustado", "formula": "adjusted" },
+          { "label": "Perícia", "collection": "skills", "valueField": "rating" }
+        ]
+      }
+    }
+  },
+  "layouts": [{
+    "schemaVersion": 1,
+    "id": "check-example-default",
+    "system": "check-example",
+    "tabs": [{ "id": "main", "label": "Ficha", "sections": [{
+      "id": "main", "title": "Teste reutilizável", "containers": [{
+        "layout": { "type": "stack" },
+        "components": [
+          { "type": "text", "field": "identity.name", "label": "Nome" },
+          { "type": "number", "field": "score", "label": "Base" },
+          { "type": "computed", "formula": "adjusted", "label": "Total ajustado" },
+          { "type": "list", "field": "skills", "label": "Perícias", "itemSchema": {
+            "name": { "type": "text", "label": "Nome da perícia" },
+            "rating": { "type": "number", "label": "Valor" }
+          } },
+          { "type": "checkRoll", "configFrom": "checks.action", "label": "Teste configurável" }
+        ]
+      }]
+    }] }]
+  }]
+}

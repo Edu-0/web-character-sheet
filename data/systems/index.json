@@ -34,6 +34,108 @@
           "file": "./sistema-rpg.table-layout.json"
         }
       ]
+    },
+    {
+      "id": "fate-accelerated",
+      "name": "Fate Acelerado",
+      "system": "./fate-accelerated.system.json",
+      "layouts": [
+        {
+          "id": "fate-accelerated-layout",
+          "name": "Padrão",
+          "file": "./fate-accelerated.layout.json"
+        },
+        {
+          "id": "fate-accelerated-table",
+          "name": "Modo mesa",
+          "file": "./fate-accelerated.table-layout.json"
+        }
+      ]
+    },
+    {
+      "id": "cthulhu7",
+      "name": "Cthulhu 7e",
+      "system": "./cthulhu7.system.json",
+      "layouts": [
+        {
+          "id": "cthulhu7-layout",
+          "name": "Padrão",
+          "file": "./cthulhu7.layout.json"
+        },
+        {
+          "id": "cthulhu7-table",
+          "name": "Modo mesa",
+          "file": "./cthulhu7.table-layout.json"
+        }
+      ]
+    },
+    {
+      "id": "blades-dark",
+      "name": "Blades in the Dark",
+      "system": "./blades-dark.system.json",
+      "layouts": [
+        {
+          "id": "blades-dark-layout",
+          "name": "Padrão",
+          "file": "./blades-dark.layout.json"
+        },
+        {
+          "id": "blades-dark-table",
+          "name": "Modo mesa",
+          "file": "./blades-dark.table-layout.json"
+        }
+      ]
+    },
+    {
+      "id": "swade",
+      "name": "Savage Worlds SWADE",
+      "system": "./swade.system.json",
+      "layouts": [
+        {
+          "id": "swade-layout",
+          "name": "Padrão",
+          "file": "./swade.layout.json"
+        },
+        {
+          "id": "swade-table",
+          "name": "Modo mesa",
+          "file": "./swade.table-layout.json"
+        }
+      ]
+    },
+    {
+      "id": "ironsworn",
+      "name": "Ironsworn",
+      "system": "./ironsworn.system.json",
+      "layouts": [
+        {
+          "id": "ironsworn-layout",
+          "name": "Padrão",
+          "file": "./ironsworn.layout.json"
+        },
+        {
+          "id": "ironsworn-table",
+          "name": "Modo mesa",
+          "file": "./ironsworn.table-layout.json"
+        }
+      ]
+    },
+    {
+      "id": "ordem-paranormal",
+      "name": "Ordem Paranormal",
+      "system": "./ordem-paranormal.system.json",
+      "layouts": [
+        {
+          "id": "ordem-paranormal-layout",
+          "name": "Padrão",
+          "file": "./ordem-paranormal.layout.json"
+        },
+        {
+          "id": "ordem-paranormal-table",
+          "name": "Modo mesa",
+          "file": "./ordem-paranormal.table-layout.json"
+        }
+      ]
     }
   ]
 }

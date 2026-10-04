@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 1,
+  "id": "cthulhu7-layout",
+  "system": "cthulhu7",
+  "name": "Padrão",
+  "tabs": [
+    {
+      "id": "identity",
+      "label": "Identidade",
+      "sections": [
+        {
+          "id": "identity",
+          "title": "Personagem",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "identity.name",
+                  "label": "Nome do personagem"
+                },
+                {
+                  "type": "text",
+                  "field": "identity.player",
+                  "label": "Jogador"
+                },
+                {
+                  "type": "textarea",
+                  "field": "identity.description",
+                  "label": "Descrição"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "background",
+          "title": "Investigador",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "identity.occupation",
+                  "label": "Ocupação"
+                },
+                {
+                  "type": "number",
+                  "field": "identity.age",
+                  "label": "Idade"
+                },
+                {
+                  "type": "text",
+                  "field": "identity.residence",
+                  "label": "Residência"
+                },
+                {
+                  "type": "text",
+                  "field": "identity.birthplace",
+                  "label": "Local de nascimento"
+                },
+                {
+                  "type": "textarea",
+                  "field": "backstory",
+                  "label": "Histórico e vínculos"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "checks",
+      "label": "Características e perícias",
+      "sections": [
+        {
+          "id": "characteristics",
+          "title": "Características",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "number",
+                  "field": "characteristics.str",
+                  "label": "Força"
+                },
+                {
+                  "type": "number",
+                  "field": "characteristics.con",
+                  "label": "Constituição"
+                },
+                {
+                  "type": "number",
+                  "field": "characteristics.siz",
+                  "label": "Tamanho"
+                },
+                {
+                  "type": "number",
+                  "field": "characteristics.dex",
+                  "label": "Destreza"
+                },
+                {
+                  "type": "number",
+                  "field": "characteristics.app",
+                  "label": "Aparência"
+                },
+                {
+                  "type": "number",
+                  "field": "characteristics.int",
+                  "label": "Inteligência"
+                },
+                {
+                  "type": "number",
+                  "field": "characteristics.pow",
+                  "label": "Poder"
+                },
+                {
+                  "type": "number",
+                  "field": "characteristics.edu",
+                  "label": "Educação"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "checks",
+          "title": "Teste percentual",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "checkRoll",
+                  "configFrom": "checks.skill",
+                  "label": "Teste percentual"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "skills",
+          "title": "Perícias",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "skills",
+                  "label": "Perícias do investigador",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Perícia"
+                    },
+                    "rating": {
+                      "type": "number",
+                      "label": "Percentual"
+                    },
+                    "development": {
+                      "type": "boolean",
+                      "label": "Marcada para evolução"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Observações"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "resources",
+      "label": "Recursos e equipamento",
+      "sections": [
+        {
+          "id": "resources",
+          "title": "Recursos e condições",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "resource",
+                  "field": "hp",
+                  "label": "Pontos de vida"
+                },
+                {
+                  "type": "resource",
+                  "field": "mp",
+                  "label": "Pontos de magia"
+                },
+                {
+                  "type": "resource",
+                  "field": "sanity",
+                  "label": "Sanidade"
+                },
+                {
+                  "type": "number",
+                  "field": "luck",
+                  "label": "Sorte"
+                },
+                {
+                  "type": "number",
+                  "field": "move",
+                  "label": "Movimento"
+                },
+                {
+                  "type": "text",
+                  "field": "build",
+                  "label": "Corpo"
+                },
+                {
+                  "type": "text",
+                  "field": "damageBonus",
+                  "label": "Bônus de dano"
+                },
+                {
+                  "type": "textarea",
+                  "field": "conditions",
+                  "label": "Ferimentos e condições"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "weapons",
+          "title": "Armas e pertences",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "weapons",
+                  "label": "Armas, dano e munição",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                },
+                {
+                  "type": "list",
+                  "field": "possessions",
+                  "label": "Pertences",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notas e cobertura",
+      "sections": [
+        {
+          "id": "notes",
+          "title": "Registros da mesa",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "textarea",
+                  "field": "notes",
+                  "label": "Notas da sessão"
+                },
+                {
+                  "type": "list",
+                  "field": "advances",
+                  "label": "Criação e evolução — registro manual",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "note": "Cobertura do Quick-Start 7e da Chaosium (2021): registro de investigador e graus percentis, com bônus/penalidade. Criação, valores-base de perícias, máximos dos recursos, dano/bônus de dano, sanidade, críticos/desastres, testes opostos, testes forçados e evolução são manuais. Preencha os valores usando a referência da mesa."
+        }
+      ]
+    }
+  ]
+}

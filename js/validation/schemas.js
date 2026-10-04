@@ -1,4 +1,5 @@
 import { validateRecoveryActions } from './recovery.js';
+import { validateChecks, validateCheckData } from './checks.js';
 import { validateEntryRolls, validateRollOptions } from './entry-rolls.js';
 import { getByPath, pathKeys } from '../engine/paths.js';
 import { validateFormula } from '../engine/formula.js';
@@ -8,6 +9,7 @@ const SCHEMA_VERSION = 1;
 
 export const KNOWN_COMPONENT_TYPES = new Set([
   'boolean',
+  'checkRoll',
   'actionGroup',
   'recoveryGroup',
   'computed',
@@ -141,6 +143,10 @@ export function validateSystem(system) {
   if (system.diceSteps !== undefined && typeof system.diceSteps !== 'boolean') add(issues, 'system.diceSteps', 'deve ser booleano');
   if (system.diceSteps === true) validateStepScale(system, 'system.dieScale', issues);
   if (system.recoveryActions !== undefined) validateRecoveryActions(system.recoveryActions, system, issues);
+  if (system.checks !== undefined) {
+    validateChecks(system.checks, issues, system);
+    validateCheckData(system.characterTemplate, system.checks, issues, 'system.characterTemplate');
+  }
   if (system.entryRolls !== undefined) validateEntryRolls(system.entryRolls, system, issues);
   if (system.diceTray !== undefined && typeof system.diceTray !== 'boolean') add(issues, 'system.diceTray', 'deve ser booleano');
   return issues;
@@ -239,6 +245,11 @@ function validateComponent(component, path, system, issues) {
     return;
   }
   if (FIELD_COMPONENT_TYPES.has(component.type)) requireString(component.field, `${path}.field`, issues);
+  if (component.type === 'checkRoll') {
+    try { pathKeys(component.configFrom); } catch (error) { add(issues, `${path}.configFrom`, error.message); }
+    if (typeof component.configFrom !== 'string' || !/^checks\.[^.]+$/.test(component.configFrom)) add(issues, `${path}.configFrom`, 'use checks.nome');
+    if (system && !readConfig(system, component.configFrom)) add(issues, `${path}.configFrom`, 'teste inexistente no sistema');
+  }
   if (component.itemSchema !== undefined && requireObject(component.itemSchema, `${path}.itemSchema`, issues)) {
     for (const [key, definition] of Object.entries(component.itemSchema)) {
       const type = typeof definition === 'string' ? definition : definition?.type;
@@ -427,6 +438,7 @@ function validateFieldValue(value, definition, path, issues) {
 export function validateCharacterForPackage(character, pkg) {
   const issues = validateCharacter(character, {expectedSystem: pkg.system.id});
   if (issues.length) return issues;
+  validateCheckData(character, pkg.system.checks, issues);
   for (const layout of pkg.layouts) for (const tab of layout.tabs) for (const section of tab.sections) for (const container of section.containers) {
     for (const component of expandComponents(container, pkg.system)) if (component.field) {
       try {

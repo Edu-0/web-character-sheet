@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+const builtinCount = JSON.parse(readFileSync('data/systems/index.json', 'utf8')).systems.length;
 import { expect, test } from '@playwright/test';
 
 const errorsByPage = new WeakMap();
@@ -21,7 +23,7 @@ test.afterEach(async ({ page }) => {
 test('troca repetidamente entre D&D e sistema-rpg sem recarregar', async ({ page }, testInfo) => {
   await page.locator('[data-bind="identity.name"]').fill('Guardião entre Sistemas');
   await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
-  await expect(page.locator('#systems-list .library-card')).toHaveCount(2);
+  await expect(page.locator('#systems-list .library-card')).toHaveCount(builtinCount);
 
   const rpgCard = page.locator('#systems-list .library-card').filter({ hasText: 'Sistema de RPG' });
   await rpgCard.getByRole('button', { name: 'Abrir' }).click();
@@ -212,7 +214,7 @@ test('rejeita personagem com versão de schema incompatível', async ({ page }) 
 test('gerenciadores fazem reflow em 360px sem overflow da página', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 360, height: 900 });
   await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
-  await expect(page.locator('#systems-list .library-card')).toHaveCount(2);
+  await expect(page.locator('#systems-list .library-card')).toHaveCount(builtinCount);
   let dimensions = await page.evaluate(() => [document.documentElement.clientWidth, document.documentElement.scrollWidth]);
   expect(dimensions[1]).toBeLessThanOrEqual(dimensions[0]);
   await page.screenshot({ path: testInfo.outputPath('systems-360.png'), fullPage: false });

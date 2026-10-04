@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "id": "swade",
+  "name": "Savage Worlds SWADE",
+  "description": "Base: Savage Worlds Test Drive SWADE 2020, regras centrais. Testes de traço/dano explosivos, dado selvagem opcional, não treinado e ampliações. Criação, avanços, vantagens/complicações, custos de poderes e Benes, cartas de iniciativa, penalidades, absorção, ferimentos/fadiga e recuperação são manuais. Não inclui regras especiais de cenário nem catálogo do livro.",
+  "dieScale": [
+    4,
+    6,
+    8,
+    10,
+    12
+  ],
+  "diceSteps": true,
+  "characterTemplate": {
+    "schemaVersion": 1,
+    "meta": {
+      "system": "swade"
+    },
+    "identity": {
+      "name": "",
+      "player": "",
+      "description": "",
+      "ancestry": "",
+      "rank": "Novato"
+    },
+    "attributes": {
+      "agility": 4,
+      "smarts": 4,
+      "spirit": 4,
+      "strength": 4,
+      "vigor": 4
+    },
+    "combat": {
+      "fighting": 0,
+      "armor": 0,
+      "pace": 6,
+      "damage": "2d6",
+      "wounds": 0,
+      "fatigue": 0,
+      "shaken": false,
+      "incapacitated": false,
+      "actionCard": ""
+    },
+    "bennies": 3,
+    "powerPoints": {
+      "current": 0,
+      "max": 0
+    },
+    "skills": [],
+    "edges": [],
+    "hindrances": [],
+    "powers": [],
+    "weapons": [],
+    "inventory": [],
+    "advances": [],
+    "notes": ""
+  },
+  "formulas": {
+    "parry": "2 + floor(combat.fighting / 2)",
+    "toughness": "2 + floor(attributes.vigor / 2) + combat.armor"
+  },
+  "checks": {
+    "trait": {
+      "algorithm": "explodingTrait",
+      "note": "Informe os modificadores autorizados, incluindo ferimentos/fadiga e bônus acima de d12. Não treinado usa d4−2. Benes, rerrolagens e consequências são manuais; o painel não conserva automaticamente o melhor resultado entre tentativas.",
+      "sources": [
+        {
+          "field": "attributes.agility",
+          "label": "Agilidade"
+        },
+        {
+          "field": "attributes.smarts",
+          "label": "Astúcia"
+        },
+        {
+          "field": "attributes.spirit",
+          "label": "Espírito"
+        },
+        {
+          "field": "attributes.strength",
+          "label": "Força"
+        },
+        {
+          "field": "attributes.vigor",
+          "label": "Vigor"
+        },
+        {
+          "field": "combat.fighting",
+          "label": "Lutar (0 = não treinado; marque a opção)"
+        },
+        {
+          "label": "Perícia",
+          "collection": "skills",
+          "valueField": "die"
+        }
+      ]
+    },
+    "damage": {
+      "algorithm": "explodingDamage",
+      "note": "Edite a expressão antes de rolar, incluindo Força e dado extra autorizado por ampliação. Cada dado explode; somam-se os resultados, sem dado selvagem. Dano e efeitos no alvo são manuais.",
+      "sources": [
+        {
+          "field": "combat.damage",
+          "label": "Dano informado"
+        }
+      ]
+    }
+  }
+}

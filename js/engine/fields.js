@@ -133,6 +133,7 @@ registerFieldType('resource', {
 
     const current = document.createElement('input');
     current.type = 'number';
+    current.setAttribute('aria-label', `${label} atual`);
     current.value = getByPath(character, `${field}.current`) ?? 0;
     current.addEventListener('input', () => {
       setByPath(character, `${field}.current`, current.value === '' ? 0 : Number(current.value));
@@ -144,6 +145,7 @@ registerFieldType('resource', {
 
     const max = document.createElement('input');
     max.type = 'number';
+    max.setAttribute('aria-label', `${label} máximo`);
     max.value = getByPath(character, `${field}.max`) ?? 0;
     registerRefresh?.(() => {
       if (document.activeElement !== current) current.value = getByPath(character, `${field}.current`) ?? 0;

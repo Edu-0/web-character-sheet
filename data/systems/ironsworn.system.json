@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "id": "ironsworn",
+  "name": "Ironsworn",
+  "description": "Base: Ironsworn original, SRD de Shawn Tomkin. Distribua 3, 2, 2, 1, 1 entre os atributos e escolha ativos com a mesa. Testes de ação/progresso, recursos, debilidades e registros. Gatilhos e efeitos dos movimentos, queima de ímpeto, progressão por desafio, vínculos, experiência e aquisição de ativos são manuais. Sem Delve, Starforged ou catálogos de oráculos/ativos.",
+  "characterTemplate": {
+    "schemaVersion": 1,
+    "meta": {
+      "system": "ironsworn"
+    },
+    "identity": {
+      "name": "",
+      "player": "",
+      "description": ""
+    },
+    "stats": {
+      "edge": 0,
+      "heart": 0,
+      "iron": 0,
+      "shadow": 0,
+      "wits": 0
+    },
+    "health": 5,
+    "spirit": 5,
+    "supply": 5,
+    "momentum": 2,
+    "debilities": {
+      "wounded": false,
+      "shaken": false,
+      "unprepared": false,
+      "encumbered": false,
+      "maimed": false,
+      "corrupted": false,
+      "cursed": false,
+      "tormented": false
+    },
+    "bondsTicks": 0,
+    "experience": 0,
+    "spentExperience": 0,
+    "progress": [],
+    "bonds": [],
+    "assets": [],
+    "inventory": [],
+    "world": "",
+    "advances": [],
+    "notes": ""
+  },
+  "formulas": {
+    "momentumMax": "10 - (if(debilities.wounded, 1, 0) + if(debilities.shaken, 1, 0) + if(debilities.unprepared, 1, 0) + if(debilities.encumbered, 1, 0) + if(debilities.maimed, 1, 0) + if(debilities.corrupted, 1, 0) + if(debilities.cursed, 1, 0) + if(debilities.tormented, 1, 0))",
+    "momentumReset": "if((if(debilities.wounded, 1, 0) + if(debilities.shaken, 1, 0) + if(debilities.unprepared, 1, 0) + if(debilities.encumbered, 1, 0) + if(debilities.maimed, 1, 0) + if(debilities.corrupted, 1, 0) + if(debilities.cursed, 1, 0) + if(debilities.tormented, 1, 0)) == 0, 2, if((if(debilities.wounded, 1, 0) + if(debilities.shaken, 1, 0) + if(debilities.unprepared, 1, 0) + if(debilities.encumbered, 1, 0) + if(debilities.maimed, 1, 0) + if(debilities.corrupted, 1, 0) + if(debilities.cursed, 1, 0) + if(debilities.tormented, 1, 0)) == 1, 1, 0))"
+  },
+  "checks": {
+    "action": {
+      "algorithm": "challenge",
+      "momentumField": "momentum",
+      "note": "Role apenas quando o movimento pedir. Empates favorecem o desafio; ímpeto negativo pode cancelar o dado de ação. Queimar ímpeto positivo cancela desafios menores que ele; compare os mesmos dados e ajuste o ímpeto para a restauração manualmente.",
+      "sources": [
+        {
+          "field": "stats.edge",
+          "label": "Agilidade"
+        },
+        {
+          "field": "stats.heart",
+          "label": "Coração"
+        },
+        {
+          "field": "stats.iron",
+          "label": "Ferro"
+        },
+        {
+          "field": "stats.shadow",
+          "label": "Sombra"
+        },
+        {
+          "field": "stats.wits",
+          "label": "Astúcia"
+        },
+        {
+          "field": "health",
+          "label": "Saúde"
+        },
+        {
+          "field": "spirit",
+          "label": "Espírito"
+        },
+        {
+          "field": "supply",
+          "label": "Suprimentos"
+        }
+      ]
+    },
+    "progress": {
+      "algorithm": "progress",
+      "note": "Quatro marcas formam uma caixa. Só caixas completas contam; progresso não usa dado de ação, modificador ou ímpeto. Resolva os efeitos do movimento manualmente.",
+      "sources": [
+        {
+          "field": "bondsTicks",
+          "label": "Vínculos"
+        },
+        {
+          "label": "Progresso",
+          "collection": "progress",
+          "valueField": "ticks"
+        }
+      ]
+    }
+  }
+}

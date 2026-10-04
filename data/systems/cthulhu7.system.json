@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "id": "cthulhu7",
+  "name": "Cthulhu 7e",
+  "description": "Cobertura do Quick-Start 7e da Chaosium (2021): registro de investigador e graus percentis, com bônus/penalidade. Criação, valores-base de perícias, máximos dos recursos, dano/bônus de dano, sanidade, críticos/desastres, testes opostos, testes forçados e evolução são manuais. Preencha os valores usando a referência da mesa.",
+  "characterTemplate": {
+    "schemaVersion": 1,
+    "meta": {
+      "system": "cthulhu7"
+    },
+    "identity": {
+      "name": "",
+      "player": "",
+      "description": "",
+      "occupation": "",
+      "age": 0,
+      "residence": "",
+      "birthplace": ""
+    },
+    "characteristics": {
+      "str": 0,
+      "con": 0,
+      "siz": 0,
+      "dex": 0,
+      "app": 0,
+      "int": 0,
+      "pow": 0,
+      "edu": 0
+    },
+    "hp": {
+      "current": 0,
+      "max": 0
+    },
+    "mp": {
+      "current": 0,
+      "max": 0
+    },
+    "sanity": {
+      "current": 0,
+      "max": 0
+    },
+    "luck": 0,
+    "move": 0,
+    "build": "",
+    "damageBonus": "",
+    "skills": [],
+    "weapons": [],
+    "possessions": [],
+    "backstory": "",
+    "conditions": "",
+    "advances": [],
+    "notes": ""
+  },
+  "checks": {
+    "skill": {
+      "algorithm": "percentile",
+      "note": "O painel mostra graus percentis do Quick-Start. Dificuldade exigida, críticos/desastres, testes forçados/opostos e efeitos são manuais; bônus e penalidade se cancelam antes de informar o saldo.",
+      "sources": [
+        {
+          "field": "characteristics.str",
+          "label": "Força"
+        },
+        {
+          "field": "characteristics.con",
+          "label": "Constituição"
+        },
+        {
+          "field": "characteristics.siz",
+          "label": "Tamanho"
+        },
+        {
+          "field": "characteristics.dex",
+          "label": "Destreza"
+        },
+        {
+          "field": "characteristics.app",
+          "label": "Aparência"
+        },
+        {
+          "field": "characteristics.int",
+          "label": "Inteligência"
+        },
+        {
+          "field": "characteristics.pow",
+          "label": "Poder"
+        },
+        {
+          "field": "characteristics.edu",
+          "label": "Educação"
+        },
+        {
+          "field": "luck",
+          "label": "Sorte"
+        },
+        {
+          "field": "sanity.current",
+          "label": "Sanidade"
+        },
+        {
+          "label": "Perícia",
+          "collection": "skills",
+          "valueField": "rating"
+        }
+      ]
+    }
+  }
+}

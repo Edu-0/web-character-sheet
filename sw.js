@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "4b6ca9654fcb73d8c801";
+const VERSION = "4ef8fa77ddb8b64c6b48";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -51,7 +51,7 @@ const ASSETS = [
   },
   {
     "path": "css/engine.css",
-    "hash": "b1488ea73491f3d25b052ebcead70bfb17b7663bb1492cb3f3f65fbd7aea07d8"
+    "hash": "34963af5b2588bdc32a42bf957b026397a354cdd0ac548668fea2f6e45745208"
   },
   {
     "path": "css/layout.css",
@@ -74,6 +74,30 @@ const ASSETS = [
     "hash": "e8dff95b6d332938ac7e7bd5cfa34eafdf31e2e923665e577bb285e4869524af"
   },
   {
+    "path": "data/systems/blades-dark.layout.json",
+    "hash": "6c94f3754e29e35f6ddb681698187bebeecc1d02af00ba1e8d4f2af357c68f1b"
+  },
+  {
+    "path": "data/systems/blades-dark.system.json",
+    "hash": "89c3829ea3e90c8134124436b77648300fc3066d575b92af51e4078d06f523d0"
+  },
+  {
+    "path": "data/systems/blades-dark.table-layout.json",
+    "hash": "3d6db0f279823fc62010a498016c87b719f9396c778793d4b2ac88582ffc3971"
+  },
+  {
+    "path": "data/systems/cthulhu7.layout.json",
+    "hash": "9cfca958a62bf73f3eb56a69c7503fe745215875ac5100c321df44c2dde8faf0"
+  },
+  {
+    "path": "data/systems/cthulhu7.system.json",
+    "hash": "061bfd00ec3b1f39fc9bce2992297b73f3ac986e54de9ad0329ae6b776911cc9"
+  },
+  {
+    "path": "data/systems/cthulhu7.table-layout.json",
+    "hash": "9aabe84bf655221ce830cf56cf1ae93f1e3d535af58a9efa093344a94404e036"
+  },
+  {
     "path": "data/systems/dnd2024.layout.json",
     "hash": "96e744e8a863687a74e333c3d8efac571bdbdb70a0b898f2a425f8752f405fff"
   },
@@ -86,8 +110,44 @@ const ASSETS = [
     "hash": "5549222ecb83ccdc0383e8b20d0268703bbe5e39189ae8a4a30beae24cf81242"
   },
   {
+    "path": "data/systems/fate-accelerated.layout.json",
+    "hash": "64da2d45b68748d0ffc3e57d80915c408114b2f2742a6285bdc9a3ec4330c1dd"
+  },
+  {
+    "path": "data/systems/fate-accelerated.system.json",
+    "hash": "87a603f79ac4949d9950fbb5af29e951b74225b8983192f19d104d905c0d6f04"
+  },
+  {
+    "path": "data/systems/fate-accelerated.table-layout.json",
+    "hash": "0cf6ee9a3cc4d79c7c194473370a0fc8d7262b34136786f5109b3186ab3cb8d6"
+  },
+  {
     "path": "data/systems/index.json",
-    "hash": "fea08e7b92397aae2cf6d195b3e2089b30a87fe25ad9a47d0ff4e256608ba117"
+    "hash": "304ccc997e705525f15306737dce1ae32ba2acd59b1849e01c258908f0571647"
+  },
+  {
+    "path": "data/systems/ironsworn.layout.json",
+    "hash": "6ca24f8af191db6890527c66ee5d3e92b975d67448b6bdab296dbb1b501bfe54"
+  },
+  {
+    "path": "data/systems/ironsworn.system.json",
+    "hash": "764c9427873a1c769541df54f35e1f8d5ed726f770370b085f22d1fad105acd1"
+  },
+  {
+    "path": "data/systems/ironsworn.table-layout.json",
+    "hash": "3aafab0083a6794318d1cb0c6dd07baf29178c6a72e5455c84ad753242bf83ec"
+  },
+  {
+    "path": "data/systems/ordem-paranormal.layout.json",
+    "hash": "49558b73db5765f3f1fd81dea28222cfe1a198eaa11a13ea4f4acc5e35b32da5"
+  },
+  {
+    "path": "data/systems/ordem-paranormal.system.json",
+    "hash": "5a38dd8fa80b801871ab8c76ba00b51843f2a7719a0d1df3d99f2888755cb9c3"
+  },
+  {
+    "path": "data/systems/ordem-paranormal.table-layout.json",
+    "hash": "a01b18051a2a9672c29521d071079b8593e9d7a02ea0864258e7d9f591fb6cbe"
   },
   {
     "path": "data/systems/sistema-rpg.layout.json",
@@ -100,6 +160,18 @@ const ASSETS = [
   {
     "path": "data/systems/sistema-rpg.table-layout.json",
     "hash": "78d6f5c416fac8fc400b7a7562c957ada956a156c8bfcc628099738d762379e3"
+  },
+  {
+    "path": "data/systems/swade.layout.json",
+    "hash": "a248d2a05b1371357e9481d994074b5fb9c8ad2f3439ef489e53a4fde1be7c24"
+  },
+  {
+    "path": "data/systems/swade.system.json",
+    "hash": "f63762e392a795eddaac710198c75990f25050f04fc501834b6119435c226313"
+  },
+  {
+    "path": "data/systems/swade.table-layout.json",
+    "hash": "f80a99aec8afe4015c2473df8f615ffa106e9379f8634407de2ddfb61f343d40"
   },
   {
     "path": "index.html",
@@ -151,7 +223,7 @@ const ASSETS = [
   },
   {
     "path": "js/dice.js",
-    "hash": "69a34dd86d78aede276635c5bc8157158b80a4a9b00efd20f2fa934431d4121e"
+    "hash": "1a090170cf12359223a4bcbd9b269271c83f4b15b78f03614609936d49a56d1b"
   },
   {
     "path": "js/engine/advanced-fields.js",
@@ -168,6 +240,14 @@ const ASSETS = [
   {
     "path": "js/engine/calculation-overrides.js",
     "hash": "c693ee094e022f4a6133bc3d8d071873ff2c9dbf4c5c4a4917dc7746921e71c2"
+  },
+  {
+    "path": "js/engine/check-fields.js",
+    "hash": "c1f6259e36546a2f032f4a82c4fb694de667f412b8f8944fc44148483611ee31"
+  },
+  {
+    "path": "js/engine/checks.js",
+    "hash": "e9232f7c94f854e8f7eff0f81c33000330f81e37d3e3089ec7252b893417cd87"
   },
   {
     "path": "js/engine/collection-recovery.js",
@@ -195,7 +275,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/fields.js",
-    "hash": "cc483b821f17c7d9d87d8abff8e8763914ded9e035101c898170423c593b96f2"
+    "hash": "5f0ccc0c6fe39eed9051346aea4ecdb644b798cf930fbeb05e0293c78060d853"
   },
   {
     "path": "js/engine/formula.js",
@@ -255,7 +335,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/renderer.js",
-    "hash": "fef05ece0407c29ae2fb20aaa4acddc6d6f7be20561d6cc081496e66e9e91d55"
+    "hash": "552934b36d23c04783fcc5ed40c7c91b6d80535ea269eba94484add4d3e845e8"
   },
   {
     "path": "js/engine/resolution.js",
@@ -374,6 +454,10 @@ const ASSETS = [
     "hash": "77ecdb9de0457f860bd0ae651c3a740aa49a6f611f8fcb45e2f0f279e1d6921a"
   },
   {
+    "path": "js/validation/checks.js",
+    "hash": "d1694ae03cfce2ba83c62b143f3b7812adce58f178798c64e55f522dcbf21212"
+  },
+  {
     "path": "js/validation/entry-rolls.js",
     "hash": "267ca8f2f313df57fcd7ea3a87af7382d589ff0567c312d379e7b7acb072017a"
   },
@@ -387,7 +471,7 @@ const ASSETS = [
   },
   {
     "path": "js/validation/schemas.js",
-    "hash": "bf45434af8b4dc242a0703e8a26b0f09c4186d0f8024591a7eee1818dee0776e"
+    "hash": "4d8a80e58880d283d8923943d635924f179dab10bcbfdf89aeed0323af00fda0"
   },
   {
     "path": "manifest.webmanifest",

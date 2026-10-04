@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "blades-dark",
+  "name": "Blades in the Dark",
+  "description": "Ficha de personagem baseada no SRD original de Blades in the Dark, sem Deep Cuts. Ações, resistência e registros de estresse, trauma, dano, carga, moedas e relógios. Posição, efeito, ajuda/esforço, consequências, custos, recuperação, vício e evolução são manuais. Bando/campanha e catálogos de playbooks não são automatizados.",
+  "characterTemplate": {
+    "schemaVersion": 1,
+    "meta": {
+      "system": "blades-dark"
+    },
+    "identity": {
+      "name": "",
+      "player": "",
+      "description": "",
+      "alias": "",
+      "heritage": "",
+      "background": "",
+      "playbook": "",
+      "vice": ""
+    },
+    "actions": {
+      "hunt": 0,
+      "study": 0,
+      "survey": 0,
+      "tinker": 0,
+      "finesse": 0,
+      "prowl": 0,
+      "skirmish": 0,
+      "wreck": 0,
+      "attune": 0,
+      "command": 0,
+      "consort": 0,
+      "sway": 0
+    },
+    "stress": 0,
+    "trauma": [],
+    "harm": {
+      "oneA": "",
+      "oneB": "",
+      "twoA": "",
+      "twoB": "",
+      "three": ""
+    },
+    "armor": {
+      "normal": false,
+      "heavy": false,
+      "special": false
+    },
+    "load": "normal",
+    "coin": 0,
+    "stash": 0,
+    "healing": 0,
+    "position": "risky",
+    "effect": "standard",
+    "abilities": [],
+    "inventory": [],
+    "contacts": [],
+    "clocks": [],
+    "advances": [],
+    "notes": ""
+  },
+  "formulas": {
+    "insight": "if(actions.hunt > 0, 1, 0) + if(actions.study > 0, 1, 0) + if(actions.survey > 0, 1, 0) + if(actions.tinker > 0, 1, 0)",
+    "prowess": "if(actions.finesse > 0, 1, 0) + if(actions.prowl > 0, 1, 0) + if(actions.skirmish > 0, 1, 0) + if(actions.wreck > 0, 1, 0)",
+    "resolve": "if(actions.attune > 0, 1, 0) + if(actions.command > 0, 1, 0) + if(actions.consort > 0, 1, 0) + if(actions.sway > 0, 1, 0)"
+  },
+  "checks": {
+    "action": {
+      "algorithm": "d6Pool",
+      "note": "Acerte posição e efeito com a mesa antes de rolar. Informe somente os dados adicionais autorizados; ajuda, esforço, barganha, dano e estresse não são pagos automaticamente.",
+      "sources": [
+        {
+          "field": "actions.hunt",
+          "label": "Caçar"
+        },
+        {
+          "field": "actions.study",
+          "label": "Estudar"
+        },
+        {
+          "field": "actions.survey",
+          "label": "Observar"
+        },
+        {
+          "field": "actions.tinker",
+          "label": "Manipular"
+        },
+        {
+          "field": "actions.finesse",
+          "label": "Refinar"
+        },
+        {
+          "field": "actions.prowl",
+          "label": "Esgueirar"
+        },
+        {
+          "field": "actions.skirmish",
+          "label": "Escaramuçar"
+        },
+        {
+          "field": "actions.wreck",
+          "label": "Destruir"
+        },
+        {
+          "field": "actions.attune",
+          "label": "Sintonizar"
+        },
+        {
+          "field": "actions.command",
+          "label": "Comandar"
+        },
+        {
+          "field": "actions.consort",
+          "label": "Socializar"
+        },
+        {
+          "field": "actions.sway",
+          "label": "Convencer"
+        }
+      ]
+    },
+    "resistance": {
+      "algorithm": "d6Resistance",
+      "note": "Confirme a resistência antes de rolar. O painel informa estresse (6 menos o resultado; crítico recupera 1), mas a marcação e a consequência reduzida são manuais.",
+      "sources": [
+        {
+          "label": "Discernimento",
+          "formula": "insight"
+        },
+        {
+          "label": "Destreza",
+          "formula": "prowess"
+        },
+        {
+          "label": "Determinação",
+          "formula": "resolve"
+        }
+      ]
+    }
+  }
+}

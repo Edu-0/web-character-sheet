@@ -18,7 +18,7 @@ test.beforeEach(async ({ page }) => {
 });
 test.afterEach(async ({ page }) => expect(errors.get(page)).toEqual([]));
 
-test('digitação agrupada, atalhos, nova ramificação e busca com undo próprio', async ({ page }) => {
+test('digitação agrupada, atalhos, nova ramificação e busca com undo próprio @smoke', async ({ page }) => {
   const name = page.locator(host).getByLabel('Nome do personagem', { exact: true });
   const original = await name.inputValue(), id = (await values(page)).meta.id;
   await name.fill(''); await name.pressSequentially('Guardiã', { delay: 30 });

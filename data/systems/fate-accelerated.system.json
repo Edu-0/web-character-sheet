@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "fate-accelerated",
+  "name": "Fate Acelerado",
+  "description": "Ficha assistida baseada em Fate Acelerado. Distribua +3, +2, +2, +1, +1 e +0 entre as abordagens na criação. Aspectos, façanhas, invocações, compulsões, recuperação e marcos são decididos e registrados pela mesa. O teste não gasta pontos nem aplica consequências.",
+  "characterTemplate": {
+    "schemaVersion": 1,
+    "meta": {
+      "system": "fate-accelerated"
+    },
+    "identity": {
+      "name": "",
+      "player": "",
+      "description": ""
+    },
+    "aspects": {
+      "concept": "",
+      "trouble": "",
+      "other1": "",
+      "other2": "",
+      "other3": ""
+    },
+    "approaches": {
+      "careful": 0,
+      "clever": 0,
+      "flashy": 0,
+      "forceful": 0,
+      "quick": 0,
+      "sneaky": 0
+    },
+    "fate": 3,
+    "refresh": 3,
+    "stress": {
+      "one": false,
+      "two": false,
+      "three": false
+    },
+    "consequences": {
+      "mild": "",
+      "moderate": "",
+      "severe": ""
+    },
+    "stunts": [],
+    "inventory": [],
+    "advances": [],
+    "notes": ""
+  },
+  "checks": {
+    "action": {
+      "algorithm": "fate",
+      "note": "Escolha a abordagem e informe oposição e bônus autorizados. Invocações, pontos de destino e efeitos da ação são manuais.",
+      "sources": [
+        {
+          "field": "approaches.careful",
+          "label": "Cuidadoso"
+        },
+        {
+          "field": "approaches.clever",
+          "label": "Esperto"
+        },
+        {
+          "field": "approaches.flashy",
+          "label": "Estiloso"
+        },
+        {
+          "field": "approaches.forceful",
+          "label": "Poderoso"
+        },
+        {
+          "field": "approaches.quick",
+          "label": "Rápido"
+        },
+        {
+          "field": "approaches.sneaky",
+          "label": "Sorrateiro"
+        }
+      ]
+    }
+  }
+}

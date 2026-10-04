@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "id": "fate-accelerated-layout",
+  "system": "fate-accelerated",
+  "name": "Padrão",
+  "tabs": [
+    {
+      "id": "identity",
+      "label": "Identidade",
+      "sections": [
+        {
+          "id": "identity",
+          "title": "Personagem",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "identity.name",
+                  "label": "Nome do personagem"
+                },
+                {
+                  "type": "text",
+                  "field": "identity.player",
+                  "label": "Jogador"
+                },
+                {
+                  "type": "textarea",
+                  "field": "identity.description",
+                  "label": "Descrição"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "aspects",
+          "title": "Aspectos",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "aspects.concept",
+                  "label": "Conceito"
+                },
+                {
+                  "type": "text",
+                  "field": "aspects.trouble",
+                  "label": "Dificuldade"
+                },
+                {
+                  "type": "text",
+                  "field": "aspects.other1",
+                  "label": "Aspecto 1"
+                },
+                {
+                  "type": "text",
+                  "field": "aspects.other2",
+                  "label": "Aspecto 2"
+                },
+                {
+                  "type": "text",
+                  "field": "aspects.other3",
+                  "label": "Aspecto 3"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "action",
+      "label": "Ações e recursos",
+      "sections": [
+        {
+          "id": "action",
+          "title": "Abordagens e teste",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "number",
+                  "field": "approaches.careful",
+                  "label": "Cuidadoso",
+                  "help": "Ficha assistida baseada em Fate Acelerado. Distribua +3, +2, +2, +1, +1 e +0 entre as abordagens na criação. Aspectos, façanhas, invocações, compulsões, recuperação e marcos são decididos e registrados pela mesa. O teste não gasta pontos nem aplica consequências."
+                },
+                {
+                  "type": "number",
+                  "field": "approaches.clever",
+                  "label": "Esperto",
+                  "help": "Ficha assistida baseada em Fate Acelerado. Distribua +3, +2, +2, +1, +1 e +0 entre as abordagens na criação. Aspectos, façanhas, invocações, compulsões, recuperação e marcos são decididos e registrados pela mesa. O teste não gasta pontos nem aplica consequências."
+                },
+                {
+                  "type": "number",
+                  "field": "approaches.flashy",
+                  "label": "Estiloso",
+                  "help": "Ficha assistida baseada em Fate Acelerado. Distribua +3, +2, +2, +1, +1 e +0 entre as abordagens na criação. Aspectos, façanhas, invocações, compulsões, recuperação e marcos são decididos e registrados pela mesa. O teste não gasta pontos nem aplica consequências."
+                },
+                {
+                  "type": "number",
+                  "field": "approaches.forceful",
+                  "label": "Poderoso",
+                  "help": "Ficha assistida baseada em Fate Acelerado. Distribua +3, +2, +2, +1, +1 e +0 entre as abordagens na criação. Aspectos, façanhas, invocações, compulsões, recuperação e marcos são decididos e registrados pela mesa. O teste não gasta pontos nem aplica consequências."
+                },
+                {
+                  "type": "number",
+                  "field": "approaches.quick",
+                  "label": "Rápido",
+                  "help": "Ficha assistida baseada em Fate Acelerado. Distribua +3, +2, +2, +1, +1 e +0 entre as abordagens na criação. Aspectos, façanhas, invocações, compulsões, recuperação e marcos são decididos e registrados pela mesa. O teste não gasta pontos nem aplica consequências."
+                },
+                {
+                  "type": "number",
+                  "field": "approaches.sneaky",
+                  "label": "Sorrateiro",
+                  "help": "Ficha assistida baseada em Fate Acelerado. Distribua +3, +2, +2, +1, +1 e +0 entre as abordagens na criação. Aspectos, façanhas, invocações, compulsões, recuperação e marcos são decididos e registrados pela mesa. O teste não gasta pontos nem aplica consequências."
+                },
+                {
+                  "type": "checkRoll",
+                  "configFrom": "checks.action",
+                  "label": "Teste de abordagem"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "resources",
+          "title": "Pontos e estresse",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "counter",
+                  "field": "fate",
+                  "label": "Pontos de destino",
+                  "min": 0
+                },
+                {
+                  "type": "number",
+                  "field": "refresh",
+                  "label": "Recarga",
+                  "help": "No início da sessão, ajuste os pontos até a recarga apenas se estiverem abaixo dela. Façanhas extras podem reduzir a recarga; confira com a mesa."
+                },
+                {
+                  "type": "boolean",
+                  "field": "stress.one",
+                  "label": "Estresse 1",
+                  "help": "Marque no máximo uma caixa de estresse por ataque; cada caixa absorve seu valor. Não são pontos de vida."
+                },
+                {
+                  "type": "boolean",
+                  "field": "stress.two",
+                  "label": "Estresse 2",
+                  "help": "Marque no máximo uma caixa de estresse por ataque; cada caixa absorve seu valor. Não são pontos de vida."
+                },
+                {
+                  "type": "boolean",
+                  "field": "stress.three",
+                  "label": "Estresse 3",
+                  "help": "Marque no máximo uma caixa de estresse por ataque; cada caixa absorve seu valor. Não são pontos de vida."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "consequences",
+          "title": "Consequências",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "consequences.mild",
+                  "label": "Suave (2)"
+                },
+                {
+                  "type": "text",
+                  "field": "consequences.moderate",
+                  "label": "Moderada (4)"
+                },
+                {
+                  "type": "text",
+                  "field": "consequences.severe",
+                  "label": "Severa (6)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stunts",
+      "label": "Façanhas e equipamento",
+      "sections": [
+        {
+          "id": "stunts",
+          "title": "Façanhas e equipamento",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "stunts",
+                  "label": "Façanhas",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                },
+                {
+                  "type": "list",
+                  "field": "inventory",
+                  "label": "Equipamento",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notas e cobertura",
+      "sections": [
+        {
+          "id": "notes",
+          "title": "Registros da mesa",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "textarea",
+                  "field": "notes",
+                  "label": "Notas da sessão"
+                },
+                {
+                  "type": "list",
+                  "field": "advances",
+                  "label": "Criação e evolução — registro manual",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "note": "Ficha assistida baseada em Fate Acelerado. Distribua +3, +2, +2, +1, +1 e +0 entre as abordagens na criação. Aspectos, façanhas, invocações, compulsões, recuperação e marcos são decididos e registrados pela mesa. O teste não gasta pontos nem aplica consequências."
+        }
+      ]
+    }
+  ]
+}

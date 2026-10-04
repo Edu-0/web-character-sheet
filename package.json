@@ -4,6 +4,9 @@
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
+    "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:quick": "npm run test:unit && playwright test --grep @smoke --workers=2",
+    "test:full": "npm run test:unit && playwright test --workers=2 && npm run check:docs && npm run check:offline",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "check:docs": "node scripts/check-doc-links.mjs",

@@ -20,7 +20,7 @@ test.afterEach(async ({ page }) => {
   expect(errorsByPage.get(page)).toEqual([]);
 });
 
-test('monta abas acessíveis e persiste campos do sistema-rpg', async ({ page }) => {
+test('monta abas acessíveis e persiste campos do sistema-rpg @smoke', async ({ page }) => {
   const tabs = page.locator('.engine-tab');
   await expect(tabs).toHaveCount(13);
   await expect(page.getByRole('tab', { name: 'Identidade' })).toHaveAttribute('aria-selected', 'true');

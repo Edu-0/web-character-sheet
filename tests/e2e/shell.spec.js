@@ -18,7 +18,7 @@ test.afterEach(async ({ page }) => {
   expect(runtimeErrors.get(page)).toEqual([]);
 });
 
-test('navega pelo shell sem remontar ou perder a ficha legada', async ({ page }) => {
+test('navega pelo shell sem remontar ou perder a ficha legada @smoke', async ({ page }) => {
   const name = page.locator('[data-bind="identity.name"]');
   await name.fill('Lia da Aurora');
   await expect(page.locator('#shell-current-character')).toHaveText('Lia da Aurora');

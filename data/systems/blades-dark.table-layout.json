@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "id": "blades-dark-table",
+  "system": "blades-dark",
+  "name": "Modo mesa",
+  "mode": "table",
+  "tabs": [
+    {
+      "id": "play",
+      "label": "Em jogo",
+      "sections": [
+        {
+          "id": "checks",
+          "title": "Testes",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "select",
+                  "field": "position",
+                  "label": "Posição",
+                  "options": [
+                    {
+                      "value": "controlled",
+                      "label": "Controlada"
+                    },
+                    {
+                      "value": "risky",
+                      "label": "Arriscada"
+                    },
+                    {
+                      "value": "desperate",
+                      "label": "Desesperada"
+                    }
+                  ]
+                },
+                {
+                  "type": "select",
+                  "field": "effect",
+                  "label": "Efeito",
+                  "options": [
+                    {
+                      "value": "limited",
+                      "label": "Limitado"
+                    },
+                    {
+                      "value": "standard",
+                      "label": "Padrão"
+                    },
+                    {
+                      "value": "great",
+                      "label": "Grande"
+                    }
+                  ]
+                },
+                {
+                  "type": "checkRoll",
+                  "configFrom": "checks.action",
+                  "label": "Teste de ação"
+                },
+                {
+                  "type": "checkRoll",
+                  "configFrom": "checks.resistance",
+                  "label": "Teste de resistência"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "resources",
+          "title": "Estresse e proteção",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "counter",
+                  "field": "stress",
+                  "label": "Estresse marcado",
+                  "min": 0,
+                  "max": 9,
+                  "help": "Ao marcar a última caixa, resolva o trauma e a saída da cena com a mesa."
+                },
+                {
+                  "type": "tagList",
+                  "field": "trauma",
+                  "label": "Traumas"
+                },
+                {
+                  "type": "boolean",
+                  "field": "armor.normal",
+                  "label": "Armadura usada"
+                },
+                {
+                  "type": "boolean",
+                  "field": "armor.heavy",
+                  "label": "Armadura pesada usada"
+                },
+                {
+                  "type": "boolean",
+                  "field": "armor.special",
+                  "label": "Proteção especial usada"
+                },
+                {
+                  "type": "counter",
+                  "field": "healing",
+                  "label": "Relógio de cura",
+                  "min": 0,
+                  "max": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "harm",
+          "title": "Dano",
+          "containers": [
+            {
+              "layout": {
+                "type": "grid",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "text",
+                  "field": "harm.oneA",
+                  "label": "Nível 1 — A"
+                },
+                {
+                  "type": "text",
+                  "field": "harm.oneB",
+                  "label": "Nível 1 — B"
+                },
+                {
+                  "type": "text",
+                  "field": "harm.twoA",
+                  "label": "Nível 2 — A"
+                },
+                {
+                  "type": "text",
+                  "field": "harm.twoB",
+                  "label": "Nível 2 — B"
+                },
+                {
+                  "type": "text",
+                  "field": "harm.three",
+                  "label": "Nível 3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "clocks",
+          "title": "Relógios e projetos",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "list",
+                  "field": "clocks",
+                  "label": "Relógios",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Objetivo"
+                    },
+                    "filled": {
+                      "type": "number",
+                      "label": "Segmentos marcados"
+                    },
+                    "segments": {
+                      "type": "number",
+                      "label": "Total de segmentos",
+                      "default": 4
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Condições e consequências"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notas e cobertura",
+      "sections": [
+        {
+          "id": "notes",
+          "title": "Registros da mesa",
+          "containers": [
+            {
+              "layout": {
+                "type": "stack",
+                "min": 220,
+                "gap": 12
+              },
+              "components": [
+                {
+                  "type": "textarea",
+                  "field": "notes",
+                  "label": "Notas da sessão"
+                },
+                {
+                  "type": "list",
+                  "field": "advances",
+                  "label": "Criação e evolução — registro manual",
+                  "itemSchema": {
+                    "name": {
+                      "type": "text",
+                      "label": "Nome"
+                    },
+                    "description": {
+                      "type": "textarea",
+                      "label": "Descrição"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "note": "Ficha de personagem baseada no SRD original de Blades in the Dark, sem Deep Cuts. Ações, resistência e registros de estresse, trauma, dano, carga, moedas e relógios. Posição, efeito, ajuda/esforço, consequências, custos, recuperação, vício e evolução são manuais. Bando/campanha e catálogos de playbooks não são automatizados."
+        }
+      ]
+    }
+  ]
+}

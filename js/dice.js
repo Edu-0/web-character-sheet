@@ -37,6 +37,11 @@ export function getHistory() {
   return history;
 }
 
+// Mantém a interpretação junto da expressão no histórico compartilhado.
+export function recordCheck(result) {
+  return record({ ...result, formula: `${result.formula} · ${result.outcome} · ${result.detail}` });
+}
+
 export function clearHistory() {
   history.length = 0;
 }
