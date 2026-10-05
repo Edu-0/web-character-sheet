@@ -9,9 +9,11 @@
     "test:full": "npm run test:unit && playwright test --workers=2 && npm run check:docs && npm run check:offline",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "check:docs": "node scripts/check-doc-links.mjs",
+    "check:docs": "npm run check:reference && node scripts/check-doc-links.mjs",
     "build:offline": "node scripts/build-offline.mjs",
-    "check:offline": "node scripts/build-offline.mjs --check"
+    "check:offline": "node scripts/build-offline.mjs --check",
+    "build:reference": "node scripts/build-reference.mjs",
+    "check:reference": "node scripts/build-reference.mjs --check"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0"

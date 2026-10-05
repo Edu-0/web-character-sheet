@@ -1,3 +1,4 @@
+import {COMPONENT_CONTRACTS,RUNTIME_DEFAULTS} from '../validation/contracts.js';
 // engine/fields.js
 // Registro de tipos de campo ("component registry"). Cada tipo sabe ler/escrever
 // seu valor no character (via caminho pontilhado) e como se desenhar. Novos tipos
@@ -9,8 +10,11 @@ import { createTraitControl } from './traits.js';
 const registry = new Map();
 
 export function registerFieldType(type, definition) {
+  if (!Object.hasOwn(COMPONENT_CONTRACTS,type)) throw new Error(`Tipo sem contrato: ${type}`);
   registry.set(type, definition);
 }
+
+export function registeredFieldTypes() {return [...registry.keys()];}
 
 export function getFieldType(type) {
   return registry.get(type);
@@ -63,7 +67,7 @@ registerFieldType('text', {
 });
 
 registerFieldType('textarea', {
-  render(container, { character, field, label, rows = 3, onChange }) {
+  render(container, { character, field, label, rows = RUNTIME_DEFAULTS.textareaRows, onChange }) {
     const wrap = fieldWrapper(label);
     const textarea = document.createElement('textarea');
     textarea.rows = rows;
@@ -180,7 +184,7 @@ registerFieldType('die', {
 
 // Contador genérico com +/- (ex.: Recurso de Ação, Reação, qualquer "ficha de uso").
 registerFieldType('counter', {
-  render(container, { character, field, label, onChange, registerRefresh, min = 0, max = Infinity }) {
+  render(container, { character, field, label, onChange, registerRefresh, min = RUNTIME_DEFAULTS.counterMin, max = Infinity }) {
     const wrap = fieldWrapper(label);
     const row = document.createElement('div');
     row.className = 'engine-counter';

@@ -1,3 +1,4 @@
+import {CHECK_CONTRACT} from './contracts.js';
 import { CHECK_ALGORITHMS } from '../engine/checks.js';
 import { pathKeys, getByPath } from '../engine/paths.js';
 
@@ -8,18 +9,43 @@ export function validateChecks(checks, issues, system) {
     const path = `system.checks.${key}`;
     if (!/^[a-zA-Z0-9_-]+$/.test(key)) issue(path, 'nome de teste deve ser um identificador simples');
     if (!config || typeof config !== 'object' || Array.isArray(config)) { issue(path, 'deve ser objeto'); continue; }
-    for (const key of Object.keys(config)) if (!['algorithm','sources','note','momentumField'].includes(key)) issue(`${path}.${key}`, 'opção desconhecida');
+    for (const key of Object.keys(config)) if (!CHECK_CONTRACT.fields.includes(key)) issue(`${path}.${key}`, 'opção desconhecida');
     if (!CHECK_ALGORITHMS.includes(config.algorithm)) issue(`${path}.algorithm`, 'algoritmo desconhecido');
     if (config.momentumField !== undefined) {
       if (config.algorithm !== 'challenge') issue(`${path}.momentumField`, 'somente challenge usa ímpeto');
       try { pathKeys(config.momentumField); } catch (error) { issue(`${path}.momentumField`, error.message); }
     }
     if (typeof config.note !== 'string' || !config.note.trim()) issue(`${path}.note`, 'explique as decisões manuais');
-    if (!Array.isArray(config.sources) || !config.sources.length || config.sources.length > 100) { issue(`${path}.sources`, 'use 1–100 fontes'); continue; }
+    if (!Array.isArray(config.sources) || !config.sources.length || config.sources.length > CHECK_CONTRACT.maxSources) { issue(`${path}.sources`, 'use 1–100 fontes'); continue; }
+    const ids = new Set();
     config.sources.forEach((source, i) => {
       const at = `${path}.sources[${i}]`;
       if (!source || typeof source !== 'object' || Array.isArray(source)) { issue(at, 'deve ser objeto'); return; }
-      for (const key of Object.keys(source)) if (!['label','field','collection','valueField','formula'].includes(key)) issue(`${at}.${key}`, 'opção desconhecida');
+      for (const key of Object.keys(source)) if (!CHECK_CONTRACT.sourceFields.includes(key)) issue(`${at}.${key}`, 'opção desconhecida');
+      if (source.id !== undefined) {
+        if (typeof source.id !== 'string' || !/^[a-zA-Z][a-zA-Z0-9_-]*$/.test(source.id) || ids.has(source.id)) issue(`${at}.id`,'exige ID simples e único iniciado por letra');
+        ids.add(source.id);
+      }
+      if (source.overrideKey !== undefined) {
+        if (!source.formula) issue(`${at}.overrideKey`,'exige formula');
+        try {pathKeys(source.overrideKey);} catch(error) {issue(`${at}.overrideKey`,error.message);}
+      }
+      if (source.variables !== undefined) {
+        if (!source.formula) issue(`${at}.variables`,'exige formula');
+        if (!source.variables || typeof source.variables !== 'object' || Array.isArray(source.variables) || Object.keys(source.variables).length>CHECK_CONTRACT.maxVariables) issue(`${at}.variables`,'use objeto com até 32 variáveis');
+        else for (const [key,definition] of Object.entries(source.variables)) {
+          const path=`${at}.variables.${key}`;
+          if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key)) issue(path,'nome de variável inválido');
+          if (!definition || typeof definition!=='object' || Array.isArray(definition)) {issue(path,'exige fonte');continue;}
+          const origins=['field','system','traitMaxField','value'].filter(key=>Object.hasOwn(definition,key));
+          if(origins.length!==1) issue(path,'use field, system, traitMaxField ou value exclusivamente');
+          for(const prop of Object.keys(definition)) if(!CHECK_CONTRACT.variableFields.includes(prop)) issue(`${path}.${prop}`,'opção desconhecida');
+          for(const prop of origins) if(prop==='value') {if(!Number.isFinite(definition.value)) issue(`${path}.value`,'exige número finito');} else {
+            try{pathKeys(definition[prop]);}catch(error){issue(`${path}.${prop}`,error.message);}
+            try {if(prop==='system' && getByPath(system,definition.system)===undefined) issue(`${path}.system`,'valor inexistente no sistema');} catch { /* caminho já diagnosticado */ }
+          }
+        }
+      }
       if (!source.collection && source.valueField !== undefined) issue(`${at}.valueField`, 'exige collection');
       if (typeof source.label !== 'string' || !source.label.trim()) issue(`${at}.label`, 'exige rótulo');
       if (['field', 'collection', 'formula'].filter(key => source[key] !== undefined).length !== 1) issue(at, 'use field, collection ou formula, exclusivamente');

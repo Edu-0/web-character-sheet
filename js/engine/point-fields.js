@@ -1,3 +1,4 @@
+import {COMPONENT_CONTRACTS} from '../validation/contracts.js';
 import { registerFieldType } from './fields.js';
 import { getByPath, setByPath } from './paths.js';
 import { closeCreation, evolutionTargets, pointBudget, stepCost } from './point-budget.js';
@@ -6,7 +7,7 @@ import { evaluate } from './formula.js';
 
 registerFieldType('pointBudget', {
   search(context) {
-    const config = getByPath(context.system, context.configFrom || 'pointBudget');
+    const config = getByPath(context.system, context.configFrom || COMPONENT_CONTRACTS.pointBudget.properties.configFrom.default);
     if (!config) return [];
     const budget = pointBudget(context.character, context.system, config);
     return [
@@ -20,7 +21,7 @@ registerFieldType('pointBudget', {
     ];
   },
   render(container, context) {
-    const config = getByPath(context.system, context.configFrom || 'pointBudget');
+    const config = getByPath(context.system, context.configFrom || COMPONENT_CONTRACTS.pointBudget.properties.configFrom.default);
     if (!config) return;
     const wrap = node('div', 'engine-budget');
     const status = node('p', 'engine-budget__status');

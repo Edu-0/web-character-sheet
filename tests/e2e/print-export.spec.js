@@ -83,7 +83,7 @@ test('impressão fora da ficha, repetição e edição anterior ao debounce pres
 test('autoral: compostos, perícias implícitas e registros persistidos, sem rolar nem cobrar custos', async ({ page }) => {
   await importFilled(page, 'sistema-rpg');
   await page.evaluate(() => {
-    Math.random = () => { throw new Error('Impressão tentou rolar'); };
+    crypto.getRandomValues = () => { throw new Error('Impressão tentou rolar'); };
   });
   const before = await snapshot(page);
   await prepare(page);

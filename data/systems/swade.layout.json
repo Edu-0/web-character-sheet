@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "swade-layout",
   "system": "swade",
   "name": "Padrão",
@@ -62,6 +62,20 @@
               ]
             }
           ]
+        },
+        {
+          "id": "effects",
+          "title": "Efeitos confirmados pela mesa",
+          "containers": [
+            {
+              "components": [
+                {
+                  "type": "effectList",
+                  "label": "Efeitos ativos"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -83,27 +97,47 @@
                 {
                   "type": "die",
                   "field": "attributes.agility",
-                  "label": "Agilidade"
+                  "label": "Agilidade",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "agility"
+                  }
                 },
                 {
                   "type": "die",
                   "field": "attributes.smarts",
-                  "label": "Astúcia"
+                  "label": "Astúcia",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "smarts"
+                  }
                 },
                 {
                   "type": "die",
                   "field": "attributes.spirit",
-                  "label": "Espírito"
+                  "label": "Espírito",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "spirit"
+                  }
                 },
                 {
                   "type": "die",
                   "field": "attributes.strength",
-                  "label": "Força"
+                  "label": "Força",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "strength"
+                  }
                 },
                 {
                   "type": "die",
                   "field": "attributes.vigor",
-                  "label": "Vigor"
+                  "label": "Vigor",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "vigor"
+                  }
                 },
                 {
                   "type": "checkRoll",
@@ -129,7 +163,11 @@
                   "type": "number",
                   "field": "combat.fighting",
                   "label": "Lutar — lados do dado (0 se não treinado)",
-                  "help": "Use 0, 4, 6, 8, 10 ou 12. O zero mantém Aparar em 2. Bônus adicionais são ajustes manuais."
+                  "help": "Use 0, 4, 6, 8, 10 ou 12. O zero mantém Aparar em 2. Bônus adicionais são ajustes manuais.",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "fighting"
+                  }
                 },
                 {
                   "type": "list",
@@ -148,6 +186,10 @@
                       "type": "textarea",
                       "label": "Bônus e observações"
                     }
+                  },
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "skills"
                   }
                 }
               ]

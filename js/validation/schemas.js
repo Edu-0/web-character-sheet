@@ -1,3 +1,4 @@
+import {COMPONENT_CONTRACTS, ITEM_FIELD_CONTRACTS, validateComponentShape, validateParameterShape} from './contracts.js';
 import { validateRecoveryActions } from './recovery.js';
 import { validateChecks, validateCheckData } from './checks.js';
 import { validateEntryRolls, validateRollOptions } from './entry-rolls.js';
@@ -5,43 +6,13 @@ import { getByPath, pathKeys } from '../engine/paths.js';
 import { validateFormula } from '../engine/formula.js';
 import { inspectJson } from './limits.js';
 import { expandComponents } from '../engine/layout-components.js';
-const SCHEMA_VERSION = 1;
+import { versionIssue } from './versions.js';
+import { validateReferences } from './references.js';
+import { validateActions } from './actions.js';
+import { validateEffects } from './effects.js';
+import {validateRollReferences} from './roll-references.js';
 
-export const KNOWN_COMPONENT_TYPES = new Set([
-  'boolean',
-  'checkRoll',
-  'actionGroup',
-  'recoveryGroup',
-  'computed',
-  'counter',
-  'die',
-  'dndAbility',
-  'dndDerived',
-  'dndSkill',
-  'image',
-  'inventorySummary',
-  'list',
-  'number',
-  'poolBuilder',
-  'pointBudget',
-  'resource',
-  'repertoire',
-  'select',
-  'skillCatalog',
-  'slotTracker',
-  'stateList',
-  'table',
-  'tagList',
-  'text',
-  'textarea',
-  'techniqueUse',
-  'traitAllocation',
-]);
-
-const FIELD_COMPONENT_TYPES = new Set([
-  'boolean', 'counter', 'die', 'dndAbility', 'dndSkill', 'image', 'list', 'number', 'resource', 'select',
-  'skillCatalog', 'slotTracker', 'stateList', 'table', 'tagList', 'text', 'textarea', 'traitAllocation', 'inventorySummary',
-]);
+export const KNOWN_COMPONENT_TYPES = new Set(Object.keys(COMPONENT_CONTRACTS));
 
 export class SchemaValidationError extends Error {
   constructor(label, issues) {
@@ -87,9 +58,9 @@ function requireArray(value, path, issues, { nonEmpty = false } = {}) {
 }
 
 function validateVersion(document, path, issues) {
-  if (document?.schemaVersion !== SCHEMA_VERSION) {
-    add(issues, `${path}.schemaVersion`, `deve ser ${SCHEMA_VERSION}`, 'schema-version');
-  }
+  const kind = path.includes('characterTemplate') ? 'character' : path.split('.')[0];
+  const issue = versionIssue(document,kind,path);
+  if (issue) issues.push(issue);
 }
 
 function validateUniqueIds(items, path, issues) {
@@ -130,6 +101,10 @@ export function validateSystem(system) {
   if (issues.length) return issues;
   if (!requireObject(system, 'system', issues)) return issues;
   validateVersion(system, 'system', issues);
+  if (system.effectDefinitions !== undefined) {
+    if (system.schemaVersion < 2) add(issues, 'system.schemaVersion', 'effectDefinitions exige versão 2');
+    issues.push(...validateEffects(system.effectDefinitions, {system, definitions:true}));
+  }
   requireString(system.id, 'system.id', issues);
   requireString(system.name, 'system.name', issues);
   if (!requireObject(system.characterTemplate, 'system.characterTemplate', issues)) return issues;
@@ -143,6 +118,7 @@ export function validateSystem(system) {
   if (system.diceSteps !== undefined && typeof system.diceSteps !== 'boolean') add(issues, 'system.diceSteps', 'deve ser booleano');
   if (system.diceSteps === true) validateStepScale(system, 'system.dieScale', issues);
   if (system.recoveryActions !== undefined) validateRecoveryActions(system.recoveryActions, system, issues);
+  if (system.sheetActions !== undefined) validateActions(system.sheetActions,system,issues);
   if (system.checks !== undefined) {
     validateChecks(system.checks, issues, system);
     validateCheckData(system.characterTemplate, system.checks, issues, 'system.characterTemplate');
@@ -157,6 +133,7 @@ export function validateLayout(layout, { system = null } = {}) {
   if (issues.length) return issues;
   if (!requireObject(layout, 'layout', issues)) return issues;
   validateVersion(layout, 'layout', issues);
+  if (layout.schemaVersion < 2 && Array.isArray(layout.tabs) && layout.tabs.some(tab=>Array.isArray(tab?.sections)&&tab.sections.some(section=>Array.isArray(section?.containers)&&section.containers.some(container=>Array.isArray(container?.components)&&container.components.some(component=>component?.type==='effectList'))))) add(issues,'layout.schemaVersion','effectList exige versão 2');
   requireString(layout.id, 'layout.id', issues);
   requireString(layout.system, 'layout.system', issues);
   if (layout.name !== undefined) requireString(layout.name, 'layout.name', issues);
@@ -231,7 +208,7 @@ function validateComponent(component, path, system, issues) {
     }
   } else if (component.rollPreset !== undefined || component.rollConfigFrom !== undefined) add(issues, `${path}.rollPreset`, 'exige entryAction: roll');
   if (component.type === 'slotTracker') {
-    if (component.display !== undefined && !['used', 'remaining'].includes(component.display)) add(issues, `${path}.display`, 'use used ou remaining');
+    if (component.display !== undefined && !COMPONENT_CONTRACTS.slotTracker.properties.display.enum.includes(component.display)) add(issues, `${path}.display`, 'use used ou remaining');
     if (component.consumeField !== undefined) {
       try { pathKeys(component.consumeField); } catch (error) { add(issues, `${path}.consumeField`, error.message); }
       if (system) { try { validateFieldValue(getByPath(system.characterTemplate, component.consumeField), 'boolean', `${path}.consumeField`, issues); } catch {} }
@@ -244,7 +221,8 @@ function validateComponent(component, path, system, issues) {
     add(issues, path, `tipo "${component.type}" desconhecido`, 'unknown-component');
     return;
   }
-  if (FIELD_COMPONENT_TYPES.has(component.type)) requireString(component.field, `${path}.field`, issues);
+  if (component.type === 'effectList' && system?.schemaVersion < 2) add(issues, path, 'effectList exige sistema versão 2');
+  validateComponentShape(component,path,issues);
   if (component.type === 'checkRoll') {
     try { pathKeys(component.configFrom); } catch (error) { add(issues, `${path}.configFrom`, error.message); }
     if (typeof component.configFrom !== 'string' || !/^checks\.[^.]+$/.test(component.configFrom)) add(issues, `${path}.configFrom`, 'use checks.nome');
@@ -253,9 +231,9 @@ function validateComponent(component, path, system, issues) {
   if (component.itemSchema !== undefined && requireObject(component.itemSchema, `${path}.itemSchema`, issues)) {
     for (const [key, definition] of Object.entries(component.itemSchema)) {
       const type = typeof definition === 'string' ? definition : definition?.type;
-      if (!['text', 'textarea', 'number', 'boolean', 'select', 'die', 'reference'].includes(type)) add(issues, `${path}.itemSchema.${key}.type`, 'tipo de campo de item desconhecido');
+      if (!Object.hasOwn(ITEM_FIELD_CONTRACTS,type)) add(issues, `${path}.itemSchema.${key}.type`, 'tipo de campo de item desconhecido');
       if (typeof definition !== 'string' && !isObject(definition)) add(issues, `${path}.itemSchema.${key}`, 'deve ser objeto ou nome de tipo');
-      if (isObject(definition)) validateCalculationOptions(definition, `${path}.itemSchema.${key}`, issues);
+      if (isObject(definition)) {validateCalculationOptions(definition, `${path}.itemSchema.${key}`, issues);validateParameterShape(definition,ITEM_FIELD_CONTRACTS[type] || {},`${path}.itemSchema.${key}`,issues);}
       if (system && definition?.stepControls === true) validateStepScale(system, `${path}.itemSchema.${key}.stepControls`, issues);
       if (isObject(definition)) validateFieldValue(definition.default, definition, `${path}.itemSchema.${key}.default`, issues);
       if (definition?.presentation !== undefined) {
@@ -274,9 +252,10 @@ function validateComponent(component, path, system, issues) {
   }
   if (component.options !== undefined && !Array.isArray(component.options)) add(issues, `${path}.options`, 'deve ser uma lista');
   if (['pointBudget', 'repertoire', 'techniqueUse'].includes(component.type)) {
-    if (requireString(component.configFrom, `${path}.configFrom`, issues) && system) {
-      const config = readConfig(system, component.configFrom);
-      if (requireObject(config, `${path}.configFrom (${component.configFrom})`, issues)) {
+    const configFrom = component.configFrom ?? COMPONENT_CONTRACTS[component.type].properties.configFrom.default;
+    if (requireString(configFrom, `${path}.configFrom`, issues) && system) {
+      const config = readConfig(system, configFrom);
+      if (requireObject(config, `${path}.configFrom (${configFrom})`, issues)) {
         if (component.type === 'pointBudget') requireArray(config.sources, `${path}.configFrom.sources`, issues);
         if (component.type === 'repertoire') ['specializationsField', 'gradeField', 'techniquesField', 'linkField', 'progressionFrom'].forEach((key) => requireString(config[key], `${path}.configFrom.${key}`, issues));
         if (component.type === 'techniqueUse') {
@@ -369,6 +348,10 @@ export function validateCharacter(character, { root = 'character', allowMissingI
   if (issues.length) return issues;
   if (!requireObject(character, root, issues)) return issues;
   validateVersion(character, root, issues);
+  if (character.activeEffects !== undefined) {
+    if (character.schemaVersion < 2) add(issues, `${root}.schemaVersion`, 'activeEffects exige versão 2');
+    issues.push(...validateEffects(character.activeEffects, {root}));
+  }
   if (!requireObject(character.meta, `${root}.meta`, issues)) return issues;
   if (!allowMissingId) requireString(character.meta.id, `${root}.meta.id`, issues);
   if (character.meta.id === 'index') add(issues, `${root}.meta.id`, 'ID reservado ao índice da biblioteca');
@@ -387,7 +370,7 @@ export function validateCharacter(character, { root = 'character', allowMissingI
       if (!requireObject(entry, path, issues)) continue;
       if (!['adjust', 'fixed'].includes(entry.mode)) add(issues, `${path}.mode`, 'deve ser adjust ou fixed');
       if (typeof entry.value !== 'number' || !Number.isFinite(entry.value)) add(issues, `${path}.value`, 'deve ser número finito');
-      for (const field of Object.keys(entry)) if (!['mode', 'value'].includes(field)) add(issues, `${path}.${field}`, 'opção desconhecida');
+      // Propriedades extras são metadados inertes e permanecem no documento.
     }
   }
   return issues;
@@ -400,16 +383,26 @@ export function validateSystemPackage(pkg) {
   validateVersion(pkg, 'package', issues);
   if (pkg.kind !== 'rpg-system-package') add(issues, 'package.kind', 'deve ser "rpg-system-package"');
   issues.push(...validateSystem(pkg.system));
+  if (pkg.schemaVersion < 2 && (pkg.system?.schemaVersion >= 2 || Array.isArray(pkg.layouts) && pkg.layouts.some(layout => layout?.schemaVersion >= 2))) add(issues, 'package.schemaVersion', 'documentos versão 2 exigem envelope versão 2');
   if (requireArray(pkg.layouts, 'package.layouts', issues, { nonEmpty: true })) {
     validateUniqueIds(pkg.layouts, 'package.layouts', issues);
-    pkg.layouts.forEach((layout) => issues.push(...validateLayout(layout, { system: pkg.system })));
+    pkg.layouts.forEach((layout,index) => issues.push(...validateLayout(layout, { system: pkg.system }).map(issue=>({...issue,path:issue.path.replace(/^layout(?=\.|$)/,`package.layouts[${index}]`)}))));
+    if (!issues.some(issue => issue.severity !== 'warning')) {
+      issues.push(...validateEffects(pkg.system?.effectDefinitions, {system:pkg.system, pkg, definitions:true}));
+      if (pkg.system?.effectDefinitions?.length) for (const [index,layout] of pkg.layouts.entries()) {
+        const visible = layout.tabs.some(tab => tab.sections.some(section => section.containers.some(container => container.components.some(component => component.type === 'effectList'))));
+        if (!visible) add(issues, `package.layouts[${index}]`, 'sistemas com efeitos exigem effectList em cada layout');
+      }
+      issues.push(...validateCharacterForPackage(pkg.system.characterTemplate,pkg,{allowMissingId:true,template:true}));
+    }
   }
   return issues;
 }
 
 export function assertValid(value, validator, label) {
   const issues = validator(value);
-  if (issues.length) throw new SchemaValidationError(label, issues);
+  const errors = issues.filter(issue => !issue.severity || issue.severity === 'error');
+  if (errors.length) throw new SchemaValidationError(label, errors);
   return value;
 }
 
@@ -435,10 +428,12 @@ function validateFieldValue(value, definition, path, issues) {
   if (type === 'resource' && isObject(value)) for (const key of ['current', 'max']) if (value[key] !== undefined && (typeof value[key] !== 'number' || !Number.isFinite(value[key]))) add(issues, `${path}.${key}`, 'deve ser número finito');
 }
 
-export function validateCharacterForPackage(character, pkg) {
-  const issues = validateCharacter(character, {expectedSystem: pkg.system.id});
+export function validateCharacterForPackage(character, pkg, {allowMissingId = false, template = false} = {}) {
+  const issues = validateCharacter(character, {expectedSystem: pkg.system.id,allowMissingId,root:template?'system.characterTemplate':'character'});
   if (issues.length) return issues;
   validateCheckData(character, pkg.system.checks, issues);
+  issues.push(...validateEffects(character.activeEffects, {system:pkg.system}));
+  if(pkg.system.sheetActions) validateActions(pkg.system.sheetActions,pkg.system,issues,'system.sheetActions',character);
   for (const layout of pkg.layouts) for (const tab of layout.tabs) for (const section of tab.sections) for (const container of section.containers) {
     for (const component of expandComponents(container, pkg.system)) if (component.field) {
       try {
@@ -452,7 +447,9 @@ export function validateCharacterForPackage(character, pkg) {
     try { validateFieldValue(getByPath(character, config.resource.consumeField), 'boolean', `character.${config.resource.consumeField}`, issues); }
     catch (error) { add(issues, `character.${config.resource.consumeField}`, error.message); }
   }
-  return issues;
+  issues.push(...validateReferences(pkg, character,{template}));
+  if (!issues.some(issue=>issue.severity !== 'warning')) issues.push(...validateRollReferences(pkg,character));
+  return template ? issues.map(issue=>({...issue,path:issue.path.replace(/^character(?=\.|$)/,'system.characterTemplate')})) : issues;
 }
 
 function validateCalculationOptions(definition, path, issues) {

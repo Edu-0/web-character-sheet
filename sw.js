@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "4ef8fa77ddb8b64c6b48";
+const VERSION = "30fdc83c20ece4712535";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -51,7 +51,7 @@ const ASSETS = [
   },
   {
     "path": "css/engine.css",
-    "hash": "34963af5b2588bdc32a42bf957b026397a354cdd0ac548668fea2f6e45745208"
+    "hash": "deda9699151f25c3272215b27d9b4d9e44a2d809e01917ae1e529c8cb7ee5e6a"
   },
   {
     "path": "css/layout.css",
@@ -123,7 +123,7 @@ const ASSETS = [
   },
   {
     "path": "data/systems/index.json",
-    "hash": "304ccc997e705525f15306737dce1ae32ba2acd59b1849e01c258908f0571647"
+    "hash": "b1463d73d2114890caf9cca2feca3600e06bb05dfe5681fded579cf8b565f4d0"
   },
   {
     "path": "data/systems/ironsworn.layout.json",
@@ -163,15 +163,15 @@ const ASSETS = [
   },
   {
     "path": "data/systems/swade.layout.json",
-    "hash": "a248d2a05b1371357e9481d994074b5fb9c8ad2f3439ef489e53a4fde1be7c24"
+    "hash": "fe0e46cb4fdbe0498cb2cfe9ca34fd600b332c59840efe6b2cd2f61cbcd2f96e"
   },
   {
     "path": "data/systems/swade.system.json",
-    "hash": "f63762e392a795eddaac710198c75990f25050f04fc501834b6119435c226313"
+    "hash": "0257d80a79836d85aab220f0ed4c706ef1f05d79855e8a70b78a102af4d9264a"
   },
   {
     "path": "data/systems/swade.table-layout.json",
-    "hash": "f80a99aec8afe4015c2473df8f615ffa106e9379f8634407de2ddfb61f343d40"
+    "hash": "ccef845303ab32fbc0cb473e38bc5e50936d79f63ae9630a462a0e5e046bf031"
   },
   {
     "path": "index.html",
@@ -183,7 +183,7 @@ const ASSETS = [
   },
   {
     "path": "js/app.js",
-    "hash": "d6db0744083ac232ef90c1a6ec044b9a47f80c07594967cbdfc6bfa538b0cfc7"
+    "hash": "455e54887bfd897ecdb25384e95df389e3dbcd128b66e2c7f373a560a5acb145"
   },
   {
     "path": "js/appearance.js",
@@ -223,59 +223,75 @@ const ASSETS = [
   },
   {
     "path": "js/dice.js",
-    "hash": "1a090170cf12359223a4bcbd9b269271c83f4b15b78f03614609936d49a56d1b"
+    "hash": "2c43c26624691d127fd49c32d5021a9dc4d4e635a197673bb51a6059d3f455e9"
   },
   {
     "path": "js/engine/advanced-fields.js",
-    "hash": "4c32c9f04efa7ba847daedec4aec7f7be321accc66714d5012705aef2820b49b"
+    "hash": "7dcb618787c2d9fdfa185d599a154792341f12355c82b88cb94f1f6ad12a9e09"
   },
   {
     "path": "js/engine/assistance.js",
-    "hash": "5352512a26ffd4564e9b8c026d8d661212fa7fa667cadb9beec48538ba88f16d"
+    "hash": "c09686d0c7212c499797448caceecca006431ebfbcf02ae54b768ef0dfef7f6b"
   },
   {
     "path": "js/engine/assisted-fields.js",
-    "hash": "91c63030ca550ba11aca7975fb8fb568b86a72a9de6820854d916509bb88d5f7"
+    "hash": "e79b086d6a73672bc6007001d51d4601366630fee42c152d86ec743f56b4b866"
   },
   {
     "path": "js/engine/calculation-overrides.js",
-    "hash": "c693ee094e022f4a6133bc3d8d071873ff2c9dbf4c5c4a4917dc7746921e71c2"
+    "hash": "3b4029b4b5271bf56014ab17ee8c137574da47e507e19217eb2b283b765e401d"
   },
   {
     "path": "js/engine/check-fields.js",
-    "hash": "c1f6259e36546a2f032f4a82c4fb694de667f412b8f8944fc44148483611ee31"
+    "hash": "f2cb136d162b12af48884bdf660ec17ad32b1610ce1bd2fce4f4f9f16f52bc3b"
   },
   {
     "path": "js/engine/checks.js",
-    "hash": "e9232f7c94f854e8f7eff0f81c33000330f81e37d3e3089ec7252b893417cd87"
+    "hash": "05f95f794a5187645eb784b66b0dca57760b8eaa54d6cf60c778dbf4d967c587"
   },
   {
     "path": "js/engine/collection-recovery.js",
     "hash": "a1b3b427130ccbe97b9bc5e4f7d0361480ca86ed6b70c14d00d38dc1ea7cf0eb"
   },
   {
+    "path": "js/engine/computed-values.js",
+    "hash": "f26ae03123fd2df75ab84bae85ca54fab9d7f30e69b9051293955f351d93a831"
+  },
+  {
     "path": "js/engine/dice-expression.js",
-    "hash": "fa744506d76664858b8aa355c0690aa5d11381377fabb2acb10922b0fa9763f4"
+    "hash": "09b2a4a71fe99bea54999b49ef7cb402a4e1d8fafa96632428e00c61365a0619"
   },
   {
     "path": "js/engine/dice-resolver.js",
-    "hash": "e5edc13c716a1b8d56207a6247e7a4d3cf3e65ec5f19f8caa16ae282751489e0"
+    "hash": "6e9e7d08602adeaa8db246a830610236dff749bddc8c720cdd4f3130194993ae"
   },
   {
     "path": "js/engine/die-scale.js",
     "hash": "a7a32e93329aef986869024e5eb3a6fed63f01af145a4518193116620dc53eba"
   },
   {
+    "path": "js/engine/effect-fields.js",
+    "hash": "d87bbef9851c9bd8a19ec6e478d2d322a0f1224164f0f50f5c7deaafa7384380"
+  },
+  {
+    "path": "js/engine/effects.js",
+    "hash": "c17c4ccc8be097d78315ae309fb658a10825a1a771b6d15a10457fd4597ad4bf"
+  },
+  {
     "path": "js/engine/entry-actions.js",
     "hash": "81dfa39ce65394dfd1754d152d0e7460027fa465777bf63fc27652e13fb1c161"
   },
   {
+    "path": "js/engine/entry-roll-preparation.js",
+    "hash": "3a1446c5b0e33c7f7ca5a4ad43fb88dff9fe5b759349e56482976c61631a31af"
+  },
+  {
     "path": "js/engine/entry-rolls.js",
-    "hash": "620c442c3b88d03e80b9773f2062109328bda2cf5df2eee500c1faebd7c5a337"
+    "hash": "98658ceb18bf06fcb91b93ce77dce4fa53eba44f718a63907ab00aaae01b6855"
   },
   {
     "path": "js/engine/fields.js",
-    "hash": "5f0ccc0c6fe39eed9051346aea4ecdb644b798cf930fbeb05e0293c78060d853"
+    "hash": "daa91ad3e645666b091309480d14633efcdd7e874019896df77f7e2473be5147"
   },
   {
     "path": "js/engine/formula.js",
@@ -311,7 +327,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/point-fields.js",
-    "hash": "8aac670fa2d8d242b81d441a42e0f11bd6ae80a3e5c8151d14b10c5816e690a3"
+    "hash": "99bb7d3b3a59fac4b9766e676e1387a7727688514c444c87936f40716c283627"
   },
   {
     "path": "js/engine/pool.js",
@@ -331,15 +347,23 @@ const ASSETS = [
   },
   {
     "path": "js/engine/recovery.js",
-    "hash": "5fcb0db99498a17839692f397cbf7e455c8eeb7da34a9207cdf8484f9ecd2b89"
+    "hash": "714bbf88828141e6531d029ad019d2ecd33d83cae70aa86337c99e5c29e56f0e"
   },
   {
     "path": "js/engine/renderer.js",
-    "hash": "552934b36d23c04783fcc5ed40c7c91b6d80535ea269eba94484add4d3e845e8"
+    "hash": "203ad0cb25031ef33fedcef630db92beea5dda23732aa95b1809a9303dcbb0f3"
   },
   {
     "path": "js/engine/resolution.js",
     "hash": "7765ad0c81927c6608e7aae095fc356bc5c4784983ae8d0cd06e282120949f94"
+  },
+  {
+    "path": "js/engine/roll-cost.js",
+    "hash": "d7f027edb0a2dd90dd023782bedb4946a532f5422ff439f0b767c297880c90cf"
+  },
+  {
+    "path": "js/engine/roll-values.js",
+    "hash": "687bc317e64d89c32017bcb2375922bc043ca0afc0151acc1aaf9837eca5dcfe"
   },
   {
     "path": "js/engine/search.js",
@@ -379,7 +403,11 @@ const ASSETS = [
   },
   {
     "path": "js/library-backup.js",
-    "hash": "9e90fd32121fd45e011972b4175b33bf7cc4c59fe26b046b718b178c89772eca"
+    "hash": "8de1e65906ecef91b899241decadf0af11a3a7c3f0c016ca60fa07d84cab386c"
+  },
+  {
+    "path": "js/migrations/index.js",
+    "hash": "0b21a3313674f2afb8db693982f051818f7fbf31e081fb0848afd5dfe0a8268a"
   },
   {
     "path": "js/modal.js",
@@ -391,7 +419,7 @@ const ASSETS = [
   },
   {
     "path": "js/persistence.js",
-    "hash": "3e3f32161453ab3e7e68a8be4106711363ceeefebf14c73a99f564f64d2f1c38"
+    "hash": "dee9aa152c4e7f75eb204e1f62bea39f1a676ecde811dc181a870336f53621b6"
   },
   {
     "path": "js/printing.js",
@@ -403,11 +431,11 @@ const ASSETS = [
   },
   {
     "path": "js/repositories/character-repository.js",
-    "hash": "5a0161719aeadded08b5d7f44af3aec8e42837beb2899f8f83d2aef908be1c9b"
+    "hash": "a43de51639c574017b8e3125b955c29430219e197da3dadab1bdb60eacebf890"
   },
   {
     "path": "js/repositories/system-repository.js",
-    "hash": "cd185c76dab1bdf78886214baa73d20dedc1357f397aaacc3114811113d29a96"
+    "hash": "6dd017e1b23730faf0c909476c8bbe0bfd0682c64af9ba80373cbfc31b65a982"
   },
   {
     "path": "js/sheet-layouts.js",
@@ -454,24 +482,60 @@ const ASSETS = [
     "hash": "77ecdb9de0457f860bd0ae651c3a740aa49a6f611f8fcb45e2f0f279e1d6921a"
   },
   {
+    "path": "js/validation/actions.js",
+    "hash": "3d8e62491f7b2bcb0d41d3d86d72e2419c53844527cd0b7b33f4669e7abb6e4c"
+  },
+  {
+    "path": "js/validation/backup.js",
+    "hash": "ec9781067ed2d34202ed141d17d070c71f5c35008335531f2aa2891d552367e1"
+  },
+  {
     "path": "js/validation/checks.js",
-    "hash": "d1694ae03cfce2ba83c62b143f3b7812adce58f178798c64e55f522dcbf21212"
+    "hash": "0eac5af65dc7d2a11cf55d85793288705ea9b09a9da6a643be61f384df3de601"
+  },
+  {
+    "path": "js/validation/contracts.js",
+    "hash": "792492a93007180d977f1e9c243b15211b9e34ea9876745c3afa504d607b1a90"
+  },
+  {
+    "path": "js/validation/diagnostics.js",
+    "hash": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a"
+  },
+  {
+    "path": "js/validation/documents.js",
+    "hash": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5"
+  },
+  {
+    "path": "js/validation/effects.js",
+    "hash": "79607d2d4eabc9e8d1ac30c0cc184748d065539329255444fcb9e12090a295ba"
   },
   {
     "path": "js/validation/entry-rolls.js",
-    "hash": "267ca8f2f313df57fcd7ea3a87af7382d589ff0567c312d379e7b7acb072017a"
+    "hash": "d069da859e352cd4e595e9d865271a16dceac58d70bff8351bf3f450d6e6e4f4"
   },
   {
     "path": "js/validation/limits.js",
-    "hash": "d61058ef189ce53084fc74913ba0b8d08fc637cfd7b8b0436a3df98f9c6bbe41"
+    "hash": "059087b6170c07f86aa8c964d976b90ab8e3f45e17ddcf5ea76bb9c2d9d4eeb8"
   },
   {
     "path": "js/validation/recovery.js",
-    "hash": "57864b21787a2f233e91fdc3cc9fc0274e95cf83393053c1958c1958eb685262"
+    "hash": "1da097d03ff6e2403d560609d0d75fb571702ade1c30c91c71c8d5bb5f81a3fa"
+  },
+  {
+    "path": "js/validation/references.js",
+    "hash": "244a4f06766ca992395996777036e81aaa7a099b474b541d0ad271c9a3a20d5d"
+  },
+  {
+    "path": "js/validation/roll-references.js",
+    "hash": "a7b19e3ddf1fa805c1df746b38f843db36f9f79c38326cd003457052a812f110"
   },
   {
     "path": "js/validation/schemas.js",
-    "hash": "4d8a80e58880d283d8923943d635924f179dab10bcbfdf89aeed0323af00fda0"
+    "hash": "142a16c8e6c2fb35b126bfec1c90da50765f4f66c5ce5e8136b3ccac3ad80063"
+  },
+  {
+    "path": "js/validation/versions.js",
+    "hash": "c68379c39aff5d334dbf1fe0ebead1a1c66df9da2fb167cbb28bf68b22b17f5c"
   },
   {
     "path": "manifest.webmanifest",

@@ -7,7 +7,7 @@
       "system": "./dnd2024.system.json",
       "layouts": [
         {
-          "id": "default",
+          "id": "dnd2024-layout",
           "name": "Padrão",
           "file": "./dnd2024.layout.json"
         },
@@ -24,7 +24,7 @@
       "system": "./sistema-rpg.system.json",
       "layouts": [
         {
-          "id": "default",
+          "id": "sistema-rpg-layout",
           "name": "Padrão",
           "file": "./sistema-rpg.layout.json"
         },

@@ -1,6 +1,6 @@
 import { recoverCollection } from './collection-recovery.js';
 import { getByPath, setByPath } from './paths.js';
-import { rollValue } from './entry-rolls.js';
+import { rollValue } from './roll-values.js';
 import { parseDiceExpression } from './dice-expression.js';
 import { rollOne } from './dice-resolver.js';
 import { executeSheetAction } from './assistance.js';
@@ -63,7 +63,14 @@ export function recoveryPlan(context, config, rolls = []) {
 
 export function applyRecovery(context, config, rolls, baseline) {
   const plan = recoveryPlan({ ...context, character: baseline }, config, rolls);
-  if (plan.effects.some(effect => JSON.stringify(getByPath(context.character, effect.field)) !== JSON.stringify(getByPath(baseline, effect.field)))) throw new Error('A ficha mudou enquanto este painel estava aberto. Feche e abra novamente para revisar os valores.');
+  const reads = character => {
+    const fields = new Set((config.operations || []).flatMap(op=>[op.field,op.maxField]).filter(Boolean));
+    if (config.healing) for (const key of ['field','maxField','usedField','totalField','dieField']) fields.add(config.healing[key]);
+    return { values:[...fields].map(field=>getByPath(character,field)),
+      modifier:config.healing ? rollValue(config.healing.modifier || {value:0},{...context,character}) : null,
+      effects:character.activeEffects, overrides:character.calculationOverrides };
+  };
+  if (JSON.stringify(reads(context.character)) !== JSON.stringify(reads(baseline))) throw new Error('A ficha mudou enquanto este painel estava aberto. Feche e abra novamente para revisar os valores.');
   const event = executeSheetAction(context.character, { id: config.id, label: config.label, effects: plan.effects }, context.system);
   event.details = plan.details;
   return event;

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "swade",
   "name": "Savage Worlds SWADE",
   "description": "Base: Savage Worlds Test Drive SWADE 2020, regras centrais. Testes de traço/dano explosivos, dado selvagem opcional, não treinado e ampliações. Criação, avanços, vantagens/complicações, custos de poderes e Benes, cartas de iniciativa, penalidades, absorção, ferimentos/fadiga e recuperação são manuais. Não inclui regras especiais de cenário nem catálogo do livro.",
@@ -12,7 +12,7 @@
   ],
   "diceSteps": true,
   "characterTemplate": {
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "meta": {
       "system": "swade"
     },
@@ -53,7 +53,8 @@
     "weapons": [],
     "inventory": [],
     "advances": [],
-    "notes": ""
+    "notes": "",
+    "activeEffects": []
   },
   "formulas": {
     "parry": "2 + floor(combat.fighting / 2)",
@@ -62,36 +63,43 @@
   "checks": {
     "trait": {
       "algorithm": "explodingTrait",
-      "note": "Informe os modificadores autorizados, incluindo ferimentos/fadiga e bônus acima de d12. Não treinado usa d4−2. Benes, rerrolagens e consequências são manuais; o painel não conserva automaticamente o melhor resultado entre tentativas.",
+      "note": "Informe os modificadores autorizados, incluindo ferimentos/fadiga e bônus acima de d12. Não treinado usa d4−2. Benes, rerrolagens e consequências são manuais; o painel não conserva automaticamente o melhor resultado entre tentativas. Coringa ativo aplica +2 separadamente; não o some novamente ao modificador manual.",
       "sources": [
         {
           "field": "attributes.agility",
-          "label": "Agilidade"
+          "label": "Agilidade",
+          "id": "agility"
         },
         {
           "field": "attributes.smarts",
-          "label": "Astúcia"
+          "label": "Astúcia",
+          "id": "smarts"
         },
         {
           "field": "attributes.spirit",
-          "label": "Espírito"
+          "label": "Espírito",
+          "id": "spirit"
         },
         {
           "field": "attributes.strength",
-          "label": "Força"
+          "label": "Força",
+          "id": "strength"
         },
         {
           "field": "attributes.vigor",
-          "label": "Vigor"
+          "label": "Vigor",
+          "id": "vigor"
         },
         {
           "field": "combat.fighting",
-          "label": "Lutar (0 = não treinado; marque a opção)"
+          "label": "Lutar (0 = não treinado; marque a opção)",
+          "id": "fighting"
         },
         {
           "label": "Perícia",
           "collection": "skills",
-          "valueField": "die"
+          "valueField": "die",
+          "id": "skills"
         }
       ]
     },
@@ -101,9 +109,44 @@
       "sources": [
         {
           "field": "combat.damage",
-          "label": "Dano informado"
+          "label": "Dano informado",
+          "id": "damage"
         }
       ]
     }
-  }
+  },
+  "effectDefinitions": [
+    {
+      "id": "joker",
+      "revision": 1,
+      "label": "Coringa",
+      "stacking": "unique",
+      "applicability": "always",
+      "duration": {
+        "type": "untilEvent",
+        "event": "endRound"
+      },
+      "operations": [
+        {
+          "type": "add",
+          "target": {
+            "kind": "checkModifier",
+            "key": "trait",
+            "unit": "total"
+          },
+          "value": 2
+        },
+        {
+          "type": "add",
+          "target": {
+            "kind": "checkModifier",
+            "key": "damage",
+            "unit": "total"
+          },
+          "value": 2
+        }
+      ],
+      "note": "SWADE Test Drive 2020, p. 4: +2 em testes de traço e dano na rodada do Coringa. Carta e ativação confirmadas pela mesa; iniciativa continua manual."
+    }
+  ]
 }

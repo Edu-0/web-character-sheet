@@ -1,7 +1,7 @@
 import { initCalculationSettings, applyCalculationPreferences } from './calculation-settings.js';
 import { initBackupControls } from './backup-controls.js';
 import { captureFocus } from './focus.js';
-import { recoverTransactions, reportStorageError } from './persistence.js';
+import { recoverTransactions, reportStorageError, migrationCopyChange } from './persistence.js';
 import { assertValid, validateCharacterForPackage } from './validation/schemas.js';
 // app.js — shell global, bibliotecas e apresentações da ficha ativa.
 import { state } from './state.js';
@@ -329,6 +329,15 @@ function renderGenericSheet(character) {
     genericSheetController = renderSheet(host, activeLayout, character, {
       showHeader: false,
       system: activePackage.system,
+      upgradeCharacter: async current => {
+        if (current.schemaVersion !== 1 || current !== state.get()) throw new Error('Personagem mudou; abra a ficha novamente.');
+        flushCharacterSave();
+        const upgraded = { ...structuredClone(current), schemaVersion: 2, activeEffects: [] };
+        assertValid(upgraded, value => validateCharacterForPackage(value,activePackage),'personagem');
+        const stored = characters.saveCharacter(upgraded,{copies:[migrationCopyChange(`effects:${current.meta.id}`,current)]});
+        Object.assign(current,stored);
+        state.clearHistory(); state.history.activate(current);
+      },
       initialTabId: getAppState().ui.activeTab,
       onTabChange: (tabId) => {
         if (activePackage?.system.id === DND_SYSTEM_ID && !synchronizingTabs) {
@@ -391,6 +400,7 @@ function scheduleCharacterSave(character) {
   saveTimeout = setTimeout(() => {
     saveTimeout = null;
     try {
+      assertValid(snapshot,value=>validateCharacterForPackage(value,activePackage),'personagem');
       const saved = characters.saveCharacter(snapshot);
       unsavedCharacter = false;
       refreshLibraries();
@@ -406,7 +416,10 @@ function flushCharacterSave({ force = false } = {}) {
   saveTimeout = null;
   const current = state.get();
   try {
-    if (current.meta?.id === activeCharacterId) characters.saveCharacter(current);
+    if (current.meta?.id === activeCharacterId) {
+      assertValid(current,value=>validateCharacterForPackage(value,activePackage),'personagem');
+      characters.saveCharacter(current);
+    }
     unsavedCharacter = false;
     $('save-indicator').textContent = 'Salvo';
   } catch (error) { unsavedCharacter = true; $('save-indicator').textContent = 'Não salvo — exporte seus dados'; throw error; }
@@ -437,6 +450,7 @@ function renderSystemLibrary(systems) {
         storage.downloadJson(await exportSystemPackage(system.id), `${system.id}.system.json`);
       })),
     );
+    if(system.unavailable) { actions.querySelector('button').disabled=true; card.appendChild(element('p','library-card__warning','Pacote indisponível. Exporte o original ou a recuperação para corrigir.')); }
     card.append(header, element('p', 'library-card__meta', `${system.layoutCount} layout(s) disponível(is)`), actions);
     container.appendChild(card);
   });
@@ -461,7 +475,8 @@ function renderCharacterLibrary(characterList) {
 
     const actions = element('div', 'library-card__actions');
     const openButton = actionButton('Abrir', 'button button--primary', () => runAction(() => openCharacter(character.id)));
-    openButton.disabled = !system;
+    openButton.disabled = !system || system.unavailable || character.unavailable;
+    if(character.unavailable) card.appendChild(element('p','library-card__warning','Documento indisponível nesta versão. O original pode ser exportado.'));
     actions.append(
       openButton,
       actionButton('Duplicar', 'button button--ghost', () => runAction(async () => {
@@ -470,6 +485,10 @@ function renderCharacterLibrary(characterList) {
         await openCharacter(copy.meta.id);
       })),
       actionButton('Exportar', 'button button--ghost', () => {
+        if(character.unavailable) {
+          const blob=new Blob([characters.rawCharacter(character.id)],{type:'application/json'});
+          const url=URL.createObjectURL(blob), link=document.createElement('a');link.href=url;link.download=`${character.id}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;
+        }
         const exported = characters.exportCharacter(characters.getCharacter(character.id));
         storage.downloadJson(exported.data, exported.filename);
       }),
@@ -535,7 +554,7 @@ function wireToolbar() {
     const file = event.target.files[0];
     if (!file) return;
     await runAction(async () => {
-      const character = await characters.importCharacter(file, { validate: async value => {
+      const character = await characters.importCharacter(file, { confirmMigration, validate: async value => {
         if (hasSystem(value.meta.system)) { const pkg = await getSystemPackage(value.meta.system); assertValid(value, item => validateCharacterForPackage(item, pkg), 'personagem'); }
       } });
       refreshLibraries();
@@ -554,11 +573,13 @@ function wireToolbar() {
     if (!file) return;
     await runAction(async () => {
       let pkg;
-      try { pkg = await importSystemPackage(file); }
+      try { pkg = await importSystemPackage(file,{currentCharacter:state.get(),confirmMigration}); }
       catch (error) {
         if (error.code !== 'system-conflict') throw error;
         if (!await confirmDialog('Substituir este sistema? Personagens existentes serão preservados, mas o novo layout pode ser incompatível.', {title: 'Sistema já existente', confirmLabel: 'Substituir sistema'})) return;
-        pkg = await importSystemPackage(file, {replace: true});
+        pkg = await importSystemPackage(file, {replace: true,currentCharacter:state.get(),confirmMigration});
+        state.clearHistory();
+        if(activePackage?.system.id===pkg.system.id) {flushCharacterSave(); activePackage=pkg;setSystem(pkg.system);activeLayout=preferredLayout(pkg);setLayout(activeLayout);mountActiveSheet(state.get());}
       }
       refreshLibraries();
       notify(`Sistema "${pkg.system.name}" importado.`);
@@ -723,3 +744,7 @@ init().catch((error) => {
   console.error(error);
   notify(`Erro ao iniciar a aplicação: ${error.message}`, { type: 'error', duration: 8000 });
 });
+
+function confirmMigration(plan) {
+  return confirmDialog(`Atualizar os nomes antigos na cópia importada? ${plan.changes.length} alteração(ões). ${plan.changes.slice(0,8).join('; ')}. O original ficará na recuperação.`,{title:'Revisar migração',confirmLabel:'Migrar e importar'});
+}

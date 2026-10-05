@@ -14,8 +14,20 @@ export function resolve(descriptor) {
   return fn(descriptor);
 }
 
-export function rollOne(sides) {
-  return Math.floor(Math.random() * sides) + 1;
+const UINT32_RANGE = 0x100000000;
+function secureRandomValues(array) {
+  if (!globalThis.crypto?.getRandomValues) throw new Error('Geração segura de dados indisponível neste navegador.');
+  globalThis.crypto.getRandomValues(array);
+}
+
+export function rollOne(sides, fillRandom = secureRandomValues) {
+  if (!Number.isSafeInteger(sides) || sides < 1 || sides > UINT32_RANGE) throw new Error('Número de faces inválido.');
+  // Cada face recebe o mesmo número de inteiros. A sobra é sorteada novamente.
+  const bucketSize = Math.floor(UINT32_RANGE / sides);
+  const limit = bucketSize * sides;
+  const sample = new Uint32Array(1);
+  do { fillRandom(sample); } while (sample[0] >= limit);
+  return Math.floor(sample[0] / bucketSize) + 1;
 }
 
 // Resolver embutido: um único tipo de dado, N vezes, + modificador.

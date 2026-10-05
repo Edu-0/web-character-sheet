@@ -171,7 +171,7 @@ test('Pool reconhece Traços criados durante a edição', async ({ page }) => {
 });
 
 test('sucesso crítico apresenta o dado de Potência aprimorado', async ({ page }) => {
-  await page.evaluate(() => { Math.random = () => 0.999; });
+  await page.evaluate(() => { crypto.getRandomValues = array => array.fill(Math.floor(0.999 * 0x100000000)); });
   await page.getByRole('tab', { name: 'Combate' }).click();
   const pool = page.locator('.engine-pool');
   await pool.getByText('Força (Atributo)', { exact: true }).click();

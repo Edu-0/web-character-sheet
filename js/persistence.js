@@ -2,6 +2,7 @@
 const JOURNAL = 'ficha-rpg:v2:storage-journal';
 const recovery = new Map();
 const protectedKeys = new Set();
+const unsupportedKeys = new Set();
 let recovering = false;
 
 export function reportStorageError(error, message = 'Não foi possível salvar. Suas alterações continuam em memória; exporte um backup antes de sair.') {
@@ -27,7 +28,12 @@ export function readJson(key, fallback, validate = () => true) {
   if (raw == null) return structuredClone(fallback);
   try {
     const parsed = JSON.parse(raw);
+    if (typeof parsed?.schemaVersion === 'number' && parsed.schemaVersion > 1) {
+      // O validador da família decide se essa versão já é suportada.
+      if (!validate(parsed)) { unsupportedKeys.add(key); throw new Error('versão de documento não suportada'); }
+    }
     if (!validate(parsed)) throw new Error('estrutura inválida');
+    unsupportedKeys.delete(key);
     return parsed;
   } catch (error) {
     if (!recovery.has(key) || recovery.get(key).raw !== raw) preserveRaw(key, raw, error.message);
@@ -58,6 +64,7 @@ export function transact(changes) {
   const next = new Map(changes);
   const before = [...next.keys()].map(key => [key, readRaw(key)]).filter(([key, value]) => next.get(key) !== value);
   if (!before.length) return;
+  for (const [key] of before) if (unsupportedKeys.has(key)) throw new Error('Versão não suportada: o documento original está protegido contra gravação. Exporte a recuperação.');
   for (const [key] of before) if (protectedKeys.has(key)) {
     const entry = recovery.get(key);
     if (entry) preserveRaw(key, entry.raw, entry.reason);
@@ -84,6 +91,11 @@ export function recoveryEntries() {
     try { const entry = JSON.parse(readRaw(key)); all.set(`${entry.key}:${entry.recoveredAt}`, entry); } catch { /* preservado bruto no storage */ }
   }
   return [...all.values()];
+}
+
+// Uma cópia de transformação faz parte da mesma transação; não depende do journal após sucesso.
+export function migrationCopyChange(label, original) {
+  return [`ficha-rpg:recovery:${Date.now()}:${crypto.randomUUID()}`, JSON.stringify({key:label,raw:JSON.stringify(original),reason:'Original anterior à migração confirmada',recoveredAt:new Date().toISOString()})];
 }
 let warned = false;
 function warnStoragePressure() {

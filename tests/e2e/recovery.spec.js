@@ -25,7 +25,7 @@ test.beforeEach(async ({ page }) => {
       { id: 'manual', name: 'Recurso manual', usesCurrent: 0, usesMax: 4 },
     ]);
     state.get().spellcasting.slots[0].max = 3; state.get().spellcasting.slots[0].used = 2;
-    state.notify(); (await import('/js/ui.js')).renderAll(state.get()); Math.random = () => 0.5;
+    state.notify(); (await import('/js/ui.js')).renderAll(state.get()); crypto.getRandomValues = array => array.fill(Math.floor(0.5 * 0x100000000));
   });
 });
 

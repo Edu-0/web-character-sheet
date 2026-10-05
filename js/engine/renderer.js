@@ -7,6 +7,8 @@ import './point-fields.js';
 import './assisted-fields.js';
 import './recovery-fields.js';
 import './check-fields.js';
+import {createCheckButton} from './check-fields.js';
+import './effect-fields.js';
 import './technique-fields.js';
 import { getByPath, setByPath } from './paths.js';
 import { appendFieldHelp } from './help.js';
@@ -208,10 +210,12 @@ function renderComponent(component, character, options) {
     character,
     system: options.system,
     registerRefresh: options.registerRefresh,
+    upgradeCharacter: options.upgradeCharacter,
     dieScale: options.system?.dieScale || options.system?.diceSet,
     onChange: () => options.onChange?.(character, component),
   });
   if (component.help) appendFieldHelp(wrapper.querySelector('.field') || wrapper, component.help, component.label || component.type);
+  if (component.roll && component.type !== 'list') wrapper.append(createCheckButton({...component,character,system:options.system}));
   if (component.disabledWhen) {
     const refresh = () => {
       const disabled = getByPath(character, component.disabledWhen.field) === component.disabledWhen.equals;

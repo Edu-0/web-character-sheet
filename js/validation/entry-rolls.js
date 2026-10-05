@@ -1,3 +1,4 @@
+import {ENTRY_ROLL_CONTRACT, RUNTIME_DEFAULTS, ROLL_OPTION_ALIASES} from './contracts.js';
 import { pathKeys, getByPath } from '../engine/paths.js';
 import { parseDiceExpression } from '../engine/dice-expression.js';
 
@@ -5,7 +6,7 @@ const object = value => value !== null && typeof value === 'object' && !Array.is
 const add = (issues, path, message) => issues.push({ path, message, code: 'invalid' });
 function keys(value, allowed, path, issues) {
   if (!object(value)) { add(issues, path, 'deve ser objeto'); return false; }
-  for (const key of Object.keys(value)) if (!allowed.includes(key)) add(issues, `${path}.${key}`, 'opção desconhecida');
+  for (const key of Object.keys(value)) if (key !== 'extensions' && !allowed.includes(key)) add(issues, `${path}.${key}`, 'opção desconhecida');
   return true;
 }
 function text(value, path, issues) {
@@ -15,7 +16,7 @@ function path(value, label, issues) {
   try { pathKeys(value); } catch (error) { add(issues, label, error.message); }
 }
 function source(value, label, system, issues, depth = 0) {
-  if (!keys(value, ['value', 'field', 'itemField', 'formula', 'variables', 'overrideKey', 'resolver', 'fallback'], label, issues)) return;
+  if (!keys(value, ENTRY_ROLL_CONTRACT.source, label, issues)) return;
   if (depth > 4) { add(issues, label, 'fonte excede profundidade 4'); return; }
   const origins = ['value', 'field', 'itemField', 'formula', 'resolver'].filter(key => Object.hasOwn(value, key));
   if (origins.length !== 1) add(issues, label, 'escolha uma única origem: value, field, itemField, formula ou resolver');
@@ -46,33 +47,33 @@ export function validateEntryRolls(definitions, system, issues) {
   for (const [id, rawConfig] of Object.entries(definitions)) {
     const label = `system.entryRolls.${id}`;
     path(id, label, issues);
-    if (!keys(rawConfig, ['buttonLabel', 'title', 'submitLabel', 'noRollMessage', 'help', 'check', 'test', 'effect', 'scale', 'resource', 'info'], label, issues)) continue;
+    if (!keys(rawConfig, ENTRY_ROLL_CONTRACT.fields, label, issues)) continue;
     if (rawConfig.check !== undefined && rawConfig.test !== undefined) add(issues, `${label}.check`, 'use somente check; test é um nome anterior');
     const config = { ...rawConfig, check: rawConfig.check ?? rawConfig.test };
     labels(config, ['buttonLabel', 'title', 'submitLabel', 'noRollMessage', 'help'], label, issues);
-    if (config.check !== undefined && keys(config.check, ['label', 'toggleLabel', 'expressionLabel', 'modifierLabel', 'enabled', 'expression', 'modifier'], `${label}.check`, issues)) {
+    if (config.check !== undefined && keys(config.check, ENTRY_ROLL_CONTRACT.check, `${label}.check`, issues)) {
       labels(config.check, ['label', 'toggleLabel', 'expressionLabel', 'modifierLabel'], `${label}.check`, issues);
       if ('enabled' in config.check && typeof config.check.enabled !== 'boolean') add(issues, `${label}.check.enabled`, 'deve ser booleano');
       expression(config.check.expression, `${label}.check.expression`, system, issues);
       if (config.check.modifier !== undefined) source(config.check.modifier, `${label}.check.modifier`, system, issues);
     }
-    if (config.effect !== undefined && keys(config.effect, ['label', 'resultLabel', 'buttonLabel', 'expression'], `${label}.effect`, issues)) {
+    if (config.effect !== undefined && keys(config.effect, ENTRY_ROLL_CONTRACT.effect, `${label}.effect`, issues)) {
       labels(config.effect, ['label', 'resultLabel', 'buttonLabel'], `${label}.effect`, issues);
       if (config.effect.expression !== undefined) expression(config.effect.expression, `${label}.effect.expression`, system, issues);
     }
-    if (config.scale !== undefined && keys(config.scale, ['base', 'min', 'max', 'step', 'label', 'incrementLabel', 'increment', 'noScaleHelp'], `${label}.scale`, issues)) {
+    if (config.scale !== undefined && keys(config.scale, ENTRY_ROLL_CONTRACT.scale, `${label}.scale`, issues)) {
       const scale = config.scale;
       labels(scale, ['label', 'incrementLabel', 'noScaleHelp'], `${label}.scale`, issues);
       source(scale.base, `${label}.scale.base`, system, issues);
       if (scale.increment !== undefined) expression(scale.increment, `${label}.scale.increment`, system, issues);
-      const step = scale.step ?? 1;
+      const step = scale.step ?? RUNTIME_DEFAULTS.scaleStep;
       if (!Number.isInteger(scale.min) || scale.min < 0 || !Number.isInteger(scale.max) || scale.max > 1000 || scale.max < scale.min || !Number.isInteger(step) || step < 1 || (scale.max - scale.min) % step !== 0 || (scale.max - scale.min) / step > 100) add(issues, `${label}.scale`, 'escala inteira de 0 a 1000, passo positivo e até 101 opções, com extremos alinhados');
     }
-    if (config.resource !== undefined && keys(config.resource, ['field', 'mode', 'matchField', 'valueField', 'maxField', 'cost', 'label', 'statusLabel', 'unavailableMessage', 'consumeField'], `${label}.resource`, issues)) {
+    if (config.resource !== undefined && keys(config.resource, ENTRY_ROLL_CONTRACT.resource, `${label}.resource`, issues)) {
       const resource = config.resource;
       labels(resource, ['label', 'statusLabel', 'unavailableMessage'], `${label}.resource`, issues);
       path(resource.field, `${label}.resource.field`, issues);
-      if (!['remaining', 'used'].includes(resource.mode)) add(issues, `${label}.resource.mode`, 'use remaining ou used');
+      if (!ENTRY_ROLL_CONTRACT.resourceModes.includes(resource.mode)) add(issues, `${label}.resource.mode`, 'use remaining ou used');
       for (const key of ['matchField', 'valueField', 'maxField', 'consumeField']) if (key in resource) path(resource[key], `${label}.resource.${key}`, issues);
       if (system && resource.consumeField) {
         let value; try { value = getByPath(system.characterTemplate, resource.consumeField); } catch {}
@@ -90,15 +91,20 @@ export function validateEntryRolls(definitions, system, issues) {
       if (!Array.isArray(config.info) || config.info.length > 10) add(issues, `${label}.info`, 'deve ser lista de até 10 informações');
       else config.info.forEach((info, index) => {
         const infoLabel = `${label}.info[${index}]`;
-        if (keys(info, ['label', 'source'], infoLabel, issues)) { text(info.label, `${infoLabel}.label`, issues); source(info.source, `${infoLabel}.source`, system, issues); }
+        if (keys(info, ENTRY_ROLL_CONTRACT.info, infoLabel, issues)) { text(info.label, `${infoLabel}.label`, issues); source(info.source, `${infoLabel}.source`, system, issues); }
       });
     }
   }
 }
 
 export function validateRollOptions(options, label, issues) {
-  if (!keys(options, ['checkEnabled', 'checkExpression', 'testEnabled', 'testExpression', 'modifier', 'effect', 'increment', 'attack', 'attackModifier', 'upcast'], label, issues)) return;
+  if (!keys(options, ENTRY_ROLL_CONTRACT.options, label, issues)) return;
   for (const [current, previous] of [['checkEnabled', 'testEnabled'], ['checkExpression', 'testExpression']]) if (current in options && previous in options) add(issues, `${label}.${current}`, `use somente ${current}; ${previous} é um nome anterior`);
+  const resolved = new Map();
+  for (const [previous,current] of ROLL_OPTION_ALIASES) for (const key of [current,previous]) if (Object.hasOwn(options,key)) {
+    if (resolved.has(current) && JSON.stringify(resolved.get(current)) !== JSON.stringify(options[key])) add(issues,`${label}.${current}`,'aliases conflitantes; escolha o valor antes de importar');
+    resolved.set(current,options[key]);
+  }
   for (const key of ['checkEnabled', 'testEnabled', 'attack']) if (key in options && typeof options[key] !== 'boolean') add(issues, `${label}.${key}`, 'deve ser booleano');
   for (const key of ['modifier', 'attackModifier']) if (key in options && (typeof options[key] !== 'string' || options[key].length > 200)) add(issues, `${label}.${key}`, 'deve ser texto de até 200 caracteres');
   for (const key of ['checkExpression', 'testExpression', 'effect', 'increment', 'upcast']) if (key in options) {

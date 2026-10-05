@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "swade-table",
   "system": "swade",
   "name": "Modo mesa",
@@ -23,27 +23,47 @@
                 {
                   "type": "die",
                   "field": "attributes.agility",
-                  "label": "Agilidade"
+                  "label": "Agilidade",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "agility"
+                  }
                 },
                 {
                   "type": "die",
                   "field": "attributes.smarts",
-                  "label": "Astúcia"
+                  "label": "Astúcia",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "smarts"
+                  }
                 },
                 {
                   "type": "die",
                   "field": "attributes.spirit",
-                  "label": "Espírito"
+                  "label": "Espírito",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "spirit"
+                  }
                 },
                 {
                   "type": "die",
                   "field": "attributes.strength",
-                  "label": "Força"
+                  "label": "Força",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "strength"
+                  }
                 },
                 {
                   "type": "die",
                   "field": "attributes.vigor",
-                  "label": "Vigor"
+                  "label": "Vigor",
+                  "roll": {
+                    "check": "trait",
+                    "sourceId": "vigor"
+                  }
                 },
                 {
                   "type": "checkRoll",
@@ -149,6 +169,20 @@
                   "type": "checkRoll",
                   "configFrom": "checks.damage",
                   "label": "Rolagem de dano"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "effects",
+          "title": "Efeitos confirmados pela mesa",
+          "containers": [
+            {
+              "components": [
+                {
+                  "type": "effectList",
+                  "label": "Efeitos ativos"
                 }
               ]
             }

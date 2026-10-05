@@ -141,7 +141,7 @@ test('validação rejeita metadados inválidos de layout', async ({ page }) => {
     pkg.layouts[0].mode = 'unknown'; pkg.layouts[0].name = 4;
     return (await import('/js/validation/schemas.js')).validateSystemPackage(pkg);
   });
-  expect(issues.map(issue => issue.path)).toEqual(expect.arrayContaining(['layout.mode', 'layout.name']));
+  expect(issues.map(issue => issue.path)).toEqual(expect.arrayContaining(['package.layouts[0].mode', 'package.layouts[0].name']));
 });
 
 for (const width of [360, 1280]) for (const theme of ['light', 'dark']) test(`mesa em ambos os sistemas: ${width}px ${theme}`, async ({ page }, testInfo) => {

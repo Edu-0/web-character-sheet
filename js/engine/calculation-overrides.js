@@ -1,4 +1,6 @@
 import { pathKeys } from './paths.js';
+import { getSystem } from './system.js';
+import { effectContribution } from './effects.js';
 
 // IDs são chaves literais, nunca caminhos de escrita no personagem.
 export function getCalculationOverride(character, key) {
@@ -6,11 +8,14 @@ export function getCalculationOverride(character, key) {
   return overrides && Object.hasOwn(overrides, key) ? overrides[key] : undefined;
 }
 
-export function calculationValue(character, key, automatic) {
+export function calculationValue(character, key, automatic, { system = getSystem(), effects = true } = {}) {
   const entry = getCalculationOverride(character, key);
-  if (!entry) return automatic;
-  if (entry.mode === 'fixed') return entry.value;
-  return entry.mode === 'adjust' && typeof automatic === 'number' && Number.isFinite(automatic) ? automatic + entry.value : automatic;
+  if (entry?.mode === 'fixed') return entry.value;
+  if (typeof automatic !== 'number' || !Number.isFinite(automatic)) return automatic;
+  const contribution = effectContribution(character, system, { kind: 'calculation', key }, { enabled: effects });
+  const result = automatic + contribution.value + (entry?.mode === 'adjust' ? entry.value : 0);
+  if (!Number.isFinite(result)) throw new Error('Resultado do cálculo não é finito.');
+  return result;
 }
 
 export function setCalculationOverride(character, key, entry) {
@@ -21,7 +26,7 @@ export function setCalculationOverride(character, key, entry) {
     return;
   }
   character.calculationOverrides ??= {};
-  character.calculationOverrides[key] = { ...entry };
+  character.calculationOverrides[key] = { ...character.calculationOverrides[key], ...entry };
 }
 
 export function createCalculationControl({ character, key, label, automatic, onChange, registerRefresh }) {

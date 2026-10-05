@@ -69,7 +69,7 @@ test('d4 não graduado pode ser selecionado e todos os dados mostram tamanho e f
   const pool = page.locator('.engine-pool');
   await expect(pool.getByRole('checkbox', { name: /Perícia não graduada/ })).toBeVisible();
   await pool.getByRole('checkbox', { name: /Perícia não graduada/ }).check();
-  await page.evaluate(() => { Math.random = () => 0.999; });
+  await page.evaluate(() => { crypto.getRandomValues = array => array.fill(Math.floor(0.999 * 0x100000000)); });
   await pool.getByRole('button', { name: 'Rolar Pool' }).click();
   await expect(pool.locator('.engine-roll__die')).toHaveText('d4 · Ápice e Base');
   await expect(pool.locator('.engine-pool__summary')).toHaveText('Peso 4');
@@ -92,7 +92,7 @@ test('descanso respeita recuperação, preserva ferimentos e permite desfazer; r
     states: { wear: [{ id: 'exausto', name: 'Exausto', sides: 8 }, { id: 'ferido', name: 'Ferido', sides: 10 }, { id: 'permanente', name: 'Exausto', sides: 6, recoverable: false }], trauma: [{ id: 'trauma', name: 'Ferido', sides: 8 }], characteristics: [], complications: [] },
     reaction: { available: false },
   });
-  await page.evaluate(() => { Math.random = () => 0.999; });
+  await page.evaluate(() => { crypto.getRandomValues = array => array.fill(Math.floor(0.999 * 0x100000000)); });
   await page.getByRole('tab', { name: 'Recursos', exact: true }).click();
   await page.getByRole('button', { name: 'Descanso curto', exact: true }).click();
   let character = await stored(page);
@@ -153,7 +153,7 @@ test('limite de Desgaste gera Trauma, sinaliza retirada e morte; cura depende do
 
 test('técnicas usam Energia pelo dado escolhido, mantêm concentração e protegem saldo insuficiente', async ({ page }, testInfo) => {
   await seed(page, { specializations: [{ id: 'spec', name: 'Gelo', die: 8 }], techniques: [{ id: 'tech', name: 'Barreira', maxDie: 10, currentDie: 10, specializationId: 'spec', energyCost: null, concentration: true }], resources: { energy: { current: 10, max: 10 }, actionResource: { current: 0 } } });
-  await page.evaluate(() => { Math.random = () => 0.999; });
+  await page.evaluate(() => { crypto.getRandomValues = array => array.fill(Math.floor(0.999 * 0x100000000)); });
   await page.getByRole('tab', { name: 'Técnicas', exact: true }).click();
   const use = page.locator('.engine-technique-use');
   await use.getByLabel('Técnica a utilizar').selectOption('tech');
@@ -204,7 +204,7 @@ test('Pool composta é uma única fonte; apoio temporário fica separado e Pool 
   await page.getByLabel('Força', { exact: true }).selectOption('composite');
   await page.getByLabel('Composição de Força').fill('d12 + d6');
   await page.getByRole('tab', { name: 'Combate' }).click();
-  await page.evaluate(() => { Math.random = () => 0.999; });
+  await page.evaluate(() => { crypto.getRandomValues = array => array.fill(Math.floor(0.999 * 0x100000000)); });
   const pool = page.locator('.engine-pool');
   await pool.getByText('Força (Atributo)', { exact: true }).click();
   await pool.getByRole('button', { name: 'Rolar Pool' }).click();

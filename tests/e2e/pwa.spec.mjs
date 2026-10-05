@@ -66,8 +66,25 @@ test('offline abre sistemas ainda não visitados, salva, desfaz e reabre em outr
     await openSystem(page, system.name);
     await page.locator('#sheet-layout-select').selectOption(`${system.id}-table`);
     await expect(page.locator(host).getByRole('tab', { name: 'Em jogo', exact: true })).toBeVisible();
+    if (system.id === 'swade') {
+      await page.getByRole('tab',{name:'Em jogo',exact:true}).click();
+      await page.getByRole('button',{name:'Ativar Coringa',exact:true}).click();
+      await expect(page.locator('.engine-effects')).toContainText('Coringa · Ativo');
+      await expect(page.locator('#save-indicator')).toHaveText('Salvo');await page.reload();
+      await expect(page.locator('.engine-effects')).toContainText('Coringa · Ativo');
+      await page.getByRole('button',{name:'Confirmar fim de rodada'}).click();await page.getByRole('button',{name:'Confirmar evento',exact:true}).click();
+      await expect(page.locator('.engine-effects')).toContainText('Coringa · Expirado');
+    }
   }
   await openSystem(page, 'D&D 5e (2024)'); expect((await values(page)).meta.id).toBe(id); await expect(name).toHaveValue('Viajante offline');
+  const offlineRoll = await page.evaluate(async () => {
+    const original = Math.random;
+    Math.random = () => { throw new Error('Offline não deve usar Math.random'); };
+    try { return (await import('/js/dice.js')).rollExpression('2d6'); }
+    finally { Math.random = original; }
+  });
+  expect(offlineRoll.rolls).toHaveLength(2);
+  expect(offlineRoll.total).toBeGreaterThanOrEqual(2); expect(offlineRoll.total).toBeLessThanOrEqual(12);
   const second = await context.newPage(); await second.goto('/'); await expect(second.locator(host).getByLabel('Nome do personagem', { exact: true })).toHaveValue('Viajante offline');
   await second.close(); await settings(page); await expect(page.locator('#offline-status')).toContainText('Você está offline');
   await expect(page.locator('#btn-check-update')).toBeDisabled();
@@ -231,10 +248,13 @@ test('cache reparado não guarda navegação desconhecida, arquivos privados ou 
     });
     await settings(page); await page.locator('#btn-check-update').click();
     await expect(page.locator('#offline-status')).toContainText('Disponível offline');
-    const paths = await page.evaluate(async () => {
+    const cachePaths = () => page.evaluate(async () => {
       const name = (await caches.keys()).find(name => name.startsWith('ficha-rpg-offline:'));
       return (await (await caches.open(name)).keys()).map(request => new URL(request.url).pathname);
     });
+    // O status anterior pode continuar visível enquanto o reparo está em andamento.
+    await expect.poll(cachePaths).toContain('/ficha/data/systems/sistema-rpg.system.json');
+    const paths = await cachePaths();
     expect(paths.some(path => path.includes('docs/') || path.includes('nao-existe'))).toBe(false);
     expect(paths).toContain('/ficha/data/systems/sistema-rpg.system.json');
   } finally { await server.close(); }

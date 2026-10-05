@@ -1,60 +1,21 @@
+import {RUNTIME_DEFAULTS} from '../validation/contracts.js';
 import { openModal } from '../modal.js';
-import { rollExpression } from '../dice.js';
-import { getByPath, setByPath } from './paths.js';
-import { evaluate } from './formula.js';
-import { calculationValue } from './calculation-overrides.js';
+import { recordResult } from '../dice.js';
+import {prepareEntryRoll} from './entry-roll-preparation.js';
+import { getByPath } from './paths.js';
 import { parseDiceExpression, scaleDiceExpression, formatDiceExpression } from './dice-expression.js';
 import { registerEntryAction } from './entry-actions.js';
 
-const valueResolvers = new Map();
-export function registerRollValueResolver(name, resolver) { valueResolvers.set(name, resolver); }
-
-export function rollValue(source, context) {
-  if (source === undefined) return undefined;
-  let value;
-  if (Object.hasOwn(source, 'value')) value = source.value;
-  else if (source.itemField) value = getByPath(context.item, source.itemField);
-  else if (source.field) value = getByPath(context.character, source.field);
-  else if (source.resolver) {
-    const resolve = valueResolvers.get(source.resolver);
-    if (!resolve) throw new Error(`Resolvedor indisponível: ${source.resolver}.`);
-    value = resolve(context);
-  } else if (source.formula) {
-    const formula = Object.hasOwn(context.system.formulas || {}, source.formula) ? context.system.formulas[source.formula] : undefined;
-    if (!formula) throw new Error(`Fórmula indisponível: ${source.formula}.`);
-    const vars = Object.fromEntries(Object.entries(source.variables || {}).map(([key, definition]) => [key, rollValue(definition, context)]));
-    value = evaluate(formula, { vars, data: context.character });
-  }
-  if ((value == null || value === '') && Object.hasOwn(source, 'fallback')) value = source.fallback;
-  return source.overrideKey ? calculationValue(context.character, source.overrideKey, value) : value;
-}
+import { rollValue } from './roll-values.js';
+import { prepareRollCost } from './roll-cost.js';
+export { rollValue, registerRollValueResolver } from './roll-values.js';
+export { prepareRollCost } from './roll-cost.js';
 
 const node = (tag, text = '') => { const el = document.createElement(tag); el.textContent = text; return el; };
 const integer = (value, label, { min = -1000000, max = 1000000 } = {}) => {
   if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < min || value > max) throw new Error(`${label}: informe um inteiro entre ${min} e ${max}.`);
   return value;
 };
-
-// Confere a disponibilidade inteira antes de devolver uma única mutação.
-export function prepareRollCost(resource, context, selection, requireAvailable = true) {
-  if (!resource) return null;
-  const cost = integer(rollValue(resource.cost || { value: 1 }, context), 'Custo', { min: 0 });
-  let target = context.character;
-  let field = resource.field;
-  if (resource.matchField) {
-    const list = getByPath(target, resource.field);
-    if (!Array.isArray(list)) throw new Error('Lista de recursos indisponível.');
-    const matches = list.filter(entry => getByPath(entry, resource.matchField) === selection);
-    if (matches.length !== 1) throw new Error(resource.unavailableMessage || 'Recurso indisponível para a opção escolhida.');
-    target = matches[0]; field = resource.valueField;
-  }
-  const current = integer(getByPath(target, field), 'Recurso', { min: 0 });
-  const max = resource.mode === 'used' ? integer(getByPath(target, resource.maxField), 'Máximo do recurso', { min: 0 }) : current;
-  const remaining = resource.mode === 'used' ? max - current : current;
-  if (remaining < 0) throw new Error('Recurso utilizado excede o máximo.');
-  if (requireAvailable && remaining < cost) throw new Error(resource.unavailableMessage || 'Recurso insuficiente. Desmarque o consumo ou escolha outro valor.');
-  return { remaining, max, cost, apply: () => setByPath(target, field, resource.mode === 'used' ? current + cost : current - cost) };
-}
 
 registerEntryAction('roll', context => createEntryRollButton(context, context.system.entryRolls[context.rollPreset ?? context.rollConfigFrom]));
 
@@ -88,7 +49,7 @@ export function openEntryRollPanel(context, config, trigger) {
   let check, checkExpression, modifier;
   if (checkConfig) {
     check = input(checkConfig.toggleLabel || 'Rolar teste', 'checkbox');
-    check.checked = saved.checkEnabled ?? saved.testEnabled ?? saved.attack ?? checkConfig.enabled ?? true;
+    check.checked = saved.checkEnabled ?? saved.testEnabled ?? saved.attack ?? checkConfig.enabled ?? RUNTIME_DEFAULTS.checkEnabled;
     checkExpression = input(checkConfig.expressionLabel || 'Dados do teste', 'text', saved.checkExpression ?? saved.testExpression ?? rollValue(checkConfig.expression, context) ?? '');
     modifier = input(checkConfig.modifierLabel || 'Modificador do teste', 'text', saved.modifier ?? saved.attackModifier ?? '');
     modifier.placeholder = 'Vazio para usar o valor da ficha';
@@ -96,13 +57,13 @@ export function openEntryRollPanel(context, config, trigger) {
   const effect = input(config.effect?.label || 'Dados de dano ou efeito', 'text', saved.effect ?? rollValue(config.effect?.expression, context) ?? '');
   effect.placeholder = 'Ex.: 3d6 + 4 · vazio para não rolar';
   const base = config.scale ? rollValue(config.scale.base, context) : undefined;
-  const scaleError = config.scale && (!Number.isSafeInteger(base) || base < 0 || base > config.scale.max || base >= config.scale.min && (base - config.scale.min) % (config.scale.step || 1)) ? 'Valor base fora da escala configurada.' : '';
+  const scaleError = config.scale && (!Number.isSafeInteger(base) || base < 0 || base > config.scale.max || base >= config.scale.min && (base - config.scale.min) % (config.scale.step || RUNTIME_DEFAULTS.scaleStep)) ? 'Valor base fora da escala configurada.' : '';
   const scaling = config.scale && !scaleError && base >= config.scale.min;
   let selection, extra, consume;
   if (scaling) {
     const label = node('label'); label.className = 'field';
     selection = node('select'); selection.setAttribute('aria-label', config.scale.label || 'Intensidade');
-    for (let value = base; value <= config.scale.max; value += config.scale.step || 1) {
+    for (let value = base; value <= config.scale.max; value += config.scale.step || RUNTIME_DEFAULTS.scaleStep) {
       const option = node('option', String(value)); option.value = value; selection.append(option);
     }
     label.append(node('span', config.scale.label || 'Intensidade'), selection); form.append(label);
@@ -135,7 +96,7 @@ export function openEntryRollPanel(context, config, trigger) {
       if (extra?.value.trim()) throw new Error('Informe os dados base antes de configurar o aumento.');
       return null;
     }
-    return scaleDiceExpression(parseDiceExpression(effect.value), parseDiceExpression(extra?.value || '', { allowEmpty: true }), selection ? (Number(selection.value) - base) / (config.scale.step || 1) : 0);
+    return scaleDiceExpression(parseDiceExpression(effect.value), parseDiceExpression(extra?.value || '', { allowEmpty: true }), selection ? (Number(selection.value) - base) / (config.scale.step || RUNTIME_DEFAULTS.scaleStep) : 0);
   };
   const cost = (requireAvailable = true) => prepareRollCost(resource, context, selection ? Number(selection.value) : undefined, requireAvailable);
   const refresh = () => {
@@ -155,14 +116,16 @@ export function openEntryRollPanel(context, config, trigger) {
   form.addEventListener('input', refresh); form.addEventListener('change', refresh);
   function save() {
     item.rollOptions = {
+      ...item.rollOptions,
       ...(check ? { checkEnabled: check.checked, checkExpression: checkExpression.value.trim(), modifier: modifier.value.trim() } : {}),
       effect: effect.value.trim(), increment: extra ? extra.value.trim() : saved.increment ?? saved.upcast ?? '',
     };
+    for (const key of ['testEnabled','testExpression','attack','attackModifier','upcast']) delete item.rollOptions[key];
     onChange?.();
   }
   function validate() { const effect = getEffect(); return { effect, check: check?.checked ? getCheck() : null }; }
-  function showRoll(expression, phase) {
-    const entry = rollExpression(expression, `${item.name || 'Ação'} · ${phase}${selection ? ` · ${config.scale.label || 'Intensidade'} ${selection.value}` : ''}`);
+  function showRoll(resolution, phase) {
+    const entry = recordResult({...resolution,label:`${item.name || 'Ação'} · ${phase}${selection ? ` · ${config.scale.label || 'Intensidade'} ${selection.value}` : ''}`});
     result.replaceChildren(node('strong', `${entry.label}: ${entry.formula} = ${entry.total}`), node('p', entry.groups.map(group => `${group.count}d${group.sides}: ${group.rolls.join(', ')}`).join(' · ') || 'Valor fixo, sem dados.'));
     document.dispatchEvent(new CustomEvent('sheet:rolled', { detail: entry }));
   }
@@ -183,17 +146,19 @@ export function openEntryRollPanel(context, config, trigger) {
     { label: config.submitLabel || 'Rolar', className: 'button button--primary', closeOnClick: false, onClick: () => run(() => {
       const expressions = validate();
       const shouldConsume = resource?.consumeField ? getByPath(character, resource.consumeField) === true : consume?.checked;
-      const payment = shouldConsume ? cost() : null;
-      payment?.apply(); save();
-      if (expressions.check) showRoll(expressions.check, checkConfig.label || 'Teste');
-      else if (expressions.effect) showRoll(expressions.effect, config.effect?.resultLabel || 'Dano/efeito');
+      const phase = expressions.check ? checkConfig.label || 'Teste' : config.effect?.resultLabel || 'Dano/efeito';
+      const prepared = prepareEntryRoll({expression:expressions.check || expressions.effect,resource,context,selection:selection?Number(selection.value):undefined,consume:shouldConsume,phase});
+      prepared.payment?.apply(); save();
+      if (prepared.result) showRoll(prepared.result,phase);
       else result.textContent = config.noRollMessage || 'Ação registrada sem rolagem.';
     }) },
     { label: config.effect?.buttonLabel || 'Rolar dano / efeito', className: 'button button--ghost', closeOnClick: false, onClick: () => run(() => {
       const expression = getEffect();
       if (!expression) throw new Error('Informe dados ou um valor fixo para o dano/efeito.');
       // Uma configuração inválida do teste não pode ser gravada pelo botão de efeito.
-      validate(); save(); showRoll(expression, config.effect?.resultLabel || 'Dano/efeito');
+      validate();
+      const phase=config.effect?.resultLabel || 'Dano/efeito';
+      const prepared=prepareEntryRoll({expression,context,phase});save();showRoll(prepared.result,phase);
     }) },
   ];
   openModal({ title: `${config.title || config.buttonLabel || 'Rolar'}: ${item.name || 'Ação sem nome'}`, contentEl: content, actions,

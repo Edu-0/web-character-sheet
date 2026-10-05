@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
     state.setPath('spellcasting.spells', [{ id: 'spell', name: 'Magia de teste', level: 1 }]);
     state.get().spellcasting.slots.forEach(entry => { entry.max = 1; entry.used = 0; });
     state.notify();
-    Math.random = () => 0.5;
+    crypto.getRandomValues = array => array.fill(Math.floor(0.5 * 0x100000000));
   });
 });
 

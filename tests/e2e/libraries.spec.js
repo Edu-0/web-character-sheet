@@ -190,7 +190,7 @@ test('rejeita pacote com componente desconhecido e informa o caminho exato', asy
   });
 
   await expect(page.locator('.toast')).toContainText(
-    'layout.tabs[0].sections[0].containers[0].components[0]: tipo "lisst" desconhecido',
+    'package.layouts[0].tabs[0].sections[0].containers[0].components[0]: tipo "lisst" desconhecido',
   );
   await expect(page.locator('#systems-list .library-card').filter({ hasText: 'Sistema Inválido' })).toHaveCount(0);
 });
@@ -208,7 +208,7 @@ test('rejeita personagem com versão de schema incompatível', async ({ page }) 
     buffer: Buffer.from(JSON.stringify(character)),
   });
 
-  await expect(page.locator('.toast')).toContainText('character.schemaVersion: deve ser 1');
+  await expect(page.locator('.toast')).toContainText('character.schemaVersion: versão não suportada');
 });
 
 test('gerenciadores fazem reflow em 360px sem overflow da página', async ({ page }, testInfo) => {

@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 2,
+  "kind": "rpg-system-package",
+  "system": {
+    "schemaVersion": 1,
+    "id": "check-buttons",
+    "name": "Exemplo de botões de teste",
+    "characterTemplate": {
+      "schemaVersion": 1,
+      "meta": {
+        "system": "check-buttons"
+      },
+      "identity": {
+        "name": "Exemplo"
+      },
+      "score": 2,
+      "skills": [
+        {
+          "id": "practice",
+          "name": "Prática",
+          "rating": 3
+        }
+      ]
+    },
+    "formulas": {
+      "adjusted": "base + 1"
+    },
+    "checks": {
+      "action": {
+        "algorithm": "fate",
+        "note": "Exemplo fictício de 4dF. Custos e efeitos são manuais.",
+        "sources": [
+          {
+            "label": "Base",
+            "field": "score",
+            "id": "base"
+          },
+          {
+            "label": "Total ajustado",
+            "formula": "adjusted",
+            "id": "derived",
+            "overrideKey": "shared",
+            "variables": {
+              "base": {
+                "field": "score"
+              }
+            }
+          },
+          {
+            "label": "Perícia",
+            "collection": "skills",
+            "valueField": "rating",
+            "id": "skill"
+          }
+        ]
+      }
+    }
+  },
+  "layouts": [
+    {
+      "schemaVersion": 2,
+      "id": "check-buttons-main",
+      "system": "check-buttons",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "main",
+              "title": "Teste reutilizável",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "text",
+                      "field": "identity.name",
+                      "label": "Nome"
+                    },
+                    {
+                      "type": "number",
+                      "field": "score",
+                      "label": "Base",
+                      "roll": {
+                        "check": "action",
+                        "sourceId": "base"
+                      }
+                    },
+                    {
+                      "type": "computed",
+                      "formula": "adjusted",
+                      "label": "Total ajustado",
+                      "overrideKey": "shared",
+                      "variables": {
+                        "base": {
+                          "field": "score"
+                        }
+                      },
+                      "roll": {
+                        "check": "action",
+                        "sourceId": "derived"
+                      }
+                    },
+                    {
+                      "type": "list",
+                      "field": "skills",
+                      "label": "Perícias",
+                      "itemSchema": {
+                        "name": {
+                          "type": "text",
+                          "label": "Nome da perícia"
+                        },
+                        "rating": {
+                          "type": "number",
+                          "label": "Valor"
+                        }
+                      },
+                      "roll": {
+                        "check": "action",
+                        "sourceId": "skill"
+                      }
+                    },
+                    {
+                      "type": "checkRoll",
+                      "configFrom": "checks.action",
+                      "label": "Teste configurável"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

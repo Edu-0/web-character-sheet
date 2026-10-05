@@ -1473,6 +1473,10 @@
 .engine-calculation-control summary .engine-calculation-status { margin-left: .5rem; font-size: inherit; font-weight: 600; }
 
 html:not([data-calculation-controls="visible"]) .engine-calculation-control { display: none; }
+.engine-effects { min-width: 0; overflow-wrap: anywhere; }
+.engine-effects > div { display: flex; flex-wrap: wrap; gap: .5rem; }
+.engine-effects__entry { width: 100%; padding: .5rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
+.engine-effects__entry p { margin: 0 0 .5rem; }
 
 .source-roll-trigger { justify-self: start; margin-bottom: var(--space-2); }
 .modal:has(.source-roll-panel) { max-width: 620px; max-height: calc(100dvh - 32px); display: flex; flex-direction: column; }

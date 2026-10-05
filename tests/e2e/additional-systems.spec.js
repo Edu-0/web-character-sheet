@@ -21,7 +21,7 @@ test('checkRoll importado relê fontes, ajustes, listas e desfazer sem gravar ro
   await open(page, pkg.system.name);
   const host = page.locator('#generic-sheet-host'), check = host.locator('.engine-check');
   const select = check.getByLabel('Fonte do teste'), output = check.getByRole('status');
-  await page.evaluate(() => { Math.random = () => 0.5; }); // Quatro faces neutras.
+  await page.evaluate(() => { crypto.getRandomValues = array => array.fill(Math.floor(0.5 * 0x100000000)); }); // Quatro faces neutras.
   await host.getByLabel('Base', { exact: true }).fill('5');
   await expect(select.locator('option').first()).toHaveText('Base (5)');
   await check.getByRole('button', { name: 'Rolar teste' }).click();
@@ -49,14 +49,14 @@ test('checkRoll importado relê fontes, ajustes, listas e desfazer sem gravar ro
   await expect(output).toContainText('Base: 0 · Empate');
   await adjustment.getByRole('combobox').selectOption('fixed');
   await adjustment.getByRole('spinbutton').fill('7');
-  await select.selectOption('2:practice');
+  await select.selectOption(JSON.stringify(['2','id','practice']));
   const skills = host.locator('[data-field="skills"]');
   await skills.getByRole('button', {name:'Adicionar',exact:true}).click();
   const practice = skills.locator('[data-entry-id="practice"]');
   if (!await practice.evaluate(node => node.open)) await practice.locator('summary').click();
   await practice.getByLabel('Nome da perícia', {exact:true}).fill('<img onerror=alert(1)>');
   await practice.getByLabel('Valor', {exact:true}).fill('4');
-  await expect(select).toHaveValue('2:practice');
+  await expect(select).toHaveValue(JSON.stringify(['2','id','practice']));
   const before = await data(page), history = await page.locator('#edit-history-status').textContent();
   await check.getByRole('button', { name: 'Rolar teste' }).click();
   await expect(output).toContainText('<img onerror=alert(1)>: 4');

@@ -8,9 +8,10 @@ async function importFixture(page, pkg = structuredClone(fixture)) {
   await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');
   await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
   await page.locator('#input-import-system').setInputFiles({ name: 'example.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(pkg)) });
+  if (Object.values(pkg.system.entryRolls || {}).some(config=>config.test)) await page.getByRole('button',{name:'Migrar e importar',exact:true}).click();
   await page.locator('#systems-list .library-card').filter({ hasText: pkg.system.name }).getByRole('button', { name: 'Abrir', exact: true }).click();
   await expect(page.locator('#shell-current-system')).toHaveText(pkg.system.name);
-  await page.evaluate(() => { Math.random = () => 0.5; });
+  await page.evaluate(() => { crypto.getRandomValues = array => array.fill(Math.floor(0.5 * 0x100000000)); });
 }
 async function open(page, label = 'Ativar poder') {
   if (label === 'Lançar') {
@@ -21,6 +22,15 @@ async function open(page, label = 'Ativar poder') {
   return page.getByRole('dialog');
 }
 const energy = page => page.evaluate(async () => (await import('/js/state.js')).state.get().energy);
+test('falha de dado não consome, não salva configuração nem publica resultado',async({page})=>{
+  await importFixture(page);const dialog=await open(page);await dialog.getByLabel('Consumir energia').check();
+  const before=await page.evaluate(async()=>({character:structuredClone((await import('/js/state.js')).state.get()),rolls:(await import('/js/dice.js')).getHistory().length}));
+  await page.evaluate(()=>{crypto.getRandomValues =()=>{throw new Error('Falha simulada no dado');};});
+  await dialog.getByRole('button',{name:'Ativar',exact:true}).click();await expect(dialog.getByRole('alert')).toContainText('Falha simulada');
+  await page.evaluate(()=>{crypto.getRandomValues = array => array.fill(Math.floor(0.5 * 0x100000000));});
+  const after=await page.evaluate(async()=>({character:structuredClone((await import('/js/state.js')).state.get()),rolls:(await import('/js/dice.js')).getHistory().length}));
+  expect(after).toEqual(before);
+});
 
 test('consumo compartilhado pode ser configurado em outro campo do sistema sem controle na entrada', async ({ page }) => {
   const pkg = structuredClone(fixture);

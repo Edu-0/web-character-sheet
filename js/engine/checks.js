@@ -1,10 +1,24 @@
 import { rollOne } from './dice-resolver.js';
 import { getByPath } from './paths.js';
-import { evaluate } from './formula.js';
-import { calculationValue, getCalculationOverride } from './calculation-overrides.js';
+import { computedValue } from './computed-values.js';
 import { parseDiceExpression } from './dice-expression.js';
+import { effectContribution, CHECK_UNITS } from './effects.js';
 
-export const CHECK_ALGORITHMS = ['fate', 'percentile', 'd6Pool', 'd6Resistance', 'explodingTrait', 'explodingDamage', 'challenge', 'progress'];
+export function prepareCheck({config, character, system, checkId, sourceId, options = {}, confirmed = []}) {
+  const source = checkSources(config,character,system).find(item => item.id === sourceId);
+  if (!source) throw new Error('Cadastre e selecione uma fonte para rolar.');
+  if (source.error) throw new Error(`${source.label}: ${source.error}`);
+  const effects = effectContribution(character,system,{kind:'checkModifier',key:checkId,unit:CHECK_UNITS[config.algorithm]},{confirmed});
+  const manual = options.modifier ?? 0;
+  const input = { ...options, value:source.value, modifier:manual + effects.value,
+    momentum:config.momentumField ? getByPath(character,config.momentumField) : 0 };
+  // Exercita as mesmas guardas sem consultar o gerador aleatório.
+  rollCheck(config.algorithm,input,()=>1);
+  const snapshot = structuredClone({schemaVersion:1,algorithm:config.algorithm,checkId,source,options:input,manualModifier:manual,effects});
+  return {source, snapshot, execute:die => ({...rollCheck(config.algorithm,input,die),snapshot})};
+}
+
+export {CHECK_ALGORITHMS} from '../validation/contracts.js';
 
 export function integer(value, min, max, label = 'Valor') {
   if (!Number.isInteger(value) || value < min || value > max) throw new Error(`${label}: informe um inteiro entre ${min} e ${max}.`);
@@ -12,18 +26,18 @@ export function integer(value, min, max, label = 'Valor') {
 }
 
 // Fontes são relidas no clique; nomes editáveis nunca são caminhos executáveis.
+export function collectionCheckSourceId(sourceId, itemId, index) {
+  return JSON.stringify([String(sourceId),itemId == null ? 'index' : 'id',itemId ?? index]);
+}
 export function checkSources(config, character, system = {}) {
   return config.sources.flatMap((source, index) => {
     if (source.collection) return (getByPath(character, source.collection) || []).map((item, i) => ({
-      id: `${index}:${item.id ?? i}`, label: `${source.label}: ${item.name || i + 1}`, value: getByPath(item, source.valueField),
+      id: collectionCheckSourceId(source.id ?? index,item.id,i), sourceId:source.id ?? String(index), itemId:item.id, label: `${source.label}: ${item.name || i + 1}`, value: getByPath(item, source.valueField),
     }));
-    const entry = { id: String(index), label: source.label };
+    const entry = { id: source.id ?? String(index), sourceId:source.id ?? String(index), label: source.label };
     try {
       if (source.formula) {
-        const key = `computed.${source.formula}`;
-        const override = getCalculationOverride(character, key);
-        entry.value = override?.mode === 'fixed' ? override.value
-          : calculationValue(character, key, evaluate(system.formulas[source.formula], { data: character }));
+        entry.value = computedValue({...source,character,system});
       } else entry.value = getByPath(character, source.field);
     } catch (error) {
       // Uma fórmula opcional indisponível não inutiliza as outras fontes.
@@ -48,7 +62,7 @@ export function rollCheck(algorithm, { value, modifier = 0, target = 0, wild = t
     const hits = challenges.filter(n => total > n).length;
     const outcome = ['Falha','Sucesso fraco','Sucesso forte'][hits];
     const match = challenges[0] === challenges[1];
-    return { rolls: [...(progress ? [] : [action]), ...challenges], total, modifier: progress ? 0 : value + modifier, hits, match, cancelled,
+    return { rolls: [...(progress ? [] : [action]), ...challenges], challenges, action, total, modifier: progress ? 0 : value + modifier, hits, match, cancelled,
       formula: progress ? 'progresso completo contra 2d10' : '1d6 + fonte + bônus contra 2d10', outcome,
       detail: `${progress ? `${value} marcas = ${total} caixas completas` : `Ação ${action}${cancelled ? ' cancelada por ímpeto negativo' : ''}`} · Desafios ${challenges.join(', ')}${match ? ' · Dados iguais: interprete uma reviravolta' : ''}. ${progress ? 'Sem ímpeto neste teste.' : 'Queima de ímpeto e efeitos do movimento são manuais.'}` };
   }
@@ -60,13 +74,13 @@ export function rollCheck(algorithm, { value, modifier = 0, target = 0, wild = t
         if (--budget < 0) throw new Error('Limite de 100 dados atingido; rolagem interrompida, sem resultado válido. Resolva na mesa.');
         result = die(sides); rolls.push(result);
       } while (result === sides);
-      return { sides, rolls, total: rolls.reduce((a,b)=>a+b,0) };
+    return { count:1, sides, rolls, total: rolls.reduce((a,b)=>a+b,0) };
     };
     if (algorithm === 'explodingDamage') {
       const expression = parseDiceExpression(value);
       const groups = expression.dice.flatMap(group => Array.from({length:group.count},()=>explode(group.sides)));
       const total = groups.reduce((sum, group)=>sum+group.total, expression.modifier + modifier);
-      return { rolls: groups.flatMap(group=>group.rolls), total, modifier: expression.modifier + modifier, formula: `${value} (explosivo) + ${modifier}`, outcome: 'Dano rolado',
+      return { rolls: groups.flatMap(group=>group.rolls), groups, total, modifier: expression.modifier + modifier, formula: `${value} (explosivo) + ${modifier}`, outcome: 'Dano rolado',
         detail: `${groups.map(group=>`d${group.sides}: ${group.rolls.join('+')}`).join(' · ')}. Resistência, armadura, Abalado e ferimentos são resolvidos pela mesa.` };
     }
     const sides = untrained ? 4 : value;

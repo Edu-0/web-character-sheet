@@ -1,7 +1,9 @@
-import { readJson, transact, storageKeys } from '../persistence.js';
+import { readJson, readRaw, transact, storageKeys, migrationCopyChange } from '../persistence.js';
 import { LIMITS, readJsonFile } from '../validation/limits.js';
 import { createId } from '../data.js';
 import { assertValid, validateCharacter } from '../validation/schemas.js';
+import { prepareDocument } from '../validation/documents.js';
+import {hasSystem,getSystemPackage} from './system-repository.js';
 
 const INDEX_KEY = 'ficha-rpg:v2:characters:index';
 const CHARACTER_PREFIX = 'ficha-rpg:v2:characters:';
@@ -14,7 +16,14 @@ function readIndex() {
   const index = readJson(INDEX_KEY, [], value => Array.isArray(value) && value.every(entry => entry && typeof entry.id === 'string' && typeof entry.system === 'string' && typeof entry.name === 'string' && Number.isFinite(Date.parse(entry.updatedAt))));
   // Documentos válidos que perderam o índice continuam visíveis e exportáveis.
   const summaries = new Map(index.map(entry => [entry.id, entry]));
-  for (const character of allCharacters()) if (!summaries.has(character.meta.id)) summaries.set(character.meta.id, toSummary(character));
+  for (const character of allCharacters()) summaries.set(character.meta.id, toSummary(character));
+  for (const key of storageKeys().filter(key=>key.startsWith(CHARACTER_PREFIX) && key!==INDEX_KEY)) {
+    const id=key.slice(CHARACTER_PREFIX.length);
+    if (!getCharacter(id)) {
+      let raw; try {raw=JSON.parse(readRaw(key));} catch {raw={};}
+      summaries.set(id,{id,system:raw?.meta?.system || 'indisponível',name:typeof raw?.identity?.name==='string'?raw.identity.name:typeof raw?.name==='string'?raw.name:'Documento indisponível',updatedAt:'1970-01-01T00:00:00.000Z',unavailable:true});
+    }
+  }
   return [...summaries.values()];
 }
 
@@ -38,6 +47,7 @@ export function listCharacters() {
 export function getCharacter(id) {
   return readJson(`${CHARACTER_PREFIX}${id}`, null, value => validateCharacter(value).length === 0 && value.meta.id === id);
 }
+export function rawCharacter(id) { return readRaw(`${CHARACTER_PREFIX}${id}`); }
 
 export function allCharacters() {
   return storageKeys().filter(key => key.startsWith(CHARACTER_PREFIX) && key !== INDEX_KEY).map(key => getCharacter(key.slice(CHARACTER_PREFIX.length))).filter(Boolean);
@@ -51,14 +61,14 @@ export function characterChanges(characters, { replace = false } = {}) {
   return [...new Map(changes)];
 }
 
-export function saveCharacter(character) {
+export function saveCharacter(character, {copies = []} = {}) {
   const stored = clone(character);
   stored.meta ||= {};
   stored.meta.updatedAt = new Date().toISOString();
   assertValid(stored, validateCharacter, 'personagem');
   const index = readIndex().filter((entry) => entry.id !== stored.meta.id);
   index.push(toSummary(stored));
-  transact([[`${CHARACTER_PREFIX}${stored.meta.id}`, JSON.stringify(stored)], [INDEX_KEY, JSON.stringify(index)]]);
+  transact([[`${CHARACTER_PREFIX}${stored.meta.id}`, JSON.stringify(stored)], [INDEX_KEY, JSON.stringify(index)], ...copies]);
   return stored;
 }
 
@@ -90,13 +100,23 @@ export function removeCharacter(id) {
   transact([[`${CHARACTER_PREFIX}${id}`, null], [INDEX_KEY, JSON.stringify(readIndex().filter(entry => entry.id !== id))]]);
 }
 
-export async function importCharacter(file, { validate } = {}) {
-  const character = await readJsonFile(file, LIMITS.characterBytes, 'character');
+export async function importCharacter(file, { validate, confirmMigration } = {}) {
+  let character = await readJsonFile(file, LIMITS.characterBytes, 'character'), migrationPlan;
+  const pkg = hasSystem(character?.meta?.system) ? await getSystemPackage(character.meta.system) : undefined;
+  const prepared=prepareDocument(character,{kind:'character',pkg,allowMissingId:true,normalize:Boolean(confirmMigration)});
+  assertValid(character,()=>prepared.diagnostics,'personagem');
+  if(confirmMigration) {
+    if(prepared.status==='needsMigration') {
+      if(!await confirmMigration(prepared.migrationPlan)) throw new Error('Importação cancelada; o original foi preservado.');
+      migrationPlan=prepared.migrationPlan;character=prepared.document;
+    }
+  }
+  character = prepared.document;
   assertValid(character, (value) => validateCharacter(value, { allowMissingId: true }), 'personagem');
   character.meta.id = createId();
   character.meta.createdAt ||= new Date().toISOString();
   await validate?.(character);
-  return saveCharacter(character);
+  return saveCharacter(character,{copies:migrationPlan?[migrationCopyChange(`import:${file.name}`,migrationPlan.original)]:[]});
 }
 
 export function exportCharacter(character) {

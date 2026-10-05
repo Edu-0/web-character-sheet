@@ -1,8 +1,10 @@
+import {validateLibraryBackup} from './validation/backup.js';
+import {validateEffectRevisionChange} from './validation/effects.js';
 import { allCharacters, characterChanges } from './repositories/character-repository.js';
 import { importedPackages, importedSystemsChange, reloadImportedSystems, listSystems, getSystemPackage } from './repositories/system-repository.js';
 import { loadSettings, resetSettingsCache } from './storage.js';
-import { transact, recoveryEntries } from './persistence.js';
-import { assertValid, validateCharacter, validateSystemPackage, validateCharacterForPackage } from './validation/schemas.js';
+import { readJson, transact, recoveryEntries } from './persistence.js';
+import { assertValid, validateCharacterForPackage } from './validation/schemas.js';
 import { inspectJson, readJsonFile, LIMITS } from './validation/limits.js';
 
 export function exportLibrary(currentCharacter) {
@@ -11,7 +13,9 @@ export function exportLibrary(currentCharacter) {
     const index = characters.findIndex(c => c.meta.id === currentCharacter.meta.id);
     if (index < 0) characters.push(structuredClone(currentCharacter)); else characters[index] = structuredClone(currentCharacter);
   }
-  return { schemaVersion: 1, kind: 'rpg-library-backup', exportedAt: new Date().toISOString(), systems: importedPackages(), characters, preferences: loadSettings(), recovery: recoveryEntries() };
+  const systems = importedPackages();
+  const metadata = readJson('ficha-rpg:v2:library:metadata',{},value=>value && typeof value==='object' && !Array.isArray(value) && !inspectJson(value).length);
+  return { ...metadata, schemaVersion: [...systems, ...characters].some(document => document.schemaVersion >= 2) ? 2 : 1, kind: 'rpg-library-backup', exportedAt: new Date().toISOString(), systems, characters, preferences: loadSettings(), recovery: recoveryEntries() };
 }
 
 export async function readLibraryBackup(file) {
@@ -20,36 +24,8 @@ export async function readLibraryBackup(file) {
   return data;
 }
 
-async function validateBackup(data) {
-  const safety = inspectJson(data, 'backup', {maxNodes: 1000000, maxDepth: LIMITS.depth + 3});
-  if (safety.length) throw new Error(`${safety[0].path}: ${safety[0].message}`);
-  if (new Blob([JSON.stringify(data)]).size > LIMITS.backupBytes) throw new Error('backup: excede 32 MiB.');
-  if (data?.schemaVersion !== 1 || data?.kind !== 'rpg-library-backup') throw new Error('backup.schemaVersion/kind: formato de backup não suportado.');
-  if (!Array.isArray(data.systems) || !Array.isArray(data.characters) || !data.preferences || typeof data.preferences !== 'object' || Array.isArray(data.preferences)) throw new Error('backup: sistemas, personagens ou preferências inválidos.');
-  const issues = inspectJson(data.preferences, 'backup.preferences');
-  if (issues.length) throw new Error(`${issues[0].path}: ${issues[0].message}`);
-  const builtin = new Set(listSystems().filter(s => s.source === 'builtin').map(s => s.id));
-  const ids = new Set();
-  for (const [i, pkg] of data.systems.entries()) {
-    assertValid(pkg, validateSystemPackage, `backup.systems[${i}]`);
-    if (new Blob([JSON.stringify(pkg)]).size > LIMITS.systemBytes) throw new Error(`backup.systems[${i}]: excede 4 MiB.`);
-    if (builtin.has(pkg.system.id) || ids.has(pkg.system.id)) throw new Error(`backup.systems[${i}].system.id: ID embutido ou duplicado.`);
-    ids.add(pkg.system.id);
-  }
-  ids.clear();
-  for (const [i, character] of data.characters.entries()) {
-    assertValid(character, validateCharacter, `backup.characters[${i}]`);
-    // O backup completo deve preservar retratos legados, sem recomprimir dados já salvos.
-    let imageBytes = 0;
-    const body = JSON.stringify(character, (key, value) => {
-      if (typeof value === 'string' && /^data:image\//i.test(value)) { imageBytes += new Blob([value]).size; return ''; }
-      return value;
-    });
-    if (new Blob([body]).size > LIMITS.characterBytes || imageBytes > LIMITS.systemBytes) throw new Error(`backup.characters[${i}]: excede 2 MiB de dados ou 4 MiB de imagens legadas.`);
-    if (ids.has(character.meta.id)) throw new Error(`backup.characters[${i}].meta.id: ID duplicado.`);
-    ids.add(character.meta.id);
-  }
-  if (data.recovery !== undefined && (!Array.isArray(data.recovery) || data.recovery.some(entry => !entry || typeof entry.key !== 'string' || typeof entry.raw !== 'string'))) throw new Error('backup.recovery: dados de recuperação inválidos.');
+function validateBackup(data) {
+  return assertValid(data,value=>validateLibraryBackup(value,{builtinIds:listSystems().filter(s=>s.source==='builtin').map(s=>s.id)}),'backup');
 }
 
 export function backupConflicts(data, currentCharacter) {
@@ -69,6 +45,16 @@ export async function restoreLibrary(data, { mode = 'merge', overwriteConflicts 
     return [...result.values()];
   };
   const systems = mode === 'replace' ? data.systems : combine(old.systems, data.systems, p => p.system.id);
+  if (mode === 'merge') for (const incoming of data.systems) {
+    const existing = old.systems.find(pkg => pkg.system.id === incoming.system.id);
+    if (!existing) continue;
+    if (overwriteConflicts) assertValid(incoming.system,next=>validateEffectRevisionChange(existing.system,next),'backup.revisão de efeitos');
+    else if (data.characters.some(character => character.meta.system === incoming.system.id && !old.characters.some(previous => previous.meta.id === character.meta.id))) {
+      // Personagens novos usarão o pacote preservado, que também precisa respeitar
+      // o significado da revisão trazida pelo backup.
+      assertValid(existing.system,next=>validateEffectRevisionChange(incoming.system,next),'backup.revisão de efeitos');
+    }
+  }
   const characters = mode === 'replace' ? data.characters : combine(old.characters, data.characters, c => c.meta.id);
   const builtin = new Map(await Promise.all(listSystems().filter(s => s.source === 'builtin').map(async s => [s.id, await getSystemPackage(s.id)])));
   const packages = new Map([...builtin, ...systems.map(p => [p.system.id, p])]);
@@ -78,7 +64,11 @@ export async function restoreLibrary(data, { mode = 'merge', overwriteConflicts 
     character.meta.updatedAt ||= new Date().toISOString();
   }
   const preferences = mode === 'replace' || overwriteConflicts ? data.preferences : { ...data.preferences, ...old.preferences };
-  const changes = [...characterChanges(characters, { replace: mode === 'replace' }), importedSystemsChange(systems), ['ficha-rpg:settings', JSON.stringify(preferences)]];
+  const known = new Set(['schemaVersion','kind','exportedAt','systems','characters','preferences','recovery']);
+  const incomingMetadata=Object.fromEntries(Object.entries(data).filter(([key])=>!known.has(key)));
+  const oldMetadata=Object.fromEntries(Object.entries(old).filter(([key])=>!known.has(key)));
+  const metadata=mode==='replace'||overwriteConflicts ? incomingMetadata : {...incomingMetadata,...oldMetadata};
+  const changes = [['ficha-rpg:v2:library:metadata',JSON.stringify(metadata)], ...characterChanges(characters, { replace: mode === 'replace' }), importedSystemsChange(systems,{replace:mode==='replace'}), ['ficha-rpg:settings', JSON.stringify(preferences)]];
   for (const entry of data.recovery || []) changes.push([`ficha-rpg:recovery:${Date.now()}:${crypto.randomUUID()}`, JSON.stringify(entry)]);
   transact(changes);
   reloadImportedSystems(); resetSettingsCache();

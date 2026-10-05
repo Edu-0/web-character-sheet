@@ -1,4 +1,5 @@
 import { createCalculationControl } from './calculation-overrides.js';
+import {COMPONENT_CONTRACTS} from '../validation/contracts.js';
 import { registerFieldType } from './fields.js';
 import { getByPath, setByPath } from './paths.js';
 import { executeSheetAction, inventoryCalculationKey, inventoryTotals, repertoireStatus, undoSheetAction } from './assistance.js';
@@ -119,7 +120,7 @@ registerFieldType('actionGroup', {
     feedback.setAttribute('role', 'status');
     feedback.setAttribute('aria-label', context.label || 'Resultado da ação');
     const undo = button('Desfazer última ação');
-    const historyField = context.historyField || 'scene.lastAction';
+    const historyField = context.historyField || COMPONENT_CONTRACTS.actionGroup.properties.historyField.default;
     (getByPath(context.system, context.actionsFrom) || []).forEach((action) => {
       const control = button(action.label);
       control.addEventListener('click', () => {

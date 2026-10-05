@@ -123,7 +123,7 @@ test('traços compostos atualizam os ícones sem multiplicar fontes ou modificar
   await page.getByRole('tab', { name: 'Combate', exact: true }).click();
   const pool = page.locator('.engine-pool');
   await pool.getByText('Força (Atributo)', { exact: true }).click();
-  await page.evaluate(() => { Math.random = () => 0.999; });
+  await page.evaluate(() => { crypto.getRandomValues = array => array.fill(Math.floor(0.999 * 0x100000000)); });
   await pool.getByRole('button', { name: 'Rolar Pool', exact: true }).click();
   await expect(pool.locator('.engine-roll')).toHaveCount(1);
   await expect(pool.locator('.engine-roll__die')).toHaveText('d12 + d6 · Ápice e Base');

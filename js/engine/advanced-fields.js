@@ -1,7 +1,12 @@
+import {RUNTIME_DEFAULTS,COMPONENT_CONTRACTS} from '../validation/contracts.js';
+import {computedValue} from './computed-values.js';
+export {computedKey,computedValue} from './computed-values.js';
+import {computedKey} from './computed-values.js';
+import {createCheckButton} from './check-fields.js';
 import { createOptionCheckboxes } from './option-checkboxes.js';
 import { createEntryAction } from './entry-actions.js';
 import './entry-rolls.js';
-import { calculationValue, createCalculationControl, getCalculationOverride } from './calculation-overrides.js';
+import { createCalculationControl } from './calculation-overrides.js';
 import { captureFocus } from '../focus.js';
 import { compressPortrait, safeImageSource } from '../images.js';
 import { notify } from '../notifications.js';
@@ -173,7 +178,7 @@ registerFieldType('computed', {
 
 registerFieldType('slotTracker', {
   render(container, context) {
-    const remaining = context.display === 'remaining';
+    const remaining = (context.display ?? COMPONENT_CONTRACTS.slotTracker.properties.display.default) === 'remaining';
     const wrap = fieldBlock(context.label, remaining ? 'engine-slots engine-slots--remaining' : 'engine-slots');
     if (context.consumeField) {
       const label = element('label', 'field field--checkbox');
@@ -436,6 +441,7 @@ function renderEntry(item, index, values, context, refreshList) {
     summary.appendChild(remove);
   }
   const body = element('div', 'engine-entry__body');
+  if (context.roll) body.append(createCheckButton({...context,itemId:item.id,label:item.name || context.label}));
   if (context.entryAction) {
     const action = createEntryAction(context.entryAction, { item, character: context.character, system: context.system, rollPreset: context.rollPreset ?? context.rollConfigFrom, onChange: context.onChange });
     if (action) body.append(action);
@@ -676,7 +682,7 @@ function renderItemField(item, key, definition, context, onChange, { hideLabel =
   let control;
   if (config.type === 'textarea') {
     control = document.createElement('textarea');
-    control.rows = config.rows || 3;
+    control.rows = config.rows || RUNTIME_DEFAULTS.textareaRows;
   } else if (config.type === 'select' || config.type === 'die') {
     control = document.createElement('select');
     const fillOptions = () => {
@@ -1054,14 +1060,4 @@ function element(tag, className = '', text = '') {
   if (className) node.className = className;
   if (text !== '') node.textContent = text;
   return node;
-}
-
-export function computedKey(context) { return `computed.${context.overrideKey || context.formula}`; }
-export function computedValue(context, automatic = false) {
-  const entry = getCalculationOverride(context.character, computedKey(context));
-  if (!automatic && context.override !== false && entry?.mode === 'fixed') return entry.value;
-  const value = evaluate(context.system.formulas[context.formula], {
-    vars: resolveFormulaVariables(context.variables, context.character, context.system, false), data: context.character,
-  });
-  return automatic || context.override === false ? value : calculationValue(context.character, computedKey(context), value);
 }

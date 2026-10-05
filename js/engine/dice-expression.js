@@ -42,9 +42,9 @@ export function formatDiceExpression({ dice, modifier }) {
   return parts.join(' + ').replace(/ \+ ([+\-]) /g, ' $1 ');
 }
 
-export function evaluateDiceExpression(expression) {
+export function evaluateDiceExpression(expression, rollDie = rollOne) {
   checkLimits(expression);
-  const groups = expression.dice.map(die => ({ ...die, rolls: Array.from({ length: die.count }, () => rollOne(die.sides)) }));
+  const groups = expression.dice.map(die => ({ ...die, rolls: Array.from({ length: die.count }, () => rollDie(die.sides)) }));
   const rolls = groups.flatMap(group => group.rolls);
   return { formula: formatDiceExpression(expression), groups, rolls, modifier: expression.modifier, total: rolls.reduce((sum, value) => sum + value, expression.modifier) };
 }

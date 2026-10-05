@@ -45,6 +45,7 @@ test('fontes ocultas no layout também validam valores e IDs antes de importar',
 test('manifesto público válido e IDs únicos', () => assert.deepEqual(validateManifest(manifest), []));
 for (const entry of manifest.systems) test(`pacote ${entry.id}: contrato, template e roundtrip JSON`, () => {
   const pkg = { schemaVersion: 1, kind: 'rpg-system-package', system: read(`../../data/systems/${entry.system}`), layouts: entry.layouts.map(layout => read(`../../data/systems/${layout.file}`)) };
+  pkg.schemaVersion = Math.max(pkg.system.schemaVersion,...pkg.layouts.map(layout=>layout.schemaVersion));
   assert.deepEqual(validateSystemPackage(pkg), []);
   const character = { ...structuredClone(pkg.system.characterTemplate), meta: { ...pkg.system.characterTemplate.meta, id: 'contract-test' } };
   assert.deepEqual(validateCharacterForPackage(character, pkg), []);

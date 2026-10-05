@@ -15,7 +15,7 @@ export function inventoryTotals(character, config, automaticStat = null) {
     return sum + Math.max(0, Number(item[config.weightField]) || 0) * Math.max(0, Number(item[config.quantityField]) || 0);
   }, 0);
   let capacity = traitMaximum(getByPath(character, config.strengthField)) * Math.max(0, Number(getByPath(character, config.multiplierField)) || 0);
-  const resolve = (stat, value) => automaticStat === stat || config.override === false ? value : calculationValue(character, inventoryCalculationKey(config, stat), value);
+  const resolve = (stat, value) => automaticStat === stat || config.override === false ? value : calculationValue(character, inventoryCalculationKey(config, stat), value, { system: config.system });
   weight = resolve('weight', weight);
   capacity = resolve('capacity', capacity);
   return { weight, capacity, excess: resolve('excess', Math.max(0, weight - capacity)) };

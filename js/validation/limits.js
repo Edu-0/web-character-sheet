@@ -22,7 +22,9 @@ export function inspectJson(value, root = 'document', { maxString = LIMITS.strin
         const path = Array.isArray(item.value) ? `${item.path}[${key}]` : `${item.path}.${key}`;
         if (!key || RESERVED_KEYS.has(key)) return [{ path, message: 'chave vazia ou reservada não permitida' }];
         const catalog = root === 'system' || item.path.startsWith('package.system.') || /^backup.systems\[\d+\]\.system\./.test(item.path);
-        if (key === 'key' && typeof child === 'string' && (RESERVED_KEYS.has(child) || catalog && (child.includes('.') || !child))) return [{path, message:'chave de catálogo vazia, reservada ou com ponto não permitida'}];
+        const calculationTarget = item.value.kind === 'calculation' && /\.effectDefinitions\[\d+\]\.operations\[\d+\]\.target$/.test(item.path);
+        if (key === 'key' && typeof child === 'string' && (RESERVED_KEYS.has(child) || catalog && !calculationTarget && (child.includes('.') || !child))) return [{path, message:'chave de catálogo vazia, reservada ou com ponto não permitida'}];
+        if (key === 'key' && calculationTarget) {try {pathKeys(child);} catch(error) {return [{path,message:error.message}];}}
         if (key.length > LIMITS.string) return [{ path: item.path, message: 'nome de chave demasiado longo' }];
         if (typeof child === 'string' && (key === 'field' || /(?:Field|From)$/.test(key) || key === 'collection' || key === 'source' && item.path.endsWith('.repeat'))) {
           try { pathKeys(child, { template: true, source: true }); }

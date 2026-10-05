@@ -108,7 +108,7 @@ test('lançar com consumo refaz o saldo e opções sem nova rolagem', async ({ p
     const { state } = await import('/js/state.js');
     state.setPath('spellcasting.spells', [{ id: 'spell', name: 'Magia com custo', level: 1 }]);
     state.get().spellcasting.slots[0].max = 2; state.get().spellcasting.slots[0].used = 0;
-    state.get().spellcasting.consumeSlots = true; state.notify(); Math.random = () => 0.5;
+    state.get().spellcasting.consumeSlots = true; state.notify(); crypto.getRandomValues = array => array.fill(Math.floor(0.5 * 0x100000000));
   });
   await page.locator(host).getByRole('tab', { name: 'Magias', exact: true }).click();
   const entry = page.locator(`${host} .engine-entry:visible`).first();
@@ -118,7 +118,7 @@ test('lançar com consumo refaz o saldo e opções sem nova rolagem', async ({ p
   await page.keyboard.press('Escape'); const after = await values(page);
   expect(after.spellcasting.slots[0].used).toBe(1);
   await page.locator(undo).click(); expect((await values(page)).spellcasting.slots[0].used).toBe(0);
-  await page.evaluate(() => { Math.random = () => { throw new Error('Refazer não deve rolar'); }; });
+  await page.evaluate(() => { crypto.getRandomValues = () => { throw new Error('Refazer não deve rolar'); }; });
   await page.locator(redo).click(); expect((await values(page)).spellcasting).toEqual(after.spellcasting);
   await expect(page.locator(`${host} .engine-slot__count`).first()).toHaveText('1 / 2');
 });
@@ -140,7 +140,7 @@ test('recuperação é atômica com seu registro; refazer não rola nem recupera
     const { state } = await import('/js/state.js');
     state.setPath('combat.hpCurrent', 4); state.setPath('combat.hpMax', 30);
     state.setPath('combat.hitDice', { used: 0, total: 4, die: 'd8' });
-    Math.random = () => 0.5;
+    crypto.getRandomValues = array => array.fill(Math.floor(0.5 * 0x100000000));
   });
   const before = await values(page);
   await page.locator(host).getByRole('button', { name: 'Descanso curto', exact: true }).click();
@@ -149,7 +149,7 @@ test('recuperação é atômica com seu registro; refazer não rola nem recupera
   await page.keyboard.press('Escape'); const after = await values(page);
   expect(after.combat.hpCurrent).toBeGreaterThan(before.combat.hpCurrent);
   await page.locator(undo).click(); expect((await values(page)).combat).toEqual(before.combat);
-  await page.evaluate(() => { Math.random = () => { throw new Error('Refazer não deve rolar'); }; });
+  await page.evaluate(() => { crypto.getRandomValues = () => { throw new Error('Refazer não deve rolar'); }; });
   await page.locator(redo).click(); expect((await values(page)).combat).toEqual(after.combat);
   await page.locator(host).getByRole('button', { name: 'Desfazer recuperação', exact: true }).click();
   expect((await values(page)).combat.hpCurrent).toBe(4);

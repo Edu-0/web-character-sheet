@@ -1,3 +1,4 @@
+import {RECOVERY_CONTRACT} from './contracts.js';
 import { pathKeys, getByPath } from '../engine/paths.js';
 import { validateRollValueSource } from './entry-rolls.js';
 
@@ -5,21 +6,21 @@ const object = value => value !== null && typeof value === 'object' && !Array.is
 const add = (issues, path, message) => issues.push({ path, message, code: 'invalid' });
 function keys(value, allowed, path, issues) {
   if (!object(value)) { add(issues, path, 'deve ser objeto'); return false; }
-  for (const key of Object.keys(value)) if (!allowed.includes(key)) add(issues, `${path}.${key}`, 'opção desconhecida');
+  for (const key of Object.keys(value)) if (key !== 'extensions' && !allowed.includes(key)) add(issues, `${path}.${key}`, 'opção desconhecida');
   return true;
 }
 function path(value, label, issues) { try { pathKeys(value); } catch (error) { add(issues, label, error.message); } }
 function text(value, label, issues) { if (typeof value !== 'string' || !value.trim() || value.length > 2000) add(issues, label, 'deve ser texto não vazio de até 2000 caracteres'); }
 export function validateRecoveryActions(actions, system, issues, root = 'system.recoveryActions') {
-  if (!Array.isArray(actions) || actions.length > 30) { add(issues, root, 'deve ser lista de até 30 ações'); return; }
+  if (!Array.isArray(actions) || actions.length > RECOVERY_CONTRACT.maxActions) { add(issues, root, 'deve ser lista de até 30 ações'); return; }
   const ids = new Set();
   actions.forEach((config, index) => {
     const label = `${root}[${index}]`;
-    if (!keys(config, ['id', 'label', 'help', 'confirmLabel', 'unavailableMessage', 'healing', 'operations'], label, issues)) return;
+    if (!keys(config, RECOVERY_CONTRACT.fields, label, issues)) return;
     path(config.id, `${label}.id`, issues); text(config.label, `${label}.label`, issues);
     if (ids.has(config.id)) add(issues, `${label}.id`, 'ID duplicado'); ids.add(config.id);
     for (const key of ['help', 'confirmLabel', 'unavailableMessage']) if (key in config) text(config[key], `${label}.${key}`, issues);
-    if (config.healing !== undefined && keys(config.healing, ['field', 'maxField', 'totalField', 'usedField', 'dieField', 'modifier', 'minimum', 'requireCurrentMin', 'label'], `${label}.healing`, issues)) {
+    if (config.healing !== undefined && keys(config.healing, RECOVERY_CONTRACT.healing, `${label}.healing`, issues)) {
       const h = config.healing;
       for (const key of ['field', 'maxField', 'totalField', 'usedField', 'dieField']) {
         path(h[key], `${label}.healing.${key}`, issues);
@@ -35,8 +36,8 @@ export function validateRecoveryActions(actions, system, issues, root = 'system.
     if (!Array.isArray(config.operations) || config.operations.length > 30) { add(issues, `${label}.operations`, 'deve ser lista de até 30 operações'); return; }
     config.operations.forEach((op, i) => {
       const opLabel = `${label}.operations[${i}]`;
-      if (!keys(op, ['type', 'field', 'maxField', 'value', 'valueField', 'filterField', 'filterValues', 'requireCurrentMin', 'label'], opLabel, issues)) return;
-      if (!['restoreValue', 'set', 'restoreCollection', 'setCollection'].includes(op.type)) add(issues, `${opLabel}.type`, 'operação de recuperação desconhecida');
+      if (!keys(op, RECOVERY_CONTRACT.operation, opLabel, issues)) return;
+      if (!RECOVERY_CONTRACT.operations.includes(op.type)) add(issues, `${opLabel}.type`, 'operação de recuperação desconhecida');
       path(op.field, `${opLabel}.field`, issues);
       for (const key of ['maxField', 'valueField', 'filterField']) if (key in op) path(op[key], `${opLabel}.${key}`, issues);
       if (['restoreValue', 'restoreCollection'].includes(op.type) && !op.maxField) add(issues, `${opLabel}.maxField`, 'obrigatório');

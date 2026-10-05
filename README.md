@@ -97,6 +97,16 @@ O componente `recoveryGroup` apresenta ações declaradas em `system.recoveryAct
 
 `checkRoll` usa algoritmos de teste configurados em `system.checks`, com fontes de campos, coleções ou fórmulas. Resultados entram no histórico de rolagens sem modificar o personagem. Consulte o [contrato e exemplo importável](data/examples/additional-systems.md#contrato-de-testes-sob-demanda).
 
+As rolagens usam `crypto.getRandomValues()` do navegador, com intervalos iguais por face e descarte da sobra para evitar viés. Funcionam offline; não recorrem a `Math.random()` se a API estiver indisponível. Isso melhora a imprevisibilidade, mas não certifica resultados perante outros jogadores.
+
+Campos e entradas identificadas podem oferecer botões de teste configurados em `roll`, reutilizando esse painel e suas fontes. Os resultados guardam a configuração e a resolução no histórico transitório. Veja o [pacote de exemplo](data/examples/check-buttons.package.json).
+
+Efeitos numéricos têm ativação explícita, duração manual ou encerramento confirmado pela mesa. O piloto é o Coringa de SWADE: bônus em testes de traço e dano, sem automatizar cartas, iniciativa ou recursos. Valores-base continuam editáveis; ajustes somam após efeitos e valores fixos determinam o resultado final. Consulte o [contrato de efeitos](data/examples/effects.md).
+
+A [política de validação e versões](data/examples/validation.md) descreve formatos suportados, diagnósticos e normalizações confirmadas com cópia recuperável. Documentos de versões futuras permanecem protegidos contra gravação. Metadados seguros desconhecidos são preservados; opções executáveis desconhecidas exigem correção antes de uso.
+
+A [referência dos componentes e parâmetros](data/examples/components-reference.md) é gerada dos descritores usados pela validação. `npm run build:reference` atualiza Markdown/JSON e `npm run check:reference` confere sua correspondência com contratos, exemplos e arquivos de origem. Não constitui um JSON Schema completo nem um editor de sistemas.
+
 `computed` (sem `mode: "roll"`) e `inventorySummary` aceitam `override: false` para desativar ajustes e `overrideKey` para identificar resultados distintos que compartilham a mesma fórmula. Ajustes persistem no personagem em `calculationOverrides`, como `{ "computed.capacity": { "mode": "adjust", "value": 2 } }`; `fixed` substitui o resultado e remover a entrada devolve o automático. `inventorySummary.overrideKeys` permite vincular peso/capacidade/sobrecarga ao ID de outro resultado calculado. No sistema, `diceSteps: true` habilita passos nos campos de dados; `stepControls: false` os desativa por campo, inclusive em `itemSchema`. A escala deve ser positiva, crescente e sem repetições. D&D mantém esses passos desligados.
 
 Os testes usam Playwright com Microsoft Edge instalado. Pare o servidor manual antes de executar:
