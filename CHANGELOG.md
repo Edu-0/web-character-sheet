@@ -1,5 +1,40 @@
 # Histórico de versões
 
+## 0.5.0 — 6 de outubro de 2026
+
+Pré-lançamento que amplia os sistemas disponíveis e os contratos da engine. Reúne as entregas posteriores à v0.2.0; não houve releases públicas v0.3.0 ou v0.4.0.
+
+### Funcionalidades
+
+- Seis novos sistemas embutidos: Fate Acelerado, Cthulhu 7e, Blades in the Dark, Savage Worlds SWADE, Ironsworn e Ordem Paranormal. O aplicativo passa a oferecer oito sistemas e 16 layouts, com Padrão e Modo mesa para cada sistema.
+- Painéis de testes configuráveis com fontes de campos, coleções ou fórmulas: 4dF, percentuais com bônus/penalidade, pools de d6, resistência, dados explosivos e desafios/progresso, conforme o sistema.
+- Botões de teste junto a campos e entradas quando configurados, reutilizando os painéis e os valores atuais da ficha. Histórico de rolagens com configuração e resolução estruturadas, limitado a 20 resultados durante a sessão.
+- Efeitos numéricos com ativação explícita e encerramento confirmado. O piloto Coringa de SWADE aplica +2 nos testes de traço e dano, preservando os valores-base e as decisões da mesa.
+- Preparação e diagnóstico de documentos versionados, com validação de contratos e referências, normalização confirmada de aliases conhecidos e cópia recuperável do original.
+- Referência pública de 29 componentes, gerada dos descritores utilizados pela validação, com exemplos importáveis e verificação de correspondência com o código.
+
+### Correções e integridade
+
+- Rolagens usam `crypto.getRandomValues()` com amostragem por rejeição para distribuir igualmente as faces; não recorrem a `Math.random()` se a API estiver indisponível.
+- Documentos de versões futuras ficam protegidos contra sobrescrita. Substituições de sistemas importados conferem os personagens vinculados; pacotes inválidos são isolados sem ocultar os demais.
+- Normalização limitada aos contratos conhecidos, preservando metadados opacos e recusando aliases contraditórios ou documentos inválidos antes de gravar.
+- Mescla de backup verifica revisões de efeitos; instâncias encerradas preservam a duração histórica quando a definição muda.
+- Validação de templates alinhada à de personagens, seleção de fontes sem colisão entre IDs e índices e reconhecimento do valor padrão documentado de `pointBudget`.
+- Preparação de rolagens por entrada antes do pagamento e separação entre efeitos, custos e valores efetivos de recuperação.
+- Cache offline atualizado para os oito sistemas e novos módulos; suíte reorganizada em testes unitários, percursos rápidos e regressão completa.
+
+### Uso e limites
+
+- D&D mantém as apresentações estática, modular e comparação com dados sincronizados; a assistência do RPG autoral continua disponível.
+- Ordem Paranormal oferece uma ficha preenchível com regras e totais manuais. Os demais sistemas têm a cobertura descrita em [sistemas adicionais](data/examples/additional-systems.md); criação, evolução, custos e decisões narrativas não são automatizados integralmente.
+- Versão do aplicativo e `schemaVersion` são independentes. Os documentos aceitam versões 1 e 2 conforme seus mecanismos; manifesto permanece em 1. Não há migração universal nem scripts executáveis fornecidos por pacotes.
+- Efeitos cobrem modificadores numéricos compatíveis; não incluem traços temporários, Ascensão autoral ou automação de iniciativa e cartas.
+- Dados continuam locais ao navegador, sem contas, backend ou sincronização. Use **Exportar tudo** para manter backups.
+- Continua sem editor visual de sistemas/layouts. Instalação no sistema operacional e iOS/Safari em aparelhos físicos ainda não foram validados.
+- A release distribui código-fonte; hospedagem de um site continua sendo uma etapa separada. Licença não comercial da engine e direitos dos conteúdos permanecem preservados.
+
+Consulte [validação e preservação](data/examples/validation.md), [efeitos numéricos](data/examples/effects.md), [referência de componentes](data/examples/components-reference.md), [testes](data/examples/testing.md), [instalação e uso offline](data/examples/offline.md), [licença](LICENSE) e [avisos de terceiros](THIRD_PARTY_NOTICES.md).
+
 ## 0.2.0 — 3 de outubro de 2026
 
 Pré-lançamento para experimentar a ficha e a engine local ao navegador. Os contratos dos pacotes ainda podem mudar durante o desenvolvimento.
