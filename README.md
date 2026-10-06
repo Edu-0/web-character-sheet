@@ -8,6 +8,8 @@ Crie seus personagens, encontre o que precisa durante o jogo e leve a ficha para
 
 Seu propósito é dar espaço a diferentes sistemas de RPG: desde uma ficha preenchível até uma ficha com cálculos e recursos assistidos. As escolhas e decisões da mesa continuam com você.
 
+São **oito sistemas embutidos**, cada um com os layouts **Padrão** e **Modo mesa**, além da importação de sistemas próprios em JSON.
+
 ![Ficha modular de D&D no computador, com tema claro e personagem fictícia](assets/readme/ficha-desktop.png)
 
 ## Mais tempo jogando
@@ -15,9 +17,11 @@ Seu propósito é dar espaço a diferentes sistemas de RPG: desde uma ficha pree
 - **Seus personagens em um só lugar.** Crie, duplique e organize fichas na biblioteca local. Importe e exporte personagens e pacotes de sistemas em JSON. Em Configurações, **Exportar tudo** salva a biblioteca e **Importar tudo** permite mesclar ou substituir com confirmação.
 - **Encontre sem percorrer todas as abas.** A busca consulta a ficha inteira, mostra os valores atuais e leva você até o campo, com tolerância a erros de digitação.
 - **Acompanhe os recursos da sessão.** Vida, inventário, habilidades, magias e rolagens ficam organizados conforme o sistema escolhido.
+- **Faça os testes do seu sistema.** Sistemas compatíveis oferecem painéis com as fontes da ficha e os ajustes do teste, além de botões junto a campos e entradas quando configurados. Os resultados ficam no histórico de rolagens da sessão; custos e decisões da mesa seguem os controles próprios de cada ação.
 - **Role a partir das entradas da ficha.** Listas configuradas podem oferecer teste e efeito separados, dados, modificadores, escala e consumo opcional. No D&D, abra uma magia e use **Lançar**, com aumento por espaço e prévia; magias sem dados também podem ser lançadas. Nos cards **Espaços de Magia**, acompanhe o saldo disponível e ative **Consumir espaço ao lançar magia** para descontar do recurso compartilhado. Nos ataques/ações, role ataque e dano separadamente. A bandeja **Dados** aceita expressões como `3d6 + 4` ou `1d8 + 1d6 - 2` nos sistemas que a exibem.
 - **Descanse com assistência.** No D&D, **Descanso curto** e **Descanso longo** ficam junto de PV e Dados de Vida, com prévia, confirmação e desfazer. Gaste dados um por vez ou informe o resultado da mesa. Nas habilidades, marque **Recuperar usos em** para incluir somente os recursos que a mesa autoriza. No RPG autoral, itens e artefatos têm **Usos e recuperação** recolhido em Equipamentos/Inventário; somente os itens marcados recuperam seus usos ao descansar.
 - **Ajuste os cálculos da mesa.** Em Configurações → **Edição da ficha**, ative **Mostrar controles de ajuste de cálculos** (ocultos por padrão). Em **Ajustar**, escolha um bônus/penalidade ou um valor fixo e volte ao automático quando quiser. Disponível nos resultados calculados, na carga e nos valores derivados de D&D.
+- **Acompanhe efeitos com confirmação da mesa.** Em SWADE, ative **Coringa** para aplicar +2 nos testes de traço e dano e confirme o fim da rodada para encerrá-lo. Os valores-base permanecem editáveis. Cartas, iniciativa e demais decisões continuam manuais; consulte a [cobertura dos efeitos](data/examples/effects.md).
 - **Assistência quando ela ajuda.** Cálculos, criação e evolução têm controles próprios nos sistemas compatíveis. Edição direta durante o jogo não cobra evolução automaticamente.
 - **Consulte também no celular.** Abas, cartões e tabelas se reorganizam para telas menores; as ações do cabeçalho ficam no menu **Mais**.
 - **Escolha a apresentação para a sessão.** Em **Layout da ficha**, alterne entre Padrão e **Modo mesa** nos sistemas embutidos. A versão de mesa reúne recursos, ações e consulta rápida com os mesmos dados. A escolha fica salva por sistema; campos fora dela continuam acessíveis pela busca e pelo layout completo.
@@ -53,7 +57,7 @@ O documento adapta a identidade visual da ficha ao papel A4 e inclui o conteúdo
 | Fate Acelerado | Aspectos, abordagens, façanhas, estresse e consequências; teste de 4dF contra oposição. |
 | Cthulhu 7e | Investigador, perícias e recursos; testes percentuais com bônus/penalidade, conforme o Quick-Start consultado. |
 | Blades in the Dark | Ações, resistências calculadas, estresse, dano e relógios; pools de d6 do SRD original. |
-| Savage Worlds SWADE | Traços, recursos e derivados; dados explosivos, dado selvagem e ampliações, conforme o Test Drive 2020. |
+| Savage Worlds SWADE | Traços, recursos e derivados; dados explosivos, dado selvagem, ampliações e efeito Coringa com ativação e encerramento confirmados, conforme o Test Drive 2020. |
 | Ironsworn | Recursos, ímpeto e trilhas; testes de ação e progresso do SRD original. |
 | Ordem Paranormal | Ficha preenchível baseada nos campos da ficha oficial pública. Regras e totais manuais. |
 | Seus sistemas | Importação de pacotes com dados e layouts configuráveis. Componentes compatíveis podem ser reutilizados; mecânicas novas podem exigir implementação adicional. |
@@ -62,11 +66,22 @@ O documento adapta a identidade visual da ficha ao papel A4 e inclui o conteúdo
 
 Os seis sistemas adicionais oferecem Padrão e Modo mesa. Consulte [referências, cobertura e regras manuais](data/examples/additional-systems.md): criação, evolução, custos e decisões narrativas não são aplicados automaticamente.
 
+## Comece sua ficha
+
+1. Em **Sistemas**, use **Abrir** no sistema desejado. Depois, em **Personagens**, escolha **Novo personagem** para criar uma ficha nesse sistema.
+2. Preencha o personagem e escolha **Layout da ficha** no cabeçalho para alternar entre Padrão e Modo mesa.
+3. Use a busca para localizar campos e **Configurações** para ajustar a aparência.
+4. Salve uma cópia com **Exportar JSON** ou faça o backup da biblioteca em Configurações → **Exportar tudo**.
+
+Para acrescentar um pacote próprio, abra **Sistemas** → **Importar sistema**. Há [exemplos importáveis e contratos](data/examples/README.md) para quem deseja configurar regras e layouts.
+
 ## Seus dados
 
 A biblioteca e as preferências ficam no navegador, sem conta ou backend. Não há sincronização entre dispositivos ou backup em nuvem. **Use Exportar tudo regularmente**: limpar os dados do site ou trocar de navegador/endereço pode tornar a biblioteca anterior indisponível. O backup inclui personagens, sistemas importados e preferências; sistemas embutidos acompanham o app. Se uma gravação falhar, a ficha continua em memória e pode ser exportada. Os arquivos exportados podem conter nomes, notas, imagens e dados de recuperação; revise-os antes de compartilhar.
 
 Novos retratos são reduzidos e comprimidos para ocupar menos espaço. Imagens externas importadas permanecem nos dados, mas não são carregadas automaticamente.
+
+Importações verificam formatos, referências e limites antes da gravação. Conversões de nomes antigos reconhecidos pedem confirmação e preservam uma cópia do original. Documentos de versões ainda não suportadas ficam protegidos contra sobrescrita; consulte a [política de validação e preservação](data/examples/validation.md).
 
 As imagens deste README são capturas reais da interface com dados fictícios, feitas em um contexto de navegador isolado.
 
@@ -119,6 +134,8 @@ npm run test:full
 Não execute suítes concorrentes na porta 4173. Para usar Chromium, ajuste o `channel` em `playwright.config.js` e instale o navegador correspondente pelo Playwright. Capturas e traces de testes ficam em `test-results/`, sem versionamento. Os prints de apresentação podem ser regenerados com `node scripts/capture-readme.mjs`, que usa a porta 4175.
 
 `test:unit` verifica regras e contratos sem navegador. `test:quick` acrescenta os percursos essenciais; `test:full` inclui todos os Playwright, documentação e cache offline. A [organização dos testes](data/examples/testing.md) explica a seleção e a cobertura preservada.
+
+Para conferir somente a documentação e os arquivos gerados, use `npm run check:docs` e `npm run check:offline`.
 
 A documentação de trabalho, os planos e os relatórios ficam privados e não acompanham o clone. Este README apresenta o produto e os passos essenciais para executá-lo.
 
