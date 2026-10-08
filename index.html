@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="css/appearance-search.css" />
 <link rel="stylesheet" href="css/artwork.css" />
 <link rel="stylesheet" href="css/refinement.css" />
+<link rel="stylesheet" href="css/editor.css" />
 <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
@@ -84,13 +85,19 @@
           <p>Escolha um sistema embutido ou importe um pacote com sua configuração e layouts.</p>
         </div>
         <div class="manager-page__actions">
+          <button type="button" id="btn-create-package" class="button button--ghost">Criar pacote</button>
+          <button type="button" id="btn-open-editor-file" class="button button--ghost">Abrir JSON no editor</button>
+          <input type="file" id="input-editor-file" accept="application/json" hidden />
           <button type="button" id="btn-import-system" class="button button--primary">Importar sistema</button>
           <input type="file" id="input-import-system" accept="application/json" hidden />
         </div>
       </div>
       <div id="systems-list" class="library-grid" aria-live="polite"></div>
+      <section id="editor-drafts" aria-label="Rascunhos do editor"></section>
     </div>
   </section>
+
+  <section id="view-editor" class="shell-view" data-app-view="editor" hidden></section>
 
   <section id="view-characters" class="shell-view" data-app-view="characters" hidden>
     <div class="manager-page">

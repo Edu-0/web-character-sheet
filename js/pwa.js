@@ -71,8 +71,8 @@ export function initPwa({ beforeReload }) {
     } catch (error) { failure = error.message; }
     finally { busy = false; void refresh(); }
   });
-  reopen.addEventListener('click', () => {
-    try { beforeReload(); location.reload(); }
+  reopen.addEventListener('click', async () => {
+    try { await beforeReload(); location.reload(); }
     catch (error) { notify(error.message, { type: 'error' }); }
   });
   window.addEventListener('beforeinstallprompt', event => {

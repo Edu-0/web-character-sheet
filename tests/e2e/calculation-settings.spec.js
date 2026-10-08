@@ -22,6 +22,7 @@ test('controles começam ocultos e a preferência é global e persistente', asyn
   await expect(control).toBeVisible();
   await page.getByRole('button', { name: 'Comparar lado a lado' }).click();
   await expect(page.locator('#legacy-dnd-sheet .engine-calculation-control').first()).toBeVisible();
+  await page.evaluate(async()=>{await (await import('/js/write-coordinator.js')).flushLibraryWrites();});
   await page.reload();
   await expect(control).toBeVisible();
   await (await settings(page)).uncheck();
@@ -58,6 +59,7 @@ test('ocultar mantém valores ajustados, rolagens e backup; restaurar reaplica a
   await expect(ability.locator('.engine-dnd-ability__modifier')).toHaveText('+7');
   await ability.getByRole('button', { name: 'Rolar teste de Força' }).click();
   await expect(page.locator('#dice-result')).toContainText('+7');
+  await page.evaluate(async()=>{await (await import('/js/write-coordinator.js')).flushLibraryWrites();});
   await page.reload();
   await expect(control).toBeHidden();
   await expect(ability.locator('.engine-dnd-ability__modifier')).toHaveText('+7');

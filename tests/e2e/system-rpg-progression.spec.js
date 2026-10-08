@@ -68,6 +68,7 @@ test('criação e evoluções pagas ou narrativas mantêm saldos independentes',
   await page.getByRole('tab', { name: 'Progressão' }).click();
   await budget.getByRole('button', { name: 'Desfazer última evolução' }).click();
   await expect(budget.getByLabel('Saldo de evolução', { exact: true })).toHaveText('3');
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   await page.reload();
   await expect(budget.getByLabel('Gastos na criação', { exact: true })).toHaveText('4');
   await expect(budget.getByLabel('Gastos na evolução', { exact: true })).toHaveText('2');

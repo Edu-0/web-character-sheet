@@ -58,7 +58,7 @@ export function initSheetSearch({ getIndex, onNavigate, onShortcut }) {
   clear.addEventListener('click', () => { input.value = ''; refresh(); input.focus(); });
   document.addEventListener('keydown', (event) => {
     if ((event.ctrlKey || event.metaKey) && !event.altKey && event.key.toLowerCase() === 'k') {
-      event.preventDefault(); onShortcut(); input.focus(); input.select();
+      event.preventDefault(); if(onShortcut()===false)return; input.focus(); input.select();
     }
   });
   return {

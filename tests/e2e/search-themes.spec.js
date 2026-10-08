@@ -156,6 +156,7 @@ test('paleta e modo persistem separadamente e o cabeçalho preserva a paleta', a
   await page.locator('#btn-theme-toggle').click();
   await expect(page.locator('#appearance-mode')).toHaveValue('dark');
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'forest');
+  await page.evaluate(async()=>{await (await import('/js/write-coordinator.js')).flushLibraryWrites();});
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(page.locator('[data-palette-choice="forest"]')).toHaveAttribute('aria-pressed', 'true');

@@ -1,9 +1,10 @@
-import { readJson, readRaw, transact, storageKeys, migrationCopyChange } from '../persistence.js';
+import { readJson, readRaw, transactWithinWrite, storageKeys, migrationCopyChange } from '../persistence.js';
+import {withLibraryWrite} from '../write-coordinator.js';
 import { LIMITS, readJsonFile } from '../validation/limits.js';
 import { createId } from '../data.js';
-import { assertValid, validateCharacter } from '../validation/schemas.js';
+import { assertValid, validateCharacter, validateCharacterForPackage } from '../validation/schemas.js';
 import { prepareDocument } from '../validation/documents.js';
-import {hasSystem,getSystemPackage} from './system-repository.js';
+import {hasSystem,getSystemPackage,listSystems} from './system-repository.js';
 
 const INDEX_KEY = 'ficha-rpg:v2:characters:index';
 const CHARACTER_PREFIX = 'ficha-rpg:v2:characters:';
@@ -15,13 +16,14 @@ function clone(value) {
 function readIndex() {
   const index = readJson(INDEX_KEY, [], value => Array.isArray(value) && value.every(entry => entry && typeof entry.id === 'string' && typeof entry.system === 'string' && typeof entry.name === 'string' && Number.isFinite(Date.parse(entry.updatedAt))));
   // Documentos válidos que perderam o índice continuam visíveis e exportáveis.
-  const summaries = new Map(index.map(entry => [entry.id, entry]));
+  const summaries = new Map(index.map(entry => [entry.id, {...entry,...(readRaw(CHARACTER_PREFIX+entry.id)===null?{unavailable:true}:{})}]));
   for (const character of allCharacters()) summaries.set(character.meta.id, toSummary(character));
   for (const key of storageKeys().filter(key=>key.startsWith(CHARACTER_PREFIX) && key!==INDEX_KEY)) {
     const id=key.slice(CHARACTER_PREFIX.length);
     if (!getCharacter(id)) {
       let raw; try {raw=JSON.parse(readRaw(key));} catch {raw={};}
-      summaries.set(id,{id,system:raw?.meta?.system || 'indisponível',name:typeof raw?.identity?.name==='string'?raw.identity.name:typeof raw?.name==='string'?raw.name:'Documento indisponível',updatedAt:'1970-01-01T00:00:00.000Z',unavailable:true});
+      const indexed=summaries.get(id);
+      summaries.set(id,{id,system:raw?.meta?.system || indexed?.system || 'indisponível',name:typeof raw?.identity?.name==='string'?raw.identity.name:typeof raw?.name==='string'?raw.name:indexed?.name || 'Documento indisponível',updatedAt:indexed?.updatedAt || '1970-01-01T00:00:00.000Z',unavailable:true});
     }
   }
   return [...summaries.values()];
@@ -61,14 +63,25 @@ export function characterChanges(characters, { replace = false } = {}) {
   return [...new Map(changes)];
 }
 
-export function saveCharacter(character, {copies = []} = {}) {
+export function saveCharacter(character, options = {}) {
+  const snapshot=clone(character);return withLibraryWrite(()=>saveCharacterWithinWrite(snapshot,options));
+}
+export function saveCharacterWithinWrite(character, {copies = [],expectedPackage,expectedRaw} = {}) {
   const stored = clone(character);
   stored.meta ||= {};
   stored.meta.updatedAt = new Date().toISOString();
   assertValid(stored, validateCharacter, 'personagem');
+  const baseline=typeof expectedRaw==='function'?expectedRaw():expectedRaw;
+  if(baseline!==undefined && readRaw(`${CHARACTER_PREFIX}${stored.meta.id}`)!==baseline)throw new Error('O personagem mudou em outra aba. Exporte a edição em memória e reabra a ficha antes de salvar.');
+  const packages=readJson('ficha-rpg:v2:systems',[],Array.isArray),pkg=packages.find(pkg=>pkg?.system?.id===stored.meta.system);
+  if(expectedPackage && expectedPackage.system.id===stored.meta.system && (pkg || !listSystems().some(system=>system.id===stored.meta.system && system.source==='builtin'))) {
+    if(JSON.stringify(pkg)!==JSON.stringify(expectedPackage))throw new Error('O pacote mudou em outra aba. Exporte a edição em memória e reabra a ficha antes de salvar.');
+  }
+  if(pkg)assertValid(stored,value=>validateCharacterForPackage(value,pkg),'personagem');
   const index = readIndex().filter((entry) => entry.id !== stored.meta.id);
   index.push(toSummary(stored));
-  transact([[`${CHARACTER_PREFIX}${stored.meta.id}`, JSON.stringify(stored)], [INDEX_KEY, JSON.stringify(index)], ...copies]);
+  transactWithinWrite([[`${CHARACTER_PREFIX}${stored.meta.id}`, JSON.stringify(stored)], [INDEX_KEY, JSON.stringify(index)], ...copies]);
+  globalThis.dispatchEvent?.(new CustomEvent('character:saved',{detail:{id:stored.meta.id,raw:JSON.stringify(stored)}}));
   return stored;
 }
 
@@ -87,17 +100,19 @@ export function createCharacter(system) {
 }
 
 export function duplicateCharacter(id) {
+  return withLibraryWrite(()=>{
   const source = getCharacter(id);
   if (!source) throw new Error('Personagem não encontrado.');
   source.meta.id = createId();
   source.meta.createdAt = new Date().toISOString();
   if (source.identity?.name) source.identity.name = `${source.identity.name} (cópia)`;
   else if (source.name) source.name = `${source.name} (cópia)`;
-  return saveCharacter(source);
+  return saveCharacterWithinWrite(source);
+  });
 }
 
 export function removeCharacter(id) {
-  transact([[`${CHARACTER_PREFIX}${id}`, null], [INDEX_KEY, JSON.stringify(readIndex().filter(entry => entry.id !== id))]]);
+  return withLibraryWrite(()=>transactWithinWrite([[`${CHARACTER_PREFIX}${id}`, null], [INDEX_KEY, JSON.stringify(readIndex().filter(entry => entry.id !== id))]]));
 }
 
 export async function importCharacter(file, { validate, confirmMigration } = {}) {
@@ -116,7 +131,7 @@ export async function importCharacter(file, { validate, confirmMigration } = {})
   character.meta.id = createId();
   character.meta.createdAt ||= new Date().toISOString();
   await validate?.(character);
-  return saveCharacter(character,{copies:migrationPlan?[migrationCopyChange(`import:${file.name}`,migrationPlan.original)]:[]});
+  return saveCharacter(character,{expectedPackage:pkg,copies:migrationPlan?[migrationCopyChange(`import:${file.name}`,migrationPlan.original)]:[]});
 }
 
 export function exportCharacter(character) {

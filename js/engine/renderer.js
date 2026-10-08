@@ -14,13 +14,22 @@ import { getByPath, setByPath } from './paths.js';
 import { appendFieldHelp } from './help.js';
 import { expandComponents, componentSearchKey } from './layout-components.js';
 import { highlightSearchTarget } from './search.js';
+import {commitRenderedChanges} from './render-projection.js';
 
 export function renderSheet(host, layout, character, options = {}) {
+  if(options.materializeDefaults===false && !options.projected){
+    const model=structuredClone(character);let original=structuredClone(character),baseline;
+    const controller=renderSheet(host,layout,model,{...options,projected:true,
+      upgradeCharacter:options.upgradeCharacter?async()=>{await options.upgradeCharacter(character);model.schemaVersion=character.schemaVersion;model.activeEffects=structuredClone(character.activeEffects);original=structuredClone(character);}:undefined,
+      onChange:()=>{commitRenderedChanges(character,original,baseline,model,options.validateCharacter);original=structuredClone(character);baseline=structuredClone(model);options.onChange?.(character);},
+    });
+    baseline=structuredClone(model);return controller;
+  }
   host.innerHTML = '';
   if (!layout) return { activate: () => {}, destroy: () => {} };
   // Defaults antes das fórmulas: a ordem visual não pode alterar os cálculos.
   (layout.tabs || []).forEach((tab) => (tab.sections || []).forEach((section) => (section.containers || []).forEach((container) => (container.components || []).forEach((component) => {
-    if (component.default !== undefined && component.field && !component.field.includes('{') && getByPath(character, component.field) == null) {
+    if (options.materializeDefaults!==false && component.default !== undefined && component.field && !component.field.includes('{') && getByPath(character, component.field) == null) {
       setByPath(character, component.field, structuredClone(component.default));
     }
   }))));
@@ -211,6 +220,8 @@ function renderComponent(component, character, options) {
     system: options.system,
     registerRefresh: options.registerRefresh,
     upgradeCharacter: options.upgradeCharacter,
+    preview: options.preview,
+    materializeDefaults: options.materializeDefaults,
     dieScale: options.system?.dieScale || options.system?.diceSet,
     onChange: () => options.onChange?.(character, component),
   });

@@ -1,0 +1,3 @@
+export function minimalPackage(id = `pacote-${crypto.randomUUID().slice(0,8)}`, name = 'Novo sistema') {
+  return {kind:'rpg-system-package',schemaVersion:1,system:{schemaVersion:1,id,name,characterTemplate:{schemaVersion:1,meta:{system:id},identity:{name:'Personagem de ensaio'},score:2,health:{current:5,max:10}},formulas:{total:'score + 1'}},layouts:[{schemaVersion:1,id:'default',system:id,tabs:[{id:'main',label:'Ficha',sections:[{id:'basic',title:'Personagem',containers:[{layout:{type:'stack'},components:[{type:'text',field:'identity.name',label:'Nome'},{type:'number',field:'score',label:'Base'},{type:'resource',field:'health',label:'Vida'},{type:'computed',formula:'total',label:'Total'}]}]}]}]}]};
+}

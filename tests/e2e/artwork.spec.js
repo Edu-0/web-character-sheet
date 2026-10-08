@@ -46,6 +46,7 @@ test('texto é padrão; vetores mantêm nomes e rolagens e persistem independent
   await d6.click();
   await expect(page.locator('#dice-history li')).toHaveCount(2);
   expect(await character(page)).toBe(snapshot);
+  await page.evaluate(async()=>{await (await import('/js/write-coordinator.js')).flushLibraryWrites();});
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-dice-display', 'illustrated');
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'ruby');
@@ -94,6 +95,7 @@ test('combinações, posição ocupada, intensidade e ativação preservam a fic
     await expect(page.locator('#sheet-ornaments')).toBeVisible();
   }
   expect(await character(page)).toBe(snapshot);
+  await page.evaluate(async()=>{await (await import('/js/write-coordinator.js')).flushLibraryWrites();});
   await page.reload();
   await expect(page.locator('#sheet-ornaments')).toHaveAttribute('data-intensity', 'strong');
   expect((await preferences(page)).artwork.selected).toEqual(selected);

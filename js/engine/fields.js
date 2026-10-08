@@ -34,11 +34,11 @@ function fieldWrapper(label, className = 'field') {
 }
 
 registerFieldType('number', {
-  render(container, { character, field, label, onChange, registerRefresh, default: defaultValue }) {
+  render(container, { character, field, label, onChange, registerRefresh, default: defaultValue,materializeDefaults }) {
     const wrap = fieldWrapper(label);
     const input = document.createElement('input');
     input.type = 'number';
-    if (defaultValue !== undefined && getByPath(character, field) == null) setByPath(character, field, defaultValue);
+    if (materializeDefaults!==false && defaultValue !== undefined && getByPath(character, field) == null) setByPath(character, field, defaultValue);
     input.value = getByPath(character, field) ?? defaultValue ?? 0;
     registerRefresh?.(() => { if (document.activeElement !== input) input.value = getByPath(character, field) ?? defaultValue ?? 0; });
     input.addEventListener('input', () => {

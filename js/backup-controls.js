@@ -4,7 +4,7 @@ import { downloadJson } from './storage.js';
 import { openModal, confirmDialog } from './modal.js';
 import { notify } from './notifications.js';
 
-export function initBackupControls({ getCurrentCharacter, onRestored }) {
+export function initBackupControls({ getCurrentCharacter, onRestored,beforeRestore }) {
   const filename = () => `biblioteca-rpg-${new Date().toISOString().slice(0,10)}.json`;
   document.getElementById('btn-export-library').addEventListener('click', () => {
     try { downloadJson(exportLibrary(getCurrentCharacter()), filename()); notify('Biblioteca exportada, incluindo a ficha em memória.'); }
@@ -46,6 +46,7 @@ export function initBackupControls({ getCurrentCharacter, onRestored }) {
           try {
             const replacing = choice !== 'merge';
             if (replacing && !await confirmDialog('Esta operação substitui dados existentes. Uma cópia da biblioteca atual será baixada antes da alteração. Continuar?', {title: 'Confirmar restauração', confirmLabel: 'Substituir dados'})) return;
+            await beforeRestore?.();
             if (replacing) downloadJson(exportLibrary(getCurrentCharacter()), `antes-restauracao-${filename()}`);
             const result = await restoreLibrary(data, {mode: choice === 'replace' ? 'replace' : 'merge', overwriteConflicts: choice === 'overwrite', confirmed: replacing, currentCharacter: getCurrentCharacter()});
             await onRestored();

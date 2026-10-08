@@ -34,6 +34,7 @@ test('monta abas acessíveis e persiste campos do sistema-rpg @smoke', async ({ 
   await expect(page.locator('.engine-panel:not([hidden]) label.field').filter({ hasText: /^Força/ }).locator('select')).toBeVisible();
   await page.locator('.engine-panel:not([hidden]) label.field').filter({ hasText: /^Força/ }).locator('select').selectOption('10');
 
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   await page.reload();
   await expect(page.getByRole('tab', { name: 'Atributos' })).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('.engine-panel:not([hidden]) label.field').filter({ hasText: /^Força/ }).locator('select')).toHaveValue('10');

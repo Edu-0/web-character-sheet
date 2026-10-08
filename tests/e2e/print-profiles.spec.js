@@ -5,7 +5,7 @@ import { populate, longText } from '../design-fixtures.mjs';
 const prepare = page => page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
 const profile = (page, value) => page.evaluate(async value => {
   const api = await import('/js/storage.js');
-  api.saveSettings({ ...api.loadSettings(), printProfile: value });
+  await api.saveSettings({ ...api.loadSettings(), printProfile: value });
 }, value);
 const data = page => page.evaluate(async () => JSON.stringify((await import('/js/state.js')).state.get()));
 

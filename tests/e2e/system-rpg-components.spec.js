@@ -46,6 +46,7 @@ test('perícias em d4 ficam ocultas, mas podem ser editadas e removidas da lista
   await expect(catalog.getByLabel('Atletismo', { exact: true })).toHaveValue('6');
   await expect(catalog.getByLabel('Percepção', { exact: true })).toHaveCount(0);
 
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   await page.reload();
   await expect(page.getByRole('tab', { name: 'Perícias' })).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('.engine-skill-catalog').getByLabel('Atletismo', { exact: true })).toHaveValue('6');

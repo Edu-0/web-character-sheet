@@ -22,6 +22,7 @@ test('ficha modular padrão exporta e reimporta o mesmo personagem JSON @smoke',
   await page.locator('#input-import-file').setInputFiles({
     name: 'lia.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(exported)),
   });
+  await expect(page.locator('#input-import-file')).toHaveValue('');
   await expect(page.locator('#shell-current-character')).toHaveText('Lia Exportável');
   await expect(page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])').getByLabel('Nome do personagem')).toHaveValue('Lia Exportável');
   await page.reload();

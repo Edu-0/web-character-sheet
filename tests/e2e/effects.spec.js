@@ -29,7 +29,7 @@ test('Coringa explícito, contribuições, fim confirmado, undo/redo, impressão
 });
 test('ativar em v1 migra com original recuperável e backup v2',async({page})=>{
   await openSwade(page);
-  await page.evaluate(async()=>{const {state}=await import('/js/state.js');const c=state.get();c.schemaVersion=1;delete c.activeEffects;c.extra={zero:0,off:false};(await import('/js/repositories/character-repository.js')).saveCharacter(c);state.syncHistoryBaseline();});
+  await page.evaluate(async()=>{const {state}=await import('/js/state.js');const c=state.get();c.schemaVersion=1;delete c.activeEffects;c.extra={zero:0,off:false};await (await import('/js/repositories/character-repository.js')).saveCharacter(c);state.syncHistoryBaseline();});
   await page.getByRole('button',{name:'Ativar Coringa',exact:true}).click();await page.getByRole('button',{name:'Migrar e ativar',exact:true}).click();
   await expect(page.locator('.engine-effects')).toContainText('Coringa · Ativo');
   const data=await page.evaluate(async()=>{const c=(await import('/js/state.js')).state.get();const originals=(await import('/js/persistence.js')).recoveryEntries().filter(e=>/migração/.test(e.reason)).map(e=>JSON.parse(e.raw));const backup=(await import('/js/library-backup.js')).exportLibrary(c);return {c,originals,version:backup.schemaVersion};});

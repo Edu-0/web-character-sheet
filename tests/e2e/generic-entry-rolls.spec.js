@@ -172,6 +172,7 @@ test('configuração neutra persiste e acompanha exportação do sistema e perso
   await dialog.getByLabel('Modificador do teste').fill('+7');
   await dialog.getByRole('button', { name: 'Salvar configuração' }).click();
   await page.keyboard.press('Escape');
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   await page.reload();
   const restored = await open(page, 'Usar técnica');
   await expect(restored.getByLabel('Dados do teste')).toHaveValue('3d6');
@@ -199,6 +200,7 @@ test('D&D migra opções antigas preservando modificador, efeito e aumento', asy
   await expect(dialog.getByLabel('Prévia da rolagem')).toContainText('7d6 + 4');
   await dialog.getByRole('button', { name: 'Salvar configuração' }).click();
   await page.keyboard.press('Escape');
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   await page.reload();
   await page.locator('#generic-sheet-host').getByRole('tab', { name: 'Magias', exact: true }).click();
   const restored = await open(page, 'Lançar');

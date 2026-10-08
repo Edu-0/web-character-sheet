@@ -19,7 +19,7 @@ export async function buildOffline({ write = true, check = false, overrides = ne
   const manifest = JSON.parse(await readFile(new URL('data/systems/index.json', root), 'utf8'));
   const paths = new Set(['index.html', 'manifest.webmanifest', 'data/systems/index.json',
     'assets/app/icon.svg', 'assets/app/icon-180.png', 'assets/app/icon-192.png', 'assets/app/icon-512.png',
-    'assets/artwork/ornaments.js', 'assets/artwork/book-vectors.js',
+    'assets/artwork/ornaments.js', 'assets/artwork/book-vectors.js', 'js/editor/generated/preview.css',
     ...await walk('css', '.css'), ...await walk('js', '.js')]);
   paths.delete('js/engine-test.js'); paths.delete('js/dice-pool-test.js');
   for (const entry of manifest.systems) for (const ref of [entry.system, ...entry.layouts.map(layout => layout.file)]) {

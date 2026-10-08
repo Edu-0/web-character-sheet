@@ -19,8 +19,8 @@ test('R2: mescla recusa reinterpretação de efeitos sem gravar; replace restaur
     const {restoreLibrary,exportLibrary}=await import('/js/library-backup.js');
     const file=value=>new File([JSON.stringify(value)],'fixture.json',{type:'application/json'});
     const snapshot=()=>JSON.stringify(Object.keys(localStorage).sort().map(key=>[key,localStorage.getItem(key)]));
-    await systems.importSystemPackage(file(pkg));const c=chars.createCharacter(pkg.system);
-    c.extra={zero:0,off:false};activateEffect(c,pkg.system,'demo','one');chars.saveCharacter(c);
+    await systems.importSystemPackage(file(pkg));const c=await chars.createCharacter(pkg.system);
+    c.extra={zero:0,off:false};activateEffect(c,pkg.system,'demo','one');await chars.saveCharacter(c);
     const coherent=exportLibrary();
     const changed=structuredClone(pkg);changed.system.effectDefinitions[0].operations[0].value=99;
     const backup={schemaVersion:2,kind:'rpg-library-backup',systems:[changed],characters:[],preferences:{}};
@@ -34,7 +34,7 @@ test('R2: mescla recusa reinterpretação de efeitos sem gravar; replace restaur
     const bonus=effectContribution(chars.getCharacter(c.meta.id),(await systems.getSystemPackage(pkg.system.id)).system,{kind:'checkModifier',key:'action',unit:'total'}).value;
     const ignored=structuredClone(backup);ignored.systems[0].system.effectDefinitions[0].revision=1;
     await restoreLibrary(ignored); // pacote conflitante ignorado e sem personagem novo: sem substituição
-    c.activeEffects[0].status='inactive';chars.saveCharacter(c);
+    c.activeEffects[0].status='inactive';await chars.saveCharacter(c);
     await restoreLibrary(backup,{overwriteConflicts:true,confirmed:true});
     const revisionAfterMerge=(await systems.getSystemPackage(pkg.system.id)).system.effectDefinitions[0].revision;
     await restoreLibrary(coherent,{mode:'replace',confirmed:true});
@@ -101,7 +101,7 @@ test('R5/R6: template inválido não entra; substituição conserva instância e
     invalid.system.characterTemplate.activeEffects[0].definitionId='missing';const before=localStorage.getItem('ficha-rpg:v2:systems');let rejected=false;
     try{await systems.importSystemPackage(file(invalid));}catch{rejected=true;}
     const same=before===localStorage.getItem('ficha-rpg:v2:systems');
-    await systems.importSystemPackage(file(pkg));const c=chars.createCharacter(pkg.system);activateEffect(c,pkg.system,'demo','old');c.activeEffects[0].status='expired';c.activeEffects[0].extra={keep:42};chars.saveCharacter(c);
+    await systems.importSystemPackage(file(pkg));const c=await chars.createCharacter(pkg.system);activateEffect(c,pkg.system,'demo','old');c.activeEffects[0].status='expired';c.activeEffects[0].extra={keep:42};await chars.saveCharacter(c);
     const original=structuredClone(c.activeEffects);pkg.system.effectDefinitions[0].revision=2;pkg.system.effectDefinitions[0].duration={type:'manual'};
     await systems.importSystemPackage(file(pkg),{replace:true});
     return {rejected,same,original,stored:chars.getCharacter(c.meta.id).activeEffects,id:c.meta.id};

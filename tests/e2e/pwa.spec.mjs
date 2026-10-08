@@ -173,7 +173,7 @@ test('deploy parcial com hash divergente preserva versão ativa e pode ser tenta
     await settings(page); await page.locator('#btn-check-update').click();
     await expect(page.locator('#pwa-update-status')).toContainText('Não foi possível');
     await expect(page.locator('#pwa-update-status')).toContainText('css/base.css foi alterado');
-    await expect(page.locator('#offline-status')).toContainText('Disponível offline'); expect(await versions(page)).toEqual(original);
+    await expect(page.locator('#offline-status')).toContainText('Disponível offline'); await expect.poll(()=>versions(page)).toEqual(original);
     next.files.set('css/base.css', nextCss); expect(next.source).toBe(correctSource);
     await page.locator('#btn-check-update').click(); await expect(page.locator('#pwa-update-status')).toContainText('Atualização pronta');
   } finally { await server.close(); }

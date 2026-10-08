@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "30fdc83c20ece4712535";
+const VERSION = "a72d9df3faf396b6fd04";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -44,6 +44,10 @@ const ASSETS = [
   {
     "path": "css/components.css",
     "hash": "5368e972fbd2c6989f6e42ce33aedf8564023a241f9b11bf2ecb311cef23891a"
+  },
+  {
+    "path": "css/editor.css",
+    "hash": "de4ceb3ead354747d446e223cf2405afeff60cea8659c42166189ccb38e3276c"
   },
   {
     "path": "css/engine-shell.css",
@@ -163,19 +167,19 @@ const ASSETS = [
   },
   {
     "path": "data/systems/swade.layout.json",
-    "hash": "fe0e46cb4fdbe0498cb2cfe9ca34fd600b332c59840efe6b2cd2f61cbcd2f96e"
+    "hash": "864a172ed81e9250242914aff4109b0942adb799c335df11cc69e51932c77df0"
   },
   {
     "path": "data/systems/swade.system.json",
-    "hash": "0257d80a79836d85aab220f0ed4c706ef1f05d79855e8a70b78a102af4d9264a"
+    "hash": "07d3f5fbd5d81c13d853a121a94a7c6d49832ded83e47a06949ee99256b9d7a2"
   },
   {
     "path": "data/systems/swade.table-layout.json",
-    "hash": "ccef845303ab32fbc0cb473e38bc5e50936d79f63ae9630a462a0e5e046bf031"
+    "hash": "b82a53b2db46926dd9eff8601c38ca7dc7b0b0ea38014a6107cd88e4fcd81689"
   },
   {
     "path": "index.html",
-    "hash": "df8876322fc1a728741009c30febcb886e5a7b9de9cfad80c46bf9485606865f"
+    "hash": "c30c332d3a1b540ee4839c08e3b4e0d1d80a627ebba39815da3758d81f3ea4dd"
   },
   {
     "path": "js/app-state.js",
@@ -183,7 +187,7 @@ const ASSETS = [
   },
   {
     "path": "js/app.js",
-    "hash": "455e54887bfd897ecdb25384e95df389e3dbcd128b66e2c7f373a560a5acb145"
+    "hash": "986e14a950a77331d816ae30fef827035d6a041f612e6fcb5e5d3d2c5f9b4d10"
   },
   {
     "path": "js/appearance.js",
@@ -195,7 +199,7 @@ const ASSETS = [
   },
   {
     "path": "js/backup-controls.js",
-    "hash": "426ff88a2dcd135d00930c3833dc95a9fca9ad4819a14e5a85d91c5ae5080492"
+    "hash": "8d5d5c36adffefb62b16fde51d67ac37c62e3b9021b537afd1c4e8b362503aae"
   },
   {
     "path": "js/calculation-settings.js",
@@ -223,11 +227,75 @@ const ASSETS = [
   },
   {
     "path": "js/dice.js",
-    "hash": "2c43c26624691d127fd49c32d5021a9dc4d4e635a197673bb51a6059d3f455e9"
+    "hash": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59"
+  },
+  {
+    "path": "js/editor/draft-repository.js",
+    "hash": "5c0cbd20ae96f3f20737802beb80e2f645eda33ba230b46e95beff6d19a160de"
+  },
+  {
+    "path": "js/editor/editor-ui.js",
+    "hash": "c66bf5c7c9e8362d159dd4e00098e47bd3f4e13f543983335f256aa3bc13461d"
+  },
+  {
+    "path": "js/editor/generated/preview.css",
+    "hash": "2a98fe676f5107fc8101c5e39c536b5bee844fce9ae4395c02bbdb8e63e9c49c"
+  },
+  {
+    "path": "js/editor/generated/preview.js",
+    "hash": "c04ab124517aec49dbaf0584a9ae570e5bd7cc5c1da49616e7266ecff65391ec"
+  },
+  {
+    "path": "js/editor/history.js",
+    "hash": "82602b7e49f38f33b05c4c4c4545b761c6cc9a8ac888719459f4ae2cb50cd9eb"
+  },
+  {
+    "path": "js/editor/minimal-package.js",
+    "hash": "bfdfd168a52f30c8265eb9270a10bb75866a094574c595e10f28da0fa55d573b"
+  },
+  {
+    "path": "js/editor/operation-paths.js",
+    "hash": "fa7e29599115734942951a23e4fbd94941806e96d06354578717444ff579a02e"
+  },
+  {
+    "path": "js/editor/operations.js",
+    "hash": "ebb70b21d5b20056db0367b0fda3a0c1d75bd76e78cc7ec5ab13b81ef0e3c65b"
+  },
+  {
+    "path": "js/editor/package-commands.js",
+    "hash": "984500b27c0b7cde78b977a209005e4e3824d2168b4fa91668fdc438a0253e76"
+  },
+  {
+    "path": "js/editor/preview-entry.js",
+    "hash": "560d618f1b3e10c8e874a5c383b6b7eb073802482c43447fa703848b5cdfa107"
+  },
+  {
+    "path": "js/editor/preview-host.js",
+    "hash": "fc08f963b8c4746e7939cde330df91c25576ab26dff8d28e96c8a74133c961dc"
+  },
+  {
+    "path": "js/editor/preview-protocol.js",
+    "hash": "3fcacf13edddd1ac3eebe2355c706d267a7e87c3de0211ac7506371814e03362"
+  },
+  {
+    "path": "js/editor/references.js",
+    "hash": "00a2921872d88150fa6beaa71f46de4187034c84b9a2e0d08d96bcbc35e67bc7"
+  },
+  {
+    "path": "js/editor/session.js",
+    "hash": "7b9927060a469f46d658b0209b2396e5d9643886ad8900b2eafd7a7dbc8c9579"
+  },
+  {
+    "path": "js/editor/source-map.js",
+    "hash": "3dd00923e74a55c718889cc744551496e3371ba28fa2091403970d1a6aed205b"
+  },
+  {
+    "path": "js/editor/validation.js",
+    "hash": "52623926895f7578248a548e99e03ed05c8f73cf3efc99534b89cbdff9effe78"
   },
   {
     "path": "js/engine/advanced-fields.js",
-    "hash": "7dcb618787c2d9fdfa185d599a154792341f12355c82b88cb94f1f6ad12a9e09"
+    "hash": "39f1d733fc970fb7e9c70fe4ff60deec59341989f6647d2df2ee4a82e0ccfbfd"
   },
   {
     "path": "js/engine/assistance.js",
@@ -243,11 +311,11 @@ const ASSETS = [
   },
   {
     "path": "js/engine/check-fields.js",
-    "hash": "f2cb136d162b12af48884bdf660ec17ad32b1610ce1bd2fce4f4f9f16f52bc3b"
+    "hash": "da205990eabc5d3b4e23454b57362f725b17d529ad3fa1b92dafda05e1e26171"
   },
   {
     "path": "js/engine/checks.js",
-    "hash": "05f95f794a5187645eb784b66b0dca57760b8eaa54d6cf60c778dbf4d967c587"
+    "hash": "7d7b7cb9e62949b92e2af7cf646ac42c040ae63828afac9b29f3897bae3c7fca"
   },
   {
     "path": "js/engine/collection-recovery.js",
@@ -271,11 +339,11 @@ const ASSETS = [
   },
   {
     "path": "js/engine/effect-fields.js",
-    "hash": "d87bbef9851c9bd8a19ec6e478d2d322a0f1224164f0f50f5c7deaafa7384380"
+    "hash": "19e14de1f04295eda9e81e52ffc77d32762f54750399e5a5aa5c32ff039f537f"
   },
   {
     "path": "js/engine/effects.js",
-    "hash": "c17c4ccc8be097d78315ae309fb658a10825a1a771b6d15a10457fd4597ad4bf"
+    "hash": "405a2e811de38fb21f16d9585b86ff520c2b8cfbc0f6d56191c9f7e10ae8dcda"
   },
   {
     "path": "js/engine/entry-actions.js",
@@ -287,11 +355,11 @@ const ASSETS = [
   },
   {
     "path": "js/engine/entry-rolls.js",
-    "hash": "98658ceb18bf06fcb91b93ce77dce4fa53eba44f718a63907ab00aaae01b6855"
+    "hash": "9f4bce37658ed155987fbae0bb23dc21130f83dd85dd39993393ae90ed60e6c2"
   },
   {
     "path": "js/engine/fields.js",
-    "hash": "daa91ad3e645666b091309480d14633efcdd7e874019896df77f7e2473be5147"
+    "hash": "6399a2c05277384116c7ff96420cd7760dcfdcaf7014aa8f0555c50801fda4e5"
   },
   {
     "path": "js/engine/formula.js",
@@ -327,7 +395,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/point-fields.js",
-    "hash": "99bb7d3b3a59fac4b9766e676e1387a7727688514c444c87936f40716c283627"
+    "hash": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612"
   },
   {
     "path": "js/engine/pool.js",
@@ -347,11 +415,15 @@ const ASSETS = [
   },
   {
     "path": "js/engine/recovery.js",
-    "hash": "714bbf88828141e6531d029ad019d2ecd33d83cae70aa86337c99e5c29e56f0e"
+    "hash": "3d45355f2b6280f624913ad79402c06cab4765e0602280b2c6e1791b5aeb623e"
+  },
+  {
+    "path": "js/engine/render-projection.js",
+    "hash": "64ee583b8e01a0df57a680151d0f6cf376c4a92208c0adf817188d20a92c7910"
   },
   {
     "path": "js/engine/renderer.js",
-    "hash": "203ad0cb25031ef33fedcef630db92beea5dda23732aa95b1809a9303dcbb0f3"
+    "hash": "89f90d9ad1260bb9f9980e8e173e43600727b9444ec74cf046b0b334aee70726"
   },
   {
     "path": "js/engine/resolution.js",
@@ -359,11 +431,11 @@ const ASSETS = [
   },
   {
     "path": "js/engine/roll-cost.js",
-    "hash": "d7f027edb0a2dd90dd023782bedb4946a532f5422ff439f0b767c297880c90cf"
+    "hash": "0606d26c72d48af3f3a08c792f66c8685adbf5182d62cd0cadb18301fb7d16b5"
   },
   {
     "path": "js/engine/roll-values.js",
-    "hash": "687bc317e64d89c32017bcb2375922bc043ca0afc0151acc1aaf9837eca5dcfe"
+    "hash": "fc749b9dd7dd87b61be3c91bdf8e2c84037d6698bbd97ab7b0c7ca3940ccf2a8"
   },
   {
     "path": "js/engine/search.js",
@@ -403,7 +475,7 @@ const ASSETS = [
   },
   {
     "path": "js/library-backup.js",
-    "hash": "8de1e65906ecef91b899241decadf0af11a3a7c3f0c016ca60fa07d84cab386c"
+    "hash": "52013bdcc020d70390183e8f987ca815988206153aa0acb97bec2829737025c7"
   },
   {
     "path": "js/migrations/index.js",
@@ -419,7 +491,7 @@ const ASSETS = [
   },
   {
     "path": "js/persistence.js",
-    "hash": "dee9aa152c4e7f75eb204e1f62bea39f1a676ecde811dc181a870336f53621b6"
+    "hash": "f76131373962ceb1082988f48afbf1cb1d26c9f818df7253c817f9805fa5f016"
   },
   {
     "path": "js/printing.js",
@@ -427,23 +499,27 @@ const ASSETS = [
   },
   {
     "path": "js/pwa.js",
-    "hash": "c50939caf2bb0b30873aed5e8717ddea1bd2103d7981b33fd66a5c6df0d485c9"
+    "hash": "97bfa206b21735b0d3e17c467c99a8caf2e9cba26563ec20d1a4e8cb5cca88c7"
   },
   {
     "path": "js/repositories/character-repository.js",
-    "hash": "a43de51639c574017b8e3125b955c29430219e197da3dadab1bdb60eacebf890"
+    "hash": "b2133ae765101820ee262483690a612183a04a9df298b3578a47ed8dfa314ca5"
+  },
+  {
+    "path": "js/repositories/package-installation.js",
+    "hash": "1a078887f04d3384daa985cf32309bbffbec2af026ec51def36619b827586711"
   },
   {
     "path": "js/repositories/system-repository.js",
-    "hash": "6dd017e1b23730faf0c909476c8bbe0bfd0682c64af9ba80373cbfc31b65a982"
+    "hash": "94d5f031f246520f053cc87b701a5a9fa7484cec25daf40b9cf708c50e03110a"
   },
   {
     "path": "js/sheet-layouts.js",
-    "hash": "bf8e4984c3264d20401b9c5f21019add5dace815376120432aba92ca93518416"
+    "hash": "2195478a5e210f2d649af4c5628b60eecc54539aed4b234e90e6da284b78133b"
   },
   {
     "path": "js/sheet-search.js",
-    "hash": "525cf0475c7156ed6f4efb05b41e9a8463f90bed5623dfe9e6c7e583f6cae1fe"
+    "hash": "895271347bdb314af109f7e70fae11f9b8778583cc0ce3b5fd249b62e72772fe"
   },
   {
     "path": "js/shell-actions.js",
@@ -455,7 +531,7 @@ const ASSETS = [
   },
   {
     "path": "js/storage.js",
-    "hash": "432314870b109d60aa60cf945d434ab5de4364779ae2afe28e7f325420730da6"
+    "hash": "fcd699123f70053e69c481734fb1efea3e14b170165a86defc3557723aaccca3"
   },
   {
     "path": "js/systems/dnd-item-rolls.js",
@@ -491,7 +567,7 @@ const ASSETS = [
   },
   {
     "path": "js/validation/checks.js",
-    "hash": "0eac5af65dc7d2a11cf55d85793288705ea9b09a9da6a643be61f384df3de601"
+    "hash": "6551ebcfc038d585b4502bc3a50bab2c4d5fa9882a30884711773903b2806cba"
   },
   {
     "path": "js/validation/contracts.js",
@@ -507,11 +583,11 @@ const ASSETS = [
   },
   {
     "path": "js/validation/effects.js",
-    "hash": "79607d2d4eabc9e8d1ac30c0cc184748d065539329255444fcb9e12090a295ba"
+    "hash": "62b0bb57a0d6c6391e31abf5df11568c0d07c59bf2e403db47221805d0935998"
   },
   {
     "path": "js/validation/entry-rolls.js",
-    "hash": "d069da859e352cd4e595e9d865271a16dceac58d70bff8351bf3f450d6e6e4f4"
+    "hash": "a16402073ce1b9fa1f864c01976e8cf5c320d02aeae24dc295c47f2cb7b8cb23"
   },
   {
     "path": "js/validation/limits.js",
@@ -519,7 +595,7 @@ const ASSETS = [
   },
   {
     "path": "js/validation/recovery.js",
-    "hash": "1da097d03ff6e2403d560609d0d75fb571702ade1c30c91c71c8d5bb5f81a3fa"
+    "hash": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9"
   },
   {
     "path": "js/validation/references.js",
@@ -531,11 +607,15 @@ const ASSETS = [
   },
   {
     "path": "js/validation/schemas.js",
-    "hash": "142a16c8e6c2fb35b126bfec1c90da50765f4f66c5ce5e8136b3ccac3ad80063"
+    "hash": "084e644bb9290dd213f2b7f8acacbc70a4eed26c200e014bea6b3b3eab40ba64"
   },
   {
     "path": "js/validation/versions.js",
     "hash": "c68379c39aff5d334dbf1fe0ebead1a1c66df9da2fb167cbb28bf68b22b17f5c"
+  },
+  {
+    "path": "js/write-coordinator.js",
+    "hash": "b1e1286978c7adfecae731ec33b69157ce2d1c0128fd4237d7ec972df9c1d03c"
   },
   {
     "path": "manifest.webmanifest",
@@ -646,6 +726,18 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('message', event => {
+  if(event.data?.type==='VERIFY_LIBRARY_WRITERS' && event.ports[0]){
+    event.waitUntil((async()=>{
+      const clients=(await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client=>client.url.startsWith(SCOPE));
+      const checks=await Promise.all(clients.map(client=>new Promise(resolve=>{
+        const channel=new MessageChannel(),timer=setTimeout(()=>finish(false),1500);
+        const finish=safe=>{clearTimeout(timer);channel.port1.close();resolve(safe);};
+        channel.port1.onmessage=({data})=>finish(data?.protocol===1 && data.locks===true);
+        client.postMessage({type:'LIBRARY_WRITE_PROBE'},[channel.port2]);
+      })));
+      event.ports[0].postMessage({protocol:1,safe:checks.every(Boolean),clients:clients.length});
+    })());return;
+  }
   if (!['OFFLINE_STATUS', 'OFFLINE_PREPARE'].includes(event.data?.type) || !event.ports[0]) return;
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);

@@ -2,6 +2,7 @@ import { initCalculationSettings, applyCalculationPreferences } from './calculat
 import { initBackupControls } from './backup-controls.js';
 import { captureFocus } from './focus.js';
 import { recoverTransactions, reportStorageError, migrationCopyChange } from './persistence.js';
+import {hasPendingLibraryWrites,flushLibraryWrites} from './write-coordinator.js';
 import { assertValid, validateCharacterForPackage } from './validation/schemas.js';
 // app.js — shell global, bibliotecas e apresentações da ficha ativa.
 import { state } from './state.js';
@@ -15,6 +16,9 @@ import {
   importSystemPackage,
   initSystemRepository,
   listSystems,
+  prepareSystemInstallation,
+  installSystemPackage,
+  reloadImportedSystems,
 } from './repositories/system-repository.js';
 import { initTabs } from './tabs.js';
 import { initTheme, applyTheme, getAvailableThemes } from './theme.js';
@@ -54,9 +58,78 @@ let synchronizingTabs = false;
 let mountingGenericSheet = false;
 let sheetSearch = null;
 let characterHistoryControls = null;
+let jsonEditor = null;
+let characterSavePromise = Promise.resolve();
+let characterSaveRevision = 0;
+let preserveMountData = false;
+let activeCharacterRaw;
+let appInitialized=false;
+
+async function openJsonEditor(options = {}) {
+  await flushCharacterSave();
+  const {JsonEditor}=await import('./editor/editor-ui.js');
+  if(options.source?.kind==='file'){
+    const {validateText}=await import('./editor/validation.js'),{installedPackageBase}=await import('./repositories/system-repository.js');
+    const parsed=validateText(options.text);
+    if(parsed.value?.system?.id)options.source={...options.source,systemId:parsed.value.system.id,base:installedPackageBase(parsed.value.system.id)};
+  }
+  jsonEditor ||= new JsonEditor($('view-editor'),{onExit:view=>{setAppState('currentView',view);document.querySelector(`[data-app-view-target="${view}"]`)?.focus();},onApply:applyEditorPackage});
+  setAppState('currentView','editor');
+  await jsonEditor.open(options);
+}
+
+async function applyEditorPackage(editor) {
+  await flushCharacterSave();
+  if(activeCharacterId && characters.rawCharacter(activeCharacterId)!==activeCharacterRaw)throw new Error('O personagem ativo mudou em outra aba. Exporte a edição em memória e reabra a ficha antes de aplicar.');
+  const session=editor.session,revision=session.revision,layoutId=editor.layout.value,result=session.validate();
+  if(result.status!=='ready' || !editor.lastRenderedCurrent)throw new Error('Valide e atualize o ensaio da revisão atual antes de aplicar.');
+  const expectedBase=session.source.systemId===result.document.system.id?session.source.base:null;
+  const plan=prepareSystemInstallation(result.document,{expectedBase,currentCharacter:state.get()});
+  const summary=`${plan.replace?'Substituir':'Instalar'} ${plan.package.system.name} (${plan.package.system.id}), revisão JSON ${revision}. ${plan.linkedIds.length} personagem(ns) vinculado(s); nenhum será migrado. Layouts removidos: ${plan.removedLayouts.join(', ') || 'nenhum'}; se necessário, a seleção usará ${plan.package.layouts[0].id}. ${plan.replace?'O pacote anterior terá cópia recuperável.':''} Avisos: ${plan.warnings.map(issue=>`${issue.path}: ${issue.message}`).join('; ') || 'nenhum'}.`;
+  if(!await confirmDialog(summary,{title:'Aplicar pacote local',confirmLabel:'Confirmar aplicação'}))return;
+  const assertCurrent=()=>{if(editor.disposed || editor.session!==session || session.revision!==revision || editor.layout.value!==layoutId || !editor.lastRenderedCurrent || session.validate().status!=='ready')throw new Error('A revisão/ensaio mudou durante a confirmação. Revise e confirme novamente.');if(activeCharacterId && characters.rawCharacter(activeCharacterId)!==activeCharacterRaw)throw new Error('O personagem ativo mudou em outra aba. Preserve sua edição e reabra a ficha.');};
+  assertCurrent();
+  if(JSON.stringify(state.get())!==plan.activeSnapshot)throw new Error('O personagem ativo mudou durante a confirmação. Preserve a edição e tente novamente.');
+  await flushCharacterSave();assertCurrent();
+  const copies=session.recoveryOriginalText?[migrationCopyChange(`editor:${session.draftId}`,JSON.parse(session.recoveryOriginalText))]:[];
+  const pkg=await installSystemPackage(plan,{currentCharacter:state.get(),assertCurrent,copies});
+  session.source={kind:'imported',systemId:pkg.system.id,base:structuredClone(pkg)};session.lastApplied={revision,systemId:pkg.system.id,appliedAt:new Date().toISOString()};
+  try {refreshInstalledPackage(pkg);editor.applicationStatus.textContent=`Pacote aplicado localmente · revisão ${revision}. Rascunho preservado; abrir a ficha é uma ação separada.`;}
+  catch(error){editor.applicationStatus.textContent=`Pacote salvo, ficha não remontada: ${error.message}. Exporte o rascunho e reabra a ficha pela biblioteca. O pacote anterior está na recuperação.`;}
+  session.lastSavedRevision=-1;
+  try{await editor.saveDraft();}catch(error){editor.applicationStatus.textContent+=` Rascunho não salvo: ${error.message}`;}
+}
+
+function refreshInstalledPackage(pkg) {
+  refreshLibraries();if(activePackage?.system.id!==pkg.system.id)return;
+  const previousLayout=activeLayout.id;
+  genericSheetController?.destroy();genericSheetController=null;
+  activePackage=pkg;activeLayout=pkg.layouts.find(layout=>layout.id===previousLayout)||preferredLayout(pkg);preserveMountData=true;
+  setSystem(pkg.system);setLayout(activeLayout);renderLayoutControls();
+  state.clearHistory();
+  state.history.activate(state.get());
+  renderGenericSheet(state.get());state.syncHistoryBaseline();sheetSearch?.refresh();
+  updateAppState({currentSystem:systemSummary(pkg.system)});
+}
+
+async function refreshEditorDrafts() {
+  const host=$('editor-drafts');
+  try {
+    const {listDrafts,decodeDraft,deleteDraft}=await import('./editor/draft-repository.js');
+    host.replaceChildren(element('h2','','Rascunhos JSON locais'));host.classList.add('editor-drafts');
+    for(const entry of listDrafts()){
+      const card=element('article');card.append(element('p','',entry.error || `${entry.draft.lastValid?.package.system.name || entry.draft.source?.name || 'Rascunho'} · revisão ${entry.draft.revision}`));
+      if(entry.draft)card.append(actionButton('Recuperar rascunho','button button--ghost',()=>runAction(()=>openJsonEditor({draft:entry.draft,draftRaw:entry.raw}))));
+      card.append(actionButton('Baixar original','button button--ghost',()=>storage.downloadText(entry.raw,'rascunho-original.json')),
+        actionButton('Excluir rascunho','button button--danger',()=>runAction(async()=>{if(await confirmDialog('Excluir somente este rascunho local? A biblioteca permanece separada.',{title:'Excluir rascunho',confirmLabel:'Excluir rascunho'})){await deleteDraft(entry.key,entry.raw);await refreshEditorDrafts();}})));
+      host.append(card);
+    }
+    if(!host.querySelector('article'))host.append(element('p','','Nenhum rascunho salvo. Rascunhos não fazem parte de Exportar tudo.'));
+  }catch(error){host.textContent=`Rascunhos indisponíveis: ${error.message}. Nenhum original foi sobrescrito.`;}
+}
 
 async function init() {
-  try { recoverTransactions(); } catch { /* adapter mantém bloqueio e journal para recuperação */ }
+  try { await recoverTransactions(); } catch { /* adapter mantém bloqueio e journal para recuperação */ }
   const session = storage.loadAppSession();
   if (session.activeTab) setAppState('ui.activeTab', session.activeTab);
   if (['legacy', 'engine', 'compare'].includes(session.dndPresentation)) {
@@ -73,6 +146,7 @@ async function init() {
     validate: character => assertValid(character, value => validateCharacterForPackage(value, activePackage), 'personagem'),
   });
   initBackupControls({
+    beforeRestore:()=>flushCharacterSave(),
     getCurrentCharacter: () => activeCharacterId ? state.get() : null,
     onRestored: async () => {
       state.clearHistory();
@@ -101,10 +175,10 @@ async function init() {
   sheetSearch = initSheetSearch({
     getIndex: () => activeCharacterId && activePackage ? layoutSearchIndex(activePackage,
       activePackage.system.id === DND_SYSTEM_ID && getAppState().ui.dndPresentation === 'legacy' ? activePackage.layouts[0] : activeLayout, state.get()) : [],
-    onShortcut: () => setAppState('currentView', 'sheet'),
-    onNavigate: (entry) => {
+    onShortcut: () => {if(getAppState().currentView==='editor')return false;setAppState('currentView', 'sheet');},
+    onNavigate: async (entry) => {
       if (!activeCharacterId || !getAppState().currentCharacter) return;
-      if (entry.layoutId !== activeLayout.id) selectSheetLayout(entry.layoutId, { preservePresentation: true });
+      if (entry.layoutId !== activeLayout.id) await selectSheetLayout(entry.layoutId, { preservePresentation: true });
       if (activePackage.system.id === DND_SYSTEM_ID && entry.layoutId !== activePackage.layouts[0].id && getAppState().ui.dndPresentation === 'legacy') setAppState('ui.dndPresentation', 'engine');
       if (activePackage?.system.id === DND_SYSTEM_ID && getAppState().ui.dndPresentation === 'legacy') revealDndSearchResult(entry, state.get(), legacyTabsController);
       else genericSheetController?.revealSearchResult(entry);
@@ -124,8 +198,10 @@ async function init() {
     else await createAndOpenCharacter(session.currentSystemId && hasSystem(session.currentSystemId) ? session.currentSystemId : DND_SYSTEM_ID, { notifyUser: false });
   }
   appPersistenceEnabled = true;
+  appInitialized=true;
+  renderShell(getAppState());
   persistAppState(getAppState());
-  initPwa({ beforeReload: () => flushCharacterSave({ force: true }) });
+  initPwa({ beforeReload: async () => {await flushCharacterSave({ force: true });await flushLibraryWrites();} });
 }
 
 function initLegacyControls(initialTabId) {
@@ -147,14 +223,25 @@ function initLegacyControls(initialTabId) {
   wireInventorySearch();
   wireDiceTray();
   document.querySelectorAll('[data-dnd-presentation]').forEach((button) => {
-    button.addEventListener('click', () => setAppState('ui.dndPresentation', button.dataset.dndPresentation));
+    button.addEventListener('click', () => runAction(async()=>{await flushCharacterSave();setAppState('ui.dndPresentation', button.dataset.dndPresentation);}));
   });
 }
 
 function initShell() {
-  $('sheet-layout-select').addEventListener('change', event => selectSheetLayout(event.target.value));
+  $('btn-create-package').addEventListener('click',()=>runAction(()=>openJsonEditor()));
+  $('btn-open-editor-file').addEventListener('click',()=>$('input-editor-file').click());
+  $('input-editor-file').addEventListener('change',()=>runAction(async()=>{
+    const [file]=$('input-editor-file').files;$('input-editor-file').value='';if(!file)return;
+    if(file.size>20*1024**2)throw new Error('Arquivo excede 20 MiB.');
+    const text=await file.text();let value;try{value=JSON.parse(text);}catch{}
+    if(value?.kind==='rpg-editor-draft'){
+      const {decodeDraft}=await import('./editor/draft-repository.js'),draft=decodeDraft(text);
+      draft.draftId=crypto.randomUUID();await openJsonEditor({draft,draftRaw:null});
+    }else {if(file.size>4*1024**2)throw new Error('Pacote excede 4 MiB.');await openJsonEditor({text,source:{kind:'file',name:file.name,base:null}});}
+  }));
+  $('sheet-layout-select').addEventListener('change', event => runAction(()=>selectSheetLayout(event.target.value)));
   document.querySelectorAll('[data-app-view-target]').forEach((button) => {
-    button.addEventListener('click', () => setAppState('currentView', button.dataset.appViewTarget));
+    button.addEventListener('click', () => {if(getAppState().currentView==='editor'){runAction(()=>jsonEditor.exit(button.dataset.appViewTarget));return;}setAppState('currentView', button.dataset.appViewTarget);});
   });
 
   subscribeAppState((appState) => {
@@ -165,6 +252,10 @@ function initShell() {
 }
 
 function renderShell(appState) {
+  document.querySelectorAll('[data-app-view-target]').forEach(button=>{button.disabled=!appInitialized;});
+  $('secondary-actions').hidden=appState.currentView==='editor';
+  $('btn-more').hidden=appState.currentView==='editor';
+  if(appState.currentView==='systems')refreshEditorDrafts();
   document.querySelectorAll('[data-app-view]').forEach((view) => {
     view.toggleAttribute('hidden', view.dataset.appView !== appState.currentView);
   });
@@ -200,6 +291,7 @@ async function activateSystem(systemId) {
 }
 
 function useSystemPackage(pkg) {
+  preserveMountData=false;
   activePackage = pkg;
   activeLayout = preferredLayout(pkg);
   setSystem(pkg.system);
@@ -220,14 +312,15 @@ function renderLayoutControls() {
   $('view-sheet').dataset.sheetMode = activeLayout.mode || 'sheet';
 }
 
-function selectSheetLayout(id, { preservePresentation = false } = {}) {
+async function selectSheetLayout(id, { preservePresentation = false } = {}) {
   const next = activePackage?.layouts.find(layout => layout.id === id);
   if (!next) return;
+  await flushCharacterSave();
+  await rememberLayout(activePackage.system.id, next.id);
   genericSheetController?.destroy();
   genericSheetController = null;
   activeLayout = next;
   setLayout(next);
-  rememberLayout(activePackage.system.id, next.id);
   renderLayoutControls();
   if (!preservePresentation && activePackage.system.id === DND_SYSTEM_ID && getAppState().ui.dndPresentation === 'legacy') setAppState('ui.dndPresentation', 'engine');
   if (!genericSheetController && (activePackage.system.id !== DND_SYSTEM_ID || getAppState().ui.dndPresentation !== 'legacy')) renderGenericSheet(state.get());
@@ -237,7 +330,7 @@ function selectSheetLayout(id, { preservePresentation = false } = {}) {
 }
 
 async function openCharacter(id, { view = 'sheet' } = {}) {
-  flushCharacterSave();
+  await flushCharacterSave();
   const character = characters.getCharacter(id);
   if (!character) throw new Error('Personagem não encontrado.');
   if (!hasSystem(character.meta.system)) {
@@ -250,6 +343,7 @@ async function openCharacter(id, { view = 'sheet' } = {}) {
   assertValid(character, value => validateCharacterForPackage(value, pkg), 'personagem');
   useSystemPackage(pkg);
   activeCharacterId = character.meta.id;
+  activeCharacterRaw=characters.rawCharacter(character.meta.id);
   suppressCharacterEffects = true;
   state.load(character);
   suppressCharacterEffects = false;
@@ -271,9 +365,9 @@ async function openSystem(systemId) {
 }
 
 async function createAndOpenCharacter(systemId, { notifyUser = true } = {}) {
-  flushCharacterSave();
+  await flushCharacterSave();
   const pkg = await activateSystem(systemId);
-  const character = characters.createCharacter(pkg.system);
+  const character = await characters.createCharacter(pkg.system);
   await openCharacter(character.meta.id);
   if (notifyUser) notify(`Novo personagem criado para ${pkg.system.name}.`);
 }
@@ -327,14 +421,17 @@ function renderGenericSheet(character) {
   mountingGenericSheet = true;
   try {
     genericSheetController = renderSheet(host, activeLayout, character, {
+      materializeDefaults:!preserveMountData,
+      validateCharacter:value=>assertValid(value,entry=>validateCharacterForPackage(entry,activePackage),'personagem'),
       showHeader: false,
       system: activePackage.system,
       upgradeCharacter: async current => {
         if (current.schemaVersion !== 1 || current !== state.get()) throw new Error('Personagem mudou; abra a ficha novamente.');
-        flushCharacterSave();
+        await flushCharacterSave();
         const upgraded = { ...structuredClone(current), schemaVersion: 2, activeEffects: [] };
         assertValid(upgraded, value => validateCharacterForPackage(value,activePackage),'personagem');
-        const stored = characters.saveCharacter(upgraded,{copies:[migrationCopyChange(`effects:${current.meta.id}`,current)]});
+        const stored = await characters.saveCharacter(upgraded,{copies:[migrationCopyChange(`effects:${current.meta.id}`,current)],expectedPackage:activePackage,expectedRaw:()=>activeCharacterRaw});
+        activeCharacterRaw=JSON.stringify(stored);
         Object.assign(current,stored);
         state.clearHistory(); state.history.activate(current);
       },
@@ -387,6 +484,8 @@ function onCharacterChange(character) {
         restoreFocus();
       }
     }
+  } else if(preserveMountData && !engineChangeInProgress && genericSheetController){
+    genericSheetController.destroy();genericSheetController=null;renderGenericSheet(character);
   }
   scheduleCharacterSave(character);
   sheetSearch?.refresh();
@@ -394,23 +493,28 @@ function onCharacterChange(character) {
 }
 
 function scheduleCharacterSave(character) {
+  unsavedCharacter=true;
   $('save-indicator').textContent = 'Salvando...';
   clearTimeout(saveTimeout);
   const snapshot = structuredClone(character);
+  const revision=++characterSaveRevision,expectedPackage=structuredClone(activePackage);
   saveTimeout = setTimeout(() => {
     saveTimeout = null;
-    try {
-      assertValid(snapshot,value=>validateCharacterForPackage(value,activePackage),'personagem');
-      const saved = characters.saveCharacter(snapshot);
+    characterSavePromise=(async()=>{try {
+      assertValid(snapshot,value=>validateCharacterForPackage(value,expectedPackage),'personagem');
+      const saved = await characters.saveCharacter(snapshot,{expectedPackage,expectedRaw:()=>activeCharacterRaw});
+      activeCharacterRaw=JSON.stringify(saved);
+      if(revision!==characterSaveRevision)return;
       unsavedCharacter = false;
       refreshLibraries();
       updateAppState({ currentCharacter: characterSummary(saved) });
       $('save-indicator').textContent = 'Salvo';
-    } catch (error) { unsavedCharacter = true; $('save-indicator').textContent = 'Não salvo — exporte seus dados'; reportStorageError(error); }
+    } catch (error) { unsavedCharacter = true; $('save-indicator').textContent = 'Não salvo — exporte seus dados'; reportStorageError(error); }})();
   }, 300);
 }
 
-function flushCharacterSave({ force = false } = {}) {
+async function flushCharacterSave({ force = false } = {}) {
+  await characterSavePromise;
   if ((!saveTimeout && !force && !unsavedCharacter) || !activeCharacterId) return;
   clearTimeout(saveTimeout);
   saveTimeout = null;
@@ -418,7 +522,8 @@ function flushCharacterSave({ force = false } = {}) {
   try {
     if (current.meta?.id === activeCharacterId) {
       assertValid(current,value=>validateCharacterForPackage(value,activePackage),'personagem');
-      characters.saveCharacter(current);
+      const saved=await characters.saveCharacter(current,{expectedPackage:activePackage,expectedRaw:()=>activeCharacterRaw});
+      activeCharacterRaw=JSON.stringify(saved);
     }
     unsavedCharacter = false;
     $('save-indicator').textContent = 'Salvo';
@@ -448,6 +553,11 @@ function renderSystemLibrary(systems) {
       actionButton('Abrir', 'button button--primary', () => runAction(() => openSystem(system.id))),
       actionButton('Exportar', 'button button--ghost', () => runAction(async () => {
         storage.downloadJson(await exportSystemPackage(system.id), `${system.id}.system.json`);
+      })),
+      actionButton(system.source==='builtin'?'Editar cópia':'Editar pacote','button button--ghost',()=>runAction(async()=>{
+        const original=await exportSystemPackage(system.id);
+        const pkg=system.source==='builtin'?(await import('./editor/package-commands.js')).copyPackage(original):original;
+        await openJsonEditor({text:JSON.stringify(pkg,null,2),source:{kind:system.source==='builtin'?'copy':'imported',systemId:pkg.system.id,base:system.source==='builtin'?null:original}});
       })),
     );
     if(system.unavailable) { actions.querySelector('button').disabled=true; card.appendChild(element('p','library-card__warning','Pacote indisponível. Exporte o original ou a recuperação para corrigir.')); }
@@ -480,7 +590,7 @@ function renderCharacterLibrary(characterList) {
     actions.append(
       openButton,
       actionButton('Duplicar', 'button button--ghost', () => runAction(async () => {
-        const copy = characters.duplicateCharacter(character.id);
+        const copy = await characters.duplicateCharacter(character.id);
         refreshLibraries();
         await openCharacter(copy.meta.id);
       })),
@@ -503,11 +613,11 @@ async function deleteCharacter(id, name) {
   const ok = await confirmDialog(`Excluir "${name}" permanentemente?`, { title: 'Excluir personagem', confirmLabel: 'Excluir' });
   if (!ok) return;
   if (id === activeCharacterId) {
-    flushCharacterSave();
+    await flushCharacterSave();
     activeCharacterId = null;
     updateAppState({ currentCharacter: null, currentView: 'characters' });
   }
-  characters.removeCharacter(id);
+  await characters.removeCharacter(id);
   refreshLibraries();
   notify('Personagem excluído.');
 }
@@ -535,15 +645,15 @@ function wireToolbar() {
     notify('Ficha restaurada.');
   }));
 
-  $('btn-save-character').addEventListener('click', () => runAction(() => {
-    flushCharacterSave({ force: true });
+  $('btn-save-character').addEventListener('click', () => runAction(async () => {
+    await flushCharacterSave({ force: true });
     refreshLibraries();
     notify('Personagem salvo.');
   }));
 
-  $('btn-export').addEventListener('click', () => {
+  $('btn-export').addEventListener('click', async () => {
     if (!activeCharacterId) return;
-    try { flushCharacterSave(); } catch (error) { reportStorageError(error); }
+    try { await flushCharacterSave(); } catch (error) { reportStorageError(error); }
     const exported = characters.exportCharacter(state.get());
     storage.downloadJson(exported.data, exported.filename);
     notify('Personagem exportado.');
@@ -573,13 +683,15 @@ function wireToolbar() {
     if (!file) return;
     await runAction(async () => {
       let pkg;
+      await flushCharacterSave();
       try { pkg = await importSystemPackage(file,{currentCharacter:state.get(),confirmMigration}); }
       catch (error) {
         if (error.code !== 'system-conflict') throw error;
         if (!await confirmDialog('Substituir este sistema? Personagens existentes serão preservados, mas o novo layout pode ser incompatível.', {title: 'Sistema já existente', confirmLabel: 'Substituir sistema'})) return;
-        pkg = await importSystemPackage(file, {replace: true,currentCharacter:state.get(),confirmMigration});
+        await flushCharacterSave();
+        pkg = await importSystemPackage(file, {replace: true,currentCharacter:state.get(),confirmMigration,expectedBase:error.base});
         state.clearHistory();
-        if(activePackage?.system.id===pkg.system.id) {flushCharacterSave(); activePackage=pkg;setSystem(pkg.system);activeLayout=preferredLayout(pkg);setLayout(activeLayout);mountActiveSheet(state.get());}
+        refreshInstalledPackage(pkg);
       }
       refreshLibraries();
       notify(`Sistema "${pkg.system.name}" importado.`);
@@ -698,7 +810,7 @@ function persistAppState(appState) {
   storage.saveAppSession({
     currentSystemId: appState.currentSystem?.id ?? null,
     currentCharacterId: appState.currentCharacter?.id ?? null,
-    currentView: appState.currentView,
+    currentView: appState.currentView==='editor'?'systems':appState.currentView,
     activeTab: appState.ui.activeTab,
     dndPresentation: appState.ui.dndPresentation,
   });
@@ -732,7 +844,15 @@ async function runAction(action) {
 }
 
 window.addEventListener('beforeunload', event => {
-  try { flushCharacterSave(); } catch { event.preventDefault(); event.returnValue = ''; }
+  if(saveTimeout || unsavedCharacter || hasPendingLibraryWrites() || jsonEditor && !jsonEditor.disposed && jsonEditor.session.lastSavedRevision!==jsonEditor.session.revision){event.preventDefault();event.returnValue='';}
+  flushCharacterSave().catch(reportStorageError);
+});
+window.addEventListener('character:saved',event=>{if(event.detail.id===activeCharacterId)activeCharacterRaw=event.detail.raw;});
+window.addEventListener('storage',event=>{
+  if(event.key==='ficha-rpg:v2:systems'){
+    reloadImportedSystems();refreshLibraries();
+    if(activePackage && listSystems().some(system=>system.id===activePackage.system.id && system.source==='imported'))notify('A biblioteca de sistemas mudou em outra aba. Suas edições continuam em memória; reabra a ficha antes de salvar com as novas regras.',{type:'error'});
+  }
 });
 let lastStorageMessage = ''; let lastStorageWarning = 0;
 window.addEventListener('storage:problem', event => {

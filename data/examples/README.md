@@ -1,5 +1,7 @@
 # Rolagens de entradas configuradas por JSON
 
+Para criar, editar e ensaiar esses pacotes pela interface, consulte o [editor JSON com prévia](editor-json.md).
+
 Uma lista de técnicas, poderes, armas ou outras ações pode oferecer um painel de rolagem sem código específico para o sistema. A configuração das regras fica em `system.entryRolls`; o layout escolhe uma configuração:
 
 ```json

@@ -4,6 +4,8 @@ Este inventário não substitui as licenças completas nem certifica a proveniê
 
 ## Ferramentas de desenvolvimento
 
+- `esbuild` **0.28.2**, versão exata no manifest/lockfile: MIT, Copyright (c) 2020 Evan Wallace. [Projeto e licença](https://github.com/evanw/esbuild/blob/v0.28.2/LICENSE.md). Ferramenta de build, sem dependência npm no navegador. A licença completa acompanha o pacote em `node_modules/esbuild/LICENSE.md`; preserve-a ao redistribuir a ferramenta. O bundle contém o código local da prévia, sob os termos próprios do projeto e de seus assets.
+
 - `@playwright/test`, `playwright` e `playwright-core`: Apache-2.0, conforme os metadados do lockfile e os avisos dos pacotes instalados. Projeto: [Microsoft Playwright](https://github.com/microsoft/playwright). Usados nos testes; não são importados pela aplicação no navegador.
 - Dependências transitivas e navegadores têm seus próprios avisos. Preserve-os se redistribuir esses componentes; seu uso nos testes não permite relicenciá-los como código próprio.
 

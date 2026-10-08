@@ -18,7 +18,7 @@ test('referência inválida informa caminho e substituição incompatível conse
   await expect(page.locator('.toast').last()).toContainText('importado');
   const result=await page.evaluate(async pkg=>{
     const systems=await import('/js/repositories/system-repository.js'), chars=await import('/js/repositories/character-repository.js');
-    const c=chars.createCharacter(pkg.system); c.score=4;chars.saveCharacter(c);
+    const c=await chars.createCharacter(pkg.system); c.score=4;await chars.saveCharacter(c);
     const before=localStorage.getItem('ficha-rpg:v2:systems');
     pkg.system.characterTemplate.score='base';
     pkg.system.checks.action.sources=pkg.system.checks.action.sources.filter(source=>source.field!=='score');
@@ -45,7 +45,7 @@ test('pacote indisponível não oculta pacote válido; documento futuro fica pro
   const download=page.waitForEvent('download');await card.getByRole('button',{name:'Exportar',exact:true}).click();await download;
   expect(await page.evaluate(async()=>{
     const repo=await import('/js/repositories/character-repository.js');
-    try{repo.saveCharacter({schemaVersion:1,meta:{id:'future-character',system:'external'},name:'Overwrite'});return false;}catch{return JSON.parse(repo.rawCharacter('future-character')).schemaVersion===99;}
+    try{await repo.saveCharacter({schemaVersion:1,meta:{id:'future-character',system:'external'},name:'Overwrite'});return false;}catch{return JSON.parse(repo.rawCharacter('future-character')).schemaVersion===99;}
   })).toBe(true);
 });
 

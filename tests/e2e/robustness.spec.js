@@ -48,8 +48,8 @@ test('quota no índice reverte save e exclusão; recarga não cria órfãos @smo
     Storage.prototype.setItem = function(key,value) {if (key === 'ficha-rpg:v2:characters:index') throw new DOMException('quota','QuotaExceededError'); return original.call(this,key,value);};
     const failures = [];
     try {
-      try {repo.saveCharacter({schemaVersion:1,meta:{system:'external',id:'failed'},name:'Novo'});} catch(e){failures.push(e.message);}
-      try {repo.removeCharacter(before[0].id);} catch(e){failures.push(e.message);}
+      try {await repo.saveCharacter({schemaVersion:1,meta:{system:'external',id:'failed'},name:'Novo'});} catch(e){failures.push(e.message);}
+      try {await repo.removeCharacter(before[0].id);} catch(e){failures.push(e.message);}
     } finally {Storage.prototype.setItem = original;}
     return {failures: failures.length, newDocument: repo.getCharacter('failed'), oldDocument: !!repo.getCharacter(before[0].id), journal: localStorage.getItem('ficha-rpg:v2:storage-journal'), index: repo.listCharacters().length};
   });
@@ -195,7 +195,7 @@ test('backup substitui com confirmação/pré-backup; quota reverte todos os wri
 test('backup rejeita estrutura inválida antes de escrever e roundtrip conserva sistemas e órfãos', async ({page}) => {
   const result=await page.evaluate(async packageData=>{
     const repo=await import('/js/repositories/system-repository.js'); await repo.importSystemPackage(new File([JSON.stringify(packageData)],'system.json'));
-    const chars=await import('/js/repositories/character-repository.js'); chars.saveCharacter({schemaVersion:1,meta:{system:'missing',id:'orphan'},name:'Órfão'});
+    const chars=await import('/js/repositories/character-repository.js'); await chars.saveCharacter({schemaVersion:1,meta:{system:'missing',id:'orphan'},name:'Órfão'});
     const backup=await import('/js/library-backup.js'); const before=backup.exportLibrary(); const bad=structuredClone(before); bad.characters.find(character => character.identity).identity.name=42; let rejected=false;
     try {await backup.restoreLibrary(bad,{mode:'replace',confirmed:true});}catch {rejected=true;}
     await backup.restoreLibrary(before,{mode:'replace',confirmed:true}); const after=backup.exportLibrary();

@@ -16,7 +16,7 @@ async function seed(page, changes) {
   await page.evaluate(async (patch) => {
     const repo = await import('/js/repositories/character-repository.js');
     const summary = repo.listCharacters().find((entry) => entry.system === 'sistema-rpg');
-    repo.saveCharacter(Object.assign(repo.getCharacter(summary.id), patch));
+    await repo.saveCharacter(Object.assign(repo.getCharacter(summary.id), patch));
   }, changes);
   await page.reload();
   await expect(page.locator('.engine-sheet')).toBeVisible();
@@ -47,6 +47,7 @@ test('carga considera quantidade, itens carregados, multiplicador e Força compo
   await expect(active(page).locator('.engine-computed').filter({ hasText: 'Carga Máxima' }).locator('.engine-computed__value')).toHaveText('144');
   await page.getByRole('tab', { name: 'Inventário' }).click();
   await expect(page.getByLabel('Capacidade de carga', { exact: true })).toHaveText('144 kg de capacidade');
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   await page.reload();
   await expect(page.getByLabel('Peso carregado', { exact: true })).toHaveText('40 kg carregados');
 });

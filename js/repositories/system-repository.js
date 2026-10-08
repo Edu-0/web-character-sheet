@@ -1,4 +1,8 @@
-import { readJson, readRaw, preserveRaw, transact, migrationCopyChange } from '../persistence.js';
+import { readJson, readRaw, preserveRaw, transactWithinWrite, migrationCopyChange,storageKeys } from '../persistence.js';
+import {withLibraryWrite,verifyWriterClients,coordinatedWritesAvailable} from '../write-coordinator.js';
+import {installationPlan} from './package-installation.js';
+import * as characters from './character-repository.js';
+import {resetSettingsCache} from '../storage.js';
 import { LIMITS, readJsonFile } from '../validation/limits.js';
 import { assertValid, validateManifest, validateSystemPackage, validateCharacterForPackage } from '../validation/schemas.js';
 import { prepareDocument } from '../validation/documents.js';
@@ -33,9 +37,42 @@ function loadImportedSystems() {
   return valid;
 }
 
-export function importedPackages() { return clone(importedSystems); }
+export function importedPackages() { reloadImportedSystems();return clone(importedSystems); }
 export function importedSystemsChange(packages, {replace = false} = {}) { return [IMPORTED_SYSTEMS_KEY, JSON.stringify([...packages,...(replace?[]:unavailableSystems)])]; }
 export function reloadImportedSystems() { importedSystems = loadImportedSystems(); }
+
+function currentImported(id) {
+  const all=readJson(IMPORTED_SYSTEMS_KEY,[],Array.isArray);return all.find(pkg=>pkg?.system?.id===id) || null;
+}
+export function installedPackageBase(id){return clone(currentImported(id));}
+function librarySnapshot() {
+  return JSON.stringify(storageKeys().filter(key=>key===IMPORTED_SYSTEMS_KEY || key==='ficha-rpg:settings' || key.startsWith('ficha-rpg:v2:characters:')).sort().map(key=>[key,readRaw(key)]));
+}
+export function prepareSystemInstallation(candidate,{expectedBase,currentCharacter}={}) {
+  const current=currentImported(candidate.system?.id), base=expectedBase===undefined?current:expectedBase;
+  const summaries=characters.listCharacters(),linked=characters.allCharacters().filter(character=>character.meta.system===candidate.system.id);
+  if(currentCharacter?.meta?.system===candidate.system.id){const index=linked.findIndex(character=>character.meta.id===currentCharacter.meta.id);if(index<0)linked.push(clone(currentCharacter));else linked[index]=clone(currentCharacter);}
+  const plan=installationPlan({candidate,base,currentPackage:current,builtinIds:manifestSystems.map(entry=>entry.id),characters:linked,unavailableLinked:summaries.some(character=>character.system===candidate.system.id && character.unavailable),unavailableUnidentified:summaries.some(character=>character.system==='indisponível' && character.unavailable)});
+  return {...plan,librarySnapshot:librarySnapshot(),activeSnapshot:JSON.stringify(currentCharacter ?? null)};
+}
+export async function installSystemPackage(plan,{currentCharacter,copies=[],assertCurrent=()=>{}}={}) {
+  if(plan.replace)await verifyWriterClients();
+  return withLibraryWrite(()=>{
+    assertCurrent();
+    if(librarySnapshot()!==plan.librarySnapshot || JSON.stringify(currentCharacter ?? null)!==plan.activeSnapshot)throw new Error('A biblioteca ou o personagem ativo mudou durante a confirmação. Revise e tente novamente.');
+    const fresh=prepareSystemInstallation(plan.package,{expectedBase:plan.base,currentCharacter});
+    const all=readJson(IMPORTED_SYSTEMS_KEY,[],Array.isArray),baseline=readRaw(IMPORTED_SYSTEMS_KEY);
+    const next=[...all.filter(pkg=>pkg?.system?.id!==fresh.package.system.id),clone(fresh.package)];
+    const changes=[[IMPORTED_SYSTEMS_KEY,JSON.stringify(next)],...copies];
+    const preferences=readJson('ficha-rpg:settings',{},value=>value && typeof value==='object' && !Array.isArray(value));
+    const selection=preferences.layoutSelections?.find(entry=>entry.systemId===fresh.package.system.id);
+    if(selection && !fresh.package.layouts.some(layout=>layout.id===selection.layoutId)){
+      selection.layoutId=fresh.package.layouts[0].id;changes.push(['ficha-rpg:settings',JSON.stringify(preferences)]);
+    }
+    if(fresh.replace && baseline)changes.push(migrationCopyChange(IMPORTED_SYSTEMS_KEY,JSON.parse(baseline)));
+    transactWithinWrite(changes);reloadImportedSystems();resetSettingsCache();return clone(fresh.package);
+  });
+}
 
 export async function initSystemRepository() {
   const manifest = await fetchJson(MANIFEST_URL, 'o manifesto de sistemas');
@@ -66,6 +103,7 @@ export function hasSystem(id) {
 }
 
 export async function getSystemPackage(id) {
+  reloadImportedSystems();
   const imported = importedSystems.find((pkg) => pkg.system.id === id);
   if (imported) return clone(imported);
 
@@ -85,17 +123,18 @@ export async function getSystemPackage(id) {
   );
 }
 
-export async function importSystemPackage(file, { replace = false, currentCharacter, confirmMigration } = {}) {
+export async function importSystemPackage(file, { replace = false, currentCharacter, confirmMigration,expectedBase } = {}) {
   let pkg = await readJsonFile(file, LIMITS.systemBytes, 'package');
   let migrationPlan;
   const prepared=prepareDocument(pkg,{kind:'package',normalize:Boolean(confirmMigration)});
   assertValid(pkg,()=>prepared.diagnostics,'pacote de sistema');
-  const previous = importedSystems.find(item=>item.system.id===pkg.system.id);
+  const previous = currentImported(pkg.system.id);
   if (previous) assertValid(pkg.system, next=>validateEffectRevisionChange(previous.system,next),'revisão de efeitos');
   if (manifestSystems.some((entry) => entry.id === pkg.system.id)) {
     throw new Error(`O ID "${pkg.system.id}" pertence a um sistema embutido.`);
   }
-  if (!replace && [...importedSystems,...unavailableSystems].some(item => item?.system?.id === pkg.system.id)) { const error = new Error('Já existe um sistema com este ID. Confirme a substituição.'); error.code = 'system-conflict'; throw error; }
+  if (!replace && previous) { const error = new Error('Já existe um sistema com este ID. Confirme a substituição.'); error.code = 'system-conflict'; error.base=clone(previous); throw error; }
+  const initialBase=expectedBase===undefined?previous:expectedBase,initialSnapshot=librarySnapshot(),initialActive=JSON.stringify(currentCharacter ?? null);
   if (confirmMigration) {
     if (prepared.status==='needsMigration') {
       if (!await confirmMigration(prepared.migrationPlan)) throw new Error('Importação cancelada; o original foi preservado.');
@@ -104,24 +143,9 @@ export async function importSystemPackage(file, { replace = false, currentCharac
   }
   pkg=prepared.document;
   assertValid(pkg, validateSystemPackage, 'pacote de sistema');
-  const baseline=readRaw(IMPORTED_SYSTEMS_KEY);
-  const characters=await import('./character-repository.js');
-  if(characters.listCharacters().some(character=>character.system===pkg.system.id && character.unavailable)) throw new Error('Há personagem indisponível vinculado ao sistema. Exporte/corrija o original antes de substituir o pacote.');
-  const linked=characters.allCharacters().filter(character=>character.meta.system===pkg.system.id);
-  if(currentCharacter?.meta?.system===pkg.system.id) {
-    const index=linked.findIndex(character=>character.meta.id===currentCharacter.meta.id);
-    if(index<0) linked.push(currentCharacter); else linked[index]=currentCharacter;
-  }
-  for(const character of linked) assertValid(character,value=>validateCharacterForPackage(value,pkg),`personagem ${character.meta.id}`);
-  if (readRaw(IMPORTED_SYSTEMS_KEY)!==baseline) throw new Error('A biblioteca mudou durante a revisão. Tente importar novamente.');
-  const next = [...importedSystems.filter(item => item.system.id !== pkg.system.id), clone(pkg)];
-  const changes=[[IMPORTED_SYSTEMS_KEY,JSON.stringify([...next,...unavailableSystems.filter(item=>item?.system?.id!==pkg.system.id)])]];
-  if(replace && baseline) changes.push(migrationCopyChange(IMPORTED_SYSTEMS_KEY,JSON.parse(baseline)));
-  if(migrationPlan) changes.push(migrationCopyChange(`import:${file.name}`,migrationPlan.original));
-  transact(changes);
-  importedSystems = next;
-  unavailableSystems=unavailableSystems.filter(item=>item?.system?.id!==pkg.system.id);
-  return clone(pkg);
+  if(librarySnapshot()!==initialSnapshot || JSON.stringify(currentCharacter ?? null)!==initialActive)throw new Error('A biblioteca ou o personagem ativo mudou durante a revisão. Tente importar novamente.');
+  const plan=prepareSystemInstallation(pkg,{expectedBase:initialBase,currentCharacter});
+  return installSystemPackage(plan,{currentCharacter,copies:migrationPlan?[migrationCopyChange(`import:${file.name}`,migrationPlan.original)]:[]});
 }
 
 export async function exportSystemPackage(id) {

@@ -58,7 +58,7 @@ test('escolha persiste por sistema e acompanha backup sem entrar no personagem',
   expect(backup.characters.every(character => !Object.hasOwn(character, 'layoutSelections'))).toBe(true);
   await page.evaluate(async backup => {
     const storage = await import('/js/storage.js');
-    storage.saveSettings({});
+    await storage.saveSettings({});
     await (await import('/js/library-backup.js')).restoreLibrary(backup, { overwriteConflicts: true, confirmed: true });
   }, backup);
   await page.reload();
@@ -128,7 +128,7 @@ test('pacote importado permite layouts arbitrários; preferência removida volta
   await page.screenshot({ path: testInfo.outputPath('four-layouts-long-name-mobile.png'), fullPage: false });
   await page.evaluate(async () => {
     const storage = await import('/js/storage.js');
-    storage.saveSettings({ ...storage.loadSettings(), layoutSelections: [{ systemId: 'multiple-test', layoutId: 'removed-layout' }] });
+    await storage.saveSettings({ ...storage.loadSettings(), layoutSelections: [{ systemId: 'multiple-test', layoutId: 'removed-layout' }] });
   });
   await page.reload();
   await expect(page.locator(select)).toHaveValue('full');

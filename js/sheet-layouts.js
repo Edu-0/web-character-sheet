@@ -11,7 +11,7 @@ export function preferredLayout(pkg) {
 export function rememberLayout(systemId, layoutId) {
   const settings = loadSettings();
   const selections = Array.isArray(settings.layoutSelections) ? settings.layoutSelections : [];
-  saveSettings({ ...settings, layoutSelections: [
+  return saveSettings({ ...settings, layoutSelections: [
     ...selections.filter(entry => entry?.systemId !== systemId), { systemId, layoutId },
   ] });
 }

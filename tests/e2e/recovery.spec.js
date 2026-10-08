@@ -63,7 +63,7 @@ for (const host of ['#generic-sheet-host', '#legacy-dnd-sheet']) test(`longo res
   await expect(page.locator('#spell-slots [data-el="count"]').first()).toHaveText('3 / 3');
   await expect(page.locator('#generic-sheet-host').getByLabel('PV Atual', { exact: true })).toHaveValue('30');
   await expect(page.locator('[data-bind="combat.hpCurrent"]')).toHaveValue('30');
-  await page.keyboard.press('Escape'); await page.reload();
+  await page.keyboard.press('Escape'); await expect(page.locator('#save-indicator')).toHaveText('Salvo'); await page.reload();
   await expect(page.locator('#generic-sheet-host').getByLabel('PV Atual', { exact: true })).toHaveValue('30');
   expect((await values(page)).combat.hpCurrent).toBe(30);
   await page.locator(host).getByRole('tab', { name: 'Identidade', exact: true }).click();

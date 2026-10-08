@@ -20,7 +20,7 @@ registerFieldType('effectList', {
     if (!character.activeEffects?.length) wrap.append(node('p', 'Nenhum efeito registrado.'));
     return wrap;
   },
-  render(container, {character, system, label, onChange, registerRefresh, upgradeCharacter}) {
+  render(container, {character, system, label, onChange, registerRefresh, upgradeCharacter, preview}) {
     const mutate = operation => {
       const draft = structuredClone(character); operation(draft);
       const error = validateEffects(draft.activeEffects,{system}).find(issue=>issue.severity !== 'warning');
@@ -43,7 +43,7 @@ registerFieldType('effectList', {
     };
     for (const definition of system.effectDefinitions || []) action(definitions, `Ativar ${definition.label}`, async () => {
       if (character.schemaVersion === 1) {
-        if (!await confirmDialog('A ativação usará a versão 2 do personagem. Uma cópia do original será preservada. O histórico de edições será reiniciado antes da ativação.', {title:'Ativar efeitos', confirmLabel:'Migrar e ativar'})) return false;
+        if (!await confirmDialog(preview ? 'A ativação usará a versão 2 somente no ensaio. O original ficará em memória até reiniciar a prévia; nada será salvo na biblioteca.' : 'A ativação usará a versão 2 do personagem. Uma cópia do original será preservada. O histórico de edições será reiniciado antes da ativação.', {title:'Ativar efeitos', confirmLabel:'Migrar e ativar'})) return false;
         if (!upgradeCharacter) throw new Error('Migração indisponível nesta apresentação.');
         await upgradeCharacter(character);
       }

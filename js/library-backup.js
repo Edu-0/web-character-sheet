@@ -3,7 +3,8 @@ import {validateEffectRevisionChange} from './validation/effects.js';
 import { allCharacters, characterChanges } from './repositories/character-repository.js';
 import { importedPackages, importedSystemsChange, reloadImportedSystems, listSystems, getSystemPackage } from './repositories/system-repository.js';
 import { loadSettings, resetSettingsCache } from './storage.js';
-import { readJson, transact, recoveryEntries } from './persistence.js';
+import { readJson, readRaw, storageKeys,transactWithinWrite, recoveryEntries } from './persistence.js';
+import {withLibraryWrite,verifyWriterClients} from './write-coordinator.js';
 import { assertValid, validateCharacterForPackage } from './validation/schemas.js';
 import { inspectJson, readJsonFile, LIMITS } from './validation/limits.js';
 
@@ -38,6 +39,13 @@ export async function restoreLibrary(data, { mode = 'merge', overwriteConflicts 
   await validateBackup(data);
   if (!['merge', 'replace'].includes(mode)) throw new Error('Modo de restauração inválido.');
   if ((mode === 'replace' || overwriteConflicts) && !confirmed) throw new Error('Confirme a substituição antes de restaurar.');
+  if(mode==='replace'||overwriteConflicts)await verifyWriterClients();
+  const snapshot=()=>JSON.stringify(storageKeys().filter(key=>key==='ficha-rpg:v2:systems'||key==='ficha-rpg:settings'||key.startsWith('ficha-rpg:v2:characters:')).sort().map(key=>[key,readRaw(key)]));
+  const baseline=snapshot(),activeBaseline=JSON.stringify(currentCharacter);
+  const builtin = new Map(await Promise.all(listSystems().filter(s => s.source === 'builtin').map(async s => [s.id, await getSystemPackage(s.id)])));
+  return withLibraryWrite(()=>{
+  if(snapshot()!==baseline || JSON.stringify(currentCharacter)!==activeBaseline)throw new Error('Biblioteca mudou durante a preparação da restauração. Revise e tente novamente.');
+  reloadImportedSystems();
   const old = exportLibrary(currentCharacter);
   const combine = (original, incoming, id) => {
     const result = new Map(original.map(value => [id(value), value]));
@@ -56,7 +64,6 @@ export async function restoreLibrary(data, { mode = 'merge', overwriteConflicts 
     }
   }
   const characters = mode === 'replace' ? data.characters : combine(old.characters, data.characters, c => c.meta.id);
-  const builtin = new Map(await Promise.all(listSystems().filter(s => s.source === 'builtin').map(async s => [s.id, await getSystemPackage(s.id)])));
   const packages = new Map([...builtin, ...systems.map(p => [p.system.id, p])]);
   for (const character of characters) {
     const pkg = packages.get(character.meta.system);
@@ -70,7 +77,8 @@ export async function restoreLibrary(data, { mode = 'merge', overwriteConflicts 
   const metadata=mode==='replace'||overwriteConflicts ? incomingMetadata : {...incomingMetadata,...oldMetadata};
   const changes = [['ficha-rpg:v2:library:metadata',JSON.stringify(metadata)], ...characterChanges(characters, { replace: mode === 'replace' }), importedSystemsChange(systems,{replace:mode==='replace'}), ['ficha-rpg:settings', JSON.stringify(preferences)]];
   for (const entry of data.recovery || []) changes.push([`ficha-rpg:recovery:${Date.now()}:${crypto.randomUUID()}`, JSON.stringify(entry)]);
-  transact(changes);
+  transactWithinWrite(changes);
   reloadImportedSystems(); resetSettingsCache();
   return { systems: systems.length, characters: characters.length };
+  });
 }

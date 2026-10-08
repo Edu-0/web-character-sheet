@@ -56,7 +56,7 @@ for (const presentation of ['Ficha modular', 'Ficha estática']) test(`espaços 
   dialog = await open(page, true, host);
   await dialog.getByRole('button', { name: 'Lançar', exact: true }).click();
   await expect(modular).toHaveText('1 / 5'); await expect(legacy).toHaveText('1 / 5');
-  await page.keyboard.press('Escape'); await page.reload();
+  await page.keyboard.press('Escape'); await expect(page.locator('#save-indicator')).toHaveText('Salvo'); await page.reload();
   await page.locator(host).getByRole('tab', { name: 'Magias', exact: true }).click();
   await expect(modular).toHaveText('1 / 5'); await expect(legacy).toHaveText('1 / 5');
   await expect(page.locator(host).getByLabel('Consumir espaço ao lançar magia')).not.toBeChecked();
@@ -79,6 +79,7 @@ test('ataque e dano separados, configuração persistida e sincronizada com a es
   await expect(dialog.getByLabel('Dados de dano ou efeito')).toHaveValue('2d6 - 2');
   await page.keyboard.press('Escape');
   await expect(page.locator('#legacy-dnd-sheet .source-roll-trigger:visible')).toBeFocused();
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   await page.reload();
   dialog = await open(page, false);
   await expect(dialog.getByLabel('Dados de dano ou efeito')).toHaveValue('2d6 - 2');
@@ -158,6 +159,7 @@ test('configuração acompanha exportação/importação do personagem', async (
   const character = JSON.parse(await readFile(await (await download).path(), 'utf8'));
   expect(character.spellcasting.spells[0].rollOptions.effect).toBe('3d6 + 4');
   await page.locator('#input-import-file').setInputFiles({ name: 'personagem.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(character)) });
+  await expect(page.locator('#input-import-file')).toHaveValue('');
   await page.reload();
   const restored = await open(page);
   await expect(restored.getByLabel('Dados de dano ou efeito')).toHaveValue('3d6 + 4');

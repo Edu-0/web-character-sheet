@@ -161,6 +161,7 @@ test('PDF herda paleta e ornamentos sem mudar preferências; claro e escuro mant
     let light;
     for (const theme of ['light', 'dark']) {
       await page.evaluate(async ({ palette, theme }) => { const api = await import('/js/theme.js'); api.applyPalette(palette); api.applyTheme(theme); }, { palette, theme });
+      await page.evaluate(async()=>await(await import('/js/write-coordinator.js')).flushLibraryWrites());
       const before = await snapshot(page);
       await prepare(page); await page.emulateMedia({ media: 'print' });
       const root = page.locator('#print-root');

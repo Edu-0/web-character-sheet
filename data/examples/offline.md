@@ -18,6 +18,8 @@ Em **Verificar / preparar offline**, o aplicativo procura uma versão nova e ten
 
 ## Desenvolvimento
 
+O editor JSON e seu runtime de prévia também são locais. `build:offline` gera primeiro o bundle isolado; `check:offline` confere ambos. esbuild é dependência de desenvolvimento com versão fixada e não é carregado no navegador. Rascunhos ficam no armazenamento da origem e têm [download próprio](editor-json.md), separado do backup da biblioteca.
+
 `manifest.webmanifest`, os ícones em `assets/app/`, `js/pwa.js` e `sw.js` implementam instalação e disponibilidade. O worker usa uma lista restrita de recursos estáticos: HTML principal, CSS, módulos do runtime, vetores e os JSONs referenciados pelo manifesto de sistemas embutidos. Não há cache dinâmico de personagens, backups, referências privadas, exemplos, screenshots, testes ou documentação.
 
 Depois de mudar arquivos do runtime ou manifestos, execute:

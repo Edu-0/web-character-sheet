@@ -1,0 +1,155 @@
+import {EditorSession} from './session.js';
+import {PreviewHost} from './preview-host.js';
+import {minimalPackage} from './minimal-package.js';
+import {locateDiagnostic} from './source-map.js';
+import {downloadJson,downloadText} from '../storage.js';
+import {confirmDialog,openModal} from '../modal.js';
+import {saveDraft,readDraft,decodeDraft} from './draft-repository.js';
+import {knownReferences,identityImpact} from './references.js';
+const el=(tag,text='',className='')=>{const node=document.createElement(tag);node.textContent=text;if(className)node.className=className;return node;};
+
+export class JsonEditor {
+  constructor(host,{onExit,onApply}={}) {
+    this.host=host;this.onExit=onExit;this.onApply=onApply;this.disposed=true;
+  }
+  async open({text=JSON.stringify(minimalPackage(),null,2),source,draft,draftRaw,returnView='systems'}={}) {
+    this.dispose();this.disposed=false;this.exiting=false;this.returnView=returnView;this.session=new EditorSession(draft || {text,source});this.savedRaw=draftRaw!==undefined?draftRaw:draft?readDraft(draft.draftId):null;this.draftConflict=false;this.savePromise=Promise.resolve();this.render();
+    if(draft && this.savedRaw!==null)this.session.lastSavedRevision=draft.revision;
+    this.refresh();this.area.focus();this.area.setSelectionRange(this.session.ui.cursorStart || 0,this.session.ui.cursorEnd || 0);this.area.scrollTop=this.session.ui.scrollTop || 0;this.savedUi=JSON.stringify(this.currentUi());if(this.savedRaw===null)this.scheduleDraft();else this.status.textContent=`Rascunho recuperado · revisão ${this.session.revision}. Histórico JSON reiniciado.`;
+    // A montagem pode terminar depois de uma edição, save, saída ou nova sessão.
+    // Toda inicialização de UI acontece antes dessa espera.
+    if(this.session.validation.status==='ready')await this.run(()=>this.updatePreview());
+  }
+  render() {
+    const root=this.host;root.replaceChildren();root.classList.add('json-editor');
+    const header=el('header','','editor-header');header.append(el('h1','Editor JSON'));
+    this.title=el('p');header.append(this.title);
+    const controls=el('div','','editor-actions');
+    const action=(label,fn)=>{const button=el('button',label,'button button--ghost');button.type='button';button.addEventListener('click',()=>this.run(fn));controls.append(button);return button;};
+    this.undo=action('Desfazer JSON',()=>{this.session.replay('undo');this.changed(true);});
+    this.redo=action('Refazer JSON',()=>{this.session.replay('redo');this.changed(true);});
+    action('Validar JSON',()=>{this.session.validate();this.refresh();});
+    this.format=action('Formatar JSON',()=>{const result=this.session.validate();if(!result.value || result.diagnostics.some(issue=>issue.code?.startsWith('json.')))throw new Error('Corrija sintaxe/duplicatas/números antes de formatar.');this.session.replaceText(JSON.stringify(result.value,null,2),{label:'Formatar JSON'});this.changed(true);});
+    this.normalize=action('Normalizar aliases',async()=>{const revision=this.session.revision,result=this.session.validate();if(!result.migrationPlan)throw new Error('Não há normalização disponível.');if(await confirmDialog(result.migrationPlan.changes.join('\n'),{title:'Normalização explícita',confirmLabel:'Normalizar JSON'})){this.session.normalizationOriginal=result.migrationPlan.original;this.session.normalize(revision);this.changed(true);}});
+    this.restore=action('Restaurar última válida',()=>{this.session.restoreValid();this.changed(true);});
+    this.original=action('Baixar original da normalização',()=>downloadText(this.session.recoveryOriginalText,'antes-normalizacao.json'));
+    this.save=action('Salvar rascunho',()=>this.saveDraft());
+    action('Salvar rascunho como cópia',()=>this.saveDraft(true));
+    action('Baixar rascunho',()=>downloadJson(this.session.envelope(),'rascunho-rpg.json'));
+    this.export=action('Exportar pacote',()=>this.exportPackage());
+    this.exportValid=action('Exportar última versão válida',()=>this.exportPackage(true));
+    this.apply=action('Aplicar pacote',()=>this.applyPackage());
+    action('Sair do editor',()=>this.exit());
+    header.append(controls);root.append(header);
+    root.append(el('p','Rascunhos ficam nesta origem do navegador e não entram em Exportar tudo. Baixe seu rascunho. O histórico JSON dura somente nesta sessão.','editor-note'));
+    this.status=el('p');this.status.id='editor-status';this.status.setAttribute('role','status');root.append(this.status);
+    this.applicationStatus=el('p');this.applicationStatus.id='editor-application-status';this.applicationStatus.setAttribute('role','status');root.append(this.applicationStatus);
+    const tabs=el('div','','editor-mobile-tabs');tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Painéis do editor');
+    for(const [value,label] of [['json','JSON'],['diagnostics','Diagnósticos'],['preview','Prévia']]) {const button=el('button',label,'button button--ghost');button.type='button';button.dataset.panel=value;button.addEventListener('click',()=>{this.session.ui.panel=value;this.panel(value);this.scheduleDraft();});tabs.append(button);}root.append(tabs);this.tabs=tabs;
+    const split=el('label','Divisão JSON / prévia','editor-split');const range=el('input');this.split=range;range.type='range';range.min=30;range.max=70;range.value=this.session.ui.split || 50;root.style.setProperty('--editor-split',`${range.value}%`);range.setAttribute('aria-label','Largura do painel JSON');range.addEventListener('input',()=>{this.session.ui.split=Number(range.value);root.style.setProperty('--editor-split',`${range.value}%`);this.scheduleDraft();});split.append(range);root.append(split);
+    const body=el('div','','editor-body'),left=el('section','','editor-source');left.dataset.editorPanel='json';
+    const label=el('label','Texto JSON do pacote');label.htmlFor='editor-json';this.area=el('textarea');this.area.id='editor-json';this.area.spellcheck=false;this.area.autocapitalize='off';this.area.setAttribute('aria-describedby','editor-validation-summary');
+    this.area.addEventListener('input',event=>{this.session.replaceText(this.area.value,{group:event.inputType?.includes('Paste')?null:'json',label:'Editar JSON'});this.changed();});
+    this.area.addEventListener('focusout',()=>{this.session.history.breakGroup();this.scheduleDraft();});
+    this.area.addEventListener('select',()=>this.scheduleDraft());this.area.addEventListener('scroll',()=>this.scheduleDraft());
+    this.area.addEventListener('compositionstart',()=>{this.composing=true;clearTimeout(this.validationTimer);});
+    this.area.addEventListener('compositionend',()=>{this.composing=false;this.changed();});
+    this.area.addEventListener('keydown',event=>{if(event.isComposing || event.altKey || !(event.ctrlKey||event.metaKey))return;const key=event.key.toLowerCase();if(key==='z'||key==='y'){event.preventDefault();event.stopPropagation();this.session.replay(key==='y'||event.shiftKey?'redo':'undo');this.changed(true);}if(key==='s'){event.preventDefault();this.run(()=>this.saveDraft());}});
+    left.append(label,this.area);body.append(left);
+    this.previewSection=el('section','','editor-preview');this.previewSection.dataset.editorPanel='preview';
+    this.previewSection.append(el('h2','Prévia'),el('p','Ensaio — não altera seus personagens. A amostra vem do template e suas edições são efêmeras.','editor-note'));
+    const tools=el('div','','editor-preview-tools');
+    const select=(label,options)=>{const wrap=el('label',label),input=el('select');for(const [value,text]of options){const option=el('option',text);option.value=value;input.append(option);}wrap.append(input);tools.append(wrap);return input;};
+    this.layout=select('Layout de ensaio',[]);this.layout.addEventListener('change',()=>{this.session.ui.layoutId=this.layout.value;this.refresh();this.scheduleDraft();});
+    this.theme=select('Tema do ensaio',[['light','Claro'],['dark','Escuro']]);this.theme.value=this.session.ui.theme || document.documentElement.dataset.theme || 'dark';
+    this.theme.addEventListener('change',()=>{this.session.ui.theme=this.theme.value;this.preview.appearance({theme:this.theme.value,palette:document.documentElement.dataset.palette || 'classic'});this.scheduleDraft();});
+    this.width=select('Largura do ensaio',[['auto','Automática'],['360','360 px'],['768','768 px'],['1280','1280 px']]);this.width.value=this.session.ui.width || 'auto';this.width.addEventListener('change',()=>{this.session.ui.width=this.width.value;this.frameWrap.style.setProperty('--preview-width',this.width.value==='auto'?'100%':`${this.width.value}px`);this.scheduleDraft();});
+    const update=el('button','Atualizar / reiniciar ensaio','button button--primary');update.type='button';update.addEventListener('click',()=>this.run(()=>this.updatePreview()));tools.append(update);
+    this.previewStatus=el('p');this.previewStatus.id='editor-preview-status';this.previewStatus.setAttribute('role','status');this.frameWrap=el('div','','editor-frame-wrap');
+    this.previewSection.append(tools,this.previewStatus,this.frameWrap);body.append(this.previewSection);root.append(body);
+    this.diagnostics=el('section','','editor-diagnostics');this.diagnostics.dataset.editorPanel='diagnostics';this.diagnostics.append(el('h2','Diagnósticos'));
+    this.summary=el('p');this.summary.id='editor-validation-summary';this.summary.setAttribute('role','status');this.issues=el('ul');this.diagnostics.append(this.summary,this.issues);root.append(this.diagnostics);
+    this.frameWrap.style.setProperty('--preview-width',this.width.value==='auto'?'100%':`${this.width.value}px`);
+    this.preview=new PreviewHost(this.frameWrap,{sessionId:this.session.draftId,onDiagnostic:message=>{this.runtimeError=message;this.refresh();}});
+    this.area.value=this.session.text;this.panel(this.session.ui.panel || 'json');
+  }
+  panel(value) {this.host.dataset.editorPanel=value;for(const button of this.tabs.children)button.setAttribute('aria-pressed',String(button.dataset.panel===value));}
+  changed(sync=false) {
+    clearTimeout(this.validationTimer);this.lastRenderedCurrent=false;
+    this.status.textContent=this.draftConflict?`Revisão ${this.session.revision} em memória; conflito com outra aba. Salve como cópia ou baixe o rascunho.`:`Revisão ${this.session.revision} em memória; salvamento do rascunho pendente.`;
+    if(sync){this.area.value=this.session.text;this.session.validate();this.refresh();}
+    else {this.refresh(false);if(!this.composing)this.validationTimer=setTimeout(()=>{this.session.validate();this.refresh();},350);}
+    this.scheduleDraft?.();
+  }
+  refresh(validated=true) {
+    const session=this.session,result=session.validation;
+    this.title.textContent=`${session.lastValid?.package.system.name || 'Rascunho'} · ${session.lastValid?.package.system.id || 'ID ainda inválido'} · origem: ${session.source.kind}${session.source.name?` (${session.source.name})`:''} · revisão ${session.revision} · última válida: ${session.lastValid?.revision ?? 'nenhuma'} · ${session.lastApplied?.revision===session.revision?'Aplicado':'Não aplicado'}`;
+    this.undo.disabled=!session.history.undoStack.length;this.redo.disabled=!session.history.redoStack.length;this.restore.disabled=!session.lastValid;
+    this.export.disabled=!validated || result.status!=='ready';this.exportValid.disabled=!session.lastValid;
+    this.normalize.hidden=result.status!=='needsMigration';
+    this.original.hidden=!session.recoveryOriginalText;
+    if(!validated){const pending='Validação pendente. O texto atual permanece preservado.';if(this.summary.textContent!==pending)this.summary.textContent=pending;this.issues.replaceChildren();}
+    if(validated){
+      this.summary.textContent=`${result.status==='ready'?'Contrato válido':result.status==='needsMigration'?'Normalização requer confirmação':result.status==='unsupported'?'Versão não suportada':'JSON inválido'} · ${result.diagnostics.length} diagnóstico(s).`;
+      this.issues.replaceChildren();for(const issue of result.diagnostics){const li=el('li'),button=el('button',`${issue.severity}: ${issue.pointer || issue.path || '/'} — ${issue.message}`);button.type='button';
+        button.addEventListener('click',()=>{const range=issue.location || locateDiagnostic(session.text,result.locations,issue);this.panel('json');this.area.focus();if(range)this.area.setSelectionRange(range.start,range.end);});li.append(button);this.issues.append(li);}
+      const layouts=session.lastValid?.package.layouts || [], selected=session.ui.layoutId || layouts[0]?.id;
+      if(result.status==='ready'){
+        const impact=identityImpact(session.source.base,result.document), references=knownReferences(result.document);
+        this.summary.textContent+=` ${references.length} usos conhecidos de referências; ${impact.changedReferences.length} alterados; layouts removidos: ${impact.removedLayouts.join(', ') || 'nenhum'}. Extensões opacas não são refatoradas.`;
+      }
+      this.layout.replaceChildren(...layouts.map(layout=>{const option=el('option',layout.name || layout.manifest?.name || layout.id);option.value=layout.id;return option;}));
+      this.layout.value=layouts.some(layout=>layout.id===selected)?selected:layouts[0]?.id || '';session.ui.layoutId=this.layout.value;
+    }
+    this.lastRenderedCurrent=this.lastRendered?.revision===session.revision && this.lastRendered.layoutId===this.layout.value && !this.runtimeError && validated && result.status==='ready';
+    this.previewStatus.textContent=this.runtimeError?`Erro de execução: ${this.runtimeError}. Prévia anterior mantida.`:this.lastRenderedCurrent?`Ensaio da revisão ${session.revision} · ${this.layout.value}`:this.lastRendered?`Prévia desatualizada — revisão ${this.lastRendered.revision}. Atualize explicitamente após terminar a interação.`:'Nenhuma prévia válida ainda. Valide o JSON e atualize o ensaio.';
+    this.apply.disabled=!this.lastRenderedCurrent;
+    if(session.history.boundary)this.status.textContent='Edição preservada; o limite do histórico encerrou operações anteriores.';
+  }
+  async updatePreview() {
+    const result=this.session.validate();this.refresh();if(result.status!=='ready')throw new Error('Corrija o documento atual antes de atualizar o ensaio.');
+    const revision=this.session.revision, layoutId=this.layout.value, session=this.session,request=Symbol();this.previewRequest=request;
+    this.runtimeError=null;this.previewStatus.textContent='Montando ensaio…';
+    try {const context=await this.preview.mount(result.document,{revision,layoutId,appearance:{theme:this.theme.value,palette:document.documentElement.dataset.palette || 'classic'}});if(this.disposed||session!==this.session||request!==this.previewRequest)return;this.runtimeError=null;this.preview.appearance({theme:this.theme.value,palette:document.documentElement.dataset.palette || 'classic'});this.lastRendered=context;this.refresh();}
+    catch(error){if(this.disposed||session!==this.session||request!==this.previewRequest)return;this.runtimeError=error.message;this.refresh();throw error;}
+  }
+  exportPackage(lastValid=false) {
+    const result=this.session.validate();if(!lastValid && result.status!=='ready')throw new Error('A revisão atual não é válida. Baixe o rascunho ou exporte explicitamente a última válida.');
+    const snapshot=lastValid?this.session.lastValid:{package:result.document,revision:this.session.revision};if(!snapshot)throw new Error('Sem versão válida.');
+    downloadJson(snapshot.package,`${snapshot.package.system.id}.system.json`);this.status.textContent=`Pacote exportado da revisão ${snapshot.revision}; amostra de ensaio excluída.`;
+  }
+  async applyPackage() {if(!this.lastRenderedCurrent)throw new Error('Atualize o ensaio da revisão atual antes de aplicar.');if(!this.onApply)throw new Error('Aplicação ainda indisponível.');await this.onApply(this);this.refresh();}
+  scheduleDraft() {clearTimeout(this.draftTimer);if(!this.draftConflict && !this.exiting)this.draftTimer=setTimeout(()=>this.run(()=>this.saveDraft()),650);}
+  currentUi(){return {...this.session.ui,theme:this.theme.value,width:this.width.value,split:Number(this.split.value),cursorStart:this.area.selectionStart,cursorEnd:this.area.selectionEnd,scrollTop:this.area.scrollTop};}
+  saveDraft(copy=false) {
+    clearTimeout(this.draftTimer);const session=this.session;
+    this.savePromise=this.savePromise.catch(()=>{}).then(async()=>{
+      if(this.disposed || session!==this.session)return;
+      session.validate();session.ui=this.currentUi();
+      if(copy){session.draftId=crypto.randomUUID();this.savedRaw=null;this.draftConflict=false;}
+      const envelope=session.envelope();
+      try {const raw=await saveDraft(envelope,this.savedRaw);if(this.disposed || session!==this.session)return;this.savedRaw=raw;this.savedUi=JSON.stringify(envelope.ui);session.lastSavedRevision=envelope.revision;this.status.textContent=`Rascunho salvo nesta origem · revisão ${envelope.revision}. Fora de Exportar tudo.`;}
+      catch(error){if(this.disposed || session!==this.session)return;this.draftConflict=error.code==='draft-conflict';throw new Error(`${error.message} Texto preservado em memória; use Baixar rascunho.`,{cause:error});}
+    });return this.savePromise;
+  }
+  async exit(view=this.returnView) {
+    clearTimeout(this.draftTimer);this.exiting=true;
+    await this.savePromise.catch(()=>{});
+    if(this.session.lastSavedRevision===this.session.revision && this.savedUi!==JSON.stringify(this.currentUi())){try{await this.saveDraft();}catch{this.session.lastSavedRevision=-1;}}
+    if(this.session.lastSavedRevision!==this.session.revision){
+      const choice=await new Promise(resolve=>{
+        const content=el('p','Há mudanças não salvas no texto ou na apresentação do editor. Escolha como preservar ou descartar as alterações desde o último salvamento.');
+        openModal({title:'Sair do editor',contentEl:content,onClose:()=>resolve('continue'),actions:[
+          {label:'Continuar editando',onClick:()=>resolve('continue')},{label:'Salvar e sair',onClick:()=>resolve('save')},
+          {label:'Baixar e sair',onClick:()=>resolve('download')},{label:'Descartar e sair',onClick:()=>resolve('discard')},
+        ]});
+      });
+      if(choice==='continue'){this.exiting=false;this.scheduleDraft();return false;}
+      if(choice==='save'){try{await this.saveDraft();}catch(error){this.exiting=false;throw error;}}
+      if(choice==='download')downloadJson(this.session.envelope(),'rascunho-rpg.json');
+    }
+    this.dispose();this.onExit?.(view);return true;
+  }
+  async run(fn) {const session=this.session;try {await fn();}catch(error){if(!this.disposed && session===this.session)this.status.textContent=error.message;}}
+  dispose() {clearTimeout(this.validationTimer);clearTimeout(this.draftTimer);this.preview?.dispose();this.lastRendered=null;this.runtimeError=null;this.disposed=true;}
+}
