@@ -318,6 +318,15 @@
   text-align: center;
 }
 
+.catalog-search { display: grid; gap: .5rem; max-width: 32rem; margin-block: 1rem; }
+.catalog-search input { width: 100%; min-height: 44px; }
+
+.modal:has(.system-removal-review) { max-height: calc(100dvh - 32px); display: flex; flex-direction: column; }
+.modal:has(.system-removal-review) .modal__body { overflow-y: auto; min-height: 0; overflow-wrap: anywhere; }
+.modal:has(.system-removal-review) .modal__header,
+.modal:has(.system-removal-review) .modal__footer { flex-shrink: 0; }
+.modal:has(.system-removal-review) .modal__footer { flex-wrap: wrap; }
+
 .generic-sheet-host {
   container-type: inline-size;
   width: min(var(--max-content-width), 100%);

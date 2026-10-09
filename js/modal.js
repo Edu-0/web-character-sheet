@@ -26,6 +26,12 @@ function close() {
 }
 
 function onKeydown(e) {
+  if(e.key==='Tab' && modalBox.querySelector('.system-removal-review')){
+    const controls=[...modalBox.querySelectorAll('button:not(:disabled), [tabindex="0"]')];
+    const first=controls[0],last=controls.at(-1);
+    if(e.shiftKey && document.activeElement===first){e.preventDefault();last?.focus();}
+    else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first?.focus();}
+  }
   if (e.key === 'Escape') {
     if (activeCloseHandler) activeCloseHandler();
     close();
@@ -89,10 +95,11 @@ export function openModal({ title, contentEl, actions = [], onClose }) {
   return close;
 }
 
-export function confirmDialog(message, { title = 'Confirmar ação', confirmLabel = 'Confirmar' } = {}) {
+export function confirmDialog(message, { title = 'Confirmar ação', confirmLabel = 'Confirmar', messageClass = '' } = {}) {
   return new Promise((resolve) => {
     const content = document.createElement('p');
-    content.className = 'modal__message';
+    content.className = `modal__message ${messageClass}`.trim();
+    if(messageClass==='system-removal-review')content.tabIndex=0;
     content.textContent = message;
 
     openModal({

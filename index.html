@@ -70,6 +70,7 @@
 
   <nav class="shell-nav no-print" aria-label="Navegação principal">
     <button type="button" class="shell-nav__item" data-app-view-target="systems">Sistemas</button>
+    <button type="button" class="shell-nav__item" data-app-view-target="catalog">Catálogo</button>
     <button type="button" class="shell-nav__item" data-app-view-target="characters">Personagens</button>
     <button type="button" class="shell-nav__item" data-app-view-target="sheet">Ficha atual</button>
     <button type="button" class="shell-nav__item" data-app-view-target="settings">Configurações</button>
@@ -82,9 +83,10 @@
         <div>
           <p class="shell-stub__eyebrow">Sistemas</p>
           <h1>Sistemas de RPG</h1>
-          <p>Escolha um sistema embutido ou importe um pacote com sua configuração e layouts.</p>
+          <p>Seus sistemas instalados. Abra uma ficha, importe JSON ou escolha outros sistemas no Catálogo.</p>
         </div>
         <div class="manager-page__actions">
+          <button type="button" class="button button--ghost" data-app-view-target="catalog">Explorar catálogo</button>
           <button type="button" id="btn-create-package" class="button button--ghost">Criar pacote</button>
           <button type="button" id="btn-open-editor-file" class="button button--ghost">Abrir JSON no editor</button>
           <input type="file" id="input-editor-file" accept="application/json" hidden />
@@ -98,6 +100,23 @@
   </section>
 
   <section id="view-editor" class="shell-view" data-app-view="editor" hidden></section>
+
+  <section id="view-catalog" class="shell-view" data-app-view="catalog" hidden>
+    <div class="manager-page">
+      <div class="manager-page__header">
+        <div>
+          <p class="shell-stub__eyebrow">Catálogo do aplicativo</p>
+          <h1>Encontre seu sistema</h1>
+          <p>Instale gratuitamente os sistemas disponíveis nesta versão. Depois da preparação do app, o catálogo também funciona offline. Instalar não cria personagens.</p>
+        </div>
+        <button type="button" id="btn-catalog-import" class="button button--primary">Importar sistema JSON</button>
+      </div>
+      <label class="catalog-search">Buscar sistema <input type="search" id="catalog-search" placeholder="Nome ou ID do sistema" autocomplete="off" /></label>
+      <p id="catalog-count" role="status" aria-live="polite"></p>
+      <div id="catalog-list" class="library-grid"></div>
+      <p class="library-empty">Novos sistemas chegam pelo catálogo nas atualizações do aplicativo. Seus próprios pacotes podem ser importados em JSON.</p>
+    </div>
+  </section>
 
   <section id="view-characters" class="shell-view" data-app-view="characters" hidden>
     <div class="manager-page">
@@ -179,6 +198,12 @@
   </section>
 
   <section id="view-sheet" class="shell-view shell-view--sheet" data-app-view="sheet">
+  <div id="sheet-empty" class="library-empty" hidden>Nenhum personagem aberto. Escolha um sistema instalado ou explore o Catálogo para começar.</div>
+  <div id="removed-context-warning" class="library-card" role="alert" hidden>
+    <p>Esta ficha ou seu sistema foi removido em outra aba. A edição em memória permanece aqui para exportar; ela não será salva novamente.</p>
+    <button type="button" id="btn-export-removed" class="button button--primary">Exportar edição em memória</button>
+    <button type="button" id="btn-exit-removed" class="button button--danger">Sair da ficha removida</button>
+  </div>
   <search class="sheet-search no-print" aria-label="Busca na ficha atual">
     <div class="sheet-search__bar">
       <label for="sheet-search-input">Buscar na ficha</label>

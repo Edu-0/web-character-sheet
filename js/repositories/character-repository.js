@@ -96,7 +96,10 @@ export function createCharacter(system) {
     createdAt: now,
     updatedAt: now,
   };
-  return saveCharacter(character);
+  return withLibraryWrite(()=>{
+    if(!hasSystem(system.id))throw new Error('O sistema foi removido em outra aba. Instale-o pelo Catálogo antes de criar personagens.');
+    return saveCharacterWithinWrite(character);
+  });
 }
 
 export function duplicateCharacter(id) {

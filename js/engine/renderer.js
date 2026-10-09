@@ -38,6 +38,7 @@ export function renderSheet(host, layout, character, options = {}) {
   const sheet = element('div', `engine-sheet${sheetVariant ? ` engine-sheet--${sheetVariant}` : ''}`);
   const header = element('header', 'engine-sheet__header');
   const title = element('h1', 'engine-sheet__title', characterName(character));
+  options.onRenderSource?.(sheet, []);
   header.append(
     element('p', 'engine-sheet__eyebrow', options.system?.name || layout.system),
     title,
@@ -71,8 +72,9 @@ export function renderSheet(host, layout, character, options = {}) {
     button.id = tabId;
     button.setAttribute('role', 'tab');
     button.setAttribute('aria-controls', panelId);
+    options.onRenderSource?.(button, ['tabs',index]);
 
-    const panel = renderTab(tab, character, componentOptions);
+    const panel = renderTab(tab, character, {...componentOptions, sourcePath:['tabs',index]});
     panel.id = panelId;
     panel.setAttribute('role', 'tabpanel');
     panel.setAttribute('aria-labelledby', tabId);
@@ -155,8 +157,9 @@ export function renderSheet(host, layout, character, options = {}) {
 export function renderTab(tab, character, options = {}) {
   const variant = safeToken(tab.variant);
   const panel = element('section', `engine-panel${variant ? ` engine-panel--${variant}` : ''}`);
-  (tab.sections || []).forEach((section) => {
-    panel.appendChild(renderSection(section, character, options));
+  options.onRenderSource?.(panel, options.sourcePath || []);
+  (tab.sections || []).forEach((section,index) => {
+    panel.appendChild(renderSection(section, character, {...options,sourcePath:[...(options.sourcePath || []),'sections',index]}));
   });
   return panel;
 }
@@ -164,6 +167,7 @@ export function renderTab(tab, character, options = {}) {
 function renderSection(section, character, options) {
   const variant = safeToken(section.variant);
   const sectionEl = element('article', `engine-section${variant ? ` engine-section--${variant}` : ''}`);
+  options.onRenderSource?.(sectionEl, options.sourcePath);
   if (section.title) {
     const header = element('header', 'engine-section__header');
     header.appendChild(element('h2', 'engine-section__title', section.title));
@@ -174,8 +178,8 @@ function renderSection(section, character, options) {
   }
 
   const body = element('div', 'engine-section__body');
-  (section.containers || []).forEach((definition) => {
-    body.appendChild(renderContainer(definition, character, { ...options, searchSection: section }));
+  (section.containers || []).forEach((definition,index) => {
+    body.appendChild(renderContainer(definition, character, { ...options, searchSection: section,sourcePath:[...options.sourcePath,'containers',index] }));
   });
   sectionEl.appendChild(body);
   return sectionEl;
@@ -185,11 +189,15 @@ function renderContainer(container, character, options) {
   const layout = container.layout || { type: 'stack' };
   const variant = safeToken(container.variant);
   const content = element('div', `engine-container engine-container--${layout.type || 'stack'}${variant ? ` engine-container--${variant}` : ''}`);
+  options.onRenderSource?.(content, options.sourcePath);
   addLayoutHintClass(content, 'min', layout.min);
   addLayoutHintClass(content, 'gap', layout.gap);
 
   expandComponents(container, options.system).forEach((component, index) => {
     const wrapper = renderComponent(component, character, options);
+    // Repeat expands values, but each instance still comes from the original
+    // component definition. Labels and field values are not source identities.
+    options.onRenderSource?.(wrapper, [...options.sourcePath,'components',index % container.components.length]);
     wrapper.dataset.searchKey = componentSearchKey(options.searchSection, container, index);
     content.appendChild(wrapper);
   });

@@ -19,7 +19,13 @@ import {
   prepareSystemInstallation,
   installSystemPackage,
   reloadImportedSystems,
+  listCatalogSystems,
+  installCatalogSystem,
+  editableCatalogPackage,
+  installedPackageBase,
 } from './repositories/system-repository.js';
+import {CATALOG_KEY} from './repositories/catalog-installations.js';
+import {prepareSystemRemoval,removeSystem} from './repositories/system-removal.js';
 import { initTabs } from './tabs.js';
 import { initTheme, applyTheme, getAvailableThemes } from './theme.js';
 import { notify } from './notifications.js';
@@ -64,6 +70,8 @@ let characterSaveRevision = 0;
 let preserveMountData = false;
 let activeCharacterRaw;
 let appInitialized=false;
+let activeContextRemoved=false;
+const currentCharacter = () => activeCharacterId ? state.get() : null;
 
 async function openJsonEditor(options = {}) {
   await flushCharacterSave();
@@ -84,15 +92,15 @@ async function applyEditorPackage(editor) {
   const session=editor.session,revision=session.revision,layoutId=editor.layout.value,result=session.validate();
   if(result.status!=='ready' || !editor.lastRenderedCurrent)throw new Error('Valide e atualize o ensaio da revisão atual antes de aplicar.');
   const expectedBase=session.source.systemId===result.document.system.id?session.source.base:null;
-  const plan=prepareSystemInstallation(result.document,{expectedBase,currentCharacter:state.get()});
+  const plan=prepareSystemInstallation(result.document,{expectedBase,currentCharacter:currentCharacter()});
   const summary=`${plan.replace?'Substituir':'Instalar'} ${plan.package.system.name} (${plan.package.system.id}), revisão JSON ${revision}. ${plan.linkedIds.length} personagem(ns) vinculado(s); nenhum será migrado. Layouts removidos: ${plan.removedLayouts.join(', ') || 'nenhum'}; se necessário, a seleção usará ${plan.package.layouts[0].id}. ${plan.replace?'O pacote anterior terá cópia recuperável.':''} Avisos: ${plan.warnings.map(issue=>`${issue.path}: ${issue.message}`).join('; ') || 'nenhum'}.`;
   if(!await confirmDialog(summary,{title:'Aplicar pacote local',confirmLabel:'Confirmar aplicação'}))return;
   const assertCurrent=()=>{if(editor.disposed || editor.session!==session || session.revision!==revision || editor.layout.value!==layoutId || !editor.lastRenderedCurrent || session.validate().status!=='ready')throw new Error('A revisão/ensaio mudou durante a confirmação. Revise e confirme novamente.');if(activeCharacterId && characters.rawCharacter(activeCharacterId)!==activeCharacterRaw)throw new Error('O personagem ativo mudou em outra aba. Preserve sua edição e reabra a ficha.');};
   assertCurrent();
-  if(JSON.stringify(state.get())!==plan.activeSnapshot)throw new Error('O personagem ativo mudou durante a confirmação. Preserve a edição e tente novamente.');
+  if(JSON.stringify(currentCharacter())!==plan.activeSnapshot)throw new Error('O personagem ativo mudou durante a confirmação. Preserve a edição e tente novamente.');
   await flushCharacterSave();assertCurrent();
   const copies=session.recoveryOriginalText?[migrationCopyChange(`editor:${session.draftId}`,JSON.parse(session.recoveryOriginalText))]:[];
-  const pkg=await installSystemPackage(plan,{currentCharacter:state.get(),assertCurrent,copies});
+  const pkg=await installSystemPackage(plan,{currentCharacter:currentCharacter(),assertCurrent,copies});
   session.source={kind:'imported',systemId:pkg.system.id,base:structuredClone(pkg)};session.lastApplied={revision,systemId:pkg.system.id,appliedAt:new Date().toISOString()};
   try {refreshInstalledPackage(pkg);editor.applicationStatus.textContent=`Pacote aplicado localmente · revisão ${revision}. Rascunho preservado; abrir a ficha é uma ação separada.`;}
   catch(error){editor.applicationStatus.textContent=`Pacote salvo, ficha não remontada: ${error.message}. Exporte o rascunho e reabra a ficha pela biblioteca. O pacote anterior está na recuperação.`;}
@@ -161,9 +169,7 @@ async function init() {
       const next = available.find(character => character.id === previousId) || available[0];
       if (next) await openCharacter(next.id, {view: 'settings'});
       else {
-        genericSheetController?.destroy(); genericSheetController = null;
-        await activateSystem(DND_SYSTEM_ID);
-        updateAppState({currentCharacter: null, currentSystem: systemSummary(activePackage.system), currentView: 'characters'});
+        clearActiveContext('settings');
       }
       $('save-indicator').textContent = 'Salvo';
     },
@@ -195,7 +201,11 @@ async function init() {
   } else {
     const firstAvailable = characters.listCharacters().find((entry) => hasSystem(entry.system));
     if (firstAvailable) await openCharacter(firstAvailable.id, { view: session.currentView || 'sheet' });
-    else await createAndOpenCharacter(session.currentSystemId && hasSystem(session.currentSystemId) ? session.currentSystemId : DND_SYSTEM_ID, { notifyUser: false });
+    else {
+      const available=listSystems().filter(system=>!system.unavailable);
+      if(!available.length || session.currentSystemId===null && session.currentCharacterId===null)clearActiveContext(available.length?'systems':'catalog');
+      else await createAndOpenCharacter(session.currentSystemId && hasSystem(session.currentSystemId) ? session.currentSystemId : available[0].id, { notifyUser: false });
+    }
   }
   appPersistenceEnabled = true;
   appInitialized=true;
@@ -228,6 +238,12 @@ function initLegacyControls(initialTabId) {
 }
 
 function initShell() {
+  $('btn-export-removed').addEventListener('click',()=>storage.exportCharacterToFile(state.get()));
+  $('btn-exit-removed').addEventListener('click',()=>runAction(async()=>{
+    if(await confirmDialog('Sair desta ficha removida e descartar a edição em memória? Exporte antes de sair se quiser guardá-la.',{title:'Sair da ficha removida',confirmLabel:'Sair e descartar'})){clearActiveContext('systems');refreshLibraries();}
+  }));
+  $('catalog-search').addEventListener('input',renderCatalog);
+  $('btn-catalog-import').addEventListener('click',()=>$('input-import-system').click());
   $('btn-create-package').addEventListener('click',()=>runAction(()=>openJsonEditor()));
   $('btn-open-editor-file').addEventListener('click',()=>$('input-editor-file').click());
   $('input-editor-file').addEventListener('change',()=>runAction(async()=>{
@@ -256,6 +272,7 @@ function renderShell(appState) {
   $('secondary-actions').hidden=appState.currentView==='editor';
   $('btn-more').hidden=appState.currentView==='editor';
   if(appState.currentView==='systems')refreshEditorDrafts();
+  if(appState.currentView==='catalog')renderCatalog();
   document.querySelectorAll('[data-app-view]').forEach((view) => {
     view.toggleAttribute('hidden', view.dataset.appView !== appState.currentView);
   });
@@ -278,6 +295,8 @@ function renderShell(appState) {
   $('sheet-layout-select').disabled = !appState.currentCharacter;
   $('btn-clear-character').disabled = !appState.currentCharacter;
   $('btn-save-character').disabled = !appState.currentCharacter;
+  $('removed-context-warning').hidden=!activeContextRemoved;
+  if(activeContextRemoved)$('btn-save-character').disabled=true;
   $('btn-export').disabled = !appState.currentCharacter;
   $('sheet-search-input').disabled = !appState.currentCharacter;
   if (!appState.currentCharacter) sheetSearch?.reset();
@@ -343,6 +362,7 @@ async function openCharacter(id, { view = 'sheet' } = {}) {
   assertValid(character, value => validateCharacterForPackage(value, pkg), 'personagem');
   useSystemPackage(pkg);
   activeCharacterId = character.meta.id;
+  activeContextRemoved=false;
   activeCharacterRaw=characters.rawCharacter(character.meta.id);
   suppressCharacterEffects = true;
   state.load(character);
@@ -391,7 +411,10 @@ function mountActiveSheet(character) {
 }
 
 function updateSheetPresentation() {
-  if (!activePackage) return;
+  const available=Boolean(activePackage && activeCharacterId);
+  $('sheet-empty').hidden=available;
+  $('dnd-sheet-surfaces').hidden=!available;
+  if (!available) { $('dnd-presentation-controls').hidden=true;$('dice-tray').hidden=true;return; }
   const isDnd = activePackage.system.id === DND_SYSTEM_ID;
   const presentation = getAppState().ui.dndPresentation;
   $('sheet-layout-hint').textContent = isDnd && presentation === 'legacy'
@@ -494,6 +517,7 @@ function onCharacterChange(character) {
 
 function scheduleCharacterSave(character) {
   unsavedCharacter=true;
+  if(activeContextRemoved){$('save-indicator').textContent='Ficha removida — exporte a edição em memória';return;}
   $('save-indicator').textContent = 'Salvando...';
   clearTimeout(saveTimeout);
   const snapshot = structuredClone(character);
@@ -515,6 +539,7 @@ function scheduleCharacterSave(character) {
 
 async function flushCharacterSave({ force = false } = {}) {
   await characterSavePromise;
+  if(activeContextRemoved)throw new Error('A ficha foi removida em outra aba. Exporte a edição em memória e use “Sair da ficha removida” antes de continuar.');
   if ((!saveTimeout && !force && !unsavedCharacter) || !activeCharacterId) return;
   clearTimeout(saveTimeout);
   saveTimeout = null;
@@ -536,17 +561,65 @@ function refreshLibraries() {
   updateAppState({ availableSystems: systems, availableCharacters: characterList });
   renderSystemLibrary(systems);
   renderCharacterLibrary(characterList);
+  renderCatalog();
+}
+
+function clearActiveContext(view='systems') {
+  clearTimeout(saveTimeout);saveTimeout=null;unsavedCharacter=false;activeContextRemoved=false;++characterSaveRevision;
+  genericSheetController?.destroy();genericSheetController=null;
+  activeCharacterId=null;activeCharacterRaw=undefined;activePackage=null;activeLayout=null;
+  setSystem(null);setLayout(null);state.clearHistory();state.load({});clearHistory();
+  $('generic-sheet-host').replaceChildren();$('sheet-layout-select').replaceChildren();
+  updateAppState({currentSystem:null,currentCharacter:null,currentView:view});
+  $('save-indicator').textContent='Salvo';
+}
+
+async function deleteSystem(id) {
+  await flushCharacterSave();await flushLibraryWrites();
+  const plan=await prepareSystemRemoval(id);
+  const names=plan.characters.map(character=>`${character.name}${character.unavailable?' (indisponível)':''}`).join(', ') || 'nenhum';
+  const message=`Excluir “${plan.system.name}” e ${plan.characters.length} personagem(ns) permanentemente desta biblioteca? Personagens: ${names}. ${plan.system.source==='builtin'?'O sistema continuará no Catálogo para reinstalar; os personagens excluídos não voltarão.':'Para reinstalar este pacote próprio, será necessário importar seu JSON novamente.'} Rascunhos do editor e backups/recuperações anteriores permanecem separados. Exporte seus dados antes de excluir se quiser guardá-los.`;
+  if(!await confirmDialog(message,{title:'Excluir sistema e personagens',confirmLabel:'Excluir sistema e personagens',messageClass:'system-removal-review'}))return;
+  const result=await removeSystem(plan);
+  if(activePackage?.system.id===id)clearActiveContext('systems');
+  refreshLibraries();notify(`Sistema excluído com ${result.deletedCharacters} personagem(ns).`);
+  document.querySelector('[data-app-view-target="systems"]').focus();
+}
+
+function renderCatalog() {
+  const host=$('catalog-list');host.replaceChildren();
+  const query=$('catalog-search').value.trim().normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase();
+  const all=listCatalogSystems();
+  const entries=all.filter(entry=>`${entry.name} ${entry.id}`.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().includes(query));
+  $('catalog-count').textContent=`${entries.length} de ${all.length} sistema(s) · ${all.filter(entry=>entry.installed).length} instalado(s)`;
+  for(const entry of entries){
+    const card=element('article','library-card');card.dataset.systemId=entry.id;
+    const header=element('div','library-card__header');
+    header.append(element('h2','library-card__title',entry.name),element('span','library-card__badge',entry.installed?'Instalado':'Disponível'));
+    const button=actionButton(entry.installed?'Instalado':'Instalar','button button--primary',()=>runAction(async()=>{
+      button.disabled=true;
+      try{await installCatalogSystem(entry.id);refreshLibraries();notify(`${entry.name} instalado. Abra pela biblioteca de Sistemas para criar ou escolher um personagem.`);}
+      finally{if(button.isConnected)button.disabled=hasSystem(entry.id);}
+    }));
+    button.disabled=entry.installed;
+    const actions=element('div','library-card__actions');actions.append(button);
+    if(entry.installed)actions.append(actionButton('Ver em Sistemas','button button--ghost',()=>{setAppState('currentView','systems');[...$('systems-list').children].find(card=>card.dataset.systemId===entry.id)?.querySelector('button')?.focus();}));
+    card.append(header,element('p','library-card__meta',`${entry.layoutCount} layout(s) · ${entry.id}`),actions);host.append(card);
+  }
+  if(!entries.length)host.append(element('p','library-empty','Nenhum sistema encontrado. Tente outro nome ou importe seu JSON.'));
 }
 
 function renderSystemLibrary(systems) {
   const container = $('systems-list');
   container.innerHTML = '';
+  if(!systems.length)container.append(element('p','library-empty','Nenhum sistema instalado. Explore o Catálogo ou importe um pacote JSON para começar.'));
   systems.forEach((system) => {
     const card = element('article', `library-card${activePackage?.system.id === system.id ? ' library-card--current' : ''}`);
+    card.dataset.systemId=system.id;
     const header = element('div', 'library-card__header');
     header.append(
       element('h2', 'library-card__title', system.name),
-      element('span', 'library-card__badge', system.source === 'builtin' ? 'Embutido' : 'Importado'),
+      element('span', 'library-card__badge', system.source === 'builtin' ? 'Do catálogo' : 'Importado'),
     );
     const actions = element('div', 'library-card__actions');
     actions.append(
@@ -560,6 +633,19 @@ function renderSystemLibrary(systems) {
         await openJsonEditor({text:JSON.stringify(pkg,null,2),source:{kind:system.source==='builtin'?'copy':'imported',systemId:pkg.system.id,base:system.source==='builtin'?null:original}});
       })),
     );
+    actions.append(actionButton('Excluir sistema','button button--danger',()=>runAction(()=>deleteSystem(system.id))));
+    if(system.source==='builtin')actions.insertBefore(actionButton('Editar pacote','button button--ghost',()=>runAction(async()=>{
+      await flushCharacterSave();
+      const pkg=await editableCatalogPackage(system.id);
+      // Materializar a cópia local não altera regras, personagem ou catálogo.
+      // O pacote ativo passa a usar a mesma base para o preflight/autosave.
+      if(activePackage?.system.id===system.id){
+        if(JSON.stringify(activePackage)!==JSON.stringify(pkg))throw new Error('O pacote ativo mudou em outra aba. Exporte suas edições e reabra a ficha antes de editar o pacote.');
+        activePackage=structuredClone(pkg);
+      }
+      refreshLibraries();
+      await openJsonEditor({text:JSON.stringify(pkg,null,2),source:{kind:'imported',systemId:pkg.system.id,base:pkg}});
+    })),actions.lastChild);
     if(system.unavailable) { actions.querySelector('button').disabled=true; card.appendChild(element('p','library-card__warning','Pacote indisponível. Exporte o original ou a recuperação para corrigir.')); }
     card.append(header, element('p', 'library-card__meta', `${system.layoutCount} layout(s) disponível(is)`), actions);
     container.appendChild(card);
@@ -629,7 +715,11 @@ function wireToolbar() {
     applyTheme(themes[(themes.indexOf(current) + 1) % themes.length]);
   });
 
-  const createCurrent = () => runAction(() => createAndOpenCharacter(activePackage?.system.id || DND_SYSTEM_ID));
+  const createCurrent = () => runAction(() => {
+    const id=activePackage?.system.id || listSystems().find(system=>!system.unavailable)?.id;
+    if(id)return createAndOpenCharacter(id);
+    setAppState('currentView','catalog');notify('Instale um sistema pelo Catálogo ou importe seu JSON para criar personagens.');
+  });
   $('btn-new-character').addEventListener('click', createCurrent);
   $('btn-library-new-character').addEventListener('click', createCurrent);
 
@@ -684,12 +774,12 @@ function wireToolbar() {
     await runAction(async () => {
       let pkg;
       await flushCharacterSave();
-      try { pkg = await importSystemPackage(file,{currentCharacter:state.get(),confirmMigration}); }
+      try { pkg = await importSystemPackage(file,{currentCharacter:currentCharacter(),confirmMigration}); }
       catch (error) {
         if (error.code !== 'system-conflict') throw error;
         if (!await confirmDialog('Substituir este sistema? Personagens existentes serão preservados, mas o novo layout pode ser incompatível.', {title: 'Sistema já existente', confirmLabel: 'Substituir sistema'})) return;
         await flushCharacterSave();
-        pkg = await importSystemPackage(file, {replace: true,currentCharacter:state.get(),confirmMigration,expectedBase:error.base});
+        pkg = await importSystemPackage(file, {replace: true,currentCharacter:currentCharacter(),confirmMigration,expectedBase:error.base});
         state.clearHistory();
         refreshInstalledPackage(pkg);
       }
@@ -808,8 +898,8 @@ function systemSummary(system) {
 
 function persistAppState(appState) {
   storage.saveAppSession({
-    currentSystemId: appState.currentSystem?.id ?? null,
-    currentCharacterId: appState.currentCharacter?.id ?? null,
+    currentSystemId: activeContextRemoved ? null : appState.currentSystem?.id ?? null,
+    currentCharacterId: activeContextRemoved ? null : appState.currentCharacter?.id ?? null,
     currentView: appState.currentView==='editor'?'systems':appState.currentView,
     activeTab: appState.ui.activeTab,
     dndPresentation: appState.ui.dndPresentation,
@@ -849,9 +939,19 @@ window.addEventListener('beforeunload', event => {
 });
 window.addEventListener('character:saved',event=>{if(event.detail.id===activeCharacterId)activeCharacterRaw=event.detail.raw;});
 window.addEventListener('storage',event=>{
-  if(event.key==='ficha-rpg:v2:systems'){
+  if(event.key===CATALOG_KEY || event.key==='ficha-rpg:v2:systems' || event.key?.startsWith('ficha-rpg:v2:characters:')){
     reloadImportedSystems();refreshLibraries();
-    if(activePackage && listSystems().some(system=>system.id===activePackage.system.id && system.source==='imported'))notify('A biblioteca de sistemas mudou em outra aba. Suas edições continuam em memória; reabra a ficha antes de salvar com as novas regras.',{type:'error'});
+    if(activeCharacterId && (!hasSystem(activePackage.system.id) || event.key===`ficha-rpg:v2:characters:${activeCharacterId}` && event.newValue===null)){
+      if(unsavedCharacter || saveTimeout){
+        clearTimeout(saveTimeout);saveTimeout=null;activeContextRemoved=true;
+        $('save-indicator').textContent='Ficha removida — exporte a edição em memória';renderShell(getAppState());
+        persistAppState(getAppState());
+        notify('A ficha foi removida em outra aba. Exporte a edição em memória antes de sair.',{type:'error',duration:10000});
+      }else clearActiveContext(getAppState().currentView==='editor'?'editor':'systems');
+    }else if(event.key==='ficha-rpg:v2:systems' && activePackage){
+      const installed=installedPackageBase(activePackage.system.id);
+      if(installed && JSON.stringify(installed)!==JSON.stringify(activePackage))notify('A biblioteca de sistemas mudou em outra aba. Suas edições continuam em memória; reabra a ficha antes de salvar com as novas regras.',{type:'error'});
+    }
   }
 });
 let lastStorageMessage = ''; let lastStorageWarning = 0;
@@ -862,6 +962,9 @@ window.addEventListener('storage:problem', event => {
 
 init().catch((error) => {
   console.error(error);
+  // Keep recovery reachable when bootstrap stops on an invalid installation
+  // selection. No failed initialization may overwrite the original selection.
+  setAppState('currentView','settings');
   notify(`Erro ao iniciar a aplicação: ${error.message}`, { type: 'error', duration: 8000 });
 });
 

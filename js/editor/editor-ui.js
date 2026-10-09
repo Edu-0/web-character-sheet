@@ -2,6 +2,7 @@ import {EditorSession} from './session.js';
 import {PreviewHost} from './preview-host.js';
 import {minimalPackage} from './minimal-package.js';
 import {locateDiagnostic} from './source-map.js';
+import {previewSources,sourceAtOffset,textareaOffset,sourceOffset} from './source-navigation.js';
 import {downloadJson,downloadText} from '../storage.js';
 import {confirmDialog,openModal} from '../modal.js';
 import {saveDraft,readDraft,decodeDraft} from './draft-repository.js';
@@ -54,8 +55,13 @@ export class JsonEditor {
     this.area.addEventListener('select',()=>this.scheduleDraft());this.area.addEventListener('scroll',()=>this.scheduleDraft());
     this.area.addEventListener('compositionstart',()=>{this.composing=true;clearTimeout(this.validationTimer);});
     this.area.addEventListener('compositionend',()=>{this.composing=false;this.changed();});
-    this.area.addEventListener('keydown',event=>{if(event.isComposing || event.altKey || !(event.ctrlKey||event.metaKey))return;const key=event.key.toLowerCase();if(key==='z'||key==='y'){event.preventDefault();event.stopPropagation();this.session.replay(key==='y'||event.shiftKey?'redo':'undo');this.changed(true);}if(key==='s'){event.preventDefault();this.run(()=>this.saveDraft());}});
-    left.append(label,this.area);body.append(left);
+    this.area.addEventListener('keydown',event=>{
+      if(event.isComposing || this.composing)return;
+      if(event.altKey && event.key==='Enter'){event.preventDefault();event.stopPropagation();this.run(()=>this.showSourceInPreview());return;}
+      if(event.altKey || !(event.ctrlKey||event.metaKey))return;const key=event.key.toLowerCase();if(key==='z'||key==='y'){event.preventDefault();event.stopPropagation();this.session.replay(key==='y'||event.shiftKey?'redo':'undo');this.changed(true);}if(key==='s'){event.preventDefault();this.run(()=>this.saveDraft());}
+    });
+    this.showPreview=el('button','Mostrar na prévia','button button--ghost');this.showPreview.type='button';this.showPreview.setAttribute('aria-keyshortcuts','Alt+Enter');this.showPreview.addEventListener('click',()=>this.run(()=>this.showSourceInPreview()));
+    left.append(label,this.showPreview,this.area);body.append(left);
     this.previewSection=el('section','','editor-preview');this.previewSection.dataset.editorPanel='preview';
     this.previewSection.append(el('h2','Prévia'),el('p','Ensaio — não altera seus personagens. A amostra vem do template e suas edições são efêmeras.','editor-note'));
     const tools=el('div','','editor-preview-tools');
@@ -65,15 +71,58 @@ export class JsonEditor {
     this.theme.addEventListener('change',()=>{this.session.ui.theme=this.theme.value;this.preview.appearance({theme:this.theme.value,palette:document.documentElement.dataset.palette || 'classic'});this.scheduleDraft();});
     this.width=select('Largura do ensaio',[['auto','Automática'],['360','360 px'],['768','768 px'],['1280','1280 px']]);this.width.value=this.session.ui.width || 'auto';this.width.addEventListener('change',()=>{this.session.ui.width=this.width.value;this.frameWrap.style.setProperty('--preview-width',this.width.value==='auto'?'100%':`${this.width.value}px`);this.scheduleDraft();});
     const update=el('button','Atualizar / reiniciar ensaio','button button--primary');update.type='button';update.addEventListener('click',()=>this.run(()=>this.updatePreview()));tools.append(update);
+    this.locating=false;this.locate=el('button','Localizar no JSON','button button--ghost');this.locate.type='button';this.locate.setAttribute('aria-pressed','false');this.locate.addEventListener('click',()=>this.setLocating(!this.locating));tools.append(this.locate);
+    const navigationHelp=el('p','Localizar no JSON: ative e clique/toque em texto, campo ou botão para selecionar seu bloco completo, sem executar ações. Tab e Enter também localizam; Escape desativa. Do JSON, use Mostrar na prévia ou Alt+Enter.','editor-note');navigationHelp.id='editor-navigation-help';
+    this.locate.setAttribute('aria-describedby',navigationHelp.id);this.showPreview.setAttribute('aria-describedby',navigationHelp.id);
+    this.navigationStatus=el('p');this.navigationStatus.id='editor-navigation-status';this.navigationStatus.setAttribute('role','status');
     this.previewStatus=el('p');this.previewStatus.id='editor-preview-status';this.previewStatus.setAttribute('role','status');this.frameWrap=el('div','','editor-frame-wrap');
-    this.previewSection.append(tools,this.previewStatus,this.frameWrap);body.append(this.previewSection);root.append(body);
+    this.previewSection.append(tools,navigationHelp,this.previewStatus,this.frameWrap);body.append(this.previewSection);root.append(this.navigationStatus,body);
     this.diagnostics=el('section','','editor-diagnostics');this.diagnostics.dataset.editorPanel='diagnostics';this.diagnostics.append(el('h2','Diagnósticos'));
     this.summary=el('p');this.summary.id='editor-validation-summary';this.summary.setAttribute('role','status');this.issues=el('ul');this.diagnostics.append(this.summary,this.issues);root.append(this.diagnostics);
     this.frameWrap.style.setProperty('--preview-width',this.width.value==='auto'?'100%':`${this.width.value}px`);
-    this.preview=new PreviewHost(this.frameWrap,{sessionId:this.session.draftId,onDiagnostic:message=>{this.runtimeError=message;this.refresh();}});
+    this.preview=new PreviewHost(this.frameWrap,{sessionId:this.session.draftId,onDiagnostic:message=>{this.runtimeError=message;this.refresh();},onSource:message=>this.pickSource(message),onInspectionEnd:()=>this.setLocating(false)});
     this.area.value=this.session.text;this.panel(this.session.ui.panel || 'json');
   }
   panel(value) {this.host.dataset.editorPanel=value;for(const button of this.tabs.children)button.setAttribute('aria-pressed',String(button.dataset.panel===value));}
+  setLocating(enabled) {
+    this.locating=enabled===true && this.lastRenderedCurrent;
+    this.locate.setAttribute('aria-pressed',String(this.locating));this.preview.inspect(this.locating);
+    this.navigationStatus.textContent=this.locating?'Localizar ativo: clique/toque ou use Enter no elemento. As ações da prévia estão suspensas.':'Localizar desativado: a prévia está interativa.';
+  }
+  navigationReady() {
+    if(this.disposed || !this.lastRenderedCurrent || this.lastRendered?.revision!==this.session.revision || this.lastRendered?.layoutId!==this.layout.value) {
+      this.navigationStatus.textContent='Atualize o ensaio da revisão e do layout atuais antes de navegar entre JSON e prévia.';return false;
+    }
+    return true;
+  }
+  pickSource(message) {
+    if(!this.navigationReady() || ['sessionId','generation','revision','layoutId'].some(key=>message[key]!==this.lastRendered[key]))return;
+    const range=this.session.validation.locations.get(message.pointer);if(!range)return;
+    const line=this.selectJsonRange(range);
+    this.navigationStatus.textContent=`Bloco selecionado no JSON: ${message.pointer} · linha ${line}. O texto não foi alterado.`;this.scheduleDraft();
+  }
+  selectJsonRange(range) {
+    const start=textareaOffset(this.session.text,range.start),end=textareaOffset(this.session.text,range.end),display=this.area.value;
+    let line=1;for(let i=0;i<start;i++)if(display[i]==='\n')line++;
+    this.session.ui.panel='json';this.panel('json');this.area.focus();this.area.setSelectionRange(start,end);
+    this.area.scrollTop=Math.max(0,(line-1)*parseFloat(getComputedStyle(this.area).lineHeight)-this.area.clientHeight/3);this.area.scrollLeft=0;this.area.scrollIntoView({block:'nearest'});
+    return line;
+  }
+  async showSourceInPreview() {
+    if(!this.navigationReady())return;
+    const session=this.session,context=this.lastRendered;
+    const sources=previewSources(session.lastValid.package,context.layoutId),pointer=sourceAtOffset(session.validation.locations,sources,sourceOffset(session.text,this.area.selectionStart));
+    if(!pointer){this.navigationStatus.textContent='Este trecho não tem elemento direto no layout de ensaio. Posicione o cursor em um componente, seção, aba, layout ou cabeçalho visível.';return;}
+    // Reveal the mobile panel before the frame computes geometry and scrolls.
+    const previousPanel=this.host.dataset.editorPanel;this.panel('preview');
+    let result;
+    try{result=await this.preview.revealSource(pointer);}
+    catch(error){if(!this.disposed && session===this.session && context===this.lastRendered)this.panel(previousPanel);throw error;}
+    if(this.disposed || session!==this.session || context!==this.lastRendered || !this.navigationReady())return;
+    if(!result.found){this.panel(previousPanel);this.navigationStatus.textContent='Este bloco não gerou elemento na prévia atual (por exemplo, repetição sem entradas).';return;}
+    this.session.ui.panel='preview';this.panel('preview');this.frameWrap.scrollIntoView({block:'nearest'});
+    this.navigationStatus.textContent=`Localizado na prévia: ${pointer} · ${result.count} ocorrência(s) destacada(s).`;this.scheduleDraft();
+  }
   changed(sync=false) {
     clearTimeout(this.validationTimer);this.lastRenderedCurrent=false;
     this.status.textContent=this.draftConflict?`Revisão ${this.session.revision} em memória; conflito com outra aba. Salve como cópia ou baixe o rascunho.`:`Revisão ${this.session.revision} em memória; salvamento do rascunho pendente.`;
@@ -92,7 +141,7 @@ export class JsonEditor {
     if(validated){
       this.summary.textContent=`${result.status==='ready'?'Contrato válido':result.status==='needsMigration'?'Normalização requer confirmação':result.status==='unsupported'?'Versão não suportada':'JSON inválido'} · ${result.diagnostics.length} diagnóstico(s).`;
       this.issues.replaceChildren();for(const issue of result.diagnostics){const li=el('li'),button=el('button',`${issue.severity}: ${issue.pointer || issue.path || '/'} — ${issue.message}`);button.type='button';
-        button.addEventListener('click',()=>{const range=issue.location || locateDiagnostic(session.text,result.locations,issue);this.panel('json');this.area.focus();if(range)this.area.setSelectionRange(range.start,range.end);});li.append(button);this.issues.append(li);}
+        button.addEventListener('click',()=>{const range=issue.location || locateDiagnostic(session.text,result.locations,issue);if(range)this.selectJsonRange(range);else{this.panel('json');this.area.focus();}});li.append(button);this.issues.append(li);}
       const layouts=session.lastValid?.package.layouts || [], selected=session.ui.layoutId || layouts[0]?.id;
       if(result.status==='ready'){
         const impact=identityImpact(session.source.base,result.document), references=knownReferences(result.document);
@@ -104,12 +153,15 @@ export class JsonEditor {
     this.lastRenderedCurrent=this.lastRendered?.revision===session.revision && this.lastRendered.layoutId===this.layout.value && !this.runtimeError && validated && result.status==='ready';
     this.previewStatus.textContent=this.runtimeError?`Erro de execução: ${this.runtimeError}. Prévia anterior mantida.`:this.lastRenderedCurrent?`Ensaio da revisão ${session.revision} · ${this.layout.value}`:this.lastRendered?`Prévia desatualizada — revisão ${this.lastRendered.revision}. Atualize explicitamente após terminar a interação.`:'Nenhuma prévia válida ainda. Valide o JSON e atualize o ensaio.';
     this.apply.disabled=!this.lastRenderedCurrent;
+    this.locate.disabled=!this.lastRenderedCurrent;this.showPreview.disabled=!this.lastRenderedCurrent;
+    if(!this.lastRenderedCurrent && this.locating)this.setLocating(false);
     if(session.history.boundary)this.status.textContent='Edição preservada; o limite do histórico encerrou operações anteriores.';
   }
   async updatePreview() {
     const result=this.session.validate();this.refresh();if(result.status!=='ready')throw new Error('Corrija o documento atual antes de atualizar o ensaio.');
     const revision=this.session.revision, layoutId=this.layout.value, session=this.session,request=Symbol();this.previewRequest=request;
     this.runtimeError=null;this.previewStatus.textContent='Montando ensaio…';
+    this.setLocating(false);this.lastRenderedCurrent=false;this.locate.disabled=true;this.showPreview.disabled=true;
     try {const context=await this.preview.mount(result.document,{revision,layoutId,appearance:{theme:this.theme.value,palette:document.documentElement.dataset.palette || 'classic'}});if(this.disposed||session!==this.session||request!==this.previewRequest)return;this.runtimeError=null;this.preview.appearance({theme:this.theme.value,palette:document.documentElement.dataset.palette || 'classic'});this.lastRendered=context;this.refresh();}
     catch(error){if(this.disposed||session!==this.session||request!==this.previewRequest)return;this.runtimeError=error.message;this.refresh();throw error;}
   }

@@ -111,10 +111,10 @@ self.addEventListener('message', event => {
       const checks=await Promise.all(clients.map(client=>new Promise(resolve=>{
         const channel=new MessageChannel(),timer=setTimeout(()=>finish(false),1500);
         const finish=safe=>{clearTimeout(timer);channel.port1.close();resolve(safe);};
-        channel.port1.onmessage=({data})=>finish(data?.protocol===1 && data.locks===true);
+        channel.port1.onmessage=({data})=>finish(data?.protocol===2 && data.locks===true);
         client.postMessage({type:'LIBRARY_WRITE_PROBE'},[channel.port2]);
       })));
-      event.ports[0].postMessage({protocol:1,safe:checks.every(Boolean),clients:clients.length});
+      event.ports[0].postMessage({protocol:2,safe:checks.every(Boolean),clients:clients.length});
     })());return;
   }
   if (!['OFFLINE_STATUS', 'OFFLINE_PREPARE'].includes(event.data?.type) || !event.ports[0]) return;

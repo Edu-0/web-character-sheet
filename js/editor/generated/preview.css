@@ -3019,4 +3019,8 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .print-options__choices small, #print-options-hint { color: var(--color-text-muted); font-size: 13px; line-height: 1.5; }
 #print-options-hint { margin: 12px 0 0; }
 
+/* Included only in the sandbox bundle. The active character has no inspector. */
+body[data-editor-inspecting],body[data-editor-inspecting] *{cursor:crosshair!important}
+[data-editor-source-highlight]{outline:3px solid var(--color-accent);outline-offset:3px;box-shadow:0 0 0 6px var(--color-panel);border-radius:4px}
+
 body{padding:16px}#preview-sheet{min-width:0}.modal-overlay[hidden]{display:none}

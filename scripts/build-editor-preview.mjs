@@ -20,7 +20,7 @@ export async function buildEditorPreview({check=false}={}) {
     if (forbidden.test(path.replace(/^preview-local:/,''))) throw new Error(`Import proibido no ensaio: ${path}`);
     if (entry.imports.some(item=>item.external)) throw new Error(`Dependência externa no ensaio: ${path}`);
   }
-  const paths=['variables','base','components','engine','character-sheet','artwork','refinement'];
+  const paths=['variables','base','components','engine','character-sheet','artwork','refinement','editor-preview'];
   const css=(await Promise.all(paths.map(name=>readFile(new URL(`css/${name}.css`,root),'utf8')))).join('\n')+'\nbody{padding:16px}#preview-sheet{min-width:0}.modal-overlay[hidden]{display:none}';
   if (/@import|url\(\s*['"]?https?:/i.test(css)) throw new Error('CSS de prévia tem rede externa.');
   const outputs=new Map([['preview.js',result.outputFiles[0].text],['preview.css',css]]);

@@ -1,5 +1,7 @@
 # Editor JSON com prévia
 
+Sistemas instalados pelo [Catálogo](catalog.md) também oferecem **Editar pacote**, com o mesmo ID, em uma cópia local; o original do catálogo permanece intacto. **Editar cópia** cria uma variante com outro ID. Aplicar a edição verifica a base e os personagens vinculados antes de substituir a instalação.
+
 Em **Sistemas**, escolha **Criar pacote**, **Abrir JSON**, **Editar cópia** em um sistema embutido ou **Editar pacote** em um importado. Abrir apenas inicia a edição; **Aplicar pacote** instala as regras na biblioteca local depois de uma confirmação.
 
 O texto JSON é a fonte da edição. Erros de sintaxe, chaves duplicadas, números que perderiam precisão e erros de contrato aparecem em **Diagnósticos**. Clique para ir ao trecho correspondente. Texto inválido continua editável, salvável como rascunho e baixável. **Formatar JSON**, **Normalizar aliases** e **Restaurar última válida** são comandos explícitos e podem ser desfeitos. A normalização conserva um original baixável.
@@ -13,6 +15,16 @@ O texto JSON é a fonte da edição. Erros de sintaxe, chaves duplicadas, númer
 Escolha layout, tema e largura para experimentar a apresentação. No celular, alterne **JSON / Diagnósticos / Prévia**. Após editar o texto, a prévia anterior fica sinalizada como desatualizada até o próximo comando de atualização. Uma falha de montagem conserva o último ensaio bem-sucedido. A prévia aceita imagens embutidas em Data URL e uploads locais; imagens por URL e acesso à rede ficam bloqueados. Ela não executa scripts do pacote.
 
 Os oito sistemas embutidos e seus layouts podem ser ensaiados. Uma cópia D&D recebe um novo ID e oferece os componentes modulares; estática e comparação continuam associadas ao D&D original. Mecânicas novas exigem suporte da engine. Este editor não inclui formulários, toolbox, arrasto ou impressão da prévia.
+
+## Navegar entre JSON e prévia
+
+Ative **Localizar no JSON** e clique ou toque em qualquer texto, campo ou botão da prévia. O editor seleciona e rola até o objeto completo do componente, em vez de uma propriedade interna. Títulos, abas e espaços de um container apontam para seu próprio bloco; o cabeçalho aponta para o nome do sistema ou para o template. Listas apontam para sua definição externa, inclusive ao tocar numa entrada. Ajuda e modais apontam para o componente de origem.
+
+Enquanto esse modo estiver ativo, cliques/toques localizam sem executar ações ou editar campos do ensaio. Pelo teclado, use **Tab** e **Enter** (ou Espaço) no elemento. **Escape**, dentro da prévia, desativa o modo; o botão também o alterna. Fora dele, cliques e duplos cliques mantêm a interação normal.
+
+No sentido inverso, posicione o cursor no JSON e use **Mostrar na prévia** ou **Alt+Enter**. A prévia abre a aba correspondente, rola até o elemento e destaca suas ocorrências. Uma definição com `repeat` destaca todos os componentes que ela gerou; cada ocorrência leva ao mesmo objeto original. No celular, o painel alterna automaticamente nos dois sentidos. Nenhum desses comandos altera o texto, formata o pacote ou cria uma operação de desfazer.
+
+A navegação exige a prévia da revisão e do layout atuais. Depois de editar, use **Atualizar / reiniciar ensaio**; uma prévia antiga não aponta para offsets potencialmente errados. Regras, fórmulas e extras sem representação direta nesse layout não têm alvo visual automático. Uma repetição vazia pode ter definição JSON e nenhum elemento renderizado, caso informado pelo editor.
 
 ## Recuperar e exportar
 

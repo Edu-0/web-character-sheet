@@ -72,13 +72,13 @@ function recoverTransactionsWithinWrite() {
 }
 
 export function transact(changes) {return withLibraryWrite(()=>transactWithinWrite(changes));}
-export function transactWithinWrite(changes) {
+export function transactWithinWrite(changes, {confirmedDeletionKeys = []} = {}) {
   if(!inLibraryWrite())throw new Error('Gravação exige o coordenador comum.');
   recoverTransactionsWithinWrite();
   const next = new Map(changes);
   const before = [...next.keys()].map(key => [key, readRaw(key)]).filter(([key, value]) => next.get(key) !== value);
   if (!before.length) return;
-  for (const [key] of before) if (unsupportedKeys.has(key)) throw new Error('Versão não suportada: o documento original está protegido contra gravação. Exporte a recuperação.');
+  for (const [key] of before) if (unsupportedKeys.has(key) && !(next.get(key)===null && confirmedDeletionKeys.includes(key))) throw new Error('Versão não suportada: o documento original está protegido contra gravação. Exporte a recuperação.');
   for (const [key] of before) if (protectedKeys.has(key)) {
     const entry = recovery.get(key);
     if (entry) preserveRaw(key, entry.raw, entry.reason);

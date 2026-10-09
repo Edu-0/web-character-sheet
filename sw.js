@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "a72d9df3faf396b6fd04";
+const VERSION = "b599b6f6fc0d41cfe520";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -46,12 +46,16 @@ const ASSETS = [
     "hash": "5368e972fbd2c6989f6e42ce33aedf8564023a241f9b11bf2ecb311cef23891a"
   },
   {
+    "path": "css/editor-preview.css",
+    "hash": "76132a90c0a36a7dad54fabb524c6e39328585621cf28ff50426645480a07874"
+  },
+  {
     "path": "css/editor.css",
-    "hash": "de4ceb3ead354747d446e223cf2405afeff60cea8659c42166189ccb38e3276c"
+    "hash": "8436e12d7a889d095cef3bf058cde2b7acb14f2b5c9250a61d8ec60cbaf283f9"
   },
   {
     "path": "css/engine-shell.css",
-    "hash": "86daf0fb2e71870dae0c14b0cb376ed0954b16ae64518d7bf64341c3cc70eb0a"
+    "hash": "7b06342cfe7c3692affa0b182461c310d9efe639640a6000f41a606cc2e50715"
   },
   {
     "path": "css/engine.css",
@@ -179,7 +183,7 @@ const ASSETS = [
   },
   {
     "path": "index.html",
-    "hash": "c30c332d3a1b540ee4839c08e3b4e0d1d80a627ebba39815da3758d81f3ea4dd"
+    "hash": "ce12aa7a03216e4049c8a417f19046cd804169b5ba96796704c3a8d0783aab3e"
   },
   {
     "path": "js/app-state.js",
@@ -187,7 +191,7 @@ const ASSETS = [
   },
   {
     "path": "js/app.js",
-    "hash": "986e14a950a77331d816ae30fef827035d6a041f612e6fcb5e5d3d2c5f9b4d10"
+    "hash": "501595e00b6e7b55bc18add7c8531e994ae1b83b37507ba30b8cfb52a61bf530"
   },
   {
     "path": "js/appearance.js",
@@ -199,7 +203,7 @@ const ASSETS = [
   },
   {
     "path": "js/backup-controls.js",
-    "hash": "8d5d5c36adffefb62b16fde51d67ac37c62e3b9021b537afd1c4e8b362503aae"
+    "hash": "a257e838eb8a243ef6053f1798f2b698ad48569ddc32fb814c357ad52403547a"
   },
   {
     "path": "js/calculation-settings.js",
@@ -235,15 +239,15 @@ const ASSETS = [
   },
   {
     "path": "js/editor/editor-ui.js",
-    "hash": "c66bf5c7c9e8362d159dd4e00098e47bd3f4e13f543983335f256aa3bc13461d"
+    "hash": "64455fd600b4f64dfb63cad252a627b6e5de28968e8bc7bf1efed872303fb65b"
   },
   {
     "path": "js/editor/generated/preview.css",
-    "hash": "2a98fe676f5107fc8101c5e39c536b5bee844fce9ae4395c02bbdb8e63e9c49c"
+    "hash": "678300993ec01ed576c811a002f079f7dfc945e9250b5a0215024074b9d3cc87"
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "c04ab124517aec49dbaf0584a9ae570e5bd7cc5c1da49616e7266ecff65391ec"
+    "hash": "c9e7cc758b376d58f36ed19bb5197827b373c9431f1d387d57a6b015759df3fa"
   },
   {
     "path": "js/editor/history.js",
@@ -267,11 +271,15 @@ const ASSETS = [
   },
   {
     "path": "js/editor/preview-entry.js",
-    "hash": "560d618f1b3e10c8e874a5c383b6b7eb073802482c43447fa703848b5cdfa107"
+    "hash": "89023f8240c88ee41c72cc1c317e2b0ee2af3ecb998f1ac63b06280b8819d6bb"
   },
   {
     "path": "js/editor/preview-host.js",
-    "hash": "fc08f963b8c4746e7939cde330df91c25576ab26dff8d28e96c8a74133c961dc"
+    "hash": "f1b1ab1a80b07e28c992a3da559554bc6779f07a5a43a9b9cc694c05d828218e"
+  },
+  {
+    "path": "js/editor/preview-navigation.js",
+    "hash": "87b47c6400b6d73330ffc45f8fa8644ee3cb02336baf366636d67e2133990d06"
   },
   {
     "path": "js/editor/preview-protocol.js",
@@ -288,6 +296,10 @@ const ASSETS = [
   {
     "path": "js/editor/source-map.js",
     "hash": "3dd00923e74a55c718889cc744551496e3371ba28fa2091403970d1a6aed205b"
+  },
+  {
+    "path": "js/editor/source-navigation.js",
+    "hash": "44d1563d9b3c5568d84b3ee3c285978e1f1bff4af1149a2c53a14432a14bd77f"
   },
   {
     "path": "js/editor/validation.js",
@@ -423,7 +435,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/renderer.js",
-    "hash": "89f90d9ad1260bb9f9980e8e173e43600727b9444ec74cf046b0b334aee70726"
+    "hash": "db7c00277211d0f15c55010d266dafc0be350fb438cc8f0546bf39b4937add2d"
   },
   {
     "path": "js/engine/resolution.js",
@@ -475,7 +487,7 @@ const ASSETS = [
   },
   {
     "path": "js/library-backup.js",
-    "hash": "52013bdcc020d70390183e8f987ca815988206153aa0acb97bec2829737025c7"
+    "hash": "b8bb018a94d933d9edab7892160c9138f7e91189f3ae7caddaf9d3ad549bb8ca"
   },
   {
     "path": "js/migrations/index.js",
@@ -483,7 +495,7 @@ const ASSETS = [
   },
   {
     "path": "js/modal.js",
-    "hash": "871c2e6ba8aca259b519a45a133aa8054900501b58270ff4fda9d66800a96f43"
+    "hash": "51a1ff65a09d1cd67bfee786788f8be58ec49adbb82e2297743289bf6c90c477"
   },
   {
     "path": "js/notifications.js",
@@ -491,7 +503,7 @@ const ASSETS = [
   },
   {
     "path": "js/persistence.js",
-    "hash": "f76131373962ceb1082988f48afbf1cb1d26c9f818df7253c817f9805fa5f016"
+    "hash": "f8731fcf0d8d3607ceb972511be90a07686ce4dd0c4818dd42d5b5a2c3c51e24"
   },
   {
     "path": "js/printing.js",
@@ -502,16 +514,24 @@ const ASSETS = [
     "hash": "97bfa206b21735b0d3e17c467c99a8caf2e9cba26563ec20d1a4e8cb5cca88c7"
   },
   {
+    "path": "js/repositories/catalog-installations.js",
+    "hash": "4f5c33c9365b40557bd382a7b564c6cad3de3791db435c670b8b896d2d780a8d"
+  },
+  {
     "path": "js/repositories/character-repository.js",
-    "hash": "b2133ae765101820ee262483690a612183a04a9df298b3578a47ed8dfa314ca5"
+    "hash": "5c87dbc31cbd67a81be8ea87e0900fb3606dbf6deaef8838ddc2c650ecbcad38"
   },
   {
     "path": "js/repositories/package-installation.js",
     "hash": "1a078887f04d3384daa985cf32309bbffbec2af026ec51def36619b827586711"
   },
   {
+    "path": "js/repositories/system-removal.js",
+    "hash": "36169ee470aafcf909e7f1fb5008534f23faa8375e6f95c4062249ddffd72449"
+  },
+  {
     "path": "js/repositories/system-repository.js",
-    "hash": "94d5f031f246520f053cc87b701a5a9fa7484cec25daf40b9cf708c50e03110a"
+    "hash": "122d5630ad38d249889559690e988084fcf0922569d4837d3f14938e0464239d"
   },
   {
     "path": "js/sheet-layouts.js",
@@ -563,7 +583,11 @@ const ASSETS = [
   },
   {
     "path": "js/validation/backup.js",
-    "hash": "ec9781067ed2d34202ed141d17d070c71f5c35008335531f2aa2891d552367e1"
+    "hash": "4ce1a50fcd8739ea086b846bc7a089731f0f493a2accb450752f81e8e38fa77a"
+  },
+  {
+    "path": "js/validation/catalog.js",
+    "hash": "beda9ba194c9971424ed18e3666b14a0ccbbac7765b7a829b793eb85e25f549c"
   },
   {
     "path": "js/validation/checks.js",
@@ -615,7 +639,7 @@ const ASSETS = [
   },
   {
     "path": "js/write-coordinator.js",
-    "hash": "b1e1286978c7adfecae731ec33b69157ce2d1c0128fd4237d7ec972df9c1d03c"
+    "hash": "984491f56f0807c4e052199f38981e8e51e90ef5e0fe6bb026bdd3cc02b4efb1"
   },
   {
     "path": "manifest.webmanifest",
@@ -732,10 +756,10 @@ self.addEventListener('message', event => {
       const checks=await Promise.all(clients.map(client=>new Promise(resolve=>{
         const channel=new MessageChannel(),timer=setTimeout(()=>finish(false),1500);
         const finish=safe=>{clearTimeout(timer);channel.port1.close();resolve(safe);};
-        channel.port1.onmessage=({data})=>finish(data?.protocol===1 && data.locks===true);
+        channel.port1.onmessage=({data})=>finish(data?.protocol===2 && data.locks===true);
         client.postMessage({type:'LIBRARY_WRITE_PROBE'},[channel.port2]);
       })));
-      event.ports[0].postMessage({protocol:1,safe:checks.every(Boolean),clients:clients.length});
+      event.ports[0].postMessage({protocol:2,safe:checks.every(Boolean),clients:clients.length});
     })());return;
   }
   if (!['OFFLINE_STATUS', 'OFFLINE_PREPARE'].includes(event.data?.type) || !event.ports[0]) return;

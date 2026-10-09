@@ -18,6 +18,8 @@ Em **Verificar / preparar offline**, o aplicativo procura uma versão nova e ten
 
 ## Desenvolvimento
 
+O [catálogo local](catalog.md) usa os sistemas já preparados com o aplicativo. Instalar ou reinstalar funciona offline; excluir uma instalação não remove os arquivos originais do catálogo do cache. As cópias editáveis e a seleção de sistemas instalados ficam na biblioteca local e são incluídas em Exportar tudo.
+
 O editor JSON e seu runtime de prévia também são locais. `build:offline` gera primeiro o bundle isolado; `check:offline` confere ambos. esbuild é dependência de desenvolvimento com versão fixada e não é carregado no navegador. Rascunhos ficam no armazenamento da origem e têm [download próprio](editor-json.md), separado do backup da biblioteca.
 
 `manifest.webmanifest`, os ícones em `assets/app/`, `js/pwa.js` e `sw.js` implementam instalação e disponibilidade. O worker usa uma lista restrita de recursos estáticos: HTML principal, CSS, módulos do runtime, vetores e os JSONs referenciados pelo manifesto de sistemas embutidos. Não há cache dinâmico de personagens, backups, referências privadas, exemplos, screenshots, testes ou documentação.

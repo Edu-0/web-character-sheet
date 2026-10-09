@@ -1,7 +1,8 @@
 import {validateLibraryBackup} from './validation/backup.js';
 import {validateEffectRevisionChange} from './validation/effects.js';
 import { allCharacters, characterChanges } from './repositories/character-repository.js';
-import { importedPackages, importedSystemsChange, reloadImportedSystems, listSystems, getSystemPackage } from './repositories/system-repository.js';
+import { importedPackages, importedSystemsChange, reloadImportedSystems, listCatalogSystems, getCatalogPackage } from './repositories/system-repository.js';
+import {CATALOG_KEY,catalogInstallationIds,catalogInstallationsChange} from './repositories/catalog-installations.js';
 import { loadSettings, resetSettingsCache } from './storage.js';
 import { readJson, readRaw, storageKeys,transactWithinWrite, recoveryEntries } from './persistence.js';
 import {withLibraryWrite,verifyWriterClients} from './write-coordinator.js';
@@ -16,7 +17,7 @@ export function exportLibrary(currentCharacter) {
   }
   const systems = importedPackages();
   const metadata = readJson('ficha-rpg:v2:library:metadata',{},value=>value && typeof value==='object' && !Array.isArray(value) && !inspectJson(value).length);
-  return { ...metadata, schemaVersion: [...systems, ...characters].some(document => document.schemaVersion >= 2) ? 2 : 1, kind: 'rpg-library-backup', exportedAt: new Date().toISOString(), systems, characters, preferences: loadSettings(), recovery: recoveryEntries() };
+  return { ...metadata, schemaVersion: [...systems, ...characters].some(document => document.schemaVersion >= 2) ? 2 : 1, kind: 'rpg-library-backup', exportedAt: new Date().toISOString(), systems, catalogSystems:catalogInstallationIds(), characters, preferences: loadSettings(), recovery: recoveryEntries() };
 }
 
 export async function readLibraryBackup(file) {
@@ -26,7 +27,7 @@ export async function readLibraryBackup(file) {
 }
 
 function validateBackup(data) {
-  return assertValid(data,value=>validateLibraryBackup(value,{builtinIds:listSystems().filter(s=>s.source==='builtin').map(s=>s.id)}),'backup');
+  return assertValid(data,value=>validateLibraryBackup(value,{builtinIds:listCatalogSystems().map(s=>s.id)}),'backup');
 }
 
 export function backupConflicts(data, currentCharacter) {
@@ -40,9 +41,9 @@ export async function restoreLibrary(data, { mode = 'merge', overwriteConflicts 
   if (!['merge', 'replace'].includes(mode)) throw new Error('Modo de restauração inválido.');
   if ((mode === 'replace' || overwriteConflicts) && !confirmed) throw new Error('Confirme a substituição antes de restaurar.');
   if(mode==='replace'||overwriteConflicts)await verifyWriterClients();
-  const snapshot=()=>JSON.stringify(storageKeys().filter(key=>key==='ficha-rpg:v2:systems'||key==='ficha-rpg:settings'||key.startsWith('ficha-rpg:v2:characters:')).sort().map(key=>[key,readRaw(key)]));
+  const snapshot=()=>JSON.stringify(storageKeys().filter(key=>key===CATALOG_KEY||key==='ficha-rpg:v2:systems'||key==='ficha-rpg:settings'||key.startsWith('ficha-rpg:v2:characters:')).sort().map(key=>[key,readRaw(key)]));
   const baseline=snapshot(),activeBaseline=JSON.stringify(currentCharacter);
-  const builtin = new Map(await Promise.all(listSystems().filter(s => s.source === 'builtin').map(async s => [s.id, await getSystemPackage(s.id)])));
+  const builtin = new Map(await Promise.all(listCatalogSystems().map(async s => [s.id, await getCatalogPackage(s.id)])));
   return withLibraryWrite(()=>{
   if(snapshot()!==baseline || JSON.stringify(currentCharacter)!==activeBaseline)throw new Error('Biblioteca mudou durante a preparação da restauração. Revise e tente novamente.');
   reloadImportedSystems();
@@ -71,11 +72,16 @@ export async function restoreLibrary(data, { mode = 'merge', overwriteConflicts 
     character.meta.updatedAt ||= new Date().toISOString();
   }
   const preferences = mode === 'replace' || overwriteConflicts ? data.preferences : { ...data.preferences, ...old.preferences };
-  const known = new Set(['schemaVersion','kind','exportedAt','systems','characters','preferences','recovery']);
+  // Backups anteriores não tinham seleção: manter a atual e habilitar apenas
+  // os sistemas conhecidos referenciados por seus personagens. Backups novos
+  // preservam inclusive uma seleção vazia e personagens órfãos deliberados.
+  const incomingCatalog=data.catalogSystems ?? [...new Set([...old.catalogSystems,...data.characters.map(character=>character.meta.system).filter(id=>builtin.has(id))])];
+  const catalogSystems=mode==='replace'?incomingCatalog:[...new Set([...old.catalogSystems,...incomingCatalog])];
+  const known = new Set(['schemaVersion','kind','exportedAt','systems','catalogSystems','characters','preferences','recovery']);
   const incomingMetadata=Object.fromEntries(Object.entries(data).filter(([key])=>!known.has(key)));
   const oldMetadata=Object.fromEntries(Object.entries(old).filter(([key])=>!known.has(key)));
   const metadata=mode==='replace'||overwriteConflicts ? incomingMetadata : {...incomingMetadata,...oldMetadata};
-  const changes = [['ficha-rpg:v2:library:metadata',JSON.stringify(metadata)], ...characterChanges(characters, { replace: mode === 'replace' }), importedSystemsChange(systems,{replace:mode==='replace'}), ['ficha-rpg:settings', JSON.stringify(preferences)]];
+  const changes = [catalogInstallationsChange(catalogSystems), ['ficha-rpg:v2:library:metadata',JSON.stringify(metadata)], ...characterChanges(characters, { replace: mode === 'replace' }), importedSystemsChange(systems,{replace:mode==='replace'}), ['ficha-rpg:settings', JSON.stringify(preferences)]];
   for (const entry of data.recovery || []) changes.push([`ficha-rpg:recovery:${Date.now()}:${crypto.randomUUID()}`, JSON.stringify(entry)]);
   transactWithinWrite(changes);
   reloadImportedSystems(); resetSettingsCache();

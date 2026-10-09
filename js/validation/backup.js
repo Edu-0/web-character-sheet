@@ -1,6 +1,7 @@
 import {inspectJson,LIMITS} from './limits.js';
 import {versionIssue} from './versions.js';
 import {validateSystemPackage,validateCharacter} from './schemas.js';
+import {validCatalogIds} from './catalog.js';
 
 export function validateLibraryBackup(data,{builtinIds=[]}={}) {
   const issues=inspectJson(data,'backup',{maxNodes:1000000,maxDepth:LIMITS.depth+3});if(issues.length) return issues;
@@ -11,11 +12,12 @@ export function validateLibraryBackup(data,{builtinIds=[]}={}) {
   if(!Array.isArray(data?.systems)||!Array.isArray(data?.characters)||!data?.preferences||typeof data.preferences!=='object'||Array.isArray(data.preferences)) {add('backup','sistemas, personagens ou preferências inválidos');return issues;}
   if(data.schemaVersion<2 && [...data.systems,...data.characters].some(doc=>doc?.schemaVersion>=2)) add('backup.schemaVersion','conteúdo versão 2 exige envelope versão 2');
   const ids=new Set();
+  if(data.catalogSystems!==undefined && !validCatalogIds(data.catalogSystems)) add('backup.catalogSystems','seleção do catálogo inválida ou duplicada');
   data.systems.forEach((pkg,i)=>{
     const root=`backup.systems[${i}]`;
     issues.push(...validateSystemPackage(pkg).map(issue=>({...issue,path:issue.path.replace(/^package(?=\.|$)/,root).replace(/^system(?=\.|$)/,`${root}.system`)})));
     if(new Blob([JSON.stringify(pkg)]).size>LIMITS.systemBytes) add(root,'excede 4 MiB');
-    if(builtinIds.includes(pkg?.system?.id)||ids.has(pkg?.system?.id)) add(`${root}.system.id`,'ID embutido ou duplicado');ids.add(pkg?.system?.id);
+    if(builtinIds.includes(pkg?.system?.id) && !(Array.isArray(data.catalogSystems) && data.catalogSystems.includes(pkg?.system?.id)) || ids.has(pkg?.system?.id)) add(`${root}.system.id`,'ID embutido sem instalação no catálogo ou duplicado');ids.add(pkg?.system?.id);
   });
   ids.clear();
   data.characters.forEach((character,i)=>{

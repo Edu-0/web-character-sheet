@@ -7,6 +7,7 @@ import { LIMITS, readJsonFile } from '../validation/limits.js';
 import { assertValid, validateManifest, validateSystemPackage, validateCharacterForPackage } from '../validation/schemas.js';
 import { prepareDocument } from '../validation/documents.js';
 import { validateEffectRevisionChange } from '../validation/effects.js';
+import {CATALOG_KEY, catalogInstallationIds, catalogInstallationsChange, initializeCatalogInstallations} from './catalog-installations.js';
 
 const MANIFEST_URL = './data/systems/index.json';
 const IMPORTED_SYSTEMS_KEY = 'ficha-rpg:v2:systems';
@@ -44,15 +45,21 @@ export function reloadImportedSystems() { importedSystems = loadImportedSystems(
 function currentImported(id) {
   const all=readJson(IMPORTED_SYSTEMS_KEY,[],Array.isArray);return all.find(pkg=>pkg?.system?.id===id) || null;
 }
+function writableImportedCollection() {
+  const all=readJson(IMPORTED_SYSTEMS_KEY,null,Array.isArray);
+  if(all===null && readRaw(IMPORTED_SYSTEMS_KEY)!==null)throw new Error('A coleção de sistemas está inválida. Exporte a recuperação antes de instalar ou editar pacotes.');
+  return all ?? [];
+}
 export function installedPackageBase(id){return clone(currentImported(id));}
 function librarySnapshot() {
-  return JSON.stringify(storageKeys().filter(key=>key===IMPORTED_SYSTEMS_KEY || key==='ficha-rpg:settings' || key.startsWith('ficha-rpg:v2:characters:')).sort().map(key=>[key,readRaw(key)]));
+  return JSON.stringify(storageKeys().filter(key=>key===IMPORTED_SYSTEMS_KEY || key===CATALOG_KEY || key==='ficha-rpg:settings' || key.startsWith('ficha-rpg:v2:characters:')).sort().map(key=>[key,readRaw(key)]));
 }
 export function prepareSystemInstallation(candidate,{expectedBase,currentCharacter}={}) {
   const current=currentImported(candidate.system?.id), base=expectedBase===undefined?current:expectedBase;
   const summaries=characters.listCharacters(),linked=characters.allCharacters().filter(character=>character.meta.system===candidate.system.id);
   if(currentCharacter?.meta?.system===candidate.system.id){const index=linked.findIndex(character=>character.meta.id===currentCharacter.meta.id);if(index<0)linked.push(clone(currentCharacter));else linked[index]=clone(currentCharacter);}
-  const plan=installationPlan({candidate,base,currentPackage:current,builtinIds:manifestSystems.map(entry=>entry.id),characters:linked,unavailableLinked:summaries.some(character=>character.system===candidate.system.id && character.unavailable),unavailableUnidentified:summaries.some(character=>character.system==='indisponível' && character.unavailable)});
+  const reserved=manifestSystems.filter(entry=>!(entry.id===current?.system?.id && catalogInstallationIds().includes(entry.id))).map(entry=>entry.id);
+  const plan=installationPlan({candidate,base,currentPackage:current,builtinIds:reserved,characters:linked,unavailableLinked:summaries.some(character=>character.system===candidate.system.id && character.unavailable),unavailableUnidentified:summaries.some(character=>character.system==='indisponível' && character.unavailable)});
   return {...plan,librarySnapshot:librarySnapshot(),activeSnapshot:JSON.stringify(currentCharacter ?? null)};
 }
 export async function installSystemPackage(plan,{currentCharacter,copies=[],assertCurrent=()=>{}}={}) {
@@ -61,7 +68,7 @@ export async function installSystemPackage(plan,{currentCharacter,copies=[],asse
     assertCurrent();
     if(librarySnapshot()!==plan.librarySnapshot || JSON.stringify(currentCharacter ?? null)!==plan.activeSnapshot)throw new Error('A biblioteca ou o personagem ativo mudou durante a confirmação. Revise e tente novamente.');
     const fresh=prepareSystemInstallation(plan.package,{expectedBase:plan.base,currentCharacter});
-    const all=readJson(IMPORTED_SYSTEMS_KEY,[],Array.isArray),baseline=readRaw(IMPORTED_SYSTEMS_KEY);
+    const all=writableImportedCollection(),baseline=readRaw(IMPORTED_SYSTEMS_KEY);
     const next=[...all.filter(pkg=>pkg?.system?.id!==fresh.package.system.id),clone(fresh.package)];
     const changes=[[IMPORTED_SYSTEMS_KEY,JSON.stringify(next)],...copies];
     const preferences=readJson('ficha-rpg:settings',{},value=>value && typeof value==='object' && !Array.isArray(value));
@@ -78,24 +85,65 @@ export async function initSystemRepository() {
   const manifest = await fetchJson(MANIFEST_URL, 'o manifesto de sistemas');
   assertValid(manifest, validateManifest, 'manifest');
   manifestSystems = manifest.systems.map((entry) => ({ ...entry, source: 'builtin' }));
+  await initializeCatalogInstallations(manifestSystems.map(entry=>entry.id));
   importedSystems = loadImportedSystems();
   return listSystems();
 }
 
 export function listSystems() {
-  const builtins = manifestSystems.map((entry) => ({
+  const installed = catalogInstallationIds();
+  const builtins = manifestSystems.filter(entry=>installed.includes(entry.id)).map((entry) => ({
     id: entry.id,
-    name: entry.name,
+    name: importedSystems.find(pkg=>pkg.system.id===entry.id)?.system.name ?? entry.name,
     source: 'builtin',
-    layoutCount: entry.layouts?.length ?? 0,
+    layoutCount: importedSystems.find(pkg=>pkg.system.id===entry.id)?.layouts.length ?? entry.layouts?.length ?? 0,
+    ...(unavailableSystems.some(pkg=>pkg?.system?.id===entry.id)?{unavailable:true}:{}),
   }));
-  const imported = importedSystems.map((pkg) => ({
+  const imported = importedSystems.filter(pkg=>!manifestSystems.some(entry=>entry.id===pkg.system.id) || !installed.includes(pkg.system.id)).map((pkg) => ({
     id: pkg.system.id,
     name: pkg.system.name,
     source: 'imported',
     layoutCount: pkg.layouts.length,
+    ...(manifestSystems.some(entry=>entry.id===pkg.system.id)?{unavailable:true}:{}),
   }));
-  return [...builtins, ...imported, ...unavailableSystems.map((pkg,index)=>({id:pkg?.system?.id || `unavailable-${index}`,name:pkg?.system?.name || 'Pacote indisponível',source:'unavailable',layoutCount:0,unavailable:true}))];
+  return [...builtins, ...imported, ...installed.filter(id=>!manifestSystems.some(entry=>entry.id===id)).map(id=>({id,name:id,source:'builtin',layoutCount:0,unavailable:true})), ...unavailableSystems.filter(pkg=>!builtins.some(entry=>entry.id===pkg?.system?.id)).map((pkg,index)=>({id:pkg?.system?.id || `unavailable-${index}`,name:pkg?.system?.name || 'Pacote indisponível',source:'unavailable',layoutCount:0,unavailable:true}))];
+}
+
+export function listCatalogSystems() {
+  const installed=catalogInstallationIds();
+  return manifestSystems.map(entry=>({id:entry.id,name:entry.name,layoutCount:entry.layouts?.length ?? 0,installed:installed.includes(entry.id)}));
+}
+
+export async function installCatalogSystem(id) {
+  const pkg=await getCatalogPackage(id);
+  return withLibraryWrite(()=>{
+    const ids=catalogInstallationIds();
+    if(ids.includes(id))return clone(pkg);
+    const summaries=characters.listCharacters();
+    // Reutiliza o preflight de instalação; IDs reservados só entram por este
+    // caminho, com pacote validado carregado do manifesto do aplicativo.
+    installationPlan({candidate:pkg,base:null,currentPackage:null,
+      characters:characters.allCharacters().filter(character=>character.meta.system===id),
+      unavailableLinked:summaries.some(character=>character.system===id && character.unavailable)});
+    if(currentImported(id))throw new Error('Há um pacote local com o ID reservado deste catálogo. Preserve o original antes de instalar.');
+    const all=writableImportedCollection();
+    transactWithinWrite([[IMPORTED_SYSTEMS_KEY,JSON.stringify([...all,clone(pkg)])],catalogInstallationsChange([...ids,id])]);
+    reloadImportedSystems();
+    return clone(pkg);
+  });
+}
+
+export async function editableCatalogPackage(id) {
+  if(!manifestSystems.some(entry=>entry.id===id))throw new Error('Sistema ausente do catálogo.');
+  const original=await getCatalogPackage(id);
+  return withLibraryWrite(()=>{
+    if(!catalogInstallationIds().includes(id))throw new Error('Sistema removido durante a abertura do editor. Instale pelo Catálogo.');
+    const existing=currentImported(id);
+    if(existing)return clone(existing);
+    const all=writableImportedCollection();
+    transactWithinWrite([[IMPORTED_SYSTEMS_KEY,JSON.stringify([...all,clone(original)])]]);
+    reloadImportedSystems();return clone(original);
+  });
 }
 
 export function hasSystem(id) {
@@ -104,8 +152,16 @@ export function hasSystem(id) {
 
 export async function getSystemPackage(id) {
   reloadImportedSystems();
+  if(unavailableSystems.some(pkg=>pkg?.system?.id===id))throw new Error('O pacote local está indisponível. Exporte o original para corrigir; o catálogo não o substituirá automaticamente.');
+  if(manifestSystems.some(entry=>entry.id===id) && !catalogInstallationIds().includes(id))throw new Error(`Sistema "${id}" não está instalado. Instale pelo Catálogo.`);
   const imported = importedSystems.find((pkg) => pkg.system.id === id);
   if (imported) return clone(imported);
+
+  if(!catalogInstallationIds().includes(id))throw new Error(`Sistema "${id}" não está instalado. Instale pelo Catálogo.`);
+  return getCatalogPackage(id);
+}
+
+export async function getCatalogPackage(id) {
 
   const entry = manifestSystems.find((system) => system.id === id);
   if (!entry) throw new Error(`Sistema "${id}" não está disponível.`);
@@ -130,7 +186,7 @@ export async function importSystemPackage(file, { replace = false, currentCharac
   assertValid(pkg,()=>prepared.diagnostics,'pacote de sistema');
   const previous = currentImported(pkg.system.id);
   if (previous) assertValid(pkg.system, next=>validateEffectRevisionChange(previous.system,next),'revisão de efeitos');
-  if (manifestSystems.some((entry) => entry.id === pkg.system.id)) {
+  if (manifestSystems.some((entry) => entry.id === pkg.system.id) && !(previous && catalogInstallationIds().includes(pkg.system.id))) {
     throw new Error(`O ID "${pkg.system.id}" pertence a um sistema embutido.`);
   }
   if (!replace && previous) { const error = new Error('Já existe um sistema com este ID. Confirme a substituição.'); error.code = 'system-conflict'; error.base=clone(previous); throw error; }

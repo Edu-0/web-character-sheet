@@ -8,7 +8,7 @@ Crie seus personagens, encontre o que precisa durante o jogo e leve a ficha para
 
 Seu propósito é dar espaço a diferentes sistemas de RPG: desde uma ficha preenchível até uma ficha com cálculos e recursos assistidos. As escolhas e decisões da mesa continuam com você.
 
-São **oito sistemas embutidos**, cada um com os layouts **Padrão** e **Modo mesa**, além da importação de sistemas próprios em JSON.
+O **catálogo local reúne oito sistemas**, cada um com os layouts **Padrão** e **Modo mesa**. Instale os que quiser, edite seus pacotes locais ou importe sistemas próprios em JSON. Consulte [catálogo, edição e exclusão](data/examples/catalog.md).
 
 ![Ficha modular de D&D no computador, com tema claro e personagem fictícia](assets/readme/ficha-desktop.png)
 
@@ -145,3 +145,4 @@ A documentação de trabalho, os planos e os relatórios ficam privados e não a
 O código original da aplicação e da engine tem [licença própria de uso não comercial com atribuição](LICENSE). Uso, modificações e compartilhamento gratuito não comercial são permitidos nos termos da licença; exploração comercial exige autorização escrita. Não é uma licença MIT ou Apache-2.0.
 
 Conteúdos de RPG, artes, marcas e materiais de terceiros têm direitos separados. O projeto é independente e não oficial, sem afiliação à Wizards of the Coast. A licença do código não libera livros, traduções ou desenhos. Consulte os [avisos de terceiros](THIRD_PARTY_NOTICES.md) e o [registro de direitos das artes](assets/artwork/README.md).
+- **Escolha seus sistemas.** O Catálogo permite instalar offline as implementações disponíveis. Em Sistemas, edite o pacote instalado mantendo a base do catálogo intacta, ou exclua o sistema com seus personagens após revisar a confirmação. Reinstalar traz o pacote original, sem recuperar personagens apagados.

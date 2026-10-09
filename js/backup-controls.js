@@ -25,7 +25,7 @@ export function initBackupControls({ getCurrentCharacter, onRestored,beforeResto
       const conflicts = backupConflicts(data, getCurrentCharacter());
       const content = document.createElement('div');
       const summary = document.createElement('p');
-      summary.textContent = `${data.characters.length} personagem(ns), ${data.systems.length} sistema(s) importado(s). Conflitos: ${conflicts.characters} personagem(ns), ${conflicts.systems} sistema(s).`;
+      summary.textContent = `${data.characters.length} personagem(ns), ${data.systems.length} sistema(s) importado(s). Catálogo: ${data.catalogSystems===undefined?'backup anterior sem seleção':`${data.catalogSystems.length} sistema(s) instalado(s)`}. Conflitos: ${conflicts.characters} personagem(ns), ${conflicts.systems} sistema(s).`;
       const label = document.createElement('label'); label.className = 'field';
       const title = document.createElement('span'); title.textContent = 'Como restaurar';
       const select = document.createElement('select'); select.id = 'backup-restore-mode';
@@ -33,7 +33,7 @@ export function initBackupControls({ getCurrentCharacter, onRestored,beforeResto
         const option = document.createElement('option'); option.value = value; option.textContent = text; select.append(option);
       }
       label.append(title, select);
-      const note = document.createElement('p'); note.textContent = 'Mesclar preserva suas fichas e preferências existentes. Substituições pedem confirmação e baixam uma cópia da biblioteca atual antes da restauração.';
+      const note = document.createElement('p'); note.textContent = 'Mesclar preserva fichas, preferências e sistemas do catálogo já instalados, acrescentando os do backup. Substituir a biblioteca inteira usa a seleção do catálogo do backup; backups anteriores mantêm a seleção atual e habilitam os sistemas conhecidos de seus personagens. Substituições pedem confirmação e baixam uma cópia antes da restauração.';
       content.append(summary, label, note);
       let busy = false;
       const close = openModal({title: 'Restaurar biblioteca', contentEl: content, actions: [
