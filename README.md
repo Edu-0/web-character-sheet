@@ -14,7 +14,7 @@ O **catálogo local reúne oito sistemas**, cada um com os layouts **Padrão** e
 
 ## Mais tempo jogando
 
-- **Edite seus pacotes com prévia.** Em Sistemas, crie um pacote, abra JSON ou edite uma cópia. Experimente campos e ações com personagem fictício isolado, corrija diagnósticos, recupere rascunhos e exporte ou aplique com confirmação. Rascunhos têm download próprio e ficam fora de Exportar tudo. Consulte o [editor JSON](data/examples/editor-json.md).
+- **Edite seus pacotes com prévia e formulários.** Em Sistemas, crie um pacote, abra JSON ou edite uma cópia. Experimente campos e ações com personagem fictício isolado, corrija diagnósticos, recupere rascunhos e exporte ou aplique com confirmação. Rascunhos têm download próprio e ficam fora de Exportar tudo. Alterne entre JSON e árvore/propriedades no mesmo rascunho. Consulte o [editor JSON](data/examples/editor-json.md) e a [cobertura dos formulários](data/examples/editor-forms.md).
 - **Seus personagens em um só lugar.** Crie, duplique e organize fichas na biblioteca local. Importe e exporte personagens e pacotes de sistemas em JSON. Em Configurações, **Exportar tudo** salva a biblioteca e **Importar tudo** permite mesclar ou substituir com confirmação.
 - **Encontre sem percorrer todas as abas.** A busca consulta a ficha inteira, mostra os valores atuais e leva você até o campo, com tolerância a erros de digitação.
 - **Acompanhe os recursos da sessão.** Vida, inventário, habilidades, magias e rolagens ficam organizados conforme o sistema escolhido.

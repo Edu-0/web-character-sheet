@@ -1,0 +1,59 @@
+# Editor por formulários
+
+Em **Sistemas**, abra ou crie um pacote e escolha **Editar por formulários**. A árvore mostra as definições de layouts, abas, seções, grupos e componentes. Selecione um bloco para configurar **Apresentação**, **Dados** e **Lógica**. É o mesmo pacote, rascunho, histórico, validador e fluxo de [prévia, recuperação, exportação e aplicação do editor JSON](editor-json.md).
+
+**Adicionar**, **Duplicar**, **Subir**, **Descer** e **Mover bloco** usam a definição original, inclusive em repeat. O destino e a posição (iniciando em 0) permitem mover entre grupos sem arrastar. Duplicar resolve IDs de irmãos com sufixo; mover para um destino com ID em conflito recusa a operação. Os componentes não recebem UUIDs no pacote. Na árvore, setas/Home/End movem o foco; Enter/Espaço selecionam. Os mesmos comandos estão disponíveis por toque. Mostrar na prévia usa o bloco selecionado na árvore; Localizar no JSON seleciona a mesma definição, recuperada ao voltar aos formulários. A navegação exige ensaio da revisão/layout atuais.
+
+## Aplicar um campo
+
+Cada campo distingue **Ausente**, **Valor explícito**, **null explícito** quando admitido e **Usar padrão** quando há um padrão declarado. Digite ou escolha o valor e use **Aplicar campo**. Ausência remove a propriedade; usar padrão grava explicitamente o padrão indicado. Abrir um formulário não grava defaults. Valores incompatíveis existentes são conservados até sua correção explícita. Nos recursos, o vínculo aponta ao objeto current/max; não há maxField inventado para o componente resource.
+
+Valores livres do template e de tabelas têm escolha de tipo: texto, número, booleano, objeto, lista ou null. Objetos recebem propriedades por chave; listas oferecem adicionar, remover, duplicar e reordenar entradas. As configurações complexas abrem em **Configurar …**. Catálogos novos e tabelas ficam no system; catálogos adicionais existentes podem ser habilitados explicitamente para edição tipada. Não há outro formato de sistema.
+
+Números que perderiam representação decimal são recusados. Texto inválido pendente permanece nos formulários e no rascunho, inclusive ao trocar para JSON ou recarregar e recuperar. **Descartar texto deste campo** é uma ação explícita. O painel de pendências também permite revisar e descartar um campo cujo bloco tenha sido removido pelo JSON. Exportar/aplicar a revisão atual exige resolver essas pendências; exportar a última válida continua sendo um comando distinto. Reorganizar arrays/estrutura exige resolver pendências que poderiam mudar de endereço.
+
+Se system não for um objeto, os formulários pedem correção no JSON. Adicionar estrutura nunca substitui uma propriedade existente incompatível (inclusive null); ramos ausentes podem ser criados explicitamente. Nós inválidos continuam preservados e podem ser removidos pelo comando estrutural.
+
+Campos editados alteram somente a propriedade solicitada. Extras, atribuições, IDs, ausência, null, 0, false, texto vazio e coleções vazias são preservados nos demais ramos. Desfazer/Refazer JSON também desfaz/refaz operações confirmadas dos formulários. Ctrl/Cmd+S salva o rascunho. Fora dos campos de texto, Ctrl/Cmd+Z e Y (ou Shift+Z) usam o histórico comum; dentro dos inputs, a edição do texto pendente mantém o desfazer nativo. O foco é conservado ao aplicar um campo. O histórico de jogo e a amostra de ensaio continuam separados. Entradas ainda não aplicadas são UI recuperável, não um segundo documento de regras.
+
+## Cobertura por família
+
+A cobertura abaixo descreve formulários próprios para as propriedades consumidas pela engine. Não representa automação de livros, novas mecânicas ou equivalência funcional entre todos os tipos.
+
+| Família / componentes | Configurável por formulários | Avançado via JSON / limite |
+| --- | --- | --- |
+| Estrutura | Pacote/versões, sistema, layouts/modo, abas, seções, grupos stack/grid/flex, gap/min suportados, repeat/source, criação/movimento/duplicação/remoção | Metadados, showHeader e print.compact de seção/grupo via JSON; pixels livres, toolbox e arrasto não estão nesta entrega |
+| text, textarea, number, boolean | Campo, rótulo, ajuda, variante, default tipado, placeholder/rows compatíveis, bloqueio por igualdade | min/max de number de topo são legados inertes e não ganham controles funcionais |
+| select | Opções por entrada (texto simples ou objeto value/label), valores tipados e optionsFrom | presentation/valueType de select de topo são inertes; os equivalentes de itemSchema têm formulário |
+| resource, counter | Vínculos e defaults, current/max pelo template/default do recurso; min/max efetivos do counter | Mecânicas de gasto/recuperação dependem das definições próprias abaixo |
+| die, image, tagList | Vínculos, ajuda, composição/passos de dado, escala do sistema, alt/placeholder | Imagem embutida avançada pelo JSON ou upload no ensaio; não há editor de imagem |
+| list, table | Coleção, textos, apresentação/consulta compatível, campos dos itens, resumo, detalhes, defaults de entrada, custo de criação compatível, ação/preset de rolagem de lista | Extras e parâmetros sem descritor; renomear uma chave de itemSchema exige revisar JSON/dados, sem migrar personagens |
+| itemSchema: text, textarea, number, boolean, select, die, reference | Tipo, rótulo/ajuda/default, rows, escala/composição/passos, opções e fontes, valueField/labelField/valueType, multiple e checkboxes onde compatíveis; expansão explícita de tipo abreviado | Propriedades desconhecidas permanecem avançadas; validação exige os limites e opções apropriados para checkboxes |
+| stateList | Coleção/itemSchema, gradeField, efeito, overflow com destino/dado/nome/onFirst/onLimit e nota de recuperação | Regras narrativas, exceções e metadados sem formulário permanecem no JSON/texto da mesa |
+| skillCatalog, slotTracker | Vínculos, catálogos/categorias/dado-base, composição/ajustes; slots used/remaining, preferência de consumo e rótulos | Slots usados/máximos configurados como dados tipados; nenhuma decisão automática de consumo |
+| computed | Fórmula nomeada, expressão limitada no system, fontes de variáveis field/system/traitMaxField/value/rollField, modo/format/ação e chaves de ajuste | Scripts, funções novas, grafo de blocos e refatoração de tokens de expressões não são suportados |
+| checkRoll e roll em number/counter/die/computed/list | Oito algoritmos existentes, nota da mesa, fontes com ID/rótulo/campo/coleção/fórmula, valueField, variáveis e ímpeto compatíveis; vínculo check/sourceId | Não é botão universal em todo tipo; validação exige fonte equivalente, IDs e versões apropriadas |
+| Rolagens de entradas (entryRolls) | Teste opcional, efeito, fontes value/field/itemField/formula/resolver, variáveis/fallback, escala/passo/incremento, textos/info, recurso/mode/custo/consumo compartilhado | Alias antigo test permanece em JSON com normalização explícita; resolver tem de existir na engine, sem plugins/scripts |
+| actionGroup / sheetActions | Requisitos mínimo/igualdade, set/add/restoreResource/rollResource/reduceNamedStates/clearNamedStates/restoreCollection/setCollection, filtros, nomes e campos de estado | Custos e autorização da mesa não são inferidos; operações antigas por effects podem ser editadas sem conversão silenciosa |
+| recoveryGroup / recoveryActions | Ações e textos, healing por campos/dado/modificador/mínimos, restoreValue/set/restoreCollection/setCollection e filtros | A mesa continua confirmando condições e duração; não há regra universal de descanso |
+| effectList / effectDefinitions | ID/revisão, unique/grupo, always/confirmEachRoll, duração manual/evento, add com alvo calculation/checkModifier, chave/unidade/valor | Ativação é no ensaio/ficha, não ao editar definição. Alterar semântica instalada exige aumentar revisão. Versões v2 são explícitas |
+| poolBuilder | Fontes constantes, campo, mapa ou coleção, sides/sidesFrom, origem, interpolação, filtro/exclusão; oposição/passivePresets e resolução d20 já registrada | Metadados descritivos de pool e resolvedores novos permanecem JSON/código; não há algoritmo universal |
+| pointBudget | Vínculos de progressão/qualidade/ajuste/evolução, fontes map/list, custos/catálogos/dados/limites, modificadores e opção pós-Ascensão; tabelas de custos e presets | Criação/evolução/narrativa continuam separadas; nenhum custo ausente é inventado |
+| traitAllocation, repertoire | Fontes de atributos/conjuntos, presets; vínculos de especializações/técnicas/grau e concessões freeCount/grants por dado | Metadados adicionais de progressão, notas e opções inertes continuam JSON; não há teto novo de aprendizado |
+| techniqueUse | Coleções/campos/tabela de custo/energia/concentração/histórico, modos, termos, requisitos, reduções, dado constante, gratuidade e parâmetros consumidos pela engine | Efeitos narrativos e regras novas não viram programas; valores da mesa são explícitos |
+| inventorySummary | Coleção, peso/quantidade/carregado/força/multiplicador e override/overrideKeys | Não aplica penalidades de sobrecarga automaticamente |
+| dndAbility, dndSkill, dndDerived | Campos, key/short/ability/stat, apresentação e chaves/controles de ajuste; catálogos de atributos/perícias no system | Não cria classes ou interpreta livros. Cópias têm renderer modular; o D&D original mantém as três apresentações |
+
+Nos componentes, o inspector oferece print.compact com inclusão, campos e apresentação conforme o tipo. Na seção e no grupo, o perfil ainda exige JSON; o validador verifica as opções compatíveis em cada contexto. Não há impressão da prévia.
+
+## Referências, versões e limites
+
+**Editar regra compartilhada** leva do componente à definição no system. Mudanças afetam todos os consumidores daquela regra; o JSON permanece a referência para propriedades **Avançado via JSON**, claramente listadas e preservadas. Fórmulas usam a expressão limitada existente, sem eval; valide e atualize o ensaio para testar os resultados e diagnosticar fontes ausentes.
+
+Renomear fórmulas, checks e entryRolls apresenta os usos conhecidos e atualiza seus vínculos em uma operação de histórico. Ao renomear fórmula, as chaves automáticas dos cálculos compatíveis são conservadas por overrideKey. IDs de fonte de check são atualizados apenas nos consumidores daquele teste; IDs de definição de efeito atualizam instâncias conhecidas no template. Trocar system.id atualiza somente vínculos de identidade declarados e cria outro pacote ao aplicar. Não migra personagens instalados.
+
+Remover mostra os usos conhecidos e deixa referências pendentes para correção e diagnóstico; nunca apaga dados de personagens. Renomeações sem refatoração segura, como dados usados do template e chaves de itemSchema, exigem revisão explícita no JSON. Expressões são relatadas como unidades e extensões opacas ficam fora do grafo; não há substituição global de strings nem garantia de refatoração universal.
+
+Botões de teste exigem layout v2. Efeitos exigem sistema/template/layouts/envelope nas versões compatíveis e controle effectList em cada layout, conforme [efeitos](effects.md) e [validação](validation.md). O inspector permite editar as versões; não eleva todos os documentos automaticamente nem materializa novos recursos no template.
+
+Todos os limites de pacote, rascunho, histórico e coordenação do [editor JSON](editor-json.md) continuam valendo. Ramos de profundidade superior a 16 no inspector exigem JSON. O editor funciona [offline](offline.md) após preparação. Toolbox, composição por arrasto e o item visual seguinte não foram implementados aqui.

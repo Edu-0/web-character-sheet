@@ -4,7 +4,7 @@ Sistemas instalados pelo [Catálogo](catalog.md) também oferecem **Editar pacot
 
 Em **Sistemas**, escolha **Criar pacote**, **Abrir JSON**, **Editar cópia** em um sistema embutido ou **Editar pacote** em um importado. Abrir apenas inicia a edição; **Aplicar pacote** instala as regras na biblioteca local depois de uma confirmação.
 
-O texto JSON é a fonte da edição. Erros de sintaxe, chaves duplicadas, números que perderiam precisão e erros de contrato aparecem em **Diagnósticos**. Clique para ir ao trecho correspondente. Texto inválido continua editável, salvável como rascunho e baixável. **Formatar JSON**, **Normalizar aliases** e **Restaurar última válida** são comandos explícitos e podem ser desfeitos. A normalização conserva um original baixável.
+O texto JSON é a fonte da edição. **Editar por formulários** oferece árvore e inspector sobre a mesma sessão; consulte a [cobertura por família](editor-forms.md). Erros de sintaxe, chaves duplicadas, números que perderiam precisão e erros de contrato aparecem em **Diagnósticos**. Clique para ir ao trecho correspondente. Texto inválido continua editável, salvável como rascunho e baixável. **Formatar JSON**, **Normalizar aliases** e **Restaurar última válida** são comandos explícitos e podem ser desfeitos. A normalização conserva um original baixável.
 
 **Desfazer JSON / Refazer JSON** ou Ctrl/⌘ Z e Ctrl/⌘ Shift Z operam no texto, independentemente do personagem. O histórico dura somente na sessão aberta: até 50 operações e 8 MiB estimados de strings antes/depois. Edições muito grandes encerram operações anteriores, com aviso, sem truncar o texto. Tab sai da textarea; colagem e composição de texto são preservadas.
 
@@ -14,7 +14,7 @@ O texto JSON é a fonte da edição. Erros de sintaxe, chaves duplicadas, númer
 
 Escolha layout, tema e largura para experimentar a apresentação. No celular, alterne **JSON / Diagnósticos / Prévia**. Após editar o texto, a prévia anterior fica sinalizada como desatualizada até o próximo comando de atualização. Uma falha de montagem conserva o último ensaio bem-sucedido. A prévia aceita imagens embutidas em Data URL e uploads locais; imagens por URL e acesso à rede ficam bloqueados. Ela não executa scripts do pacote.
 
-Os oito sistemas embutidos e seus layouts podem ser ensaiados. Uma cópia D&D recebe um novo ID e oferece os componentes modulares; estática e comparação continuam associadas ao D&D original. Mecânicas novas exigem suporte da engine. Este editor não inclui formulários, toolbox, arrasto ou impressão da prévia.
+Os oito sistemas embutidos e seus layouts podem ser ensaiados. Uma cópia D&D recebe um novo ID e oferece os componentes modulares; estática e comparação continuam associadas ao D&D original. Mecânicas novas exigem suporte da engine. O editor também oferece [formulários](editor-forms.md); toolbox, arrasto e impressão da prévia continuam fora do escopo.
 
 ## Navegar entre JSON e prévia
 

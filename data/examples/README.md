@@ -119,3 +119,5 @@ Expressões aceitam grupos `NdS` somados, modificadores inteiros positivos/negat
 A bandeja e seu histórico de 20 resultados ficam disponíveis para todos os sistemas; `system.diceTray: false` oculta a bandeja. O painel continua mostrando seu resultado. Histórico é temporário, não um registro persistente de usos. Resultados e botões não entram na impressão da ficha.
 
 Este contrato oferece dados e soma, teste/efeito separados, aumento linear e consumo opcional. Contagem de sucessos, seleção de resultados de uma Pool, explosões, dados Fate, críticos e escalas não lineares exigem outros contratos/resolvedores. O painel não aplica dano, decide sucesso ou interpreta descrições de livros.
+
+O [editor por formulários](editor-forms.md) usa o mesmo pacote, com cobertura declarada por família e acesso às propriedades avançadas via JSON.

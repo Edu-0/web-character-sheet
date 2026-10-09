@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "b599b6f6fc0d41cfe520";
+const VERSION = "261115a1b32aa5b5f655";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -51,7 +51,7 @@ const ASSETS = [
   },
   {
     "path": "css/editor.css",
-    "hash": "8436e12d7a889d095cef3bf058cde2b7acb14f2b5c9250a61d8ec60cbaf283f9"
+    "hash": "61d12a3d8a55277ccd0bdfb0392d9cd2911f9586f24056ffffbc944c357d5eaf"
   },
   {
     "path": "css/engine-shell.css",
@@ -239,7 +239,23 @@ const ASSETS = [
   },
   {
     "path": "js/editor/editor-ui.js",
-    "hash": "64455fd600b4f64dfb63cad252a627b6e5de28968e8bc7bf1efed872303fb65b"
+    "hash": "dc5ab8e525aa2853bbd69e90351716880e675a91a3cae40181fed135c6797d96"
+  },
+  {
+    "path": "js/editor/form-commands.js",
+    "hash": "63b686cb1f94053aea4597111c0e75df5d87d46c2040d72dd98328a25ae25a78"
+  },
+  {
+    "path": "js/editor/form-metadata.js",
+    "hash": "b2163645700375951fc21fc9e271614a881968dfd36ef5a992a8eca9ad42e7f4"
+  },
+  {
+    "path": "js/editor/form-structure.js",
+    "hash": "534b26818f8bd2dd35b61464ea9edaa0e0c17cb998fa1941a3d8e622870f3de0"
+  },
+  {
+    "path": "js/editor/form-view.js",
+    "hash": "960d01e65074d58a38b0775493ef9600a7c759060b5f27b064128f696038cad6"
   },
   {
     "path": "js/editor/generated/preview.css",
@@ -252,6 +268,10 @@ const ASSETS = [
   {
     "path": "js/editor/history.js",
     "hash": "82602b7e49f38f33b05c4c4c4545b761c6cc9a8ac888719459f4ae2cb50cd9eb"
+  },
+  {
+    "path": "js/editor/inspector.js",
+    "hash": "89701fdf20a74b493b37db14bfb8326b2fc741cd4dff3e4a94af5988a2ba92d7"
   },
   {
     "path": "js/editor/minimal-package.js",
@@ -287,7 +307,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/references.js",
-    "hash": "00a2921872d88150fa6beaa71f46de4187034c84b9a2e0d08d96bcbc35e67bc7"
+    "hash": "eac2b6236fb8b43ef40ea4d70cabf64c21cab7d9963447dd8c133b5be0eb7a99"
   },
   {
     "path": "js/editor/session.js",

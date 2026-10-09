@@ -1,3 +1,5 @@
+import {FormView} from './form-view.js';
+import {editableDocument} from './form-structure.js';
 import {EditorSession} from './session.js';
 import {PreviewHost} from './preview-host.js';
 import {minimalPackage} from './minimal-package.js';
@@ -16,14 +18,14 @@ export class JsonEditor {
   async open({text=JSON.stringify(minimalPackage(),null,2),source,draft,draftRaw,returnView='systems'}={}) {
     this.dispose();this.disposed=false;this.exiting=false;this.returnView=returnView;this.session=new EditorSession(draft || {text,source});this.savedRaw=draftRaw!==undefined?draftRaw:draft?readDraft(draft.draftId):null;this.draftConflict=false;this.savePromise=Promise.resolve();this.render();
     if(draft && this.savedRaw!==null)this.session.lastSavedRevision=draft.revision;
-    this.refresh();this.area.focus();this.area.setSelectionRange(this.session.ui.cursorStart || 0,this.session.ui.cursorEnd || 0);this.area.scrollTop=this.session.ui.scrollTop || 0;this.savedUi=JSON.stringify(this.currentUi());if(this.savedRaw===null)this.scheduleDraft();else this.status.textContent=`Rascunho recuperado · revisão ${this.session.revision}. Histórico JSON reiniciado.`;
+    this.refresh();if(this.session.ui.mode==='forms')this.formsHost.querySelector('[tabindex="0"]')?.focus();else this.area.focus();this.area.setSelectionRange(this.session.ui.cursorStart || 0,this.session.ui.cursorEnd || 0);this.area.scrollTop=this.session.ui.scrollTop || 0;this.savedUi=JSON.stringify(this.currentUi());if(this.savedRaw===null)this.scheduleDraft();else this.status.textContent=`Rascunho recuperado · revisão ${this.session.revision}. Histórico JSON reiniciado.`;
     // A montagem pode terminar depois de uma edição, save, saída ou nova sessão.
     // Toda inicialização de UI acontece antes dessa espera.
     if(this.session.validation.status==='ready')await this.run(()=>this.updatePreview());
   }
   render() {
     const root=this.host;root.replaceChildren();root.classList.add('json-editor');
-    const header=el('header','','editor-header');header.append(el('h1','Editor JSON'));
+    const header=el('header','','editor-header');header.append(el('h1','Editor de pacotes'));
     this.title=el('p');header.append(this.title);
     const controls=el('div','','editor-actions');
     const action=(label,fn)=>{const button=el('button',label,'button button--ghost');button.type='button';button.addEventListener('click',()=>this.run(fn));controls.append(button);return button;};
@@ -42,7 +44,9 @@ export class JsonEditor {
     this.apply=action('Aplicar pacote',()=>this.applyPackage());
     action('Sair do editor',()=>this.exit());
     header.append(controls);root.append(header);
-    root.append(el('p','Rascunhos ficam nesta origem do navegador e não entram em Exportar tudo. Baixe seu rascunho. O histórico JSON dura somente nesta sessão.','editor-note'));
+    const modes=el('div','','editor-mode-controls');modes.setAttribute('role','group');modes.setAttribute('aria-label','Modo de edição');
+    for(const [mode,label]of [['json','Editar JSON'],['forms','Editar por formulários']]){const button=el('button',label,'button button--ghost');button.type='button';button.dataset.mode=mode;button.addEventListener('click',()=>this.run(()=>this.setMode(mode)));modes.append(button);}root.append(modes);this.modes=modes;this.pendingList=el('details','','editor-pending-list');this.pendingList.append(el('summary','Texto pendente dos formulários'));this.pendingEntries=el('div');this.pendingList.append(this.pendingEntries);root.append(this.pendingList);
+    root.append(el('p','Rascunhos ficam nesta origem do navegador e não entram em Exportar tudo. Baixe seu rascunho. JSON e formulários compartilham o histórico do editor, que dura somente nesta sessão.','editor-note'));
     this.status=el('p');this.status.id='editor-status';this.status.setAttribute('role','status');root.append(this.status);
     this.applicationStatus=el('p');this.applicationStatus.id='editor-application-status';this.applicationStatus.setAttribute('role','status');root.append(this.applicationStatus);
     const tabs=el('div','','editor-mobile-tabs');tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Painéis do editor');
@@ -61,7 +65,15 @@ export class JsonEditor {
       if(event.altKey || !(event.ctrlKey||event.metaKey))return;const key=event.key.toLowerCase();if(key==='z'||key==='y'){event.preventDefault();event.stopPropagation();this.session.replay(key==='y'||event.shiftKey?'redo':'undo');this.changed(true);}if(key==='s'){event.preventDefault();this.run(()=>this.saveDraft());}
     });
     this.showPreview=el('button','Mostrar na prévia','button button--ghost');this.showPreview.type='button';this.showPreview.setAttribute('aria-keyshortcuts','Alt+Enter');this.showPreview.addEventListener('click',()=>this.run(()=>this.showSourceInPreview()));
-    left.append(label,this.showPreview,this.area);body.append(left);
+    this.sourceLabel=label;left.append(label,this.showPreview,this.area);
+    this.formsHost=el('div','','editor-forms');left.append(this.formsHost);
+    this.forms=new FormView(this.formsHost,{session:this.session,onChange:()=>{this.formsText=this.session.text;this.changed(true);},onPending:(rerender,message)=>{if(rerender)this.refresh();else this.refreshPending();if(message)this.status.textContent=message;this.scheduleDraft();},onJson:path=>this.openFormJson(path),confirm:(message,options={})=>confirmDialog(message,{title:'Revisar alteração',confirmLabel:'Confirmar alteração',messageClass:'system-removal-review',...options})});
+    this.formsHost.addEventListener('keydown',event=>{
+      if(event.isComposing || event.altKey || !(event.ctrlKey||event.metaKey))return;const key=event.key.toLowerCase();
+      if(key==='s'){event.preventDefault();event.stopPropagation();this.run(()=>this.saveDraft());return;}
+      if(['z','y'].includes(key) && !event.target.closest('input,textarea,select,[contenteditable]')){event.preventDefault();event.stopPropagation();this.session.replay(key==='y'||event.shiftKey?'redo':'undo');this.changed(true);}
+    });
+    body.append(left);
     this.previewSection=el('section','','editor-preview');this.previewSection.dataset.editorPanel='preview';
     this.previewSection.append(el('h2','Prévia'),el('p','Ensaio — não altera seus personagens. A amostra vem do template e suas edições são efêmeras.','editor-note'));
     const tools=el('div','','editor-preview-tools');
@@ -72,7 +84,7 @@ export class JsonEditor {
     this.width=select('Largura do ensaio',[['auto','Automática'],['360','360 px'],['768','768 px'],['1280','1280 px']]);this.width.value=this.session.ui.width || 'auto';this.width.addEventListener('change',()=>{this.session.ui.width=this.width.value;this.frameWrap.style.setProperty('--preview-width',this.width.value==='auto'?'100%':`${this.width.value}px`);this.scheduleDraft();});
     const update=el('button','Atualizar / reiniciar ensaio','button button--primary');update.type='button';update.addEventListener('click',()=>this.run(()=>this.updatePreview()));tools.append(update);
     this.locating=false;this.locate=el('button','Localizar no JSON','button button--ghost');this.locate.type='button';this.locate.setAttribute('aria-pressed','false');this.locate.addEventListener('click',()=>this.setLocating(!this.locating));tools.append(this.locate);
-    const navigationHelp=el('p','Localizar no JSON: ative e clique/toque em texto, campo ou botão para selecionar seu bloco completo, sem executar ações. Tab e Enter também localizam; Escape desativa. Do JSON, use Mostrar na prévia ou Alt+Enter.','editor-note');navigationHelp.id='editor-navigation-help';
+    const navigationHelp=el('p','Localizar no JSON: ative e clique/toque em texto, campo ou botão para selecionar seu bloco completo, sem executar ações. Tab e Enter também localizam; Escape desativa. Da árvore, use Mostrar na prévia; do JSON, também Alt+Enter.','editor-note');navigationHelp.id='editor-navigation-help';
     this.locate.setAttribute('aria-describedby',navigationHelp.id);this.showPreview.setAttribute('aria-describedby',navigationHelp.id);
     this.navigationStatus=el('p');this.navigationStatus.id='editor-navigation-status';this.navigationStatus.setAttribute('role','status');
     this.previewStatus=el('p');this.previewStatus.id='editor-preview-status';this.previewStatus.setAttribute('role','status');this.frameWrap=el('div','','editor-frame-wrap');
@@ -81,8 +93,17 @@ export class JsonEditor {
     this.summary=el('p');this.summary.id='editor-validation-summary';this.summary.setAttribute('role','status');this.issues=el('ul');this.diagnostics.append(this.summary,this.issues);root.append(this.diagnostics);
     this.frameWrap.style.setProperty('--preview-width',this.width.value==='auto'?'100%':`${this.width.value}px`);
     this.preview=new PreviewHost(this.frameWrap,{sessionId:this.session.draftId,onDiagnostic:message=>{this.runtimeError=message;this.refresh();},onSource:message=>this.pickSource(message),onInspectionEnd:()=>this.setLocating(false)});
-    this.area.value=this.session.text;this.panel(this.session.ui.panel || 'json');
+    this.area.value=this.session.text;this.panel(this.session.ui.panel || 'json');this.setMode(this.session.ui.mode || 'json',true);
   }
+  setMode(mode,initial=false) {
+    if(mode==='forms')try{editableDocument(this.session);}catch(error){if(!initial)throw error;mode='json';}
+    this.session.ui.mode=mode;this.area.hidden=mode==='forms';this.sourceLabel.hidden=mode==='forms';this.formsHost.hidden=mode!=='forms';
+    for(const button of this.modes.children)button.setAttribute('aria-pressed',String(button.dataset.mode===mode));
+    if(mode==='forms'){this.forms.refresh();this.formsText=this.session.text;}this.refreshPending();if(!initial)this.scheduleDraft();
+  }
+  refreshPending(){const entries=Object.entries(this.session.ui.formPending || {}),count=entries.length;if(this.pendingList){this.pendingList.hidden=!count;this.pendingEntries.replaceChildren();for(const [pointer,pending]of entries){const row=el('div','','editor-pending-entry');row.append(el('code',pointer),el('p',String(pending?.raw ?? '')+' · '+String(pending?.mode ?? '')));const discard=el('button','Descartar pendência','button button--ghost');discard.type='button';discard.addEventListener('click',()=>{delete this.session.ui.formPending[pointer];this.refresh();this.forms.refresh(true);this.scheduleDraft();});row.append(discard);this.pendingEntries.append(row);}}this.host.dataset.formPending=String(count);if(count)this.status.textContent=count+' campo(s) com texto pendente nos formulários; aplique ou descarte cada campo. O rascunho preserva esse texto.';if(this.apply && count)this.apply.disabled=true;if(this.export && count)this.export.disabled=true;}
+  assertNoPending(){if(Object.keys(this.session.ui.formPending || {}).length)throw new Error('Há texto pendente nos formulários. Aplique ou descarte os campos antes de exportar/aplicar.');}
+  openFormJson(path){this.setMode('json');const range=this.session.validation.locations.get('/'+path.map(key=>String(key).replaceAll('~','~0').replaceAll('/','~1')).join('/'));if(range)this.selectJsonRange(range);else{this.panel('json');this.area.focus();}}
   panel(value) {this.host.dataset.editorPanel=value;for(const button of this.tabs.children)button.setAttribute('aria-pressed',String(button.dataset.panel===value));}
   setLocating(enabled) {
     this.locating=enabled===true && this.lastRenderedCurrent;
@@ -98,10 +119,12 @@ export class JsonEditor {
   pickSource(message) {
     if(!this.navigationReady() || ['sessionId','generation','revision','layoutId'].some(key=>message[key]!==this.lastRendered[key]))return;
     const range=this.session.validation.locations.get(message.pointer);if(!range)return;
+    this.forms.selectPointer(message.pointer);
     const line=this.selectJsonRange(range);
     this.navigationStatus.textContent=`Bloco selecionado no JSON: ${message.pointer} · linha ${line}. O texto não foi alterado.`;this.scheduleDraft();
   }
   selectJsonRange(range) {
+    this.setMode('json');
     const start=textareaOffset(this.session.text,range.start),end=textareaOffset(this.session.text,range.end),display=this.area.value;
     let line=1;for(let i=0;i<start;i++)if(display[i]==='\n')line++;
     this.session.ui.panel='json';this.panel('json');this.area.focus();this.area.setSelectionRange(start,end);
@@ -111,7 +134,9 @@ export class JsonEditor {
   async showSourceInPreview() {
     if(!this.navigationReady())return;
     const session=this.session,context=this.lastRendered;
-    const sources=previewSources(session.lastValid.package,context.layoutId),pointer=sourceAtOffset(session.validation.locations,sources,sourceOffset(session.text,this.area.selectionStart));
+    const sources=previewSources(session.lastValid.package,context.layoutId);
+    const selection=this.forms.selection,formPointer=selection?'/'+selection.map(part=>String(part).replaceAll('~','~0').replaceAll('/','~1')).join('/'):null;
+    const pointer=session.ui.mode==='forms'?(sources.has(formPointer)?formPointer:formPointer==='/system' && sources.has('/system/name')?'/system/name':null):sourceAtOffset(session.validation.locations,sources,sourceOffset(session.text,this.area.selectionStart));
     if(!pointer){this.navigationStatus.textContent='Este trecho não tem elemento direto no layout de ensaio. Posicione o cursor em um componente, seção, aba, layout ou cabeçalho visível.';return;}
     // Reveal the mobile panel before the frame computes geometry and scrolls.
     const previousPanel=this.host.dataset.editorPanel;this.panel('preview');
@@ -155,6 +180,8 @@ export class JsonEditor {
     this.apply.disabled=!this.lastRenderedCurrent;
     this.locate.disabled=!this.lastRenderedCurrent;this.showPreview.disabled=!this.lastRenderedCurrent;
     if(!this.lastRenderedCurrent && this.locating)this.setLocating(false);
+    if(validated && this.session.ui.mode==='forms' && this.formsText!==session.text){this.forms.refresh();this.formsText=session.text;}
+    this.refreshPending();
     if(session.history.boundary)this.status.textContent='Edição preservada; o limite do histórico encerrou operações anteriores.';
   }
   async updatePreview() {
@@ -166,11 +193,12 @@ export class JsonEditor {
     catch(error){if(this.disposed||session!==this.session||request!==this.previewRequest)return;this.runtimeError=error.message;this.refresh();throw error;}
   }
   exportPackage(lastValid=false) {
+    if(!lastValid)this.assertNoPending();
     const result=this.session.validate();if(!lastValid && result.status!=='ready')throw new Error('A revisão atual não é válida. Baixe o rascunho ou exporte explicitamente a última válida.');
     const snapshot=lastValid?this.session.lastValid:{package:result.document,revision:this.session.revision};if(!snapshot)throw new Error('Sem versão válida.');
     downloadJson(snapshot.package,`${snapshot.package.system.id}.system.json`);this.status.textContent=`Pacote exportado da revisão ${snapshot.revision}; amostra de ensaio excluída.`;
   }
-  async applyPackage() {if(!this.lastRenderedCurrent)throw new Error('Atualize o ensaio da revisão atual antes de aplicar.');if(!this.onApply)throw new Error('Aplicação ainda indisponível.');await this.onApply(this);this.refresh();}
+  async applyPackage() {this.assertNoPending();if(!this.lastRenderedCurrent)throw new Error('Atualize o ensaio da revisão atual antes de aplicar.');if(!this.onApply)throw new Error('Aplicação ainda indisponível.');await this.onApply(this);this.refresh();}
   scheduleDraft() {clearTimeout(this.draftTimer);if(!this.draftConflict && !this.exiting)this.draftTimer=setTimeout(()=>this.run(()=>this.saveDraft()),650);}
   currentUi(){return {...this.session.ui,theme:this.theme.value,width:this.width.value,split:Number(this.split.value),cursorStart:this.area.selectionStart,cursorEnd:this.area.selectionEnd,scrollTop:this.area.scrollTop};}
   saveDraft(copy=false) {

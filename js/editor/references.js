@@ -1,5 +1,5 @@
 import {pointerFor} from './source-map.js';
-const referenceKeys=new Set(['field','formula','optionsFrom','presetsFrom','traitsFrom','configFrom','actionsFrom','rollPreset','collection','overrideKey','definitionId','sourceId','check','historyField']);
+const referenceKeys=new Set(['field','formula','optionsFrom','presetsFrom','traitsFrom','configFrom','actionsFrom','rollPreset','rollConfigFrom','collection','overrideKey','definitionId','sourceId','check','historyField','costsFrom','labelsFrom','catalogFrom','progressionFrom','formulaFrom','attributesFrom','categoriesFrom','baseDieFrom','sidesFrom']);
 // A report of consumed reference slots, never a string-replacement/refactor graph.
 export function knownReferences(pkg) {
   if(!pkg?.system || !Array.isArray(pkg.layouts))return [];
@@ -8,15 +8,18 @@ export function knownReferences(pkg) {
     if(!value||typeof value!=='object')return;
     for(const [key,child]of Object.entries(value)){
       const next=[...path,key];
+      if(typeof child==='string' && key==='difficultyFormula')result.push({pointer:pointerFor(next),kind:'formula',value:child});
+      if(typeof child==='string' && key==='key' && path.at(-1)==='target' && value.kind==='checkModifier')result.push({pointer:pointerFor(next),kind:'checkTarget',value:child});
       if(typeof child==='string' && (referenceKeys.has(key)||key.endsWith('Field')||key==='source'&&path.at(-1)==='repeat'||key==='system'&&path.at(-2)==='variables'||path.at(-1)==='overrideKeys'))result.push({pointer:pointerFor(next),kind:key,value:child});
       // Opaque extension metadata and text are deliberately outside this report.
-      if(child&&typeof child==='object' && !['metadata','extra','extras','manifest'].includes(key))walk(child,next);
+      if(child&&typeof child==='object' && !['metadata','extra','extras','manifest','extensions'].includes(key))walk(child,next);
     }
   };
   pkg.layouts.forEach((layout,index)=>{result.push({pointer:`/layouts/${index}/system`,kind:'system',value:layout?.system});walk(layout,['layouts',index]);});
   // Expressões são relatadas como unidades; não presumir refatoração de tokens.
   if(pkg.system.formulas && typeof pkg.system.formulas==='object' && !Array.isArray(pkg.system.formulas))for(const [key,value]of Object.entries(pkg.system.formulas))if(typeof value==='string')result.push({pointer:pointerFor(['system','formulas',key]),kind:'expression',value});
-  for(const key of ['checks','entryRolls','recoveryActions','sheetActions','effectDefinitions'])walk(pkg.system[key],['system',key]);
+  walk(pkg.system.characterTemplate?.activeEffects,['system','characterTemplate','activeEffects']);
+  for(const key of ['checks','entryRolls','recoveryActions','sheetActions','effectDefinitions','pointBudget','repertoire','techniqueUse','resolution'])walk(pkg.system[key],['system',key]);
   return result;
 }
 export function identityImpact(base,candidate) {

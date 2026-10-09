@@ -3,8 +3,10 @@ import { expect, test } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)', { timeout: 15_000 });
+  await expect(page.locator('#generic-sheet-host .engine-sheet')).toBeVisible();
   await page.getByRole('button', { name: 'Sistemas', exact: true }).click();
   await page.locator('#systems-list .library-card').filter({ hasText: 'Sistema de RPG' }).getByRole('button', { name: 'Abrir' }).click();
+  await expect(page.locator('#shell-current-system')).toHaveText('Sistema de RPG');
   await expect(page.locator('.engine-sheet')).toBeVisible();
 });
 
