@@ -1,17 +1,18 @@
+import {AUTHORING_LABELS} from './authoring-labels.js';
 import {ACTION_OPERATIONS} from '../validation/actions.js';
 import {COMPONENT_CONTRACTS,ITEM_FIELD_CONTRACTS,CHECK_ALGORITHMS,RECOVERY_CONTRACT,EFFECT_EVENTS} from '../validation/contracts.js';
 const s=()=>({type:'string'}),path=()=>({type:'path'});
 export const LABELS={id:'ID',name:'Nome',label:'Rótulo',title:'Título',field:'Campo do personagem',type:'Tipo',help:'Ajuda',default:'Valor padrão',formula:'Fórmula',variables:'Variáveis',configFrom:'Configuração no sistema',actionsFrom:'Ações no sistema',options:'Opções',optionsFrom:'Fonte das opções',itemSchema:'Campos dos itens',repeat:'Repetição',characterTemplate:'Template do personagem',formulas:'Fórmulas',checks:'Testes',entryRolls:'Rolagens de entradas',sheetActions:'Ações da ficha',recoveryActions:'Recuperações',effectDefinitions:'Efeitos',sources:'Fontes',operations:'Operações',consumeField:'Preferência de consumo',expression:'Expressão',value:'Valor',mode:'Modo',sourceId:'ID da fonte',algorithm:'Algoritmo',note:'Nota da mesa',historyField:'Campo de histórico',layout:'Disposição',variant:'Variante',schemaVersion:'Versão do documento'};
-export const labelFor=key=>LABELS[key] || key;
+export const labelFor=key=>LABELS[key] || AUTHORING_LABELS[key] || key;
 export function nodeSchema(kind,value={}) {
   value??={};
   if(kind==='package')return {schemaVersion:{type:'integer'}};
   if(kind==='system')return {id:s(),name:s(),description:s(),schemaVersion:{type:'integer'},characterTemplate:{type:'any',label:'Template do personagem'},formulas:{type:'object',values:{type:'string',multiline:true}},diceSteps:{type:'boolean'},diceTray:{type:'boolean'},dieScale:{type:'array',items:{type:'integer'}},...SYSTEM_RULES};
-  if(kind==='layout')return {id:s(),name:s(),mode:{type:'string',enum:['sheet','table']},schemaVersion:{type:'integer'}};
+  if(kind==='layout')return {id:s(),name:s(),mode:{type:'string',enum:['sheet','table']},schemaVersion:{type:'integer'},showHeader:{type:'boolean',label:'Mostrar cabeçalho'}};
   if(kind==='tab')return {id:s(),label:s(),variant:s()};
-  if(kind==='section')return {id:s(),title:s(),note:s(),variant:s()};
-  if(kind==='container')return {id:s(),variant:s(),layout:{type:'object',properties:{type:{type:'string',enum:['stack','grid','flex']},gap:{type:'number',enum:[4,8,12,16,24,32]},min:{type:'number',enum:[120,140,160,180,220,260,300]}}},repeat:{type:'object',properties:{source:path()}}};
-  if(kind==='component')return {type:{type:'string',enum:Object.keys(COMPONENT_CONTRACTS)},...Object.fromEntries(Object.entries(COMPONENT_CONTRACTS[value.type]?.properties || {}).filter(([key,desc])=>!desc.inert && !['extensions','type'].includes(key)).map(([key,desc])=>[key,{...desc,...(NESTED[key] || {})}]))};
+  if(kind==='section')return {id:s(),title:s(),note:s(),notes:{type:'string',label:'Nota (alias existente)'},variant:s(),print:printSchema('section',value)};
+  if(kind==='container')return {id:s(),variant:s(),layout:{type:'object',properties:{type:{type:'string',enum:['stack','grid','flex']},gap:{type:'number',enum:[4,8,12,16,24,32]},min:{type:'number',enum:[120,140,160,180,220,260,300]}}},repeat:{type:'object',properties:{source:path()}},print:printSchema('container',value)};
+  if(kind==='component')return {type:{type:'string',enum:Object.keys(COMPONENT_CONTRACTS)},...Object.fromEntries(Object.entries(COMPONENT_CONTRACTS[value.type]?.properties || {}).filter(([key,desc])=>!desc.inert && !['extensions','type'].includes(key)).map(([key,desc])=>[key,{...desc,...(NESTED[key] || {}),...(key==='print'?printSchema('component',value):{})}]))};
   return {};
 }
 export function propertyGroup(key) {if(['label','title','name','note','variant','help','rows','placeholder','alt','layout','print','mode','format','actionLabel','addLabel','emptyLabel','heading','removeLabel','searchLabel','searchPlaceholder','toolbarTitle','defaultOpen','reorderable','summaryFields','itemDetails'].includes(key))return 'Apresentação';if(['formula','variables','roll','override','overrideKey','overrideKeys','disabledWhen','entryAction','rollPreset','rollConfigFrom','creationCost','overflow','recovery','traitSources','configFrom','actionsFrom','historyField','presetsFrom','traitsFrom'].includes(key))return 'Lógica';return 'Dados';}
@@ -65,7 +66,7 @@ const effect=obj({id:str,label:str,revision:{type:'integer'},stacking:en(['uniqu
 const budgetSource=obj({field:ref,kind:en(['map','list']),...paths('labelsFrom catalogFrom costsFrom'),baseDie:num,label:str,...strings('valueField costField evolutionValueField'),countCreation:bool,limitByQuality:bool,allowComposite:bool});
 const budget=obj({...paths('field qualityField adjustmentField evolutionField presetsFrom'),sources:arr(budgetSource),modifiers:arr(obj({field:ref,valueField:ref,sign:num,label:str})),postAscension:obj({enabledField:ref,formulaFrom:ref})});
 const repertoire=obj(paths('specializationsField gradeField techniquesField linkField progressionFrom'));
-const technique=obj({...paths('attributesFrom attributesField skillsField techniquesField specializationsField costsFrom energyField concentrationField lastUseField'),skillBaseDie:num,modes:arr(obj({id:str,label:str,terms:arr(en(['attribute','specialization','technique','skill','highestSpecialization','constant'])),requiresTechnique:bool,requiresSpecialization:bool,requiresConcentration:bool,techniqueFrom:en(['specialization']),reductionSteps:{type:'integer'},energyFrom:en(['original']),reverseOnFailure:bool,failureImpact:bool,free:bool,constantDie:num,defaultAttribute:str,skill:str,note:{type:'string',multiline:true}}))});
+const technique=obj({...paths('attributesFrom attributesField skillsField techniquesField specializationsField costsFrom energyField concentrationField lastUseField'),skillBaseDie:num,modes:arr(obj({id:str,label:str,terms:arr(en(['attribute','specialization','technique','skill','highestSpecialization','constant'])),requiresTechnique:bool,requiresSpecialization:bool,requiresConcentration:bool,techniqueFrom:en(['specialization']),reductionSteps:{type:'integer'},energyFrom:en(['original','specialization']),reverseOnFailure:bool,failureImpact:bool,free:bool,constantDie:num,defaultAttribute:{type:'string',editor:'attributeKey'},skill:{type:'string',editor:'skillKey'},labels:obj(strings('attribute specialization technique skill highestSpecialization constant')),note:{type:'string',multiline:true}}))});
 const poolSource=obj({kind:en(['constant','field','entries']),from:en(['character','system']),id:str,label:str,sides:any,sidesFrom:ref,field:ref,collection:ref,require:ref,excludeWhen:obj({field:ref,equals:any})});
 Object.assign(NESTED,{
   creationCost:obj({baseDie:num,valueField:ref,costsFrom:ref}),
@@ -85,6 +86,8 @@ export const SYSTEM_RULES={
   techniques:obj({progressionByDie:map(obj({freeCount:{type:'integer'},grants:arr(obj({count:{type:'integer'},sides:num}))}))}),
   abilities:arr(obj({key:str,label:str,short:str})),skills:arr(obj({key:str,label:str,ability:str})),diceSet:arr(num),
   opposition:obj({passivePresets:arr(obj({id:str,label:str,dice:arr(num)}))}),resolution:obj({type:en(['d20-above-difficulty']),difficultyFormula:ref,criticalSuccessAt:num,criticalFailureAt:num,note:{type:'string',multiline:true}}),
-  evolution:obj({costs:map(num),postAscensionFormulaOptional:str}),
+  evolution:obj({costs:map(num),postAscensionFormulaOptional:{type:'string',editor:'postAscensionFormula'}}),
 };
 export function ruleDescriptor(key){return SYSTEM_RULES[key];}
+
+export function printSchema(kind,value){const collection=kind==='component'&&value?.itemSchema;return {type:'object',properties:{compact:{type:'object',properties:{include:{type:'boolean',label:'Incluir na impressão compacta'},...(collection?{fields:{type:'array',items:{type:'string'},label:'Campos no resumo'}}:{}),...(kind!=='component'||collection?{presentation:{type:'string',enum:collection?['table','records']:['cards','inline'],label:'Apresentação compacta'}}:{})}}}};}

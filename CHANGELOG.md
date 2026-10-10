@@ -1,5 +1,12 @@
 # Histórico de versões
 
+## Alterações locais — item 14, 10 de outubro de 2026
+
+- Autoria visual dos mecanismos atuais em Compor, reutilizando documento, operações, histórico, recuperação, sandbox e aplicação do editor existente. Toolbox por finalidade, inclusão guiada, seleção da definição original, movimento por nomes e arrasto direto para o canvas, com indicador de encaixe e atualização automática de stack/grid/flex.
+- Dados e catálogos por nome, referências, construtores de fórmulas/condições/dados e receitas das famílias atuais de testes, entradas, ações, recuperação, efeitos, módulos assistidos, criação/evolução, repertório, Pool, técnicas e D&D.
+- Inspector contextual, reparos explícitos, paginação, upload de imagens pelo compressor existente, ajuda, leitura do ensaio e organização/fechamento de layouts e pacotes.
+- Cobertura e limites em [autoria visual](data/examples/editor-visual.md). Verificação atual: 128/128 Node; 375/380 Playwright na completa, que teve interrupção de energia relatada, seguidos de 15/15 retestes dos cinco casos afetados, sem alteração de código. Checks de referência, inventário, documentação, prévia e offline aprovados; nenhuma publicação. A ambição de autoria de qualquer sistema continua aberta, sem novas mecânicas, migração de personagens ou card informativo independente.
+
 ## 0.5.0 — 6 de outubro de 2026
 
 Pré-lançamento que amplia os sistemas disponíveis e os contratos da engine. Reúne as entregas posteriores à v0.2.0; não houve releases públicas v0.3.0 ou v0.4.0.

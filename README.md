@@ -63,7 +63,7 @@ O documento adapta a identidade visual da ficha ao papel A4 e inclui o conteúdo
 | Ordem Paranormal | Ficha preenchível baseada nos campos da ficha oficial pública. Regras e totais manuais. |
 | Seus sistemas | Importação de pacotes com dados e layouts configuráveis. Componentes compatíveis podem ser reutilizados; mecânicas novas podem exigir implementação adicional. |
 
-**O projeto está em desenvolvimento**, ainda sem lançamento de produção. A cobertura depende do sistema: não há automação integral de livros ou editor visual completo.
+**O projeto está em desenvolvimento**, ainda sem lançamento de produção. A cobertura depende do sistema; não há automação integral de livros nem suporte universal a toda mecânica. O [editor visual](data/examples/editor-visual.md) oferece autoria dos mecanismos atuais, com cobertura e limites por família.
 
 Os seis sistemas adicionais oferecem Padrão e Modo mesa. Consulte [referências, cobertura e regras manuais](data/examples/additional-systems.md): criação, evolução, custos e decisões narrativas não são aplicados automaticamente.
 
@@ -74,7 +74,9 @@ Os seis sistemas adicionais oferecem Padrão e Modo mesa. Consulte [referências
 3. Use a busca para localizar campos e **Configurações** para ajustar a aparência.
 4. Salve uma cópia com **Exportar JSON** ou faça o backup da biblioteca em Configurações → **Exportar tudo**.
 
-Para acrescentar um pacote próprio, abra **Sistemas** → **Importar sistema**. Há [exemplos importáveis e contratos](data/examples/README.md) para quem deseja configurar regras e layouts.
+Para montar uma ficha própria, abra **Sistemas** → **Criar pacote** → **Compor**. Use os cards da toolbox, a prévia e as receitas de lógica; **Experimentar** permite ensaiar com dados fictícios. Consulte [autoria visual e limites](data/examples/editor-visual.md).
+
+Para acrescentar um pacote de arquivo, abra **Sistemas** → **Importar sistema**. Há [exemplos importáveis e contratos](data/examples/README.md) para quem deseja configurar regras e layouts.
 
 ## Seus dados
 

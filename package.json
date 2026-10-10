@@ -9,13 +9,15 @@
     "test:full": "npm run test:unit && playwright test --workers=2 && npm run check:docs && npm run check:offline",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "check:docs": "npm run check:reference && node scripts/check-doc-links.mjs",
+    "check:docs": "npm run check:reference && npm run check:editor-capabilities && node scripts/check-doc-links.mjs",
     "build:preview": "node scripts/build-editor-preview.mjs",
     "check:preview": "node scripts/build-editor-preview.mjs --check",
     "build:offline": "npm run build:preview && node scripts/build-offline.mjs",
     "check:offline": "npm run check:preview && node scripts/build-offline.mjs --check",
     "build:reference": "node scripts/build-reference.mjs",
-    "check:reference": "node scripts/build-reference.mjs --check"
+    "check:reference": "node scripts/build-reference.mjs --check",
+    "build:editor-capabilities": "node scripts/build-editor-capabilities.mjs",
+    "check:editor-capabilities": "node scripts/build-editor-capabilities.mjs --check"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",

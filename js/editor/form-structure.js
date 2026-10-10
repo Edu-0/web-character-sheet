@@ -1,3 +1,4 @@
+import {cachedProjection,revisionProjection} from './projection-cache.js';
 import {pointerFor} from './source-map.js';
 import {RESERVED_KEYS} from './operation-paths.js';
 
@@ -8,9 +9,10 @@ export function editableDocument(session) {
   const result=session.validate();
   if(!object(result.value) || result.status==='unsupported' || result.diagnostics.some(issue=>issue.code?.startsWith('json.')))throw new Error('O texto atual não pode ser convertido sem perda. Corrija o JSON; ele permanece preservado.');
   if(!object(result.value.system))throw new Error('O sistema precisa ser um objeto para abrir formulários. Corrija este ramo no JSON; o texto atual permanece preservado.');
-  return result.value;
+  return revisionProjection(result.value);
 }
-export function structuralNodes(pkg) {
+export function structuralNodes(pkg) {return cachedProjection(pkg,'structure',()=>buildStructuralNodes(pkg));}
+function buildStructuralNodes(pkg) {
   const nodes=[];
   const add=(kind,path,title,parent=null)=>{const node={kind,path,pointer:pointerFor(path),title,parent,value:valueAt(pkg,path)};nodes.push(node);return node;};
   add('package',[],'Pacote');
@@ -74,3 +76,6 @@ export function reconcileSelection(previous,next,selection) {
   if(object(old.value) && old.value.id){const match=candidates.filter(node=>node.value?.id===old.value.id);if(match.length===1)return match[0].path;}
   if(old.kind==='system' && object(next.system))return ['system'];return null;
 }
+
+// Visual repair can inspect parseable incompatible branches without using lastValid.
+export function editableVisualDocument(session){const result=session.validate();if(!object(result.value)||result.status==='unsupported'||result.diagnostics.some(issue=>issue.code?.startsWith('json.')))throw new Error('O texto não pode ser interpretado sem perda. Preserve o rascunho e corrija a sintaxe ou a versão no acesso avançado.');return revisionProjection(result.value);}

@@ -24,3 +24,6 @@ export function rollValue(source, context) {
   if ((value == null || value === '') && Object.hasOwn(source, 'fallback')) value = source.fallback;
   return source.overrideKey ? calculationValue(context.character, source.overrideKey, value, { system: context.system }) : value;
 }
+
+// Read-only capability discovery for the authoring UI; execution is unchanged.
+export function rollValueResolverNames(){return [...valueResolvers.keys()];}

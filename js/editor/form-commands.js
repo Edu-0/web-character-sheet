@@ -17,7 +17,7 @@ export function renameKeyCommands(pkg,path,newKey) {
 export function referenceOptions(pkg,path,key) {
   const paths=(root,prefix='',depth=0)=>{if(depth>10 || !object(root)&&!Array.isArray(root))return [];return Object.entries(root).flatMap(([name,value])=>{const next=prefix?prefix+'.'+name:name;return [next,...paths(value,next,depth+1)];});};
   if(key==='formula')return Object.keys(pkg.system?.formulas || {});
-  if(key==='rollPreset')return Object.keys(pkg.system?.entryRolls || {});
+  if(['rollPreset','rollConfigFrom'].includes(key))return Object.keys(pkg.system?.entryRolls || {});
   if(key==='check')return Object.keys(pkg.system?.checks || {});
   if(key==='sourceId'){const owner=valueAt(pkg,path.slice(0,-1));return (pkg.system?.checks?.[owner?.check]?.sources || []).map(source=>source.id).filter(Boolean);}
   const systemPaths=paths(pkg.system),fields=paths(pkg.system?.characterTemplate);

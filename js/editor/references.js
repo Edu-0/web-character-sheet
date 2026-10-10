@@ -1,7 +1,9 @@
+import {cachedProjection} from './projection-cache.js';
 import {pointerFor} from './source-map.js';
 const referenceKeys=new Set(['field','formula','optionsFrom','presetsFrom','traitsFrom','configFrom','actionsFrom','rollPreset','rollConfigFrom','collection','overrideKey','definitionId','sourceId','check','historyField','costsFrom','labelsFrom','catalogFrom','progressionFrom','formulaFrom','attributesFrom','categoriesFrom','baseDieFrom','sidesFrom']);
 // A report of consumed reference slots, never a string-replacement/refactor graph.
-export function knownReferences(pkg) {
+export function knownReferences(pkg) {return cachedProjection(pkg,'references',()=>buildKnownReferences(pkg));}
+function buildKnownReferences(pkg) {
   if(!pkg?.system || !Array.isArray(pkg.layouts))return [];
   const result=[{pointer:'/system/id',kind:'identity',value:pkg.system.id},{pointer:'/system/characterTemplate/meta/system',kind:'system',value:pkg.system.characterTemplate?.meta?.system}];
   const walk=(value,path)=>{
@@ -19,6 +21,7 @@ export function knownReferences(pkg) {
   // Expressões são relatadas como unidades; não presumir refatoração de tokens.
   if(pkg.system.formulas && typeof pkg.system.formulas==='object' && !Array.isArray(pkg.system.formulas))for(const [key,value]of Object.entries(pkg.system.formulas))if(typeof value==='string')result.push({pointer:pointerFor(['system','formulas',key]),kind:'expression',value});
   walk(pkg.system.characterTemplate?.activeEffects,['system','characterTemplate','activeEffects']);
+  const consumed=result.filter(ref=>['configFrom','actionsFrom','rollConfigFrom'].includes(ref.kind));const followed=new Set();for(const ref of consumed){const parts=ref.value.replace(/^system\./,'').split('.'),pointer=pointerFor(['system',...parts]);if(followed.has(pointer)||['checks','entryRolls','recoveryActions','sheetActions','effectDefinitions','pointBudget','repertoire','techniqueUse','resolution'].includes(parts[0]))continue;followed.add(pointer);let value=pkg.system;for(const part of parts)value=value!=null&&Object.hasOwn(Object(value),part)?value[part]:undefined;if(value&&typeof value==='object')walk(value,['system',...parts]);}
   for(const key of ['checks','entryRolls','recoveryActions','sheetActions','effectDefinitions','pointBudget','repertoire','techniqueUse','resolution'])walk(pkg.system[key],['system',key]);
   return result;
 }

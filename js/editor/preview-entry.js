@@ -9,6 +9,7 @@ import {matchesPreview,previewMessage,PREVIEW_PROTOCOL} from './preview-protocol
 import {previewSources} from './source-navigation.js';
 import {previewNavigation} from './preview-navigation.js';
 import {pointerFor} from './source-map.js';
+import {closeModal} from '../modal.js';
 
 let port, context, character, controller, original, navigation;
 const send = (type,payload={}) => port?.postMessage(previewMessage(type,context,payload));
@@ -22,13 +23,16 @@ function bootstrap(event) {
   window.removeEventListener('message',bootstrap);
   context=message.context; port=event.ports[0];
   port.onmessage=({data})=>{
-    if (!matchesPreview(data,context,['mount','appearance','snapshot','dispose','inspect','reveal-source'])) return;
+    if (!matchesPreview(data,context,['mount','appearance','snapshot','dispose','inspect','compose','composition-geometry','composition-scroll','reveal-source'])) return;
     try {
       if (data.type==='dispose') {navigation?.destroy();controller?.destroy();port.close();return;}
       if (data.type==='appearance') {appearance(data.appearance);return;}
       if (data.type==='snapshot') {send('snapshot',{requestId:data.requestId,character:structuredClone(character),history:structuredClone(getHistory()),migrationOriginal:original});return;}
+      if(data.type==='composition-geometry'){send('composition-geometry',{requestId:data.requestId,rectangles:navigation?.geometry()||[]});return;}
+      if(data.type==='composition-scroll'){navigation?.scroll(data.delta);return;}
+      if(data.type==='compose'){closeModal();navigation?.compose(data.enabled,data.token);return;}
       if (data.type==='inspect') {navigation?.inspect(data.enabled);return;}
-      if (data.type==='reveal-source') {send('source-revealed',{requestId:data.requestId,...navigation.reveal(data.pointer)});return;}
+        if (data.type==='reveal-source') {send('source-revealed',{requestId:data.requestId,...navigation.reveal(data.pointer,{focus:data.focus!==false,scroll:data.scroll!==false})});return;}
       const prepared=prepareDocument(data.package,{kind:'package'});
       if (prepared.status!=='ready') throw new Error('Pacote de ensaio inválido.');
       const pkg=prepared.document, layout=pkg.layouts.find(layout=>layout.id===context.layoutId);

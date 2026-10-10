@@ -10,7 +10,7 @@ async function runtimeAssets() {
 }
 const attrs = () => Object.fromEntries(['theme','palette','diceDisplay'].map(key=>[key,document.documentElement.dataset[key] || '']));
 export class PreviewHost {
-  constructor(host,{sessionId=crypto.randomUUID(),onDiagnostic=()=>{},onSource=()=>{},onInspectionEnd=()=>{}}={}) {this.host=host;this.sessionId=sessionId;this.generation=0;this.onDiagnostic=onDiagnostic;this.onSource=onSource;this.onInspectionEnd=onInspectionEnd;this.pending=new Set();}
+  constructor(host,{sessionId=crypto.randomUUID(),onDiagnostic=()=>{},onSource=()=>{},onInspectionEnd=()=>{},onCompositionDrop=()=>{}}={}) {this.host=host;this.sessionId=sessionId;this.generation=0;this.onDiagnostic=onDiagnostic;this.onSource=onSource;this.onInspectionEnd=onInspectionEnd;this.onCompositionDrop=onCompositionDrop;this.pending=new Set();}
   async mount(pkg,{revision,layoutId,appearance=attrs()}={}) {
     for(const record of this.pending)this.destroyRecord(record);
     const generation=++this.generation, context={sessionId:this.sessionId,generation,revision,layoutId};
@@ -25,13 +25,15 @@ export class PreviewHost {
       const finish=error=>{clearTimeout(timer);record.cancel=null;if(error) reject(error);else resolve(record);};
       record.cancel=()=>finish(new Error('Prévia descartada.'));
       channel.port1.onmessage=({data})=>{
-        if (generation!==this.generation && record!==this.current || !matchesPreview(data,context,['ready','rendered','runtime-diagnostic','snapshot','source-picked','source-revealed','inspection-ended'])) return;
+        if (generation!==this.generation && record!==this.current || !matchesPreview(data,context,['ready','rendered','runtime-diagnostic','snapshot','source-picked','source-revealed','composition-geometry','composition-drop','inspection-ended'])) return;
         if (data.type==='ready') channel.port1.postMessage(previewMessage('mount',context,{package:pkg,appearance}));
         if (data.type==='rendered') finish();
         if (data.type==='runtime-diagnostic') {this.onDiagnostic(data.message);finish(new Error(data.message));}
         if (data.type==='snapshot') record.requests?.get(data.requestId)?.(data);
+        if (data.type==='composition-geometry') record.requests?.get(data.requestId)?.(data);
         if (data.type==='source-revealed') record.requests?.get(data.requestId)?.(data);
         if (data.type==='source-picked' && record===this.current && record.sources.has(data.pointer)) this.onSource({pointer:data.pointer,...context});
+        if(data.type==='composition-drop'&&record===this.current&&data.token===record.compositionToken&&record.sources.has(data.source)&&record.sources.has(data.target))this.onCompositionDrop({...data,...context});
         if (data.type==='inspection-ended' && record===this.current) this.onInspectionEnd();
       };
       channel.port1.start();
@@ -50,12 +52,15 @@ export class PreviewHost {
       record.port.postMessage(previewMessage(type,record.context,{requestId:id,...payload}));
     });
   }
+  async geometry(){const data=await this.request('composition-geometry');return (Array.isArray(data.rectangles)?data.rectangles:[]).slice(0,10000).filter(r=>this.current?.sources.has(r?.pointer)&&['x','y','width','height'].every(k=>Number.isFinite(r[k])&&Math.abs(r[k])<=10000000)&&r.width>=0&&r.height>=0);}
+  compositionScroll(delta){if(this.current)this.current.port.postMessage(previewMessage('composition-scroll',this.current.context,{delta}));}
   snapshot() {return this.request('snapshot');}
-  revealSource(pointer) {
+  revealSource(pointer,{focus=true,scroll=true}={}) {
     if(!this.current?.sources.has(pointer))return Promise.reject(new Error('Trecho sem elemento nesta prévia.'));
-    return this.request('reveal-source',{pointer});
+    return this.request('reveal-source',{pointer,focus:focus===true,scroll:scroll===true});
   }
   inspect(enabled) {if(this.current)this.current.port.postMessage(previewMessage('inspect',this.current.context,{enabled:enabled===true}));}
+  compose(enabled){if(this.current){this.current.compositionToken=enabled?crypto.randomUUID():null;this.current.port.postMessage(previewMessage('compose',this.current.context,{enabled:enabled===true,token:this.current.compositionToken}));}}
   appearance(appearance) {if(this.current)this.current.port.postMessage(previewMessage('appearance',this.current.context,{appearance}));}
   destroyRecord(record) {if (!record)return;record.cancel?.();for(const request of record.requests?.values() || [])request.cancel();record.port.postMessage(previewMessage('dispose',record.context));record.port.close();record.frame.remove();this.pending.delete(record);}
   dispose() {this.generation++;for(const record of this.pending)this.destroyRecord(record);this.destroyRecord(this.current);this.current=null;}
