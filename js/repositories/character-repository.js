@@ -1,6 +1,7 @@
 import { readJson, readRaw, transactWithinWrite, storageKeys, migrationCopyChange } from '../persistence.js';
 import {withLibraryWrite} from '../write-coordinator.js';
 import { LIMITS, readJsonFile } from '../validation/limits.js';
+import {initializeData} from '../engine/data-definitions.js';
 import { createId } from '../data.js';
 import { assertValid, validateCharacter, validateCharacterForPackage } from '../validation/schemas.js';
 import { prepareDocument } from '../validation/documents.js';
@@ -87,7 +88,7 @@ export function saveCharacterWithinWrite(character, {copies = [],expectedPackage
 
 export function createCharacter(system) {
   if (!system.characterTemplate) throw new Error(`O sistema "${system.name}" não possui characterTemplate.`);
-  const character = clone(system.characterTemplate);
+  const character = initializeData(system, clone(system.characterTemplate));
   const now = new Date().toISOString();
   character.meta = {
     ...character.meta,

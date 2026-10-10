@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 
 const base='/layouts/0/tabs/0/sections/0/containers/0/components/';
 const frame=page=>page.frameLocator('.editor-preview-frame:not([hidden])');
@@ -10,7 +10,7 @@ async function open(page){
     const {PreviewHost}=await import('/js/editor/preview-host.js'),mount=PreviewHost.prototype.mount;
     PreviewHost.prototype.mount=function(...args){window.navigationHost=this;return mount.apply(this,args);};
   });
-  await page.getByRole('button',{name:'Sistemas',exact:true}).click();await page.getByRole('button',{name:'Criar pacote',exact:true}).click();
+  await page.getByRole('button',{name:'Sistemas',exact:true}).click();await page.locator('#input-editor-file').setInputFiles({name:'legacy-example.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(minimalPackage('legacy-regression'),null,2))});
   await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0');
 }
 async function load(page,pkg){

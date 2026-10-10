@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 const read=name=>JSON.parse(readFileSync(`data/examples/${name}.package.json`,'utf8'));
 async function start(page) {
   await page.goto('/');await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');

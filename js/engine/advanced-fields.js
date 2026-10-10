@@ -135,21 +135,24 @@ registerFieldType('table', {
 registerFieldType('computed', {
   search(context) {
     // Fórmulas de rolagem só são executadas pelo botão da ficha.
-    const value = context.mode === 'roll' ? 'Rolagem sob demanda' : formatValue(computedValue(context), context.format);
+    let value;try{value = context.mode === 'roll' ? 'Rolagem sob demanda' : formatValue(computedValue(context), context.format);}catch(error){value='— ('+error.message+')';}
     return [{ label: context.label, value }];
   },
   render(container, context) {
     const wrap = fieldBlock(context.label, 'engine-computed');
     const output = element('output', 'engine-computed__value');
+    const errorStatus=context.ruleId?element('span','engine-empty'):null;if(errorStatus){errorStatus.setAttribute('role','status');errorStatus.id='rule-error-'+crypto.randomUUID();output.setAttribute('aria-describedby',errorStatus.id);}
     const refresh = () => {
       try {
         output.value = formatValue(computedValue(context), context.format);
         output.title = '';
         output.textContent = output.value;
+        if(errorStatus){errorStatus.textContent='';errorStatus.hidden=true;}
       } catch (error) {
         output.value = '—';
         output.textContent = '—';
         output.title = error.message;
+        if(errorStatus){errorStatus.textContent='Erro no cálculo: '+error.message;errorStatus.hidden=false;}
       }
     };
 
@@ -169,7 +172,7 @@ registerFieldType('computed', {
     } else {
       refresh();
       context.registerRefresh?.(refresh);
-      wrap.appendChild(output);
+      wrap.appendChild(output);if(errorStatus)wrap.append(errorStatus);
       if (context.override !== false) wrap.append(createCalculationControl({ ...context, key: computedKey(context), automatic: () => computedValue(context, true) }));
     }
     container.appendChild(wrap);

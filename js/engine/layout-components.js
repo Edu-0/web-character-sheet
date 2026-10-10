@@ -1,3 +1,4 @@
+import {dataDefinition} from './data-definitions.js';
 import { pathKeys } from './paths.js';
 // Expansão compartilhada pela renderização e pelo índice de busca.
 export function resolveSource(root, path) {
@@ -35,6 +36,7 @@ export function expandComponents(container, system) {
           return { value: option.value ?? option.id ?? option.key ?? optionIndex, label: option.label ?? option.name ?? (option.points != null ? `${option.points} pontos` : String(option.id ?? optionIndex + 1)) };
         });
       }
+      if (component.dataId !== undefined) {component.field=dataDefinition(system,component.dataId).binding;component.boundData=true;}
       if (component.field) pathKeys(component.field);
       return component;
     });

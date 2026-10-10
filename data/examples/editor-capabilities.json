@@ -213,6 +213,20 @@
       ]
     },
     {
+      "context": "component:boolean",
+      "property": "dataId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
       "context": "component:number",
       "property": "type",
       "consumer": "js/engine/fields.js",
@@ -418,6 +432,20 @@
         "tests/unit/editor-rule-authoring.test.mjs",
         "tests/unit/editor-visual-audit.test.mjs",
         "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:number",
+      "property": "dataId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
       ]
     },
     {
@@ -710,6 +738,20 @@
     },
     {
       "context": "component:text",
+      "property": "dataId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:text",
       "property": "placeholder",
       "consumer": "js/engine/fields.js",
       "validation": "js/validation/schemas.js",
@@ -930,6 +972,20 @@
         "tests/unit/editor-rule-authoring.test.mjs",
         "tests/unit/editor-visual-audit.test.mjs",
         "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:textarea",
+      "property": "dataId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
       ]
     },
     {
@@ -5506,6 +5562,20 @@
         "tests/unit/editor-rule-authoring.test.mjs",
         "tests/unit/editor-visual-audit.test.mjs",
         "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:computed",
+      "property": "ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
       ]
     },
     {
@@ -10146,6 +10216,160 @@
         "tests/unit/editor-rule-authoring.test.mjs",
         "tests/unit/editor-visual-audit.test.mjs",
         "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[]",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[].id",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[].label",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[].description",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[].type",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[].binding",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[].required",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[].nullable",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "dataDefinitions.[].initial",
+      "consumer": "js/engine/data-definitions.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "any",
+      "inert": false,
+      "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "rules",
+      "consumer": "js/engine/rule-registry.js",
+      "validation": "js/validation/data-definitions.js",
+      "type": "any",
+      "inert": false,
+      "control": "árvore de operações tipadas; painel Dados tipados e vínculos",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-general-authoring.test.mjs",
+        "tests/e2e/editor-general-authoring.spec.js"
       ]
     },
     {

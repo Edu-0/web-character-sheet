@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {readFile} from 'node:fs/promises';
 
 const membership='ficha-rpg:v2:catalog-installations';

@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {EditorSession} from '../../js/editor/session.js';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {encodeDraft,decodeDraft,saveDraft,readDraft,listDrafts,deleteDraft,DRAFT_PREFIX} from '../../js/editor/draft-repository.js';
 const store=new Map();globalThis.localStorage={getItem:key=>store.get(key)??null,setItem:(key,value)=>{store.set(key,value);Object.defineProperty(localStorage,key,{value,enumerable:true,configurable:true});},removeItem:key=>{store.delete(key);delete localStorage[key];}};
 // Browser locking is exercised by Playwright. Node's experimental LockManager

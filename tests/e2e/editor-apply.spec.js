@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 const upload=pkg=>({name:'apply.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(pkg))});
 async function ready(page){await page.goto('/');await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await page.evaluate(()=>navigator.serviceWorker.ready);await page.getByRole('button',{name:'Sistemas',exact:true}).click();}
 async function edit(page,pkg){await page.locator('#systems-list .library-card').filter({hasText:pkg.system.name}).getByRole('button',{name:'Editar pacote',exact:true}).click();await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0');}

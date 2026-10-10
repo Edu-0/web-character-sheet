@@ -1,0 +1,110 @@
+{
+  "kind": "rpg-system-package",
+  "schemaVersion": 3,
+  "system": {
+    "schemaVersion": 3,
+    "id": "primeiro-vinculo",
+    "name": "Primeiro vínculo",
+    "characterTemplate": {
+      "schemaVersion": 1,
+      "meta": {
+        "system": "primeiro-vinculo"
+      }
+    },
+    "dataDefinitions": [
+      {
+        "id": "data-ae5e4de1-c803-446c-a240-645902d4f022",
+        "label": "Vínculos",
+        "type": "number",
+        "binding": "vinculos",
+        "required": false,
+        "nullable": false
+      }
+    ],
+    "rules": [
+      {
+        "id": "rule-5f44ccba-3774-443a-a0c7-61af9cd8194b",
+        "label": "Bônus",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-e8ac6f05-31df-41f3-942b-0c0dfbbe8641",
+          "op": "floor",
+          "version": 1,
+          "value": {
+            "id": "node-80dab283-3800-4afe-8ba8-3f81f21ebaf9",
+            "op": "divide",
+            "version": 1,
+            "left": {
+              "id": "node-8dcc3205-653d-47e0-9f76-f7422a74d909",
+              "op": "ifAbsent",
+              "version": 1,
+              "value": {
+                "id": "node-8d37306b-1cfb-4947-bbea-91e9c7f36877",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-ae5e4de1-c803-446c-a240-645902d4f022"
+              },
+              "fallback": {
+                "id": "node-c1604c0c-3c6a-4129-9115-8e7717ca2528",
+                "op": "literal",
+                "version": 1,
+                "value": 0
+              }
+            },
+            "right": {
+              "id": "node-9f84f01d-01c2-46c3-b1c0-6237c00618e8",
+              "op": "literal",
+              "version": 1,
+              "value": 5
+            }
+          }
+        }
+      }
+    ]
+  },
+  "layouts": [
+    {
+      "schemaVersion": 3,
+      "id": "default",
+      "system": "primeiro-vinculo",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "basic",
+              "title": "Personagem",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "number",
+                      "label": "Vínculos da viagem",
+                      "dataId": "data-ae5e4de1-c803-446c-a240-645902d4f022"
+                    },
+                    {
+                      "type": "number",
+                      "label": "Vínculos da mesa",
+                      "dataId": "data-ae5e4de1-c803-446c-a240-645902d4f022"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Bônus",
+                      "ruleId": "rule-5f44ccba-3774-443a-a0c7-61af9cd8194b"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

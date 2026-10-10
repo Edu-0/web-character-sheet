@@ -1,6 +1,7 @@
 // Renderizador declarativo: Layout → Tabs → Sections → Containers → Components.
 // A estrutura, o conteúdo e as regras vêm dos JSONs; este módulo cuida somente
 // da composição acessível e do vínculo entre componentes e personagem.
+import {renderBoundField} from './bound-fields.js';
 import { getFieldType } from './fields.js';
 import './advanced-fields.js';
 import './point-fields.js';
@@ -222,7 +223,7 @@ function renderComponent(component, character, options) {
     return wrapper;
   }
 
-  fieldType.render(wrapper, {
+  (component.boundData ? renderBoundField : fieldType.render)(wrapper, {
     ...component,
     character,
     system: options.system,

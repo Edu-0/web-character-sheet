@@ -41,8 +41,8 @@ export function validateReferences(pkg, character, {template = false} = {}) {
         if (!Object.hasOwn(component.disabledWhen,'equals')) add(`${at}.disabledWhen.equals`,'informe o valor de comparação');
       }
       if (component.type==='computed' && component.mode!=='roll') {
-        const key=`computed.${component.overrideKey || component.formula}`;
-        const signature=JSON.stringify([component.formula,component.variables || {}]);
+        const key=`computed.${component.overrideKey || component.ruleId || component.formula}`;
+        const signature=JSON.stringify([component.ruleId || component.formula,component.variables || {}]);
         if (calculations.has(key) && calculations.get(key)!==signature) add(`${at}.overrideKey`,`a chave ${key} é compartilhada por cálculos incompatíveis`,'calculation.collision');
         calculations.set(key,signature);
       }

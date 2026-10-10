@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {EditorSession} from '../../js/editor/session.js';
 import {CHECK_ALGORITHMS,RECOVERY_CONTRACT} from '../../js/validation/contracts.js';
 import {ACTION_OPERATIONS} from '../../js/validation/actions.js';

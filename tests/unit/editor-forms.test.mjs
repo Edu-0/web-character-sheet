@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {EditorSession} from '../../js/editor/session.js';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {structuralNodes,structureCommand,editableDocument,reconcileSelection} from '../../js/editor/form-structure.js';
 const fixture=()=>{const pkg=minimalPackage('forms');pkg.extra={zero:0,no:false,nil:null,empty:'',list:[]};pkg.layouts[0].tabs[0].sections[0].containers[0].components[0].extra={nil:null};return pkg;};
 test('estrutura cria, move, duplica e remove pela sessão, com extras e undo exato',()=>{

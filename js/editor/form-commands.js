@@ -29,6 +29,8 @@ export function knownUsages(pkg,path) {
   const value=valueAt(pkg,path),name=path.at(-1),parent=path.at(-2),id=object(value)?value.id:typeof value==='string'?value:undefined;
   const systemKinds=new Set(['configFrom','actionsFrom','presetsFrom','traitsFrom','costsFrom','labelsFrom','catalogFrom','progressionFrom','formulaFrom','attributesFrom','categoriesFrom','baseDieFrom','sidesFrom']);
   return knownReferences(pkg).filter(entry=>entry.pointer!==pointerFor(path) && (
+    parent==='dataDefinitions'&&id?entry.kind==='dataId'&&entry.value===id:
+    parent==='rules'&&id?entry.kind==='ruleId'&&entry.value===id:
     parent==='formulas'?entry.kind==='formula'&&entry.value===name:
     parent==='checks'?['check','checkTarget'].includes(entry.kind)&&entry.value===name || entry.kind==='configFrom'&&entry.value==='checks.'+name:
     parent==='entryRolls'?['rollPreset','rollConfigFrom'].includes(entry.kind)&&entry.value===name:

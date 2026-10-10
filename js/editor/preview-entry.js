@@ -1,3 +1,4 @@
+import {initializeData} from '../engine/data-definitions.js';
 import {renderSheet} from '../engine/renderer.js';
 import {setSystem} from '../engine/system.js';
 import {setLayout} from '../engine/layout.js';
@@ -37,7 +38,7 @@ function bootstrap(event) {
       if (prepared.status!=='ready') throw new Error('Pacote de ensaio inválido.');
       const pkg=prepared.document, layout=pkg.layouts.find(layout=>layout.id===context.layoutId);
       if (!layout) throw new Error('Layout de ensaio ausente.');
-      character=structuredClone(pkg.system.characterTemplate);
+      character=initializeData(pkg.system,structuredClone(pkg.system.characterTemplate));
       character.meta={...character.meta,id:'editor-preview'};
       setSystem(pkg.system);setLayout(layout);appearance(data.appearance);
       const layoutIndex=pkg.layouts.indexOf(layout);

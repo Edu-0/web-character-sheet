@@ -4,6 +4,7 @@ import { captureFocus } from './focus.js';
 import { recoverTransactions, reportStorageError, migrationCopyChange } from './persistence.js';
 import {hasPendingLibraryWrites,flushLibraryWrites} from './write-coordinator.js';
 import { assertValid, validateCharacterForPackage } from './validation/schemas.js';
+import {initializeData} from './engine/data-definitions.js';
 // app.js — shell global, bibliotecas e apresentações da ficha ativa.
 import { state } from './state.js';
 import * as storage from './storage.js';
@@ -727,7 +728,7 @@ function wireToolbar() {
     if (!activePackage || !activeCharacterId) return;
     const ok = await confirmDialog('Restaurar todos os campos deste personagem para os valores iniciais do sistema?', { title: 'Limpar ficha', confirmLabel: 'Limpar' });
     if (!ok) return;
-    const reset = structuredClone(activePackage.system.characterTemplate);
+    const reset = initializeData(activePackage.system,structuredClone(activePackage.system.characterTemplate));
     reset.meta = { ...reset.meta, ...state.get().meta, updatedAt: new Date().toISOString() };
     state.load(reset, { record: true, label: 'Limpar ficha' });
     mountActiveSheet(reset);

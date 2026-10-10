@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {CHECK_ALGORITHMS} from '../../js/validation/contracts.js';
 import {progressionRecipePlan} from '../../js/editor/progression-plans.js';
 import {applyOperations} from '../../js/editor/operations.js';
@@ -8,7 +8,7 @@ const openFile=async(page,pkg)=>{await page.goto('/');await expect(page.locator(
 const property=(page,path)=>page.locator('[data-property="'+path+'"]');
 const expand=async(page,path)=>{const d=page.locator('[data-nested="'+path+'"]');if(await d.getAttribute('open')===null)await d.locator(':scope > summary').click();};
 test('14C.1 reparar system nulo e estrutura incompatível sem editar JSON, undo exato',async({page})=>{
- const pkg=minimalPackage('repair');pkg.system=null;await openFile(page,pkg);const text=await page.locator('#editor-json').inputValue();await expect(page.locator('.editor-inspector')).toContainText('incompatível');await page.getByRole('button',{name:'Reparar system com estrutura inicial',exact:true}).click();await expect(page.locator('#editor-validation-summary')).toContainText('Contrato válido');await page.getByRole('button',{name:'Desfazer JSON',exact:true}).click();expect(await page.locator('#editor-json').inputValue()).toBe(text);
+ const pkg=minimalPackage('repair');pkg.system=null;await openFile(page,pkg);const text=await page.locator('#editor-json').inputValue();await expect(page.locator('.editor-inspector')).toContainText('incompatível');await page.getByRole('button',{name:'Reparar system com estrutura inicial',exact:true}).click();expect(JSON.parse(await page.locator('#editor-json').inputValue()).system.dataDefinitions).toEqual([]);await expect(page.getByRole('button',{name:'Exportar pacote',exact:true})).toBeDisabled();await page.getByRole('button',{name:'Desfazer JSON',exact:true}).click();expect(await page.locator('#editor-json').inputValue()).toBe(text);
 });
 test('14C.1 impressão de seção/grupo e regra em caminho customizado têm controles reais',async({page})=>{
  const pkg=minimalPackage('context');pkg.system.own={commands:[{id:'gain',label:'Ganhar',operations:[{type:'add',field:'score',amount:1}]}]};pkg.layouts[0].tabs[0].sections[0].containers[0].components.push({type:'actionGroup',actionsFrom:'own.commands'});await openFile(page,pkg);await expand(page,'/system/own');await expand(page,'/system/own/commands');await expand(page,'/system/own/commands/0');await expand(page,'/system/own/commands/0/operations');await expand(page,'/system/own/commands/0/operations/0');const amount=property(page,'/system/own/commands/0/operations/0/amount');await amount.getByLabel('Quantidade somada (negativa para gastar)',{exact:true}).fill('3');await amount.getByRole('button',{name:'Aplicar campo',exact:true}).click();expect(JSON.parse(await page.locator('#editor-json').inputValue()).system.own.commands[0].operations[0].amount).toBe(3);

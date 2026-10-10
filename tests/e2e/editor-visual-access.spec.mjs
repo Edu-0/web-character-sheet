@@ -1,8 +1,8 @@
 import {test,expect} from '@playwright/test';
 import {writeFile,readFile} from 'node:fs/promises';
 import {startPwaServer} from '../pwa-server.mjs';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
-const open=async(page,url='/')=>{await page.goto(url);await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await page.getByRole('button',{name:'Sistemas',exact:true}).click();const start=Date.now();await page.getByRole('button',{name:'Criar pacote',exact:true}).click();await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0',{timeout:20000});const mountMs=Date.now()-start;await page.getByRole('button',{name:'Compor',exact:true}).click();return mountMs;};
+import {minimalPackage} from '../legacy-editor-package.js';
+const open=async(page,url='/')=>{await page.goto(url);await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await page.getByRole('button',{name:'Sistemas',exact:true}).click();const start=Date.now();await page.locator('#input-editor-file').setInputFiles({name:'legacy-example.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(minimalPackage('legacy-regression')))});await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0',{timeout:20000});const mountMs=Date.now()-start;await page.getByRole('button',{name:'Compor',exact:true}).click();return mountMs;};
 const add=async(page,type,name)=>{const box=page.locator('.editor-toolbox');await box.getByLabel('O que adicionar',{exact:true}).selectOption(type);await box.getByLabel('Nome mostrado na ficha',{exact:true}).fill(name);return box;};
 const confirm=async page=>{await page.locator('.editor-toolbox').getByRole('button',{name:'Revisar inclusão',exact:true}).click();await page.getByRole('dialog').getByRole('button',{name:'Confirmar alteração',exact:true}).click();};
 test('T10 visual: teclado/toque, seis paletas nos dois temas, larguras e zoom',async({browser},testInfo)=>{

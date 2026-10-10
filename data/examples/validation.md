@@ -1,5 +1,7 @@
 # Validação e preservação de documentos
 
+Versões aceitas: manifesto 1; pacote/sistema/layout 1, 2 e 3; personagem/backup 1 e 2. O [contrato v3 de dados tipados e cálculos](typed-data.md) exige envelope v3, com habilitação explícita; abrir v1/v2 não converte fórmulas ou versões. Valores escalares não exigem nova versão de personagem. Backup com pacote v3 usa envelope 2.
+
 Sistema, layout, personagem e pacote são documentos distintos. `schemaVersion` identifica seu formato; a versão do aplicativo e o namespace do armazenamento não são versões desses documentos.
 
 `prepareDocument` em `js/validation/documents.js` verifica limites, versão, contratos e referências sem alterar a entrada. Retorna `ready`, `needsMigration`, `unsupported` ou `invalid`, com diagnósticos de severidade, código, caminho e JSON Pointer. A referência por ponteiro respeita chaves literais com ponto. O limite de 200 diagnósticos produz um erro explícito de truncamento.

@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 29 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `01fcd0c9efdcac1656af7b8d5ed84039beea9571a078d04bedee0ca849b41404`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `44b0f6b86bd200e9a1d2e61e43d21a268f054ca9fd944e65d18ada30ee4e8fd0`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -40,6 +40,7 @@ Implementação: [js/engine/fields.js](../../js/engine/fields.js). Validação s
 
 | Parâmetro | Tipo | Obrigatório | Default/enum/condição |
 | --- | --- | --- | --- |
+| `dataId` | string | não |  |
 | `field` | path | sim |  |
 
 ## checkRoll
@@ -67,6 +68,7 @@ Implementação: [js/engine/advanced-fields.js](../../js/engine/advanced-fields.
 | `override` | boolean | não |  |
 | `overrideKey` | path | não |  |
 | `roll` | object | não | check/sourceId; referências em roll-references.js; opt-in |
+| `ruleId` | string | não |  |
 | `stepControls` | boolean | não |  |
 | `variables` | object | não |  |
 
@@ -215,6 +217,7 @@ Implementação: [js/engine/fields.js](../../js/engine/fields.js). Validação s
 
 | Parâmetro | Tipo | Obrigatório | Default/enum/condição |
 | --- | --- | --- | --- |
+| `dataId` | string | não |  |
 | `field` | path | sim |  |
 | `max` | number | não | inert nesta posição |
 | `min` | number | não | inert nesta posição |
@@ -403,6 +406,7 @@ Implementação: [js/engine/fields.js](../../js/engine/fields.js). Validação s
 
 | Parâmetro | Tipo | Obrigatório | Default/enum/condição |
 | --- | --- | --- | --- |
+| `dataId` | string | não |  |
 | `field` | path | sim |  |
 | `placeholder` | string | não |  |
 
@@ -414,6 +418,7 @@ Implementação: [js/engine/fields.js](../../js/engine/fields.js). Validação s
 
 | Parâmetro | Tipo | Obrigatório | Default/enum/condição |
 | --- | --- | --- | --- |
+| `dataId` | string | não |  |
 | `field` | path | sim |  |
 | `rows` | integer | não | default: 3 |
 
@@ -515,7 +520,7 @@ Tipos aceitos como string curta ou `{type, …}`. Não herdam os defaults/contro
 
 ## Contratos transversais
 
-Versões suportadas: manifest: 1; package: 1/2; system: 1/2; layout: 1/2; character: 1/2; backup: 1/2. Envelope v2 quando o conteúdo exige v2. A migração precisa de revisão/cópia do original; não há downgrade automático.
+Versões suportadas: manifest: 1; package: 1/2/3; system: 1/2/3; layout: 1/2/3; character: 1/2; backup: 1/2. Envelope v2/v3 quando o conteúdo exige essa versão. Dados tipados e regras de cálculo v3: [contrato e autoria](typed-data.md). A migração precisa de revisão/cópia do original; não há downgrade automático.
 
 Algoritmos: fate, percentile, d6Pool, d6Resistance, explodingTrait, explodingDamage, challenge, progress. progress não recebe efeitos de teste. Unidade por algoritmo: fate=total; percentile=bonusDice; d6Pool=dice; d6Resistance=dice; explodingTrait=total; explodingDamage=total; challenge=action.
 
@@ -551,6 +556,7 @@ Defaults compartilhados: {"historyLimit":20,"textareaRows":3,"counterMin":0,"che
 
 - [check-buttons.package.json](check-buttons.package.json)
 - [check-rolls.package.json](check-rolls.package.json)
+- [first-bindings.package.json](first-bindings.package.json)
 - [generic-entry-rolls.package.json](generic-entry-rolls.package.json)
 - [recovery-actions.package.json](recovery-actions.package.json)
 

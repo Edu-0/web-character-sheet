@@ -4,9 +4,13 @@ Em **Sistemas**, crie ou abra um pacote e escolha **Compor**. O editor usa o mes
 
 **Compor** seleciona a definição original e organiza a ficha. Campos e ações da prévia ficam suspensos. **Experimentar** usa um personagem de ensaio isolado e permite jogar as regras configuradas. Suas alterações não entram no pacote nem na biblioteca. Em uma repetição, selecionar qualquer ocorrência aponta para a mesma definição.
 
+## Dados tipados e cálculos v3
+
+Em **Dados tipados e vínculos**, crie texto, número finito, inteiro ou Sim/Não independentemente da apresentação. Dado opcional sem inicial permanece ausente. Dois componentes podem usar a mesma identidade. Construa um cálculo pela árvore de operações ou pela receita “a cada N”; fontes ausentes têm tratamento explícito. Dados e regras ficam no documento canônico. [Contrato, passo a passo, exemplo e limites de AV-01](typed-data.md). Pacotes antigos conservam suas fórmulas e versão ao abrir; habilitar v3 exige um comando explícito.
+
 ## Incluir componentes e dados
 
-Em **Adicionar à ficha**, a toolbox agrupa cards em **Textos**, **Elementos**, **Caixas**, **Coleções**, **Cálculos**, **Regras** e **D&D**. Arraste um card para a prévia: a indicação mostra antes/depois no destino compatível. Campos prontos entram ao soltar; a prévia de Compor atualiza automaticamente e stack/grid/flex organizam os elementos pelo layout existente. Caixas e seções começam com um campo de texto real, pois o contrato atual exige componentes não vazios. Não há card apenas informativo independente.
+Em **Adicionar à ficha**, a toolbox agrupa cards em **Textos**, **Elementos**, **Caixas**, **Coleções**, **Cálculos**, **Regras** e **D&D**. Arraste um card para a prévia: a indicação mostra antes/depois no destino compatível. Campos prontos entram ao soltar; a prévia de Compor atualiza automaticamente e stack/grid/flex organizam os elementos pelo layout existente. Criar pacote inicia um esqueleto v3 vazio, sem campos ou regras pré-montados. Caixas e seções da toolbox continuam começando com um campo de texto real; v1/v2 conservam a exigência de componentes não vazios. Não há card apenas informativo independente.
 
 Para uma regra que precisa de fontes, opções ou custos, o arrasto escolhe a posição e abre a receita correspondente. Também é possível tocar/escolher o card e configurar nome e grupo de destino. Uma configuração pode criar suas dependências ou reutilizar um componente existente. **Revisar inclusão** lista os dados, regras e mudanças de versão; cancelar conserva o documento. A inclusão confirmada constitui uma operação do histórico.
 

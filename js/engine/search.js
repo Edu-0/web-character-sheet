@@ -1,3 +1,4 @@
+import {readData} from './data-definitions.js';
 import { getFieldType } from './fields.js';
 import { getByPath } from './paths.js';
 import { expandComponents, componentSearchKey } from './layout-components.js';
@@ -13,6 +14,7 @@ export function normalizeSearch(value) {
 function defaultEntries(component, character, system) {
   const label = component.label || component.heading || component.type;
   const value = component.field ? getByPath(character, component.field) : undefined;
+  if(component.boundData){const cell=readData(system,character,component.dataId);return [{label,value:!cell.present?'Ausente':cell.value===null?'null explícito':cell.value===''?'Texto vazio':formatSearchValue(cell.value,component,{character,system})}];}
   if (component.itemSchema && Array.isArray(value)) {
     return [
       { label, value: `${value.length} ${value.length === 1 ? 'item' : 'itens'}` },

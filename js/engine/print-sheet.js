@@ -1,3 +1,4 @@
+import {readData} from './data-definitions.js';
 import { safeImageSource } from '../images.js';
 // Documento de leitura independente de abas, filtros e apresentação da tela.
 import { getFieldType } from './fields.js';
@@ -104,6 +105,7 @@ function field(label, value, definition, context) {
 function printComponent(context) {
   const { type, character, system, label, itemSchema } = context;
   const value = getByPath(character, context.field);
+  if(context.boundData){const cell=readData(system,character,context.dataId);if(!cell.present || cell.value===null || cell.value==='')return field(label,!cell.present?'Ausente':cell.value===null?'null explícito':'Texto vazio',{},context);}
   const custom = getFieldType(type)?.print;
   if (custom) return custom(context);
   if (type === 'poolBuilder' || type === 'traitAllocation') return null;

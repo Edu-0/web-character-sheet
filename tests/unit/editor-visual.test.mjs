@@ -4,7 +4,7 @@ import {capabilityCatalog} from '../../js/editor/capability-catalog.js';
 import {COMPONENT_CONTRACTS,ITEM_FIELD_CONTRACTS} from '../../js/validation/contracts.js';
 import {insertionPlan,movePlan,moveChoices} from '../../js/editor/composition-commands.js';
 import {dataIndex,generatedKey} from '../../js/editor/data-index.js';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {EditorSession} from '../../js/editor/session.js';
 import {structuralNodes} from '../../js/editor/form-structure.js';
 const destination=['layouts',0,'tabs',0,'sections',0,'containers',0,'components'];

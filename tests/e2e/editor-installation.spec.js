@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 async function ready(page){await page.goto('/');await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForTimeout(350);}
 
 test('navegação aguarda inicialização da ficha e preserva view escolhida',async({page})=>{

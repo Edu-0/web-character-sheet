@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {revisionProjection} from '../../js/editor/projection-cache.js';
 import {structuralNodes} from '../../js/editor/form-structure.js';
 import {dataIndex} from '../../js/editor/data-index.js';

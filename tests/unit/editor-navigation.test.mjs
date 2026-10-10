@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {parseSource} from '../../js/editor/source-map.js';
 import {previewSources,sourceAtOffset,textareaOffset,sourceOffset} from '../../js/editor/source-navigation.js';
 

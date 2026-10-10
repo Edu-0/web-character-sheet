@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {readFile,writeFile} from 'node:fs/promises';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {startPwaServer} from '../pwa-server.mjs';
 const open=async page=>{await page.goto('/');await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await page.getByRole('button',{name:'Sistemas',exact:true}).click();await page.getByRole('button',{name:'Criar pacote',exact:true}).click();await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0',{timeout:20000});};
 

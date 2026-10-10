@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 import {installationPlan} from '../../js/repositories/package-installation.js';
 test('plano protege embutidos, ausência/base completa e caracteres vinculados',()=>{
   const pkg=minimalPackage('install-test'),character={...structuredClone(pkg.system.characterTemplate),meta:{system:pkg.system.id,id:'linked'}};

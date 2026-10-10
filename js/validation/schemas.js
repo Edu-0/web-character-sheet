@@ -10,6 +10,7 @@ import { versionIssue } from './versions.js';
 import { validateReferences } from './references.js';
 import { validateActions } from './actions.js';
 import { validateEffects } from './effects.js';
+import {validateDataDefinitions, validateRules, validateBinding} from './data-definitions.js';
 import {validateRollReferences} from './roll-references.js';
 
 export const KNOWN_COMPONENT_TYPES = new Set(Object.keys(COMPONENT_CONTRACTS));
@@ -125,6 +126,7 @@ export function validateSystem(system) {
   }
   if (system.entryRolls !== undefined) validateEntryRolls(system.entryRolls, system, issues);
   if (system.diceTray !== undefined && typeof system.diceTray !== 'boolean') add(issues, 'system.diceTray', 'deve ser booleano');
+  issues.push(...validateDataDefinitions(system), ...validateRules(system));
   return issues;
 }
 
@@ -142,33 +144,33 @@ export function validateLayout(layout, { system = null } = {}) {
 
   if (requireArray(layout.tabs, 'layout.tabs', issues, { nonEmpty: true })) {
     validateUniqueIds(layout.tabs, 'layout.tabs', issues);
-    layout.tabs.forEach((tab, tabIndex) => validateTab(tab, tabIndex, system, issues));
+    layout.tabs.forEach((tab, tabIndex) => validateTab(tab, tabIndex, system, issues, layout.schemaVersion));
   }
   return issues;
 }
 
-function validateTab(tab, tabIndex, system, issues) {
+function validateTab(tab, tabIndex, system, issues, layoutVersion) {
   const path = `layout.tabs[${tabIndex}]`;
   if (!requireObject(tab, path, issues)) return;
   requireString(tab.id, `${path}.id`, issues);
   requireString(tab.label, `${path}.label`, issues);
   if (requireArray(tab.sections, `${path}.sections`, issues, { nonEmpty: true })) {
     validateUniqueIds(tab.sections, `${path}.sections`, issues);
-    tab.sections.forEach((section, sectionIndex) => validateSection(section, `${path}.sections[${sectionIndex}]`, system, issues));
+    tab.sections.forEach((section, sectionIndex) => validateSection(section, `${path}.sections[${sectionIndex}]`, system, issues, layoutVersion));
   }
 }
 
-function validateSection(section, path, system, issues) {
+function validateSection(section, path, system, issues, layoutVersion) {
   if (!requireObject(section, path, issues)) return;
   validatePrintOptions(section, path, issues);
   requireString(section.id, `${path}.id`, issues);
   if (requireArray(section.containers, `${path}.containers`, issues, { nonEmpty: true })) {
     validateUniqueIds(section.containers, `${path}.containers`, issues);
-    section.containers.forEach((container, index) => validateContainer(container, `${path}.containers[${index}]`, system, issues));
+    section.containers.forEach((container, index) => validateContainer(container, `${path}.containers[${index}]`, system, issues, layoutVersion));
   }
 }
 
-function validateContainer(container, path, system, issues) {
+function validateContainer(container, path, system, issues, layoutVersion) {
   if (!requireObject(container, path, issues)) return;
   validatePrintOptions(container, path, issues);
   if (container.id !== undefined) requireString(container.id, `${path}.id`, issues);
@@ -182,8 +184,8 @@ function validateContainer(container, path, system, issues) {
   if (container.repeat !== undefined) {
     if (requireObject(container.repeat, `${path}.repeat`, issues)) requireString(container.repeat.source, `${path}.repeat.source`, issues);
   }
-  if (requireArray(container.components, `${path}.components`, issues, { nonEmpty: true })) {
-    container.components.forEach((component, index) => validateComponent(component, `${path}.components[${index}]`, system, issues));
+  if (requireArray(container.components, `${path}.components`, issues, { nonEmpty: layoutVersion !== 3 })) {
+    container.components.forEach((component, index) => validateComponent(component, `${path}.components[${index}]`, system, issues, layoutVersion));
     if (system) {
       try { expandComponents(container, system).forEach((component, index) => {
         const safety = inspectJson(component, `${path}.expanded[${index}]`);
@@ -194,7 +196,7 @@ function validateContainer(container, path, system, issues) {
   }
 }
 
-function validateComponent(component, path, system, issues) {
+function validateComponent(component, path, system, issues, layoutVersion) {
   if (!requireObject(component, path, issues)) return;
   validatePrintOptions(component, path, issues, true);
   validateCalculationOptions(component, path, issues);
@@ -222,6 +224,7 @@ function validateComponent(component, path, system, issues) {
     return;
   }
   if (component.type === 'effectList' && system?.schemaVersion < 2) add(issues, path, 'effectList exige sistema versão 2');
+  issues.push(...validateBinding(component,system,path,layoutVersion));
   validateComponentShape(component,path,issues);
   if (component.type === 'checkRoll') {
     try { pathKeys(component.configFrom); } catch (error) { add(issues, `${path}.configFrom`, error.message); }
@@ -304,7 +307,7 @@ function validateComponent(component, path, system, issues) {
     }
   }
   if (component.type === 'inventorySummary') ['weightField', 'quantityField', 'strengthField', 'multiplierField'].forEach((key) => requireString(component[key], `${path}.${key}`, issues));
-  if (component.type === 'computed') {
+  if (component.type === 'computed' && component.ruleId === undefined) {
     requireString(component.formula, `${path}.formula`, issues);
     if (system && component.formula && !Object.hasOwn(system.formulas || {}, component.formula)) {
       add(issues, `${path}.formula`, `fórmula "${component.formula}" não existe em system.formulas`, 'unknown-formula');
@@ -384,6 +387,7 @@ export function validateSystemPackage(pkg) {
   if (pkg.kind !== 'rpg-system-package') add(issues, 'package.kind', 'deve ser "rpg-system-package"');
   issues.push(...validateSystem(pkg.system));
   if (pkg.schemaVersion < 2 && (pkg.system?.schemaVersion >= 2 || Array.isArray(pkg.layouts) && pkg.layouts.some(layout => layout?.schemaVersion >= 2))) add(issues, 'package.schemaVersion', 'documentos versão 2 exigem envelope versão 2');
+  if (pkg.schemaVersion < 3 && (pkg.system?.schemaVersion === 3 || pkg.layouts?.some?.(l=>l?.schemaVersion===3))) add(issues,'package.schemaVersion','documentos v3 exigem envelope v3');
   if (requireArray(pkg.layouts, 'package.layouts', issues, { nonEmpty: true })) {
     validateUniqueIds(pkg.layouts, 'package.layouts', issues);
     pkg.layouts.forEach((layout,index) => issues.push(...validateLayout(layout, { system: pkg.system }).map(issue=>({...issue,path:issue.path.replace(/^layout(?=\.|$)/,`package.layouts[${index}]`)}))));
@@ -431,6 +435,7 @@ function validateFieldValue(value, definition, path, issues) {
 export function validateCharacterForPackage(character, pkg, {allowMissingId = false, template = false} = {}) {
   const issues = validateCharacter(character, {expectedSystem: pkg.system.id,allowMissingId,root:template?'system.characterTemplate':'character'});
   if (issues.length) return issues;
+  issues.push(...validateDataDefinitions(pkg.system,character,template?'system.characterTemplate':'character'));
   validateCheckData(character, pkg.system.checks, issues);
   issues.push(...validateEffects(character.activeEffects, {system:pkg.system}));
   if(pkg.system.sheetActions) validateActions(pkg.system.sheetActions,pkg.system,issues,'system.sheetActions',character);

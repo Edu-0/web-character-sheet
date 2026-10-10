@@ -11,6 +11,9 @@ export function installationPlan({candidate,base,currentPackage,builtinIds=[],ch
   if(currentPackage && unavailableUnidentified)throw new Error('Há personagem indisponível sem identificação de sistema. Preserve/corrija o original antes de substituir pacotes.');
   if(currentPackage && prepareDocument(currentPackage,{kind:'package'}).status!=='ready')throw new Error('O pacote instalado está indisponível ou em versão não suportada. Preserve o original e trabalhe em uma cópia com outro ID.');
   if(currentPackage)assertValid(pkg.system,next=>validateEffectRevisionChange(currentPackage.system,next),'revisão de efeitos');
+  if(currentPackage && characters.length && currentPackage.system.schemaVersion===3){
+    for(const old of currentPackage.system.dataDefinitions||[]){const next=pkg.system.dataDefinitions?.find(d=>d.id===old.id);if(!next || ['binding','type','required','nullable'].some(key=>next[key]!==old[key]))throw new Error('Mudança estrutural de dado instalado exige migração explícita, indisponível em AV-01. Preserve a definição ou trabalhe em cópia com outro ID.');}
+  }
   const warnings=[];
   for(const character of characters){const issues=validateCharacterForPackage(character,pkg);assertValid(character,()=>issues,`personagem ${character.meta.id}`);warnings.push(...issues.filter(issue=>issue.severity==='warning'));}
   return {package:pkg,base:structuredClone(base ?? null),replace:Boolean(currentPackage),linkedIds:characters.map(character=>character.meta.id),warnings,removedLayouts:(currentPackage?.layouts || []).filter(layout=>!pkg.layouts.some(next=>next.id===layout.id)).map(layout=>layout.id)};

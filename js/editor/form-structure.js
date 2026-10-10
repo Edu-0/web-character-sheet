@@ -38,7 +38,7 @@ export function blankNode(kind,pkg,type='text') {
   const container=()=>({layout:{type:'stack'},components:[{type:'text',field:'identity.name',label:'Nome'}]});
   const section=()=>({id:'secao',title:'Nova seção',containers:[container()]});
   const tab=()=>({id:'aba',label:'Nova aba',sections:[section()]});
-  if(kind==='layout')return {schemaVersion:1,id:'layout',name:'Novo layout',system:pkg.system?.id,tabs:[tab()]};
+  if(kind==='layout')return {schemaVersion:pkg.system?.schemaVersion===3?3:1,id:'layout',name:'Novo layout',system:pkg.system?.id,tabs:[tab()]};
   if(kind==='tab')return tab();if(kind==='section')return section();if(kind==='container')return container();
   if(kind==='component')return {type,label:'Novo componente',...(['computed','poolBuilder','pointBudget','repertoire','actionGroup','recoveryGroup','techniqueUse','checkRoll','effectList','dndDerived'].includes(type)?{}:{field:'identity.name'})};
   throw new Error('Tipo estrutural desconhecido.');

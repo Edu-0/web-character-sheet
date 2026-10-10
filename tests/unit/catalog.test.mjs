@@ -5,7 +5,7 @@ import {validateLibraryBackup} from '../../js/validation/backup.js';
 import {CATALOG_KEY,catalogInstallationIds,initializeCatalogInstallations,catalogInstallationsChange} from '../../js/repositories/catalog-installations.js';
 import {transact,readRaw,readJson,transactWithinWrite} from '../../js/persistence.js';
 import {withLibraryWrite,flushLibraryWrites} from '../../js/write-coordinator.js';
-import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {minimalPackage} from '../legacy-editor-package.js';
 const store=new Map();
 globalThis.localStorage={getItem:key=>store.get(key)??null,setItem:(key,value)=>{store.set(key,value);Object.defineProperty(localStorage,key,{value,enumerable:true,configurable:true});},removeItem:key=>{store.delete(key);delete localStorage[key];}};
 Object.defineProperty(navigator,'locks',{value:{request:async(name,operation)=>operation({name})},configurable:true});

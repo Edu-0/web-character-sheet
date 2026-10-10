@@ -16,7 +16,7 @@ export function layoutPlan(pkg,{action,index,name,mode,source}){
  else if(action==='new')value=structureCommand(pkg,structuralNodes(pkg).find(n=>n.kind==='system'),'add').commands[0].value;
  else throw new Error('Operação de layout desconhecida.');
  value.id=generatedKey(name,pkg.layouts.map(l=>l.id));value.name=name;if(mode==='absent')delete value.mode;else if(mode!=='keep')value.mode=mode;
- if(pkg.system.effectDefinitions?.length){value.schemaVersion=2;const hasEffect=(value.tabs||[]).some(t=>(t.sections||[]).some(s=>(s.containers||[]).some(g=>g.components?.some(c=>c.type==='effectList'))));if(!hasEffect)value.tabs[0].sections[0].containers[0].components.push({type:'effectList',label:'Efeitos'});}
+ if(pkg.system.effectDefinitions?.length){value.schemaVersion=Math.max(value.schemaVersion,2);const hasEffect=(value.tabs||[]).some(t=>(t.sections||[]).some(s=>(s.containers||[]).some(g=>g.components?.some(c=>c.type==='effectList'))));if(!hasEffect)value.tabs[0].sections[0].containers[0].components.push({type:'effectList',label:'Efeitos'});}
  const selection=['layouts',pkg.layouts.length];return {commands:[{type:'insertNode',path:['layouts'],index:pkg.layouts.length,value}],selection,notes:['Novo ID local sem colisão. Dados e regras do sistema permanecem compartilhados.','A seleção do ensaio não altera a preferência da biblioteca.'],id:value.id};
 }
 export function renderLayoutManager(view,pkg){

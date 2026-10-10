@@ -40,10 +40,10 @@ function component(source, summary, field, properties = {}, semantic = 'schemas.
 }
 const basic='js/engine/fields.js',advanced='js/engine/advanced-fields.js',assisted='js/engine/assisted-fields.js',dnd='js/systems/dnd2024-fields.js';
 export const COMPONENT_CONTRACTS = {
-  boolean:component(basic,'Escolha booleana',true),
-  number:component(basic,'Número preenchível; min/max legados não limitam este input',true,{...roll,min:p('number',{inert:true}),max:p('number',{inert:true})}),
-  text:component(basic,'Texto curto',true,{placeholder:p('string')}),
-  textarea:component(basic,'Texto longo',true,{rows:p('integer',{default:RUNTIME_DEFAULTS.textareaRows})}),
+  boolean:component(basic,'Escolha booleana',true,{dataId:p('string')}),
+  number:component(basic,'Número preenchível; min/max legados não limitam este input',true,{dataId:p('string'),...roll,min:p('number',{inert:true}),max:p('number',{inert:true})}),
+  text:component(basic,'Texto curto',true,{dataId:p('string'),placeholder:p('string')}),
+  textarea:component(basic,'Texto longo',true,{dataId:p('string'),rows:p('integer',{default:RUNTIME_DEFAULTS.textareaRows})}),
   select:component(basic,'Uma opção; optionsFrom é expandido pelo layout; presentation/valueType só atuam em itemSchema',true,{options:p('array'),optionsFrom:p('path'),presentation:p('string',{inert:true}),valueType:p('string',{inert:true})}),
   resource:component(basic,'Objeto current/max; edição não cobra evolução',true),
   counter:component(basic,'Contador com limites nos botões',true,{...roll,min:p('number',{default:RUNTIME_DEFAULTS.counterMin}),max:p('number')}),
@@ -55,7 +55,7 @@ export const COMPONENT_CONTRACTS = {
   stateList:component(advanced,'Estados graduados autorais existentes; não é activeEffects',true,{...collection,gradeField:p('string'),effectLabel:p('string'),overflow:p('object'),recovery:p('object')}),
   skillCatalog:component(advanced,'Catálogo configurado de perícias',true,{...calculation,...fields('baseDieFrom categoriesFrom doneLabel editLabel emptyLabel'),allowComposite:p('boolean')}),
   slotTracker:component(advanced,'Usos/limites compartilhados; display só altera apresentação',true,{...fields('consumeLabel levelLabel'),consumeField:p('path'),display:p('string',{enum:['used','remaining'],default:'used'})}),
-  computed:component(advanced,'Cálculo nomeado; modo roll não recebe override/efeito derivado',false,{...calculation,...roll,formula:p('path',{required:true}),variables:p('object'),mode:p('string',{enum:['roll']}),format:p('string'),actionLabel:p('string')},'schemas.js / references.js / roll-references.js'),
+  computed:component(advanced,'Cálculo nomeado; modo roll não recebe override/efeito derivado',false,{ruleId:p('string'),...calculation,...roll,formula:p('path',{required:true}),variables:p('object'),mode:p('string',{enum:['roll']}),format:p('string'),actionLabel:p('string')},'schemas.js / references.js / roll-references.js'),
   poolBuilder:component(advanced,'Pool autoral e oposição assistida',false,{traitSources:p('array'),...fields('rollLabel resolveLabel')}),
   pointBudget:component('js/engine/point-fields.js','Criação e evolução paga/narrativa separadas',false,{configFrom:p('path',{default:'pointBudget'})}),
   traitAllocation:component(assisted,'Distribuição de traços conforme configuração',true,{presetsFrom:p('path',{required:true}),traitsFrom:p('path',{required:true})}),
@@ -78,7 +78,10 @@ export const ITEM_FIELD_CONTRACTS = Object.fromEntries(['text','textarea','numbe
 
 export function validateComponentShape(component, path, issues) {
   const contract=COMPONENT_CONTRACTS[component.type];if(!contract) return;
-  validateParameterShape(component,contract.properties,path,issues);
+  const properties={...contract.properties};
+  if(component.dataId!==undefined && properties.dataId && properties.field)properties.field={...properties.field,required:false};
+  if(component.ruleId!==undefined && properties.formula)properties.formula={...properties.formula,required:false};
+  validateParameterShape(component,properties,path,issues);
 }
 export function validateParameterShape(document,properties,path,issues) {
   for(const [key,parameter] of Object.entries(properties)) {
