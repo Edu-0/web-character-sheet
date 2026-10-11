@@ -1,5 +1,7 @@
 # Verificação do projeto
 
+Os contratos de [ações tipadas](action-flows.md) têm testes Node de admissão, custos, conflitos, presença, transcripts, limites e marcos. A suíte `editor-action-flows.spec.js` cria as regras pela interface desde um pacote vazio e verifica prévia/cancelamento, os dois perfis, histórico causal, recarga, quota/retry sem novo RNG, exportação/reimportação, arquivo e habilitação v3 explícita. A inspeção do documento é somente uma asserção; as regras desses percursos não são injetadas pelo JSON.
+
 Execute apenas uma suíte Playwright por vez; todas usam a porta 4173 e contextos isolados, sem acessar a biblioteca pessoal. Pare o servidor manual antes. O setup gera o worker offline uma vez por execução, inicia o servidor e o fecha ao terminar.
 
 | Comando | Quando usar | Cobertura |

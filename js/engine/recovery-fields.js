@@ -18,7 +18,7 @@ export function renderRecoveryGroup(container, context) {
   }
   const undo = button('Desfazer recuperação');
   undo.addEventListener('click', () => {
-    if (!undoSheetAction(context.character, getByPath(context.character, historyField))) { status.textContent = 'Os recursos mudaram após a recuperação. Ajuste-os manualmente para corrigir.'; return; }
+    if (!undoSheetAction(context.character, getByPath(context.character, historyField),{system:context.system,validate:context.validateCharacter})) { status.textContent = 'Os recursos mudaram após a recuperação. Ajuste-os manualmente para corrigir.'; return; }
     setByPath(context.character, historyField, null); context.onChange?.(); refresh();
   });
   row.append(undo); wrap.append(row, status); container.append(wrap);

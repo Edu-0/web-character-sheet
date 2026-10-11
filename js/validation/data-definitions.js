@@ -5,7 +5,7 @@ import {referenceValueIssue} from '../engine/data-references.js';
 import {compileRules} from '../engine/rule-registry.js';
 const object=v=>v!==null && typeof v==='object' && !Array.isArray(v);
 const id=v=>typeof v==='string' && /^[a-zA-Z0-9_-]{1,100}$/.test(v) && !['constructor','prototype','__proto__'].includes(v);
-export function validateDataDefinitions(system, character=system.characterTemplate, root='system.characterTemplate') {
+export function validateDataDefinitions(system, character=system.characterTemplate, root='system.characterTemplate',{definitionsOnly=false}={}) {
   const issues=[], add=(path,message)=>issues.push({path,message,code:'data.invalid'}), definitions=system.dataDefinitions===undefined?[]:system.dataDefinitions;
   if(system.schemaVersion!==3)return issues; // Legacy unknown roots keep their previous meaning.
   if(!Array.isArray(definitions) || definitions.length>500) {add('system.dataDefinitions','lista de até 500 dados exigida');return issues;}
@@ -48,11 +48,11 @@ export function validateDataDefinitions(system, character=system.characterTempla
     try {
       const keys=pathKeys(d.binding);
       if(nested){if(keys.length!==1||keys[0]==='id')throw new Error('Campo aninhado exige chave única não reservada à identidade');}
-      if(!nested&&['schemaVersion','meta','activeEffects','calculationOverrides'].includes(keys[0])) throw new Error('Binding reservado ao documento');
+      if(!nested&&['schemaVersion','meta','activeEffects','calculationOverrides','actionRecords'].includes(keys[0])) throw new Error('Binding reservado ao documento');
       if(!nested && bindings.some(b=>b===d.binding || b.startsWith(d.binding+'.') || d.binding.startsWith(b+'.'))) throw new Error('Binding sobreposto a outra identidade');
       if(!nested)bindings.push(d.binding);
       if(Object.hasOwn(d,'initial')) {const problem=typedValueIssue(d,d.initial,{allowInitial:true});if(problem)add(at+'.initial',problem);}
-      if(nested)return;
+      if(nested||definitionsOnly)return;
       const cell=readData(system,character,d.id);
       if(d.required && !cell.present && !(character===system.characterTemplate && Object.hasOwn(d,'initial'))) add(root+'.'+d.binding,'dado obrigatório ausente');
       // An existing scalar parent cannot be replaced during an interaction.
@@ -72,6 +72,7 @@ export function validateDataDefinitions(system, character=system.characterTempla
       if(Object.keys(catalog).some(k=>!['id','label','fields','entries','extensions'].includes(k)))add(at,'parâmetro de catálogo indisponível');
     });}
   }
+  if(definitionsOnly)return issues;
   let referenceCharacter=character;
   if(!issues.length&&character===system.characterTemplate)try{referenceCharacter=initializeData(system,structuredClone(character));}catch(error){add(root,error.message);}
   const references=(definition,value,context={})=>{

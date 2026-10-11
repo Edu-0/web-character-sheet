@@ -82,6 +82,8 @@ Em pacotes v3, componha também [registros, coleções e grupos](data/examples/s
 
 Use [condições compartilhadas](data/examples/predicates.md) para mostrar componentes, permitir sua edição ou autorizar ações. Ocultar preserva os valores; executar uma ação verifica novamente a permissão atual.
 
+Configure [ações tipadas e resoluções](data/examples/action-flows.md) com entradas da mesa, grupos de dados, seleção, rerrolagem, custos por resultado e consequências. Escolha prévia integral ou ativação com pagamento anterior aos dados; registros v3 permitem retomar execuções guardadas.
+
 ## Seus dados
 
 A biblioteca e as preferências ficam no navegador, sem conta ou backend. Não há sincronização entre dispositivos ou backup em nuvem. **Use Exportar tudo regularmente**: limpar os dados do site ou trocar de navegador/endereço pode tornar a biblioteca anterior indisponível. O backup inclui personagens, sistemas importados e preferências; sistemas embutidos acompanham o app. Se uma gravação falhar, a ficha continua em memória e pode ser exportada. Os arquivos exportados podem conter nomes, notas, imagens e dados de recuperação; revise-os antes de compartilhar.

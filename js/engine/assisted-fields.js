@@ -4,6 +4,7 @@ import { registerFieldType } from './fields.js';
 import { getByPath, setByPath } from './paths.js';
 import { executeSheetAction, inventoryCalculationKey, inventoryTotals, repertoireStatus, undoSheetAction } from './assistance.js';
 import {predicateStatus} from './predicates.js';
+import {openTypedAction,openActionRecords} from './action-fields.js';
 import { traitLabel } from './traits.js';
 
 registerFieldType('inventorySummary', {
@@ -122,9 +123,11 @@ registerFieldType('actionGroup', {
     feedback.setAttribute('aria-label', context.label || 'Resultado da ação');
     const undo = button('Desfazer última ação');
     const historyField = context.historyField || COMPONENT_CONTRACTS.actionGroup.properties.historyField.default;
+    if((getByPath(context.system,context.actionsFrom)||[]).some(action=>action.flow)){const records=button('Registros de ações');records.addEventListener('click',()=>openActionRecords(context));row.append(records);}
     (getByPath(context.system, context.actionsFrom) || []).forEach((action) => {
       const control = button(action.label);
       control.addEventListener('click', () => {
+        if(action.flow){openTypedAction(context,action).catch(error=>{feedback.textContent=error.message;feedback.hidden=false;});return;}
         try {
           const event = executeSheetAction(context.character, action, context.system);
           event.note = action.note || '';
@@ -140,7 +143,7 @@ registerFieldType('actionGroup', {
     });
     undo.addEventListener('click', () => {
       const event = getByPath(context.character, historyField);
-      if (!undoSheetAction(context.character, event)) {
+      if (!undoSheetAction(context.character, event,{system:context.system,validate:context.validateCharacter})) {
         feedback.textContent = 'A ficha mudou após esta ação; ajuste os valores manualmente para corrigir.';
         return;
       }

@@ -29,11 +29,11 @@ class CharacterState {
     this.notifying = false;
   }
 
-  load(character, { record = false, label = 'Substituir campos da ficha' } = {}) {
+  load(character, { record = false, label = 'Substituir campos da ficha', group = null, mergeAcrossTime = false } = {}) {
     if (record && (character.meta?.id !== this.character.meta?.id || character.meta?.system !== this.character.meta?.system)) throw new Error('A edição deve preservar a identidade do personagem.');
     this.character = character;
     if (!record) this.history.activate(character);
-    this.notify(record ? { label } : null);
+    this.notify(record ? { label, group, mergeAcrossTime } : null);
   }
 
   get() {

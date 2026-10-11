@@ -5,6 +5,10 @@ import { recoverTransactions, reportStorageError, migrationCopyChange } from './
 import {hasPendingLibraryWrites,flushLibraryWrites} from './write-coordinator.js';
 import { assertValid, validateCharacterForPackage } from './validation/schemas.js';
 import {initializeData} from './engine/data-definitions.js';
+import {executeSheetAction} from './engine/assistance.js';
+import {setByPath} from './engine/paths.js';
+import {changesBetween,applyCharacterChanges} from './engine/character-history.js';
+import {archiveCompletedRecords} from './engine/action-records.js';
 // app.js — shell global, bibliotecas e apresentações da ficha ativa.
 import { state } from './state.js';
 import * as storage from './storage.js';
@@ -440,6 +444,45 @@ function updateSheetPresentation() {
   if (isDnd && presentation !== 'legacy' && !genericSheetController && !mountingGenericSheet) renderGenericSheet(state.get());
 }
 
+async function commitPreparedCharacter(prepare,{label,group=null,copies=[],record=true}={}) {
+  const current=state.get(),pkg=activePackage,snapshot=structuredClone(current);
+  await flushCharacterSave();
+  const assertContext=()=>{
+    if(state.get()!==current || activePackage!==pkg || JSON.stringify(current)!==JSON.stringify(snapshot))throw new Error('A ficha mudou durante a gravação; revise a ação antes de confirmar.');
+  };
+  assertContext();
+  const stored=await characters.saveCharacter(snapshot,{copies,expectedPackage:pkg,expectedRaw:()=>activeCharacterRaw,prepare:candidate=>{
+    assertContext();
+    prepare(candidate,pkg);
+  }});
+  activeCharacterRaw=JSON.stringify(stored);
+  suppressCharacterEffects=true;
+  try{state.load(stored,{record,label,group,mergeAcrossTime:Boolean(group)});if(!record)state.clearHistory();}
+  finally{suppressCharacterEffects=false;}
+  unsavedCharacter=false;
+  genericSheetController?.destroy();genericSheetController=null;renderGenericSheet(stored);
+  sheetSearch?.refresh();refreshLibraries();updateAppState({currentCharacter:characterSummary(stored)});$('save-indicator').textContent='Salvo';
+  return stored;
+}
+
+function commitPreparedAction(action,plan,{historyField}={}) {
+  return commitPreparedCharacter((candidate,pkg)=>{
+    const event=executeSheetAction(candidate,action,pkg.system,{plan,validate:value=>assertValid(value,entry=>validateCharacterForPackage(entry,pkg),'personagem')});
+    if(historyField && plan.stage==='complete')setByPath(candidate,historyField,event);
+  },{label:action.label,group:'action:'+plan.id});
+}
+
+async function upgradeActionCharacter() {
+  const current=state.get();
+  if(current.schemaVersion===3)return current;
+  return commitPreparedCharacter(candidate=>{candidate.schemaVersion=3;},{label:'Habilitar registros v3',record:false,copies:[migrationCopyChange(`actions:${current.meta.id}`,current)]});
+}
+
+function archiveActionRecords(ids) {
+  const current=state.get(),draft={...structuredClone(current),actionRecords:archiveCompletedRecords(current,ids)},patches=changesBetween(current,draft);
+  return commitPreparedCharacter((candidate,pkg)=>applyCharacterChanges(candidate,patches,{validate:value=>assertValid(value,entry=>validateCharacterForPackage(entry,pkg),'personagem')}),{label:'Arquivar registros concluídos',copies:[migrationCopyChange(`archive-actions:${current.meta.id}`,current)]});
+}
+
 function renderGenericSheet(character) {
   const host = $('generic-sheet-host');
   mountingGenericSheet = true;
@@ -449,6 +492,11 @@ function renderGenericSheet(character) {
       validateCharacter:value=>assertValid(value,entry=>validateCharacterForPackage(entry,activePackage),'personagem'),
       showHeader: false,
       system: activePackage.system,
+      getCharacter:()=>state.get(),
+      commitPreparedAction,
+      upgradeActionCharacter,
+      archiveActionRecords,
+      exportActionCharacter:()=>{const file=characters.exportCharacter(state.get());storage.downloadJson(file.data,file.filename);},
       upgradeCharacter: async current => {
         if (current.schemaVersion !== 1 || current !== state.get()) throw new Error('Personagem mudou; abra a ficha novamente.');
         await flushCharacterSave();

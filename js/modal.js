@@ -26,8 +26,8 @@ function close() {
 }
 
 function onKeydown(e) {
-  if(e.key==='Tab' && modalBox.querySelector('.system-removal-review')){
-    const controls=[...modalBox.querySelectorAll('button:not(:disabled), [tabindex="0"]')];
+  if(e.key==='Tab' && modalBox.querySelector('.system-removal-review, .engine-action-flow')){
+    const controls=[...modalBox.querySelectorAll('button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]')].filter(control=>control.getClientRects().length);
     const first=controls[0],last=controls.at(-1);
     if(e.shiftKey && document.activeElement===first){e.preventDefault();last?.focus();}
     else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first?.focus();}

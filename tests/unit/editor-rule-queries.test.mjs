@@ -41,7 +41,7 @@ test('AV-03 operações registradas têm execução comprovada, incluindo presen
  assert.equal(run(n('count',{source:n('empty',{dataId:'items'})})),0);covered.add('empty');
  assert.equal(run(n('text',{value:n('option',{dataId:'category',optionId:'deep'})}),'string',f=>f.system.dataDefinitions.push(d('category','enum',{options:[{id:'deep',label:'Profunda'}]}))),'Profunda');covered.add('option');
  const shared=lit(3);assert.equal(run(n('add',{left:shared,right:n('node',{nodeId:shared.id})})),6);covered.add('node');
- const f=fixture();f.system.rules=[rule(lit(4),'number','base'),rule(n('rule',{ruleId:'base'}))];assert.equal(evaluateRule(f.system,f.character,'main'),4);covered.add('rule');assert.deepEqual([...covered].sort(),Object.keys(RULE_OPERATIONS).sort());
+ const f=fixture();f.system.rules=[rule(lit(4),'number','base'),rule(n('rule',{ruleId:'base'}))];assert.equal(evaluateRule(f.system,f.character,'main'),4);covered.add('rule');assert.deepEqual([...covered].sort(),Object.keys(RULE_OPERATIONS).filter(id=>RULE_OPERATIONS[id].scope!=='action').sort());
 });
 test('AV-03 vazio tem semântica explícita; ausência/null exigem alternativas',()=>{
  for(const [op,expected,type]of [['sum',0,'number'],['count',0,'number'],['any',false,'boolean'],['all',true,'boolean']]){const expression=['any','all'].includes(op)?n(op,{source:read('items'),predicate:read('equipped')}):n(op,{source:op==='count'?read('items'):weights()});assert.equal(run(expression,type,f=>f.character.items=[]),expected);}

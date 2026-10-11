@@ -1,4 +1,49 @@
 {
+  "actions": {
+    "limits": {
+      "costs": 32,
+      "inputs": 32,
+      "recordBytes": 65536,
+      "records": 50,
+      "recordsBytes": 524288,
+      "steps": 128
+    },
+    "operations": {
+      "dice": {
+        "label": "Lançar grupo de dados",
+        "version": 1
+      },
+      "explode": {
+        "label": "Explodir com limite explícito",
+        "version": 1
+      },
+      "ranges": {
+        "label": "Classificar por faixas declaradas",
+        "version": 1
+      },
+      "reroll": {
+        "label": "Rerrolar com limite e política explícitos",
+        "version": 1
+      },
+      "select": {
+        "label": "Manter ou descartar por ordem estável",
+        "version": 1
+      },
+      "sharedPercentile": {
+        "label": "Percentil com unidade compartilhada",
+        "version": 1
+      },
+      "successes": {
+        "label": "Contar dados que atendem à condição",
+        "version": 1
+      }
+    },
+    "resolutionLimits": {
+      "draws": 100,
+      "groups": 32,
+      "sides": 100000
+    }
+  },
   "algorithms": [
     "fate",
     "percentile",
@@ -2440,9 +2485,14 @@
   "schemaVersion": 1,
   "sources": {
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
+    "js/engine/action-expression.js": "c0add5098ca09383e3cd0b00215e8cb8c21f584d9a28fbe6c5aeeac952333b99",
+    "js/engine/action-fields.js": "b6cbef63142438a6825947fb3efafc47a8cf39ad54281371d7dc86fc8c03f8c6",
+    "js/engine/action-plan.js": "00861e3d4567ef43311a7f9a68a58f07c4ddfd7f95f57a5bc76dde3b4effe3c4",
+    "js/engine/action-records.js": "ddbc47590d898d6f4e2e1496f29f61595d968764574b96cf9539df539c614d8d",
     "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
-    "js/engine/assisted-fields.js": "501f9c0539c7a1cdd24985e9399e52ff667d47c208b98f23baae909f876606df",
+    "js/engine/assisted-fields.js": "eb9e2fcf436dd2691f178b013957aa403fad0dfb4ba7bb2cabae3eb67f368252",
     "js/engine/bound-fields.js": "2b19f0c9e8f1cb1660fc639a212a26d1516bf3a1b99e2143e4839d68da42da5e",
+    "js/engine/character-history.js": "f46d865c00084773fd8ca8e12bca9fe02c8e9b0da241ec7005adb5accb3081e9",
     "js/engine/check-fields.js": "da205990eabc5d3b4e23454b57362f725b17d529ad3fa1b92dafda05e1e26171",
     "js/engine/checks.js": "5d00b70016076cb3e309a86ae310375d84589fdb12ed120cb3a87313569764c5",
     "js/engine/composition.js": "8e1f48dbdfdada7ff414dcc3e4e48a99b817eed84f0c18f39cf665a7e1fd0085",
@@ -2457,24 +2507,25 @@
     "js/engine/fields.js": "6399a2c05277384116c7ff96420cd7760dcfdcaf7014aa8f0555c50801fda4e5",
     "js/engine/point-fields.js": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612",
     "js/engine/predicates.js": "bb5440f4ccceb2086397949c59554f095526d9f6684630a1a32a7225e6d47c02",
-    "js/engine/recovery-fields.js": "b93a066c424fd08a09d5df065e298d16068b2598a891ac1ddb06072dcbde6d24",
+    "js/engine/recovery-fields.js": "0376f86ecc50c64a9eaef03c277450b095b9611221a23fd4f989a23044646cbc",
     "js/engine/recovery.js": "3d45355f2b6280f624913ad79402c06cab4765e0602280b2c6e1791b5aeb623e",
+    "js/engine/roll-transcript.js": "7222e52c7a5129921e5ed236fb3cc07173c5f8fc9deb514854aa0922b7b4f1f0",
     "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
-    "js/engine/rule-analysis.js": "095be3e8e060ce845205c83aea2ad728863f18b0800f2720443cd04563e68399",
-    "js/engine/rule-operations.js": "5854bbd399986532d257f74641cac7ab505a972c73ca2c173b245b425cbcbf3f",
-    "js/engine/rule-registry.js": "3d8a32d8fcbcdfeed2b45a50f61c2978951a723e8f519e888e63fe9646cf3eee",
+    "js/engine/rule-analysis.js": "cfa65cdd7e105f974d957aa41ac6347a297929361dad9b4b89172c44a217c5d5",
+    "js/engine/rule-operations.js": "27bc301c8d9ab7357d8e9ca2ccb4c6cccac2cca237afc548eff2dd261cb1d6aa",
+    "js/engine/rule-registry.js": "b944919ff910a7d2a94e970462e1806bf0d465b4abe7d207365ca66118634915",
     "js/engine/structured-fields.js": "dce4e747ea727d0d3c3cd33ee7283ce67ab3efc05a9b6c62e7e65edf5a5bb7f3",
     "js/engine/technique-fields.js": "e3785057b2d986001fb3bd98a4c7bb8ac267fa61f7de709b862a64bda0efdb9f",
     "js/engine/typed-data-write.js": "049439c40503f04cd9daffc3bbdec0d4ba071a5dba6f99064c5581dc342445df",
     "js/engine/typed-record-inputs.js": "d0f43c88cec1fd710bc2041bb74bee7d478ace2be9d62fa792b6577f58036cc3",
     "js/engine/typed-value-format.js": "660043d9c59e0137a206cb781910c33728693a3db1dca12c836b69a36fb2ace6",
     "js/systems/dnd2024-fields.js": "5a2f55694f246994ea68e6769ba51e6fce39b4bd0ee414d46720807de6acb661",
-    "js/validation/actions.js": "ad9311f342e76efa6b11cf32282467bceae1640988772e0a70a805b2934f4b16",
+    "js/validation/actions.js": "0e3856c1008ac3df9bb0a919ed8b4948d06dd9f05bd2ee6e92769b43ee3b50bf",
     "js/validation/backup.js": "4ce1a50fcd8739ea086b846bc7a089731f0f493a2accb450752f81e8e38fa77a",
     "js/validation/catalog.js": "beda9ba194c9971424ed18e3666b14a0ccbbac7765b7a829b793eb85e25f549c",
     "js/validation/checks.js": "48db8458c7327c0996fe6e5e831663f26e7b002f021e98bd43adf9870e27c351",
     "js/validation/contracts.js": "4afa9968dc3cce8fa2d975d5d63d899d3123ec25cd39bf642fd93895aead2a05",
-    "js/validation/data-definitions.js": "ccdc2c1eed818ede57cf51fe34235c0818450259faa2cd5eb75b496c3bc9885e",
+    "js/validation/data-definitions.js": "6b1d061d76f8dd67b7a1701d73a9bb19458aa2f0699584f79bc7b9d42db3e80d",
     "js/validation/diagnostics.js": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a",
     "js/validation/documents.js": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5",
     "js/validation/effects.js": "62b0bb57a0d6c6391e31abf5df11568c0d07c59bf2e403db47221805d0935998",
@@ -2483,8 +2534,8 @@
     "js/validation/recovery.js": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
     "js/validation/roll-references.js": "bfe1051d6425682fe5043d16ce865091ae408fadf811ea0c9338891653721bcb",
-    "js/validation/schemas.js": "4b2b447392a7b6e4aaf4983b1ac9fd4616bf3dbb4d519bd97d5d4196405d69d9",
-    "js/validation/versions.js": "7a203c83ac2552a35aaf42379890a610dd8e3eb12af554d2606fc8acb2ba8781"
+    "js/validation/schemas.js": "ec95c32c18ccf57570f64b20e70443c8455e8e42f74972de85004145729c9c86",
+    "js/validation/versions.js": "c9b2fd271721e72b489044f900e2cffc2ecd5da7d6bd4497e30571f850c7b172"
   },
   "supportedVersions": {
     "backup": [
@@ -2493,7 +2544,8 @@
     ],
     "character": [
       1,
-      2
+      2,
+      3
     ],
     "layout": [
       1,
@@ -2551,6 +2603,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "add": {
@@ -2563,6 +2616,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "all": {
@@ -2575,6 +2629,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "and": {
@@ -2587,6 +2642,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "any": {
@@ -2599,6 +2655,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "catalog": {
@@ -2610,6 +2667,7 @@
         ],
         "pure": true,
         "resultType": "collection",
+        "scope": "continuous",
         "version": 1
       },
       "concat": {
@@ -2622,6 +2680,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "string",
+        "scope": "continuous",
         "version": 1
       },
       "count": {
@@ -2633,6 +2692,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "divide": {
@@ -2645,6 +2705,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "empty": {
@@ -2656,6 +2717,7 @@
         ],
         "pure": true,
         "resultType": "collection",
+        "scope": "continuous",
         "version": 1
       },
       "equal": {
@@ -2668,6 +2730,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "exists": {
@@ -2679,6 +2742,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "filter": {
@@ -2691,6 +2755,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "collection",
+        "scope": "continuous",
         "version": 1
       },
       "floor": {
@@ -2702,6 +2767,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "greater": {
@@ -2714,6 +2780,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "greaterEqual": {
@@ -2726,6 +2793,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "if": {
@@ -2739,6 +2807,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "same",
+        "scope": "continuous",
         "version": 1
       },
       "ifAbsent": {
@@ -2751,6 +2820,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "same",
+        "scope": "continuous",
         "version": 1
       },
       "ifNull": {
@@ -2763,6 +2833,19 @@
         "parameters": [],
         "pure": true,
         "resultType": "same",
+        "scope": "continuous",
+        "version": 1
+      },
+      "input": {
+        "help": "",
+        "inputs": [],
+        "label": "Ler entrada desta ação",
+        "parameters": [
+          "inputId"
+        ],
+        "pure": true,
+        "resultType": "input",
+        "scope": "action",
         "version": 1
       },
       "isEmpty": {
@@ -2774,6 +2857,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "isNull": {
@@ -2785,6 +2869,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "item": {
@@ -2794,6 +2879,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "item",
+        "scope": "continuous",
         "version": 1
       },
       "less": {
@@ -2806,6 +2892,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "lessEqual": {
@@ -2818,6 +2905,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "literal": {
@@ -2829,6 +2917,19 @@
         ],
         "pure": true,
         "resultType": "literal",
+        "scope": "continuous",
+        "version": 1
+      },
+      "local": {
+        "help": "",
+        "inputs": [],
+        "label": "Usar resultado anterior desta ação",
+        "parameters": [
+          "localId"
+        ],
+        "pure": true,
+        "resultType": "local",
+        "scope": "action",
         "version": 1
       },
       "lookup": {
@@ -2841,6 +2942,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "record",
+        "scope": "continuous",
         "version": 1
       },
       "map": {
@@ -2853,6 +2955,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "list",
+        "scope": "continuous",
         "version": 1
       },
       "max": {
@@ -2864,6 +2967,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "min": {
@@ -2875,6 +2979,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "multiply": {
@@ -2887,6 +2992,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "node": {
@@ -2898,6 +3004,7 @@
         ],
         "pure": true,
         "resultType": "node",
+        "scope": "continuous",
         "version": 1
       },
       "not": {
@@ -2909,6 +3016,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "option": {
@@ -2921,6 +3029,7 @@
         ],
         "pure": true,
         "resultType": "enum",
+        "scope": "continuous",
         "version": 1
       },
       "or": {
@@ -2933,6 +3042,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "property": {
@@ -2946,6 +3056,7 @@
         ],
         "pure": true,
         "resultType": "data",
+        "scope": "continuous",
         "version": 1
       },
       "read": {
@@ -2957,6 +3068,7 @@
         ],
         "pure": true,
         "resultType": "data",
+        "scope": "continuous",
         "version": 1
       },
       "resolved": {
@@ -2968,6 +3080,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
         "version": 1
       },
       "rule": {
@@ -2980,6 +3093,7 @@
         ],
         "pure": true,
         "resultType": "rule",
+        "scope": "continuous",
         "version": 1
       },
       "subtract": {
@@ -2992,6 +3106,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "sum": {
@@ -3003,6 +3118,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "number",
+        "scope": "continuous",
         "version": 1
       },
       "text": {
@@ -3014,6 +3130,7 @@
         "parameters": [],
         "pure": true,
         "resultType": "string",
+        "scope": "continuous",
         "version": 1
       }
     },

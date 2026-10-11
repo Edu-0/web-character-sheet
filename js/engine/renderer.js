@@ -138,6 +138,7 @@ export function renderSheet(host, layout, character, options = {}) {
   activate(requestedIndex >= 0 ? requestedIndex : 0, { focus: false });
 
   return {
+    refresh(){componentOptions.onChange(character);},
     revealSearchResult(entry) {
       const index = tabs.findIndex(({ id }) => id === entry.tabId);
       if (index < 0) return;
@@ -268,6 +269,12 @@ function renderComponent(component, character, options) {
     ruleEvaluation:options.ruleEvaluation,
     registerRefresh: options.registerRefresh,
     upgradeCharacter: options.upgradeCharacter,
+    upgradeActionCharacter:options.upgradeActionCharacter,
+    getCharacter:options.getCharacter || (()=>character),
+    commitPreparedAction:options.commitPreparedAction,
+    archiveActionRecords:options.archiveActionRecords,
+    exportActionCharacter:options.exportActionCharacter,
+    validateCharacter:options.validateCharacter,
     preview: options.preview,
     materializeDefaults: options.materializeDefaults,
     dieScale: options.system?.dieScale || options.system?.diceSet,

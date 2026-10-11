@@ -11,8 +11,13 @@ import {previewSources} from './source-navigation.js';
 import {previewNavigation} from './preview-navigation.js';
 import {pointerFor} from './source-map.js';
 import {closeModal} from '../modal.js';
+import {executeSheetAction} from '../engine/assistance.js';
+import {setByPath} from '../engine/paths.js';
+import {CharacterHistory,changesBetween,applyCharacterChanges} from '../engine/character-history.js';
+import {archiveCompletedRecords} from '../engine/action-records.js';
 
 let port, context, character, controller, original, navigation;
+const characterHistory=new CharacterHistory();
 const send = (type,payload={}) => port?.postMessage(previewMessage(type,context,payload));
 function appearance(value) {
   for (const key of ['theme','palette','diceDisplay']) if (typeof value?.[key]==='string' && /^[a-z-]+$/.test(value[key])) document.documentElement.dataset[key]=value[key];
@@ -40,12 +45,28 @@ function bootstrap(event) {
       if (!layout) throw new Error('Layout de ensaio ausente.');
       character=initializeData(pkg.system,structuredClone(pkg.system.characterTemplate));
       character.meta={...character.meta,id:'editor-preview'};
+      characterHistory.activate(character);
       setSystem(pkg.system);setLayout(layout);appearance(data.appearance);
       const layoutIndex=pkg.layouts.indexOf(layout);
       navigation=previewNavigation({sources:previewSources(pkg,context.layoutId),controller:()=>controller,send});
       controller=renderSheet(document.getElementById('preview-sheet'),layout,character,{system:pkg.system,
         onRenderSource:(node,path)=>navigation.register(node,pointerFor(['layouts',layoutIndex,...path])),
-        preview:true,onChange:()=>{},upgradeCharacter:async current=>{
+        preview:true,getCharacter:()=>character,
+        commitPreparedAction:async(action,plan,{historyField}={})=>{
+          const candidate=structuredClone(character),event=executeSheetAction(candidate,action,pkg.system,{plan});
+          if(historyField && plan.stage==='complete')setByPath(candidate,historyField,event);
+          if(prepareDocument(candidate,{kind:'character',pkg}).status!=='ready')throw Error('Resultado de ensaio inválido.');
+          for(const key of Object.keys(character))delete character[key];Object.assign(character,candidate);
+          characterHistory.record(character,{label:action.label,group:'action:'+plan.id,mergeAcrossTime:true});
+          controller?.refresh();return character;
+        },
+        upgradeActionCharacter:async()=>{
+          const candidate={...structuredClone(character),schemaVersion:3};
+          if(prepareDocument(candidate,{kind:'character',pkg}).status!=='ready')throw Error('Habilitação de ensaio inválida.');
+          original=structuredClone(character);character.schemaVersion=3;characterHistory.clear();characterHistory.activate(character);return character;
+        },
+        archiveActionRecords:async ids=>{const candidate={...structuredClone(character),actionRecords:archiveCompletedRecords(character,ids)};applyCharacterChanges(character,changesBetween(character,candidate),{validate:value=>{if(prepareDocument(value,{kind:'character',pkg}).status!=='ready')throw Error('Arquivamento de ensaio inválido.');}});characterHistory.record(character,{label:'Arquivar registros concluídos'});controller?.refresh();return character;},
+        onChange:()=>characterHistory.record(character),upgradeCharacter:async current=>{
           original=structuredClone(current); current.schemaVersion=2;current.activeEffects=[];
           if (prepareDocument(current,{kind:'character',pkg}).status!=='ready') throw new Error('Migração de ensaio inválida.');
         }});

@@ -16,6 +16,7 @@ import {dataDefinition,BOUND_COMPONENT_TYPES} from '../engine/data-definitions.j
 import {DATA_TYPES,safeDataId} from '../engine/data-types.js';
 import {validateRollReferences} from './roll-references.js';
 import {predicateBindingIssue} from '../engine/predicates.js';
+import {validateActionRecords} from '../engine/action-records.js';
 
 export const KNOWN_COMPONENT_TYPES = new Set(Object.keys(COMPONENT_CONTRACTS));
 
@@ -408,6 +409,7 @@ export function validateCharacter(character, { root = 'character', allowMissingI
   if (issues.length) return issues;
   if (!requireObject(character, root, issues)) return issues;
   validateVersion(character, root, issues);
+  issues.push(...validateActionRecords(character,{root}));
   if (character.activeEffects !== undefined) {
     if (character.schemaVersion < 2) add(issues, `${root}.schemaVersion`, 'activeEffects exige versão 2');
     issues.push(...validateEffects(character.activeEffects, {root}));

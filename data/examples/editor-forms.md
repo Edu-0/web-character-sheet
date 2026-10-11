@@ -24,6 +24,7 @@ A cobertura abaixo descreve formulários próprios para as propriedades consumid
 
 | Família / componentes | Configurável por formulários | Avançado via JSON / limite |
 | --- | --- | --- |
+| Ações tipadas v3 (Compor) | Entradas temporárias, etapas/ASTs, grupos, percentil compartilhado, faixas, seleção, rerrolagem/explosão, custos e consequências no documento comum. [Execução e registros](action-flows.md). | Sem scripts ou transações entre personagens. Registros em personagens antigos exigem habilitação v3 explícita. |
 | Estrutura | Pacote/versões, sistema, layouts/modo, abas, seções, grupos stack/grid/flex, gap/min suportados, repeat/source, criação/movimento/duplicação/remoção | Metadados, showHeader e print.compact de seção/grupo via JSON; pixels livres, toolbox e arrasto não estão nesta entrega |
 | text, textarea, number, boolean | Campo, rótulo, ajuda, variante, default tipado, placeholder/rows compatíveis, bloqueio por igualdade | min/max de number de topo são legados inertes e não ganham controles funcionais |
 | select | Opções por entrada (texto simples ou objeto value/label), valores tipados e optionsFrom | presentation/valueType de select de topo são inertes; os equivalentes de itemSchema têm formulário |

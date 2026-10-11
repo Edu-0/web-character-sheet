@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 33 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `79a52d769177ee3e5bea2fcd39aed4620ac95d47d6902e5104a0a3200a4690f0`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `feef68396617fd2890e2413c418f622452000f3ba63a123bf11ec38f4d353888`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -569,7 +569,7 @@ Tipos aceitos como string curta ou `{type, …}`. Não herdam os defaults/contro
 
 ## Contratos transversais
 
-Versões suportadas: manifest: 1; package: 1/2/3; system: 1/2/3; layout: 1/2/3; character: 1/2; backup: 1/2. Envelope v2/v3 quando o conteúdo exige essa versão. Dados tipados e regras de cálculo v3: [contrato e autoria](typed-data.md). A migração precisa de revisão/cópia do original; não há downgrade automático.
+Versões suportadas: manifest: 1; package: 1/2/3; system: 1/2/3; layout: 1/2/3; character: 1/2/3; backup: 1/2. Envelope v2/v3 quando o conteúdo exige essa versão. Dados tipados e regras de cálculo v3: [contrato e autoria](typed-data.md). A migração precisa de revisão/cópia do original; não há downgrade automático.
 
 Algoritmos: fate, percentile, d6Pool, d6Resistance, explodingTrait, explodingDamage, challenge, progress. progress não recebe efeitos de teste. Unidade por algoritmo: fate=total; percentile=bonusDice; d6Pool=dice; d6Resistance=dice; explodingTrait=total; explodingDamage=total; challenge=action.
 
@@ -598,6 +598,10 @@ Defaults compartilhados: {"historyLimit":20,"textareaRows":3,"counterMin":0,"che
 | recovery.operation | `type`, `field`, `maxField`, `value`, `valueField`, `filterField`, `filterValues`, `requireCurrentMin`, `label` |
 | recovery.operations | `restoreValue`, `set`, `restoreCollection`, `setCollection` |
 | recovery.maxActions | 30 |
+
+## Ações tipadas e resoluções
+
+[Contrato e autoria visual](action-flows.md). Limites de ação: {"steps":128,"inputs":32,"costs":32,"records":50,"recordBytes":65536,"recordsBytes":524288}. Limites de resolução: {"groups":32,"draws":100,"sides":100000}. input/local são fontes puras restritas ao escopo de uma ação; cálculos contínuos não as admitem. Primitivas numéricas distribuídas: dice, sharedPercentile, select, reroll, explode, successes, ranges. O artefato JSON contém os descritores e fingerprints dos módulos reais, incluindo marcos e patches compartilhados.
 
 [Rolagens de entradas e suas condições](README.md), [testes/botões](testing.md), [recuperação](recovery.md) e [validação documental](validation.md) explicam o uso. As listas acima são as mesmas importadas pelos validadores; extensions é permitido como metadado inerte nos contratos estritos. Não traduzir uma regra narrativa para automação sem definição verificada.
 

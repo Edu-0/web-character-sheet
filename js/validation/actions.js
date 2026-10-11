@@ -1,5 +1,6 @@
 import {getByPath,pathKeys} from '../engine/paths.js';
 import {predicateBindingIssue} from '../engine/predicates.js';
+import {compileActionFlow} from '../engine/action-plan.js';
 export const ACTION_OPERATIONS=['set','add','restoreResource','rollResource','reduceNamedStates','clearNamedStates','restoreCollection','setCollection'];
 export function validateActions(actions,system,issues,root='system.sheetActions',character=system.characterTemplate) {
   const add=(path,message)=>issues.push({path,message,code:'action.invalid'});
@@ -12,6 +13,7 @@ export function validateActions(actions,system,issues,root='system.sheetActions'
     if(!action || typeof action!=='object'){add(at,'deve ser objeto');return;}
     if(typeof action.id!=='string'||!action.id||ids.has(action.id))add(`${at}.id`,'ID textual único obrigatório');ids.add(action.id);
     if(action.allowWhen!==undefined){const issue=predicateBindingIssue(system,action.allowWhen,{collections:[]});if(issue)add(at+'.allowWhen',issue);}
+    if(action.flow!==undefined){try{compileActionFlow(system,action);}catch(error){add(at+'.flow',error.message);}return;}
     const requirements=action.requirements || [];
     if(!Array.isArray(requirements)){add(`${at}.requirements`,'deve ser lista');return;}
     requirements.forEach((r,i)=>{

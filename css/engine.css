@@ -1501,6 +1501,14 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .modal:has(.source-roll-panel) .modal__title { min-width: 0; overflow-wrap: anywhere; }
 .modal:has(.source-roll-panel) .modal__close { flex-shrink: 0; }
 .modal:has(.source-roll-panel) .modal__footer { flex-wrap: wrap; flex-shrink: 0; }
+.modal:has(.engine-action-flow) { max-width: 680px; max-height: calc(100dvh - 32px); display: flex; flex-direction: column; }
+.modal:has(.engine-action-flow) .modal__body { overflow-y: auto; min-height: 0; overflow-wrap: anywhere; }
+.modal:has(.engine-action-flow) .modal__header, .modal:has(.engine-action-flow) .modal__footer { flex-shrink: 0; }
+.modal:has(.engine-action-flow) .modal__footer { flex-wrap: wrap; }
+.engine-action-flow fieldset { min-width: 0; }
+.engine-action-flow label { display: flex; gap: 8px; margin: 8px 0; }
+.engine-action-flow button, .engine-action-flow input, .engine-action-flow select { min-height: 44px; max-width: 100%; }
+.engine-action-flow input:not([type=checkbox]), .engine-action-flow select { width: 100%; min-width: 0; box-sizing: border-box; }
 .source-roll-panel { display: grid; gap: var(--space-3); min-width: 0; }
 .source-roll-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-3); }
 .source-roll-preview, .source-roll-result { overflow-wrap: anywhere; padding: var(--space-3); background: var(--color-panel-alt); border-radius: var(--radius-sm); }

@@ -1,10 +1,12 @@
 import { recoverCollection } from './collection-recovery.js';
 import { calculationValue } from './calculation-overrides.js';
-import { getByPath, setByPath } from './paths.js';
+import { getByPath, setByPath, pathKeys } from './paths.js';
+import {changesBetween,readCharacterCell,applyCharacterChanges} from './character-history.js';
 import { traitDice, traitMaximum } from './traits.js';
 import { rollOne } from './dice-resolver.js';
 import {requirePredicate} from './predicates.js';
 import {validateDataDefinitions} from '../validation/data-definitions.js';
+import {assertPreparedAction} from './action-plan.js';
 
 export function inventoryCalculationKey(config, stat) {
   return config.overrideKeys?.[stat] || `inventory.${config.overrideKey || config.field}.${stat}`;
@@ -51,8 +53,12 @@ export function healState(grade, potency, success, scale, limited = false) {
 }
 
 // Execução transacional de operações declarativas. Um erro não altera a ficha.
-export function executeSheetAction(character, action, system) {
+export function executeSheetAction(character, action, system,options={}) {
   if(action.allowWhen!==undefined)requirePredicate(system,character,action.allowWhen);
+  if(action.flow!==undefined){
+    const plan=assertPreparedAction(system,character,action,options.plan),validate=draft=>{const issues=validateDataDefinitions(system,draft,'character');if(issues.length)throw Error(issues[0].message);options.validate?.(draft);};
+    applyCharacterChanges(character,plan.patches,{validate});return {version:plan.recordChange?3:2,id:action.id,runId:plan.id,label:action.label,date:new Date().toISOString(),changes:structuredClone(plan.changes),patches:structuredClone(plan.recordChange?plan.patches.filter(p=>p.path[0]!=='actionRecords'):plan.patches),...(plan.recordChange?{recordChange:structuredClone(plan.recordChange)}:{}),details:structuredClone(plan.details),result:{inputs:structuredClone(plan.inputs),results:structuredClone(plan.results),transcripts:structuredClone(plan.transcripts)}};
+  }
   const draft = structuredClone(character);
   const touched = new Set();
   const details = [];
@@ -93,14 +99,22 @@ export function executeSheetAction(character, action, system) {
     } else throw new Error(`Operação de ficha desconhecida: ${effect.type}`);
   });
   if(system?.schemaVersion===3){const issues=validateDataDefinitions(system,draft,'character');if(issues.length)throw Error(issues[0].message);}
-  const changes = [...touched].map((field) => ({ field, before: structuredClone(getByPath(character, field) ?? null), after: structuredClone(getByPath(draft, field) ?? null) }));
-  changes.forEach((change) => setByPath(character, change.field, structuredClone(change.after)));
-  return { id: action.id, label: action.label, date: new Date().toISOString(), changes, details };
+  const changes = [...touched].map(field=>{const before=readCharacterCell(character,pathKeys(field)),after=readCharacterCell(draft,pathKeys(field));return {field,beforeExists:before.exists,afterExists:after.exists,...(before.exists?{before:structuredClone(before.value)}:{}),...(after.exists?{after:structuredClone(after.value)}:{})};});
+  const patches=changesBetween(character,draft);applyCharacterChanges(character,patches);
+  return { version:2,id: action.id, label: action.label, date: new Date().toISOString(), changes, patches, details };
 }
 
-export function undoSheetAction(character, event) {
-  if (!event?.changes?.length) return false;
+export function undoSheetAction(character, event,{system,validate:extraValidation}={}) {
+  if (!event?.changes?.length&&!event?.recordChange) return false;
+  const validate=draft=>{if(system?.schemaVersion===3){const issues=validateDataDefinitions(system,draft,'character');if(issues.length)throw Error(issues[0].message);}extraValidation?.(draft);};
+  if(event.version===3){
+    const position=character.actionRecords?.findIndex(r=>r.id===event.recordChange?.id),current=character.actionRecords?.[position];if(!current||JSON.stringify(current)!==JSON.stringify(event.recordChange.after)||event.recordChange.afterIndex!==undefined&&position!==event.recordChange.afterIndex)return false;
+    try{const draft=structuredClone(character);applyCharacterChanges(draft,event.patches,{expected:'after',result:'before'});draft.actionRecords=draft.actionRecords.filter(r=>r.id!==event.recordChange.id);if(event.recordChange.beforeExists)draft.actionRecords.splice(event.recordChange.beforeIndex??position,0,structuredClone(event.recordChange.before));applyCharacterChanges(character,changesBetween(character,draft),{validate});return true;}catch{return false;}
+  }
+  if(event.version===2){
+    if(event.changes.some(change=>{const cell=readCharacterCell(character,pathKeys(change.field));return cell.exists!==change.afterExists||cell.exists&&JSON.stringify(cell.value)!==JSON.stringify(change.after);}))return false;
+    try{applyCharacterChanges(character,event.patches,{expected:'after',result:'before',validate});return true;}catch{return false;}
+  }
   if (event.changes.some((change) => JSON.stringify(getByPath(character, change.field) ?? null) !== JSON.stringify(change.after))) return false;
-  event.changes.forEach((change) => setByPath(character, change.field, structuredClone(change.before)));
-  return true;
+  try{const draft=structuredClone(character);event.changes.forEach(change=>setByPath(draft,change.field,structuredClone(change.before)));applyCharacterChanges(character,changesBetween(character,draft),{validate});return true;}catch{return false;}
 }

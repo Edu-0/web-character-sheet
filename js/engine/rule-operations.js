@@ -4,6 +4,8 @@ const operation=(label,inputs,resultType,parameters=[],help='')=>({label,inputs,
 export const RULE_OPERATIONS=Object.freeze({
  literal:operation('Valor literal',[],'literal',['value'],'Número, texto, Sim/Não ou null explícito.'),
  read:operation('Ler dado',[],'data',['dataId'],'Lê o valor atual; ausência não equivale a zero.'),
+ input:{...operation('Ler entrada desta ação',[],'input',['inputId']),scope:'action'},
+ local:{...operation('Usar resultado anterior desta ação',[],'local',['localId']),scope:'action'},
  option:operation('Opção de escolha',[],'enum',['dataId','optionId'],'Seleciona uma identidade da escolha; renomear o rótulo conserva a comparação.'),
  rule:operation('Usar resultado de cálculo',[],'rule',['ruleId','mode'],'Escolha resultado automático ou ajustes numéricos compatíveis.'),
  node:operation('Reutilizar parte existente',[],'node',['nodeId'],'A identidade da parte determina o vínculo; a posição visual não determina a regra.'),

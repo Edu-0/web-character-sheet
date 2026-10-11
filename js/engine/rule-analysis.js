@@ -6,14 +6,15 @@ export const QUERY_PORTS=Object.freeze({filter:'predicate',map:'value',any:'pred
 const numeric=t=>['number','integer'].includes(t?.type);
 export const sameRuleType=(a,b)=>numeric(a)&&numeric(b)||a?.type===b?.type&&(!['record','collection','enum','reference','trait'].includes(a?.type)||a.definition?.id===b.definition?.id)&&(!a?.item||sameRuleType(a.item,b.item));
 export function typeOfDefinition(definition){return {type:definition.type,definition,optional:!definition.required,nullable:definition.nullable,...(definition.type==='collection'?{item:{type:'record',definition,collectionIds:[definition.id]}}:{})};}
-export function compileRules(system){
+export function compileRules(system,{actionScope}={}){
  if(system?.schemaVersion!==3)throw Error('Regras declarativas exigem v3.');
- const rules=system.rules??[];if(!Array.isArray(rules)||rules.length>RULE_LIMITS.rules)throw Error('Lista de até '+RULE_LIMITS.rules+' regras exigida');
+ const rules=system.rules??[];if(!Array.isArray(rules)||rules.length>RULE_LIMITS.rules+(actionScope?1:0))throw Error('Lista de até '+RULE_LIMITS.rules+' regras exigida');
  const rows=dataDefinitions(system),index=new Map(),types=new Map(),active=new Set(),dependencies=new Map();let total=0;
  const fail=(info,port,message)=>{const error=Error((info?.rule?.label||'Regra')+' › '+(RULE_OPERATIONS[info?.node?.op]?.label||'Parte')+(port?' › '+port:'')+': '+message);error.path=(info?.path||'system.rules')+(port?'.'+port:'');error.nodeId=info?.node?.id;throw error;};
  for(const [i,rule]of rules.entries()){
   const at='system.rules['+i+']';if(!object(rule)||!safeId(rule.id)||index.has(rule.id))fail({rule,path:at},'id','identidade inválida ou duplicada');
-  if(!['calculation','predicate'].includes(rule.kind)||!['number','string','boolean'].includes(rule.resultType)||rule.kind==='predicate'&&rule.resultType!=='boolean')fail({rule,path:at},'kind','espécie ou resultado indisponível');
+  const actionExpression=rule.id===actionScope?.ruleId;
+  if(!['calculation','predicate'].includes(rule.kind)||!(actionExpression?['infer','number','integer','string','boolean','null','enum','reference','trait','record','collection']:['number','string','boolean']).includes(rule.resultType)||rule.kind==='predicate'&&rule.resultType!=='boolean')fail({rule,path:at},'kind','espécie ou resultado indisponível');
   if(!Number.isSafeInteger(rule.revision)||rule.revision<1||typeof rule.label!=='string'||!rule.label.trim())fail({rule,path:at},'revision','nome e revisão positiva exigidos');
   if(Object.keys(rule).some(k=>!['id','label','revision','kind','resultType','context','expression','extensions'].includes(k)))fail({rule,path:at},null,'parâmetro de regra indisponível');
   let contextCollections=[];if(rule.context!==undefined){const row=rows.find(r=>r.definition.id===rule.context?.dataId);if(!object(rule.context)||Object.keys(rule.context).some(k=>k!=='dataId')||row?.definition.type!=='collection')fail({rule,path:at},'context','selecione coleção para o contexto da entrada');contextCollections=[...row.ancestors.filter(d=>d.type==='collection').map(d=>d.id),row.definition.id];}
@@ -23,6 +24,7 @@ export function compileRules(system){
    if(!object(node)||!safeId(node.id)||record.nodes.has(node.id))fail(info,'id','identidade de parte inválida ou duplicada');
    const operation=Object.hasOwn(RULE_OPERATIONS,node.op)?RULE_OPERATIONS[node.op]:null;
    if(!operation||node.version!==1)fail(info,'op','operação/versão indisponível');
+   if(operation.scope==='action'&&!actionExpression)fail(info,'op','fonte disponível somente dentro de ação explícita');
    if(Object.keys(node).some(k=>!['id','op','version','extensions',...operation.inputs,...operation.parameters].includes(k)))fail(info,null,'parâmetro indisponível');
    record.nodes.set(node.id,info);
    if(node.op==='literal'&&!(node.value===null||typeof node.value==='boolean'||typeof node.value==='string'&&node.value.length<=RULE_LIMITS.string||typeof node.value==='number'&&Number.isFinite(node.value)))fail(info,'value','literal primitivo finito exigido');
@@ -37,6 +39,9 @@ export function compileRules(system){
   const scopeTypes=()=>info.scopes.map(id=>{const query=record.nodes.get(id);return childSource(record,query);});
   let result;
   if(n.op==='literal')result={type:n.value===null?'null':typeof n.value,nullable:n.value===null,optional:false};
+  else if(n.op==='input'||n.op==='local'){
+   const definition=(n.op==='input'?actionScope?.inputs:actionScope?.locals)?.find(d=>d.id===n[n.op==='input'?'inputId':'localId']);if(!definition)fail(info,null,n.op==='input'?'entrada da ação inexistente':'resultado ainda não produzido nesta etapa');result=definition.valueType??typeOfDefinition(definition);
+  }
   else if(n.op==='read'||n.op==='empty'){
    const row=rows.find(r=>r.definition.id===n.dataId);if(!row)fail(info,'dataId','dado inexistente');
    const scopes=[...record.contextCollections,...scopeTypes().flatMap(t=>t.item?.collectionIds||[])];for(const a of row.ancestors)if(a.type==='collection'&&!scopes.includes(a.id))fail(info,'dataId',row.definition.label+' exige entrada de '+a.label);
@@ -74,7 +79,7 @@ export function compileRules(system){
  };
  const childSource=(record,info)=>infer(record,record.nodes.get(info.node.source.id));
  for(const record of index.values()){
-  const result=infer(record,record.nodes.get(record.rule.expression.id));if(result.type!==record.rule.resultType&&!(record.rule.resultType==='number'&&numeric(result)))fail(record.nodes.get(record.rule.expression.id),null,'resultado declarado '+record.rule.resultType+' incompatível com '+result.type);
+  const result=infer(record,record.nodes.get(record.rule.expression.id));if(record.rule.resultType!=='infer'&&result.type!==record.rule.resultType&&!(record.rule.resultType==='number'&&numeric(result)))fail(record.nodes.get(record.rule.expression.id),null,'resultado declarado '+record.rule.resultType+' incompatível com '+result.type);
   // Lazy branches remain executable only when their complete graph is admitted.
   for(const info of record.nodes.values())infer(record,info);
  }

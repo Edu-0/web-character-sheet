@@ -16,9 +16,9 @@ export function ruleCalculationKey(system,id,context={}){
 }
 // One disposable context for a validated package/character revision. Mutable
 // callers use evaluateRule without a context and never receive stale caches.
-export function createRuleContext(system,character,{dataContext={},trace=false,budget}={}){
+export function createRuleContext(system,character,{dataContext={},trace=false,budget,actionScope,actionInputs={},actionLocals={}}={}){
  const safety=inspectJson(system,'system');if(safety.length)throw Error(safety[0].message);
- const compiled=compileRules(system),memo=new Map(),readings=new Map(),traceRows=[];let indices=new WeakMap();
+ const compiled=compileRules(system,{actionScope}),memo=new Map(),readings=new Map(),traceRows=[];let indices=new WeakMap();
  let steps=0,visits=0;const shared=budget??{remaining:100000};
  const charge=(entries=0)=>{steps++;visits+=entries;shared.remaining-=1+entries;if(steps>RULE_LIMITS.steps||visits>RULE_LIMITS.visits||shared.remaining<0)throw Error('Orçamento de avaliação/consulta excedido');};
  const checkCharacter=()=>{const safety=inspectJson(character,'character');if(safety.length)throw Error(safety[0].message);};checkCharacter();
@@ -45,6 +45,9 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
  const visit=(record,info,frame)=>{
   charge();const key=keyFor(record,info,frame);if(memo.has(key))return memo.get(key);const n=info.node,child=p=>visit(record,record.nodes.get(n[p].id),frame),type=compiled.types.get(record.rule.id+':'+n.id);let cell;
   if(n.op==='literal')cell={present:true,value:n.value};
+  else if(n.op==='input'||n.op==='local'){
+   const key=n[n.op==='input'?'inputId':'localId'],values=n.op==='input'?actionInputs:actionLocals,definition=type.definition??{type:type.type,nullable:type.nullable},exists=Object.hasOwn(values,key);if(exists){const issue=typedValueIssue(definition,values[key]);if(issue)throw error(info,issue);}cell={present:exists,...(exists?{value:values[key]}:{}),definition,storageScope:'action',dataContext:frame.dataContext};
+  }
   else if(n.op==='read'){
    const context=contextFor(record,info,frame);cell=readData(system,character,n.dataId,context);const definition=compiled.rows.find(r=>r.definition.id===n.dataId).definition;cell={...cell,definition,dataContext:context,storageScope:'character'};readings.set(JSON.stringify([n.dataId,context]),{dataId:n.dataId,context:structuredClone(context),cell:structuredClone(cell)});
   }else if(n.op==='option')cell={present:true,value:n.optionId,definition:type.definition};
@@ -93,7 +96,7 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
  };
  const evaluate=(id,currentContext=dataContext)=>{
   const record=compiled.index.get(id);if(!record)throw Error('Cálculo indisponível: '+id);for(const dataId of record.contextCollections)if(!currentContext.entries?.some(e=>e.dataId===dataId))throw Error(record.rule.label+': contexto de entrada ausente');
-  const cell=visit(record,record.nodes.get(record.rule.expression.id),{dataContext:currentContext,items:new Map()}),value=present(cell,record.nodes.get(record.rule.expression.id));if(record.rule.resultType==='number'&&(typeof value!=='number'||!Number.isFinite(value)))throw Error('Resultado não numérico');if(record.rule.resultType!=='number'&&typeof value!==record.rule.resultType)throw Error('Tipo de resultado incompatível');return structuredClone(value);
+  const cell=visit(record,record.nodes.get(record.rule.expression.id),{dataContext:currentContext,items:new Map()}),value=present(cell,record.nodes.get(record.rule.expression.id),record.rule.id===actionScope?.ruleId);if(record.rule.resultType==='number'&&(typeof value!=='number'||!Number.isFinite(value)))throw Error('Resultado não numérico');if(['string','boolean'].includes(record.rule.resultType)&&typeof value!==record.rule.resultType)throw Error('Tipo de resultado incompatível');if(record.rule.id===actionScope?.ruleId&&!['infer','number','string','boolean','null'].includes(record.rule.resultType)){const issue=typedValueIssue(cell.definition,value);if(issue)throw Error(issue);}if(record.rule.resultType==='null'&&value!==null)throw Error('null explícito exigido.');return structuredClone(value);
  };
  return {system,character,compiled,evaluate,trace:traceRows,readings,metrics:()=>({steps,visits}),invalidate(){memo.clear();indices=new WeakMap();traceRows.length=0;readings.clear();steps=0;visits=0;if(!budget)shared.remaining=100000;checkCharacter();}};
 }

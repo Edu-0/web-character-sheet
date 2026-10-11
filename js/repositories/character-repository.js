@@ -67,17 +67,26 @@ export function characterChanges(characters, { replace = false } = {}) {
 export function saveCharacter(character, options = {}) {
   const snapshot=clone(character);return withLibraryWrite(()=>saveCharacterWithinWrite(snapshot,options));
 }
-export function saveCharacterWithinWrite(character, {copies = [],expectedPackage,expectedRaw} = {}) {
+export function saveCharacterWithinWrite(character, {copies = [],expectedPackage,expectedRaw,prepare} = {}) {
   const stored = clone(character);
   stored.meta ||= {};
-  stored.meta.updatedAt = new Date().toISOString();
-  assertValid(stored, validateCharacter, 'personagem');
   const baseline=typeof expectedRaw==='function'?expectedRaw():expectedRaw;
   if(baseline!==undefined && readRaw(`${CHARACTER_PREFIX}${stored.meta.id}`)!==baseline)throw new Error('O personagem mudou em outra aba. Exporte a edição em memória e reabra a ficha antes de salvar.');
   const packages=readJson('ficha-rpg:v2:systems',[],Array.isArray),pkg=packages.find(pkg=>pkg?.system?.id===stored.meta.system);
   if(expectedPackage && expectedPackage.system.id===stored.meta.system && (pkg || !listSystems().some(system=>system.id===stored.meta.system && system.source==='builtin'))) {
     if(JSON.stringify(pkg)!==JSON.stringify(expectedPackage))throw new Error('O pacote mudou em outra aba. Exporte a edição em memória e reabra a ficha antes de salvar.');
   }
+  // Trusted application callback, synchronous inside the existing writer. It
+  // revalidates a prepared plan after raw/package guards, before any journal write.
+  if(prepare!==undefined){
+    if(typeof prepare!=='function')throw new Error('Preparação de gravação inválida.');
+    const identity={id:stored.meta.id,system:stored.meta.system};
+    const result=prepare(stored);
+    if(result && typeof result.then==='function')throw new Error('A preparação da gravação deve ser síncrona.');
+    if(stored.meta?.id!==identity.id || stored.meta?.system!==identity.system)throw new Error('A preparação deve preservar a identidade do personagem.');
+  }
+  stored.meta.updatedAt = new Date().toISOString();
+  assertValid(stored, validateCharacter, 'personagem');
   if(pkg)assertValid(stored,value=>validateCharacterForPackage(value,pkg),'personagem');
   const index = readIndex().filter((entry) => entry.id !== stored.meta.id);
   index.push(toSummary(stored));
