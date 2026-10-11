@@ -6,10 +6,10 @@ export const EFFECT_EVENTS = ['endRound','endScene'];
 export const EFFECT_LIMITS = Object.freeze({definitions:100,instances:100,operations:20,value:1000});
 export const RUNTIME_DEFAULTS = Object.freeze({historyLimit:20,textareaRows:3,counterMin:0,checkEnabled:true,scaleStep:1});
 export const ROLL_OPTION_ALIASES = [['testEnabled','checkEnabled'],['attack','checkEnabled'],['testExpression','checkExpression'],['attackModifier','modifier'],['upcast','increment']];
-export const CHECK_CONTRACT = {fields:['algorithm','sources','note','momentumField','extensions'],sourceFields:['id','label','field','collection','valueField','formula','overrideKey','variables','extensions'],variableFields:['field','system','traitMaxField','value','extensions'],maxSources:100,maxVariables:32};
+export const CHECK_CONTRACT = {fields:['algorithm','sources','note','momentumField','extensions'],sourceFields:['ruleId','id','label','field','collection','valueField','formula','overrideKey','variables','extensions'],variableFields:['field','system','traitMaxField','value','extensions'],maxSources:100,maxVariables:32};
 export const ENTRY_ROLL_CONTRACT = {
   fields:['buttonLabel','title','submitLabel','noRollMessage','help','check','test','effect','scale','resource','info'],
-  source:['value','field','itemField','formula','variables','overrideKey','resolver','fallback'],
+  source:['ruleId','dataId','value','field','itemField','formula','variables','overrideKey','resolver','fallback'],
   check:['label','toggleLabel','expressionLabel','modifierLabel','enabled','expression','modifier'],
   effect:['label','resultLabel','buttonLabel','expression'],
   scale:['base','min','max','step','label','incrementLabel','increment','noScaleHelp'],

@@ -40,14 +40,16 @@ export function createCatalogPlan(pkg,name){
 export function ruleNode(op='literal',previous={}) {
   const operation=Object.hasOwn(RULE_OPERATIONS,op)?RULE_OPERATIONS[op]:null;if(!operation)throw new Error('Operação indisponível');
   const node={id:previous.id||uuid('node'),op,version:1,...(previous.extensions?{extensions:structuredClone(previous.extensions)}:{})};
-  if(op==='literal')node.value=typeof previous.value==='number'?previous.value:0;
-  else if(op==='read')node.dataId=previous.dataId||'';
-  else for(const key of operation.inputs)node[key]=previous[key]&&typeof previous[key]==='object'?structuredClone(previous[key]):ruleNode();
+  if(op==='literal')node.value=Object.hasOwn(previous,'value')&&(['string','number','boolean'].includes(typeof previous.value)||previous.value===null)?previous.value:0;
+  else {
+    for(const parameter of operation.parameters||[])node[parameter]=previous[parameter]??(parameter==='mode'?'automatic':'');
+    for(const key of operation.inputs)node[key]=previous[key]&&typeof previous[key]==='object'?structuredClone(previous[key]):ruleNode('literal',{value:['condition','predicate'].includes(key)?false:0});
+  }
   return node;
 }
-export function createTypedRulePlan(pkg,{name,expression}) {
+export function createTypedRulePlan(pkg,{name,expression,resultType='number',context}) {
   if(pkg.system.schemaVersion!==3 || !name?.trim())throw new Error('Informe nome do cálculo em pacote v3.');
-  const rule={id:uuid('rule'),label:name.trim(),revision:1,kind:'calculation',resultType:'number',expression:structuredClone(expression)};
+  const rule={id:uuid('rule'),label:name.trim(),revision:1,kind:'calculation',resultType,expression:structuredClone(expression),...(context?{context:structuredClone(context)}:{})};
   const commands=[];if(!pkg.system.rules)commands.push({type:'setProperty',path:['system','rules'],value:[]});
   commands.push({type:'insertNode',path:['system','rules'],index:pkg.system.rules?.length||0,value:rule});
   return {commands,rule};

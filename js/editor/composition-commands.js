@@ -5,7 +5,7 @@ import {valueAt,object,destinations,structuralNodes,structureCommand} from './fo
 import {generatedKey,compatibleData,dataIndex} from './data-index.js';
 import {pointerFor} from './source-map.js';
 export function namedDestinations(pkg,kind){const nodes=structuralNodes(pkg);return destinations(pkg,kind).map(destination=>({...destination,title:nodes.filter(n=>!['package','system'].includes(n.kind)&&n.path.length<destination.path.length&&n.path.every((part,i)=>part===destination.path[i])).map(n=>n.title).join(' › ')}));}
-export function insertionPlan(pkg,{type,name,destination,existingField,initial,hasInitial=false,formula,existingFormula,ruleId,ruleExpression,prototype,variables={},overrideKey,options=[],dataId,text='',layout,repeat,definitionId,bindings}){
+export function insertionPlan(pkg,{type,name,destination,existingField,initial,hasInitial=false,formula,existingFormula,ruleId,ruleExpression,ruleResultType='number',ruleContext,prototype,variables={},overrideKey,options=[],dataId,text='',layout,repeat,definitionId,bindings}){
  if(!COMPONENT_CONTRACTS[type])throw new Error('Componente desconhecido.');
  if(!destinations(pkg,'component').some(d=>pointerFor(d.path)===pointerFor(destination)))throw new Error('Escolha um grupo da ficha.');
  const array=valueAt(pkg,destination);if(!Array.isArray(array))throw new Error('O grupo precisa de reparo explícito antes de receber componentes.');
@@ -34,7 +34,7 @@ export function insertionPlan(pkg,{type,name,destination,existingField,initial,h
  if(['list','table'].includes(type)){const schemas=existingField?structuralNodes(pkg).filter(n=>n.kind==='component'&&n.value?.field===existingField&&n.value?.itemSchema).map(n=>n.value.itemSchema):[];if(new Set(schemas.map(s=>JSON.stringify(s))).size>1)throw new Error('Esta coleção tem apresentações com campos diferentes. Reutilize explicitamente o exemplo desejado.');component.itemSchema=schemas.length?structuredClone(schemas[0]):{name:{type:'text',label:'Nome'}};}
  if(type==='computed' && (ruleId || ruleExpression)){
   if(ruleId){if(!pkg.system.rules?.some(r=>r.id===ruleId))throw new Error('Cálculo tipado inexistente.');component.ruleId=ruleId;}
-  else {const plan=createTypedRulePlan(pkg,{name:component.label,expression:ruleExpression});commands.push(...plan.commands);component.ruleId=plan.rule.id;dependencies.push('Cálculo tipado: '+component.label);}
+  else {const plan=createTypedRulePlan(pkg,{name:component.label,expression:ruleExpression,resultType:ruleResultType,context:ruleContext});commands.push(...plan.commands);component.ruleId=plan.rule.id;dependencies.push('Cálculo tipado: '+component.label);}
  }
  if(type==='computed'&&!component.ruleId&&existingFormula){if(!Object.hasOwn(pkg.system.formulas||{},existingFormula))throw new Error('Cálculo inexistente.');component.formula=existingFormula;}
  if(type==='computed'&&!component.ruleId&&!existingFormula){

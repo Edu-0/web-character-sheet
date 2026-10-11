@@ -1,6 +1,6 @@
 import {cachedProjection} from './projection-cache.js';
 import {pointerFor} from './source-map.js';
-const referenceKeys=new Set(['dataId','dataParameter','catalogId','ruleId','binding','field','formula','optionsFrom','presetsFrom','traitsFrom','configFrom','actionsFrom','rollPreset','rollConfigFrom','collection','overrideKey','definitionId','sourceId','check','historyField','costsFrom','labelsFrom','catalogFrom','progressionFrom','formulaFrom','attributesFrom','categoriesFrom','baseDieFrom','sidesFrom']);
+const referenceKeys=new Set(['nodeId','fieldId','dataId','dataParameter','catalogId','ruleId','binding','field','formula','optionsFrom','presetsFrom','traitsFrom','configFrom','actionsFrom','rollPreset','rollConfigFrom','collection','overrideKey','definitionId','sourceId','check','historyField','costsFrom','labelsFrom','catalogFrom','progressionFrom','formulaFrom','attributesFrom','categoriesFrom','baseDieFrom','sidesFrom']);
 // A report of consumed reference slots, never a string-replacement/refactor graph.
 export function knownReferences(pkg) {return cachedProjection(pkg,'references',()=>buildKnownReferences(pkg));}
 function buildKnownReferences(pkg) {

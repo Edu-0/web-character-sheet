@@ -2,7 +2,7 @@ import {pathKeys} from '../engine/paths.js';
 import {DATA_TYPES, BOUND_COMPONENT_TYPES, readData, valueIssue, dataDefinitions,initializeData} from '../engine/data-definitions.js';
 import {DATA_LIMITS,typedValueIssue,recordValue} from '../engine/data-types.js';
 import {referenceValueIssue} from '../engine/data-references.js';
-import {RULE_OPERATIONS, RULE_LIMITS} from '../engine/rule-registry.js';
+import {compileRules} from '../engine/rule-registry.js';
 const object=v=>v!==null && typeof v==='object' && !Array.isArray(v);
 const id=v=>typeof v==='string' && /^[a-zA-Z0-9_-]{1,100}$/.test(v) && !['constructor','prototype','__proto__'].includes(v);
 export function validateDataDefinitions(system, character=system.characterTemplate, root='system.characterTemplate') {
@@ -85,33 +85,8 @@ export function validateDataDefinitions(system, character=system.characterTempla
   return issues;
 }
 export function validateRules(system) {
-  const issues=[],add=(path,message)=>issues.push({path,message,code:'rule.invalid'});
-  if(system.rules===undefined)return issues;
-  if(system.schemaVersion!==3)return issues; // Declarative rules are interpreted only in v3.
-  if(!Array.isArray(system.rules) || system.rules.length>RULE_LIMITS.rules){add('system.rules','lista de até 100 cálculos exigida');return issues;}
-  const ids=new Set();
-  system.rules.forEach((rule,i)=>{
-    const at=`system.rules[${i}]`;
-    if(!object(rule)){add(at,'regra deve ser objeto');return;}
-    if(!id(rule.id) || ids.has(rule.id))add(at+'.id','identidade inválida ou duplicada');ids.add(rule.id);
-    if(rule.kind!=='calculation' || rule.resultType!=='number')add(at,'somente cálculo numérico disponível');
-    if(!Number.isSafeInteger(rule.revision) || rule.revision<1)add(at+'.revision','revisão positiva exigida');
-    if(typeof rule.label!=='string' || !rule.label.trim())add(at+'.label','nome exigido');
-    for(const key of Object.keys(rule))if(!['id','label','revision','kind','resultType','expression','extensions'].includes(key))add(at+'.'+key,'opção de regra indisponível');
-    let count=0;const nodes=new Set();
-    const visit=(node,path,depth=0)=>{
-      if(++count>RULE_LIMITS.nodes || depth>RULE_LIMITS.depth){add(path,'limite de cálculo excedido');return;}
-      if(!object(node)){add(path,'nó deve ser objeto');return;}
-      if(!id(node.id) || nodes.has(node.id))add(path+'.id','ID de nó inválido ou duplicado');nodes.add(node.id);
-      const operation=Object.hasOwn(RULE_OPERATIONS,node.op)?RULE_OPERATIONS[node.op]:null;
-      if(!operation || node.version!==1){add(path+'.op','operação/versão indisponível');return;}
-      const allowed=['id','op','version','extensions',...operation.inputs,...(node.op==='literal'?['value']:node.op==='read'?['dataId']:[])];
-      for(const key of Object.keys(node))if(!allowed.includes(key))add(path+'.'+key,'parâmetro indisponível');
-      if(node.op==='literal' && (typeof node.value!=='number' || !Number.isFinite(node.value)))add(path+'.value','número finito exigido');
-      if(node.op==='read') {const d=(Array.isArray(system.dataDefinitions)?system.dataDefinitions:[]).find(d=>d?.id===node.dataId);if(!d || !['number','integer'].includes(d.type))add(path+'.dataId','fonte numérica inexistente ou incompatível');}
-      for(const key of operation.inputs)visit(node[key],path+'.'+key,depth+1);
-    };visit(rule.expression,at+'.expression');
-  });return issues;
+  if(system.rules===undefined||system.schemaVersion!==3)return [];
+  try{compileRules(system);return [];}catch(error){return [{path:error.path||'system.rules',message:error.message,code:'rule.invalid',...(error.nodeId?{nodeId:error.nodeId}:{})}];}
 }
 export function validateBinding(component, system, path, layoutVersion) {
   const issues=[],add=(key,message)=>issues.push({path:path+'.'+key,message,code:'binding.invalid'});

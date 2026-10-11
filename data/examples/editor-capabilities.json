@@ -12452,6 +12452,22 @@
     },
     {
       "context": "system",
+      "property": "checks.*.sources.[].ruleId",
+      "consumer": "js/engine/checks.js",
+      "validation": "js/validation/checks.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
       "property": "checks.*.sources.[].id",
       "consumer": "js/engine/checks.js",
       "validation": "js/validation/checks.js",
@@ -12916,6 +12932,38 @@
     },
     {
       "context": "system",
+      "property": "entryRolls.*.check.expression.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.check.expression.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
       "property": "entryRolls.*.check.expression.value",
       "consumer": "js/engine/entry-rolls.js",
       "validation": "js/validation/entry-rolls.js",
@@ -13066,6 +13114,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.check.modifier.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.check.modifier.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -13300,6 +13380,38 @@
     },
     {
       "context": "system",
+      "property": "entryRolls.*.effect.expression.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.effect.expression.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
       "property": "entryRolls.*.effect.expression.value",
       "consumer": "js/engine/entry-rolls.js",
       "validation": "js/validation/entry-rolls.js",
@@ -13466,6 +13578,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.scale.base.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.scale.base.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -13722,6 +13866,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.scale.increment.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.scale.increment.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -14004,6 +14180,38 @@
     },
     {
       "context": "system",
+      "property": "entryRolls.*.resource.cost.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.resource.cost.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
       "property": "entryRolls.*.resource.cost.value",
       "consumer": "js/engine/entry-rolls.js",
       "validation": "js/validation/entry-rolls.js",
@@ -14250,6 +14458,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.info.[].source.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "entryRolls.*.info.[].source.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -15498,6 +15738,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "recoveryActions.[].healing.modifier.ruleId",
+      "consumer": "js/engine/recovery.js",
+      "validation": "js/validation/recovery.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "recoveryActions.[].healing.modifier.dataId",
+      "consumer": "js/engine/recovery.js",
+      "validation": "js/validation/recovery.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -19012,6 +19284,22 @@
     },
     {
       "context": "rule:checks",
+      "property": "definition.*.sources.[].ruleId",
+      "consumer": "js/engine/checks.js",
+      "validation": "js/validation/checks.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:checks",
       "property": "definition.*.sources.[].id",
       "consumer": "js/engine/checks.js",
       "validation": "js/validation/checks.js",
@@ -19476,6 +19764,38 @@
     },
     {
       "context": "rule:entryRolls",
+      "property": "definition.*.check.expression.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.check.expression.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
       "property": "definition.*.check.expression.value",
       "consumer": "js/engine/entry-rolls.js",
       "validation": "js/validation/entry-rolls.js",
@@ -19626,6 +19946,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.check.modifier.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.check.modifier.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -19860,6 +20212,38 @@
     },
     {
       "context": "rule:entryRolls",
+      "property": "definition.*.effect.expression.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.effect.expression.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
       "property": "definition.*.effect.expression.value",
       "consumer": "js/engine/entry-rolls.js",
       "validation": "js/validation/entry-rolls.js",
@@ -20026,6 +20410,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.scale.base.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.scale.base.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -20282,6 +20698,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.scale.increment.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.scale.increment.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -20564,6 +21012,38 @@
     },
     {
       "context": "rule:entryRolls",
+      "property": "definition.*.resource.cost.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.resource.cost.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
       "property": "definition.*.resource.cost.value",
       "consumer": "js/engine/entry-rolls.js",
       "validation": "js/validation/entry-rolls.js",
@@ -20810,6 +21290,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.info.[].source.ruleId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:entryRolls",
+      "property": "definition.*.info.[].source.dataId",
+      "consumer": "js/engine/entry-rolls.js",
+      "validation": "js/validation/entry-rolls.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -22058,6 +22570,38 @@
       "type": "object",
       "inert": false,
       "control": "construtor de origem",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:recoveryActions",
+      "property": "definition.[].healing.modifier.ruleId",
+      "consumer": "js/engine/recovery.js",
+      "validation": "js/validation/recovery.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:recoveryActions",
+      "property": "definition.[].healing.modifier.dataId",
+      "consumer": "js/engine/recovery.js",
+      "validation": "js/validation/recovery.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",

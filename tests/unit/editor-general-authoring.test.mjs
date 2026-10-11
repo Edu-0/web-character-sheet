@@ -80,7 +80,7 @@ test('AV-01 religação explícita remove somente field/default e preserva exten
 test('AV-01 operações numéricas limitadas têm executor, tipos, divisão/overflow e budgets',()=>{
  const {session,id}=fixture();let p=session.validation.value;const read={...ruleNode('read'),dataId:id},c={...p.system.characterTemplate,vinculos:14};
  const cases=[['literal',literal(4),4],['read',read,14],['add',binary('add',read,literal(5)),19],['subtract',binary('subtract',read,literal(5)),9],['multiply',binary('multiply',read,literal(5)),70],['divide',binary('divide',read,literal(5)),2.8],['floor',{...ruleNode('floor'),value:binary('divide',read,literal(5))},2],['ifAbsent',{...ruleNode('ifAbsent'),value:read,fallback:literal(3)},14]];
- assert.deepEqual(cases.map(([op])=>op).sort(),Object.keys(RULE_OPERATIONS).sort());
+ assert.ok(cases.every(([op])=>Object.hasOwn(RULE_OPERATIONS,op))); // AV-03 proves the expanded registry separately.
  for(const [op,ast,expected]of cases){const pkg=withRule(p,ast);ready(pkg);assert.equal(evaluateRule(pkg.system,c,'opaque-rule'),expected,op);}
  for(const ast of [binary('divide',literal(1),literal(0)),binary('multiply',literal(1e308),literal(1e308))])assert.throws(()=>evaluateRule(withRule(p,ast).system,c,'opaque-rule'));
  let deep=literal(0);for(let i=0;i<RULE_LIMITS.depth+2;i++)deep={...ruleNode('floor'),value:deep};assert.equal(prepareDocument(withRule(p,deep),{kind:'package'}).status,'invalid');assert.throws(()=>evaluateRule(withRule(p,deep).system,c,'opaque-rule'));
@@ -115,7 +115,7 @@ test('AV-01 referências, bindings incompatíveis e identidades de nós são dia
  const choices=structuredClone(p);choices.system.dataDefinitions.push({id:'flag',label:'Autorizado',type:'boolean',binding:'flag',required:false,nullable:false});components(choices).push({type:'number',label:'Número',dataId:id});ready(choices);
  assert.ok(compatibleData(choices,'number').some(row=>row.dataId===id));for(const type of ['counter','die','select','image','tagList'])assert.ok(!compatibleData(choices,type).some(row=>row.typed),type);
  assert.deepEqual(dataChoices(choices,[...path,0,'dataId'],'dataId').map(([value])=>value),[id]);components(choices)[0].type='boolean';assert.deepEqual(dataChoices(choices,[...path,0,'dataId'],'dataId').map(([value])=>value),['flag']);
- choices.system.rules=withRule(p,{...ruleNode('read'),dataId:id}).system.rules;assert.deepEqual(dataChoices(choices,['system','rules',0,'expression','dataId'],'dataId').map(([value])=>value),[id]);
+ choices.system.rules=withRule(p,{...ruleNode('read'),dataId:id}).system.rules;assert.deepEqual(dataChoices(choices,['system','rules',0,'expression','dataId'],'dataId').map(([value])=>value),[id,'flag']);
  const ast=binary('add',literal(1),literal(2));ast.right.id=ast.left.id;assert.equal(prepareDocument(withRule(p,ast),{kind:'package'}).status,'invalid');
  const badRead={...ruleNode('read'),dataId:'missing'};assert.equal(prepareDocument(withRule(p,badRead),{kind:'package'}).status,'invalid');
  const type=structuredClone(p);type.system.dataDefinitions[0].type='boolean';assert.equal(prepareDocument(withRule(type,{...ruleNode('read'),dataId:id}),{kind:'package'}).status,'invalid');

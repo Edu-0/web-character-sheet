@@ -29,6 +29,7 @@
     "maxSources": 100,
     "maxVariables": 32,
     "sourceFields": [
+      "ruleId",
       "id",
       "label",
       "field",
@@ -1953,6 +1954,8 @@
       "noScaleHelp"
     ],
     "source": [
+      "ruleId",
+      "dataId",
       "value",
       "field",
       "itemField",
@@ -2173,13 +2176,13 @@
   "schemaVersion": 1,
   "sources": {
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
-    "js/engine/advanced-fields.js": "37e770aa6378bcf332334dbdcfedbcb549600731918e8a4f5ea4c27d4b9e8b8d",
+    "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
     "js/engine/assisted-fields.js": "e79b086d6a73672bc6007001d51d4601366630fee42c152d86ec743f56b4b866",
     "js/engine/bound-fields.js": "de42f98bb09c3893f7c87b2d121e8a5a31a382e9338287421960af5627909a8e",
     "js/engine/check-fields.js": "da205990eabc5d3b4e23454b57362f725b17d529ad3fa1b92dafda05e1e26171",
-    "js/engine/checks.js": "7d7b7cb9e62949b92e2af7cf646ac42c040ae63828afac9b29f3897bae3c7fca",
-    "js/engine/composition.js": "fa18ded212270f508e774f1a95da7cab0b3e895693c81bd5e22f1aff712806a7",
-    "js/engine/computed-values.js": "a6395209d9ef4a443f1c67bcd8b631b4069d3a3bc34c3d3191bfeb82f837e74f",
+    "js/engine/checks.js": "5d00b70016076cb3e309a86ae310375d84589fdb12ed120cb3a87313569764c5",
+    "js/engine/composition.js": "7d983e44c6c96a11e72abec28ae760439ead321b275a3d4a5fc4fbf6c8ffedc1",
+    "js/engine/computed-values.js": "c80991719813fcc2f5651fc6954660da689f802c53cc940003f4a6eeb37d98ec",
     "js/engine/data-definitions.js": "b22785e5e5d3871716770a556f7ac8534f46632df4db72e4627852bb5ef25274",
     "js/engine/data-references.js": "17c21973b702810c2f7dea62254722c8e481454268c4c7c45f329c83f1090d6d",
     "js/engine/data-types.js": "4913c175d14cb2c43501210cc92dacf14728eec650b4a3d6638cc3b0c9f8362c",
@@ -2191,7 +2194,10 @@
     "js/engine/point-fields.js": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612",
     "js/engine/recovery-fields.js": "b93a066c424fd08a09d5df065e298d16068b2598a891ac1ddb06072dcbde6d24",
     "js/engine/recovery.js": "3d45355f2b6280f624913ad79402c06cab4765e0602280b2c6e1791b5aeb623e",
-    "js/engine/rule-registry.js": "dbedd5fe00c3b687d748b645d704f5109856420afe3343639e0bd69c0e490218",
+    "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
+    "js/engine/rule-analysis.js": "dedce684bbde417d9619c203207035e665881c9a1cb48b8dc1b73b59bbd8b00c",
+    "js/engine/rule-operations.js": "5854bbd399986532d257f74641cac7ab505a972c73ca2c173b245b425cbcbf3f",
+    "js/engine/rule-registry.js": "3d8a32d8fcbcdfeed2b45a50f61c2978951a723e8f519e888e63fe9646cf3eee",
     "js/engine/structured-fields.js": "dce4e747ea727d0d3c3cd33ee7283ce67ab3efc05a9b6c62e7e65edf5a5bb7f3",
     "js/engine/technique-fields.js": "e3785057b2d986001fb3bd98a4c7bb8ac267fa61f7de709b862a64bda0efdb9f",
     "js/engine/typed-data-write.js": "049439c40503f04cd9daffc3bbdec0d4ba071a5dba6f99064c5581dc342445df",
@@ -2201,17 +2207,17 @@
     "js/validation/actions.js": "3d8e62491f7b2bcb0d41d3d86d72e2419c53844527cd0b7b33f4669e7abb6e4c",
     "js/validation/backup.js": "4ce1a50fcd8739ea086b846bc7a089731f0f493a2accb450752f81e8e38fa77a",
     "js/validation/catalog.js": "beda9ba194c9971424ed18e3666b14a0ccbbac7765b7a829b793eb85e25f549c",
-    "js/validation/checks.js": "6551ebcfc038d585b4502bc3a50bab2c4d5fa9882a30884711773903b2806cba",
-    "js/validation/contracts.js": "db5e24524b13de769e1aeec4fceca7d5f72de8d14c03ebf034331d232c492fe4",
-    "js/validation/data-definitions.js": "49b74b3979f4c9a3eec9a2b9fb90002338ff6d266eaa57a1f39147ebbf0b4c1e",
+    "js/validation/checks.js": "48db8458c7327c0996fe6e5e831663f26e7b002f021e98bd43adf9870e27c351",
+    "js/validation/contracts.js": "93a427ff92dcd0df3f4a9f5e92f17767250a572258160d11081ea6a4f49a3417",
+    "js/validation/data-definitions.js": "ccdc2c1eed818ede57cf51fe34235c0818450259faa2cd5eb75b496c3bc9885e",
     "js/validation/diagnostics.js": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a",
     "js/validation/documents.js": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5",
     "js/validation/effects.js": "62b0bb57a0d6c6391e31abf5df11568c0d07c59bf2e403db47221805d0935998",
-    "js/validation/entry-rolls.js": "a16402073ce1b9fa1f864c01976e8cf5c320d02aeae24dc295c47f2cb7b8cb23",
+    "js/validation/entry-rolls.js": "31f6adf64d16c76b31a70d1cd197ae2b11e58f1b8b173a13fa6425cd167baf3b",
     "js/validation/limits.js": "059087b6170c07f86aa8c964d976b90ab8e3f45e17ddcf5ea76bb9c2d9d4eeb8",
     "js/validation/recovery.js": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
-    "js/validation/roll-references.js": "a7b19e3ddf1fa805c1df746b38f843db36f9f79c38326cd003457052a812f110",
+    "js/validation/roll-references.js": "bfe1051d6425682fe5043d16ce865091ae408fadf811ea0c9338891653721bcb",
     "js/validation/schemas.js": "865c6bde64534566984918e6e387c37bd3fd7a2ca80c78da874bf88ee698bef7",
     "js/validation/versions.js": "7a203c83ac2552a35aaf42379890a610dd8e3eb12af554d2606fc8acb2ba8781"
   },
@@ -2271,84 +2277,489 @@
       ]
     },
     "operations": {
+      "abs": {
+        "help": "",
+        "inputs": [
+          "value"
+        ],
+        "label": "Valor absoluto",
+        "parameters": [],
+        "pure": true,
+        "resultType": "number",
+        "version": 1
+      },
       "add": {
+        "help": "",
         "inputs": [
           "left",
           "right"
         ],
         "label": "Somar",
+        "parameters": [],
+        "pure": true,
+        "resultType": "number",
+        "version": 1
+      },
+      "all": {
+        "help": "",
+        "inputs": [
+          "source",
+          "predicate"
+        ],
+        "label": "Todas as entradas atendem",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "and": {
+        "help": "",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "label": "E",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "any": {
+        "help": "",
+        "inputs": [
+          "source",
+          "predicate"
+        ],
+        "label": "Alguma entrada atende",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "catalog": {
+        "help": "",
+        "inputs": [],
+        "label": "Consultar catálogo",
+        "parameters": [
+          "catalogId"
+        ],
+        "pure": true,
+        "resultType": "collection",
+        "version": 1
+      },
+      "concat": {
+        "help": "",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "label": "Juntar textos",
+        "parameters": [],
+        "pure": true,
+        "resultType": "string",
+        "version": 1
+      },
+      "count": {
+        "help": "",
+        "inputs": [
+          "source"
+        ],
+        "label": "Contar entradas",
+        "parameters": [],
         "pure": true,
         "resultType": "number",
         "version": 1
       },
       "divide": {
+        "help": "",
         "inputs": [
           "left",
           "right"
         ],
         "label": "Dividir",
+        "parameters": [],
         "pure": true,
         "resultType": "number",
         "version": 1
       },
+      "empty": {
+        "help": "",
+        "inputs": [],
+        "label": "Coleção vazia explícita",
+        "parameters": [
+          "dataId"
+        ],
+        "pure": true,
+        "resultType": "collection",
+        "version": 1
+      },
+      "equal": {
+        "help": "",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "label": "Igual (mesmo tipo)",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "exists": {
+        "help": "null, false, zero e texto vazio são valores presentes.",
+        "inputs": [
+          "value"
+        ],
+        "label": "Existe a propriedade",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "filter": {
+        "help": "",
+        "inputs": [
+          "source",
+          "predicate"
+        ],
+        "label": "Filtrar entradas",
+        "parameters": [],
+        "pure": true,
+        "resultType": "collection",
+        "version": 1
+      },
       "floor": {
+        "help": "",
         "inputs": [
           "value"
         ],
         "label": "Arredondar para baixo",
+        "parameters": [],
         "pure": true,
         "resultType": "number",
         "version": 1
       },
+      "greater": {
+        "help": "",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "label": "Maior que",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "greaterEqual": {
+        "help": "",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "label": "Maior ou igual",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "if": {
+        "help": "Só avalia o ramo escolhido.",
+        "inputs": [
+          "condition",
+          "then",
+          "else"
+        ],
+        "label": "Se… então… senão",
+        "parameters": [],
+        "pure": true,
+        "resultType": "same",
+        "version": 1
+      },
       "ifAbsent": {
+        "help": "",
         "inputs": [
           "value",
           "fallback"
         ],
         "label": "Usar se ausente",
+        "parameters": [],
+        "pure": true,
+        "resultType": "same",
+        "version": 1
+      },
+      "ifNull": {
+        "help": "",
+        "inputs": [
+          "value",
+          "fallback"
+        ],
+        "label": "Usar se nulo",
+        "parameters": [],
+        "pure": true,
+        "resultType": "same",
+        "version": 1
+      },
+      "isEmpty": {
+        "help": "Ausente e null não são vazios.",
+        "inputs": [
+          "value"
+        ],
+        "label": "É vazio",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "isNull": {
+        "help": "",
+        "inputs": [
+          "value"
+        ],
+        "label": "É null explícito",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "item": {
+        "help": "",
+        "inputs": [],
+        "label": "Valor desta entrada",
+        "parameters": [],
+        "pure": true,
+        "resultType": "item",
+        "version": 1
+      },
+      "less": {
+        "help": "",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "label": "Menor que",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "lessEqual": {
+        "help": "",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "label": "Menor ou igual",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "literal": {
+        "help": "Número, texto, Sim/Não ou null explícito.",
+        "inputs": [],
+        "label": "Valor literal",
+        "parameters": [
+          "value"
+        ],
+        "pure": true,
+        "resultType": "literal",
+        "version": 1
+      },
+      "lookup": {
+        "help": "Exige exatamente uma correspondência; ID inexistente ou ambíguo é erro.",
+        "inputs": [
+          "source",
+          "key"
+        ],
+        "label": "Buscar entrada por identidade",
+        "parameters": [],
+        "pure": true,
+        "resultType": "record",
+        "version": 1
+      },
+      "map": {
+        "help": "",
+        "inputs": [
+          "source",
+          "value"
+        ],
+        "label": "Transformar cada entrada",
+        "parameters": [],
+        "pure": true,
+        "resultType": "list",
+        "version": 1
+      },
+      "max": {
+        "help": "Lista vazia produz ausência; trate com Usar se ausente.",
+        "inputs": [
+          "source"
+        ],
+        "label": "Maior valor da lista",
+        "parameters": [],
         "pure": true,
         "resultType": "number",
         "version": 1
       },
-      "literal": {
-        "inputs": [],
-        "label": "Número",
+      "min": {
+        "help": "Lista vazia produz ausência; trate com Usar se ausente.",
+        "inputs": [
+          "source"
+        ],
+        "label": "Menor valor da lista",
+        "parameters": [],
         "pure": true,
         "resultType": "number",
         "version": 1
       },
       "multiply": {
+        "help": "",
         "inputs": [
           "left",
           "right"
         ],
         "label": "Multiplicar",
+        "parameters": [],
         "pure": true,
         "resultType": "number",
+        "version": 1
+      },
+      "node": {
+        "help": "A identidade da parte determina o vínculo; a posição visual não determina a regra.",
+        "inputs": [],
+        "label": "Reutilizar parte existente",
+        "parameters": [
+          "nodeId"
+        ],
+        "pure": true,
+        "resultType": "node",
+        "version": 1
+      },
+      "not": {
+        "help": "",
+        "inputs": [
+          "value"
+        ],
+        "label": "Não",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "option": {
+        "help": "Seleciona uma identidade da escolha; renomear o rótulo conserva a comparação.",
+        "inputs": [],
+        "label": "Opção de escolha",
+        "parameters": [
+          "dataId",
+          "optionId"
+        ],
+        "pure": true,
+        "resultType": "enum",
+        "version": 1
+      },
+      "or": {
+        "help": "",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "label": "OU",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "property": {
+        "help": "",
+        "inputs": [
+          "value"
+        ],
+        "label": "Ler campo de registro",
+        "parameters": [
+          "fieldId"
+        ],
+        "pure": true,
+        "resultType": "data",
         "version": 1
       },
       "read": {
+        "help": "Lê o valor atual; ausência não equivale a zero.",
         "inputs": [],
         "label": "Ler dado",
+        "parameters": [
+          "dataId"
+        ],
         "pure": true,
-        "resultType": "number",
+        "resultType": "data",
+        "version": 1
+      },
+      "resolved": {
+        "help": "",
+        "inputs": [
+          "value"
+        ],
+        "label": "Referência resolvida",
+        "parameters": [],
+        "pure": true,
+        "resultType": "boolean",
+        "version": 1
+      },
+      "rule": {
+        "help": "Escolha resultado automático ou ajustes numéricos compatíveis.",
+        "inputs": [],
+        "label": "Usar resultado de cálculo",
+        "parameters": [
+          "ruleId",
+          "mode"
+        ],
+        "pure": true,
+        "resultType": "rule",
         "version": 1
       },
       "subtract": {
+        "help": "",
         "inputs": [
           "left",
           "right"
         ],
         "label": "Subtrair",
+        "parameters": [],
         "pure": true,
         "resultType": "number",
+        "version": 1
+      },
+      "sum": {
+        "help": "Lista vazia soma zero; valores inválidos não são descartados.",
+        "inputs": [
+          "source"
+        ],
+        "label": "Somar valores da lista",
+        "parameters": [],
+        "pure": true,
+        "resultType": "number",
+        "version": 1
+      },
+      "text": {
+        "help": "",
+        "inputs": [
+          "value"
+        ],
+        "label": "Converter valor para texto",
+        "parameters": [],
+        "pure": true,
+        "resultType": "string",
         "version": 1
       }
     },
     "ruleLimits": {
-      "depth": 16,
-      "nodes": 128,
-      "rules": 100
+      "dependencyDepth": 128,
+      "depth": 32,
+      "nodes": 2048,
+      "rules": 100,
+      "steps": 10000,
+      "string": 100000,
+      "visits": 10000
     },
     "types": [
       "string",

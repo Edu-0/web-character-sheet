@@ -86,7 +86,10 @@ export function previewNavigation({sources,controller,send}) {
       if(composing)authoringHandle(pointer);
       const first=targets.find(node=>node.getClientRects().length) || targets[0];
       if(!first.matches('[tabindex],input,textarea,select,button,summary'))first.tabIndex=-1;
-      if(focus)first.focus({preventScroll:true});if(scroll)first.scrollIntoView({block:'center',behavior:'instant'});
+      if(focus)first.focus({preventScroll:true});
+      // Keep an asynchronous reveal inside this opaque frame. scrollIntoView
+      // can also move the parent while its user is clicking a mode button.
+      if(scroll){const rect=first.getBoundingClientRect();window.scrollBy({top:rect.top+rect.height/2-innerHeight/2,behavior:'instant'});}
       // Parent mobile panels may be hidden while a command is in flight. Count
       // rendered occurrences, excluding hidden tabs/modals within this frame.
       return {found:true,count:targets.filter(node=>!node.closest('[hidden]')).length};

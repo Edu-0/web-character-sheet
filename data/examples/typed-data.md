@@ -1,5 +1,7 @@
 # Dados tipados e primeiro vínculo — AV-01
 
+Este guia registra o primeiro recorte. A extensão atual está em [registros e composição](structured-data.md) e [consultas e cálculos](rule-queries.md), incluindo mais tipos, operações, dependências e limites ampliados. A tabela de oito operações e os limites abaixo descrevem AV-01.
+
 **Criar pacote** inicia um pacote v3 vazio: apenas identificação técnica e um destino de composição. Não há atributo, recurso, fórmula, teste ou cálculo pré-configurado. Em **Compor → Dados tipados e vínculos**, crie um dado sem precisar criar um componente. Ele pode ser opcional, admitir null e ter um valor inicial explícito.
 
 Para mostrar o mesmo valor duas vezes, inclua dois componentes pela toolbox e escolha o mesmo **Dado do personagem**. Os componentes guardam `dataId`; a definição guarda o caminho de armazenamento (`binding`). Há um único valor no personagem. **Duplicar bloco** conserva esse vínculo. Mudar o rótulo do dado conserva identidade, armazenamento e fontes de cálculo. Ao selecionar um campo compatível, **Vincular valor de…** permite escolher outro dado, com revisão.

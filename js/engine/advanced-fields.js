@@ -2,6 +2,7 @@ import {RUNTIME_DEFAULTS,COMPONENT_CONTRACTS} from '../validation/contracts.js';
 import {computedValue} from './computed-values.js';
 export {computedKey,computedValue} from './computed-values.js';
 import {computedKey} from './computed-values.js';
+import {createRuleContext} from './rule-registry.js';
 import {createCheckButton} from './check-fields.js';
 import { createOptionCheckboxes } from './option-checkboxes.js';
 import { createEntryAction } from './entry-actions.js';
@@ -173,7 +174,11 @@ registerFieldType('computed', {
       refresh();
       context.registerRefresh?.(refresh);
       wrap.appendChild(output);if(errorStatus)wrap.append(errorStatus);
-      if (context.override !== false) wrap.append(createCalculationControl({ ...context, key: computedKey(context), automatic: () => computedValue(context, true) }));
+      if(context.ruleId){
+        const details=element('details','engine-rule-trace'),summary=element('summary','','Leituras de '+context.label),body=element('div');details.append(summary,body);wrap.append(details);
+        const explain=()=>{if(!details.open)return;body.replaceChildren();try{const evaluation=createRuleContext(context.system,context.character,{dataContext:context.dataContext,trace:true}),result=evaluation.evaluate(context.ruleId);body.append(element('p','','Automático: '+formatValue(result,context.format)));for(const row of evaluation.trace)body.append(element('p','',row.label+': '+row.value+(row.entries.length?' · '+row.entries.map(e=>e.entryId).join(' › '):'')));}catch(error){body.append(element('p','',error.message));}};details.addEventListener('toggle',explain);context.registerRefresh?.(explain);
+      }
+      if (context.override !== false && (!context.ruleId||context.system.rules?.find(r=>r.id===context.ruleId)?.resultType==='number')) wrap.append(createCalculationControl({ ...context, key: computedKey(context), automatic: () => computedValue(context, true) }));
     }
     container.appendChild(wrap);
   },
@@ -1041,6 +1046,7 @@ function numberValue(input) {
 }
 
 function formatValue(value, format) {
+  if(typeof value==='boolean')return value?'Sim':'Não';
   if (!Number.isFinite(value)) return String(value ?? '—');
   if (format === 'signed') return value >= 0 ? `+${value}` : String(value);
   return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 }).format(value);

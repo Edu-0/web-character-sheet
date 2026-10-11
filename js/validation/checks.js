@@ -27,7 +27,7 @@ export function validateChecks(checks, issues, system) {
         ids.add(source.id);
       }
       if (source.overrideKey !== undefined) {
-        if (!source.formula) issue(`${at}.overrideKey`,'exige formula');
+        if (!source.formula&&!source.ruleId) issue(`${at}.overrideKey`,'exige formula ou ruleId');
         try {pathKeys(source.overrideKey);} catch(error) {issue(`${at}.overrideKey`,error.message);}
       }
       if (source.variables !== undefined) {
@@ -48,9 +48,10 @@ export function validateChecks(checks, issues, system) {
       }
       if (!source.collection && source.valueField !== undefined) issue(`${at}.valueField`, 'exige collection');
       if (typeof source.label !== 'string' || !source.label.trim()) issue(`${at}.label`, 'exige rótulo');
-      if (['field', 'collection', 'formula'].filter(key => source[key] !== undefined).length !== 1) issue(at, 'use field, collection ou formula, exclusivamente');
+      if (['ruleId','field', 'collection', 'formula'].filter(key => source[key] !== undefined).length !== 1) issue(at, 'use field, collection ou formula, exclusivamente');
       if (source.formula && !Object.hasOwn(system.formulas || {}, source.formula)) issue(`${at}.formula`, 'fórmula inexistente');
-      for (const prop of source.collection ? ['collection', 'valueField'] : source.formula ? ['formula'] : ['field']) {
+      if(source.ruleId!==undefined){const rule=system.rules?.find(r=>r.id===source.ruleId);if(system.schemaVersion!==3||!rule||rule.context||rule.resultType!==(config.algorithm==='explodingDamage'?'string':'number'))issue(at+'.ruleId','cálculo puro com tipo e contexto compatíveis exigido');}
+      for (const prop of source.ruleId?[]:source.collection ? ['collection', 'valueField'] : source.formula ? ['formula'] : ['field']) {
         try { pathKeys(source[prop]); } catch (error) { issue(`${at}.${prop}`, error.message); }
       }
     });

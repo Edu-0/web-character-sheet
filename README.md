@@ -74,7 +74,7 @@ Os seis sistemas adicionais oferecem Padrão e Modo mesa. Consulte [referências
 3. Use a busca para localizar campos e **Configurações** para ajustar a aparência.
 4. Salve uma cópia com **Exportar JSON** ou faça o backup da biblioteca em Configurações → **Exportar tudo**.
 
-Para montar uma ficha própria, abra **Sistemas** → **Criar pacote** → **Compor**. O pacote começa vazio em v3. Crie dados opcionais em **Dados tipados e vínculos**, reutilize o mesmo valor em componentes diferentes e construa cálculos por operações ou pela receita “a cada N”. Consulte o [primeiro vínculo e contrato v3](data/examples/typed-data.md). Use os cards da toolbox, a prévia e as receitas de lógica; **Experimentar** permite ensaiar com dados fictícios. Consulte [autoria visual e limites](data/examples/editor-visual.md).
+Para montar uma ficha própria, abra **Sistemas** → **Criar pacote** → **Compor**. O pacote começa vazio em v3. Crie dados opcionais em **Dados tipados e vínculos**, reutilize o mesmo valor em componentes diferentes e construa cálculos por operações ou pela receita “a cada N”. Consulte o [primeiro vínculo e contrato v3](data/examples/typed-data.md) e as [consultas e cálculos visuais](data/examples/rule-queries.md). Use os cards da toolbox, a prévia e as receitas de lógica; **Experimentar** permite ensaiar com dados fictícios. Consulte [autoria visual e limites](data/examples/editor-visual.md).
 
 Para acrescentar um pacote de arquivo, abra **Sistemas** → **Importar sistema**. Há [exemplos importáveis e contratos](data/examples/README.md) para quem deseja configurar regras e layouts.
 

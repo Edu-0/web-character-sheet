@@ -49,10 +49,10 @@ export function resolveSchema(desc,value) {
 export function descriptorFields(names,type='string'){return Object.fromEntries(names.map(key=>[key,{type}]));}
 
 const en=values=>({type:'string',enum:values});
-const rollValue=obj({value:any,field:ref,itemField:ref,formula:ref,variables:map({type:'object',rollSource:true}),overrideKey:ref,resolver:ref,fallback:any});
-rollValue.exclusive=['value','field','itemField','formula','resolver'];
+const rollValue=obj({ruleId:ref,dataId:ref,value:any,field:ref,itemField:ref,formula:ref,variables:map({type:'object',rollSource:true}),overrideKey:ref,resolver:ref,fallback:any});
+rollValue.exclusive=['ruleId','dataId','value','field','itemField','formula','resolver'];
 const checkVariable=obj({field:ref,system:ref,traitMaxField:ref,value:num});checkVariable.exclusive=['field','system','traitMaxField','value'];
-const checkSource=obj({id:str,label:str,field:ref,collection:ref,valueField:ref,formula:ref,overrideKey:ref,variables:map(checkVariable)});checkSource.exclusive=['field','collection','formula'];
+const checkSource=obj({ruleId:ref,id:str,label:str,field:ref,collection:ref,valueField:ref,formula:ref,overrideKey:ref,variables:map(checkVariable)});checkSource.exclusive=['ruleId','field','collection','formula'];
 const check=obj({algorithm:en(CHECK_ALGORITHMS),sources:arr(checkSource),note:{type:'string',multiline:true},momentumField:ref});
 const entryRoll=obj({
   ...strings('buttonLabel title submitLabel noRollMessage help'),

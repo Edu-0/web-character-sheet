@@ -17,6 +17,7 @@ import { appendFieldHelp } from './help.js';
 import { expandComponents, componentSearchKey } from './layout-components.js';
 import { highlightSearchTarget } from './search.js';
 import {commitRenderedChanges} from './render-projection.js';
+import {createRuleContext} from './rule-registry.js';
 
 export function renderSheet(host, layout, character, options = {}) {
   if(options.materializeDefaults===false && !options.projected){
@@ -54,13 +55,16 @@ export function renderSheet(host, layout, character, options = {}) {
   const cleanups = [];
   const refreshers = new Set();
   const structuralRefreshers=new Set();
+  const ruleEvaluation=options.system?.schemaVersion===3?createRuleContext(options.system,character):undefined;
   const componentOptions = {
     ...options,
+    ruleEvaluation,
     registerRefresh(refresh,{structural=false}={}) {
       const callbacks=structural?structuralRefreshers:refreshers;callbacks.add(refresh);
       return () => callbacks.delete(refresh);
     },
     onChange(updatedCharacter, component) {
+      ruleEvaluation?.invalidate();
       title.textContent = characterName(updatedCharacter);
       [...structuralRefreshers].forEach(refresh=>refresh());
       [...refreshers].forEach((refresh) => refresh());
@@ -246,6 +250,7 @@ function renderComponent(component, character, options) {
     ...component,
     character,
     system: options.system,
+    ruleEvaluation:options.ruleEvaluation,
     registerRefresh: options.registerRefresh,
     upgradeCharacter: options.upgradeCharacter,
     preview: options.preview,

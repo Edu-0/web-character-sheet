@@ -59,12 +59,13 @@ function renderTypedRules(view,pkg,checkedCommit){
   const select=choose('Cálculo tipado para editar',[['','Criar cálculo independente'],...(pkg.system.rules||[]).map(r=>[r.id,r.label])],state.id||'');host.append(select.wrap);
   const body=el('div');host.append(body);
   const draw=()=>{
-    body.replaceChildren();state.id=select.input.value;const index=(pkg.system.rules||[]).findIndex(r=>r.id===state.id),rule=pkg.system.rules?.[index];state.drafts??={};const draft=state.drafts[state.id||'new']??={};if(rule&&!draft.dirty)draft.ast=structuredClone(rule.expression);
+    body.replaceChildren();state.id=select.input.value;const index=(pkg.system.rules||[]).findIndex(r=>r.id===state.id),rule=pkg.system.rules?.[index];state.drafts??={};const draft=state.drafts[state.id||'new']??={};if(rule&&!draft.dirty){draft.ast=structuredClone(rule.expression);draft.resultType=rule.resultType;draft.contextDataId=rule.context?.dataId||'';}draft.ruleId=rule?.id;
     const name=input('Nome do cálculo tipado',draft.name??rule?.label??'');body.append(name.wrap);name.input.addEventListener('input',()=>{draft.name=name.input.value;view.onPending?.();});
     const builder=el('div');body.append(builder);const pointer=rule?pointerFor(['system','rules',index,'expression']):null;
     const pending=()=>{if(pointer){ui.formPending??={};if(draft.dirty)ui.formPending[pointer]={raw:JSON.stringify(draft.ast),mode:'value',valueType:'object'};else delete ui.formPending[pointer];}view.onPending?.();};
-    mountTypedRuleBuilder(builder,{pkg,state:draft,expression:rule?.expression,onEdit:pending,onApply:expression=>view.run(async()=>{
-      const commands=rule?[{type:'setProperty',path:['system','rules',index,'expression'],value:expression},{type:'setProperty',path:['system','rules',index,'label'],value:name.input.value},{type:'setProperty',path:['system','rules',index,'revision'],value:rule.revision+1}]:createTypedRulePlan(pkg,{name:name.input.value,expression}).commands;
+    mountTypedRuleBuilder(builder,{pkg,state:draft,expression:rule?.expression,resultType:rule?.resultType,context:rule?.context,onEdit:pending,onApply:expression=>view.run(async()=>{
+      const commands=rule?[{type:'setProperty',path:['system','rules',index,'resultType'],value:draft.resultType},{type:'setProperty',path:['system','rules',index,'expression'],value:expression},{type:'setProperty',path:['system','rules',index,'label'],value:name.input.value},{type:'setProperty',path:['system','rules',index,'revision'],value:rule.revision+1}]:createTypedRulePlan(pkg,{name:name.input.value,expression,resultType:draft.resultType,...(draft.contextDataId?{context:{dataId:draft.contextDataId}}:{})}).commands;
+      if(rule){if(draft.contextDataId)commands.push({type:'setProperty',path:['system','rules',index,'context'],value:{dataId:draft.contextDataId}});else if(rule.context)commands.push({type:'removeProperty',path:['system','rules',index,'context']});}
       // Keep existing pending barrier until confirmation; remove only for this commit.
       const previous=pointer?ui.formPending?.[pointer]:null;
       const revision=view.session.revision,result=prepareDocument(JSON.parse(applyOperations(view.session.text,commands)),{kind:'package'});

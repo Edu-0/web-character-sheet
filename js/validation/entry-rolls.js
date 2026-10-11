@@ -1,3 +1,4 @@
+import {dataDefinitions} from '../engine/data-definitions.js';
 import {ENTRY_ROLL_CONTRACT, RUNTIME_DEFAULTS, ROLL_OPTION_ALIASES} from './contracts.js';
 import { pathKeys, getByPath } from '../engine/paths.js';
 import { parseDiceExpression } from '../engine/dice-expression.js';
@@ -18,8 +19,14 @@ function path(value, label, issues) {
 function source(value, label, system, issues, depth = 0) {
   if (!keys(value, ENTRY_ROLL_CONTRACT.source, label, issues)) return;
   if (depth > 4) { add(issues, label, 'fonte excede profundidade 4'); return; }
-  const origins = ['value', 'field', 'itemField', 'formula', 'resolver'].filter(key => Object.hasOwn(value, key));
+  const origins = ['ruleId','dataId','value', 'field', 'itemField', 'formula', 'resolver'].filter(key => Object.hasOwn(value, key));
   if (origins.length !== 1) add(issues, label, 'escolha uma única origem: value, field, itemField, formula ou resolver');
+  for(const prop of ['ruleId','dataId'])if(value[prop]!==undefined){
+    if(Object.hasOwn(value,'fallback'))add(issues,label+'.fallback','Fonte tipada trata ausência/null em sua regra; remova a alternativa legada');
+    if(system?.schemaVersion!==3)add(issues,label+'.'+prop,'fonte tipada exige sistema v3');
+    const rule=prop==='ruleId'?system?.rules?.find(r=>r.id===value[prop]):null,row=prop==='dataId'?dataDefinitions(system).find(r=>r.definition.id===value[prop]):null;
+    if(prop==='ruleId'?(!rule||rule.context||!['number','string'].includes(rule.resultType)):(!row||row.ancestors.some(d=>d.type==='collection')||!['number','integer','string'].includes(row.definition.type)))add(issues,label+'.'+prop,'fonte pura numérica/textual do personagem inteiro exigida');
+  }
   if ('value' in value && !['number', 'string'].includes(typeof value.value)) add(issues, `${label}.value`, 'deve ser número ou texto');
   if ('fallback' in value && !['number', 'string'].includes(typeof value.fallback)) add(issues, `${label}.fallback`, 'deve ser número ou texto');
   for (const key of ['field', 'itemField', 'overrideKey', 'resolver', 'formula']) if (key in value) path(value[key], `${label}.${key}`, issues);

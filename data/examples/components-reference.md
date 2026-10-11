@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 33 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `5eda5a3a91fc1b75e6058bc1e7116ce48998912062c154bf56c330f3dc0f5bf5`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `f72563cc89bcb679e4425283bf0d807d2d473e43122230cc4f7074e1a5f2a4e9`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -578,12 +578,12 @@ Defaults compartilhados: {"historyLimit":20,"textareaRows":3,"counterMin":0,"che
 | Contrato | Chaves/enum aceitos |
 | --- | --- |
 | checks.fields | `algorithm`, `sources`, `note`, `momentumField`, `extensions` |
-| checks.sourceFields | `id`, `label`, `field`, `collection`, `valueField`, `formula`, `overrideKey`, `variables`, `extensions` |
+| checks.sourceFields | `ruleId`, `id`, `label`, `field`, `collection`, `valueField`, `formula`, `overrideKey`, `variables`, `extensions` |
 | checks.variableFields | `field`, `system`, `traitMaxField`, `value`, `extensions` |
 | checks.maxSources | 100 |
 | checks.maxVariables | 32 |
 | entryRolls.fields | `buttonLabel`, `title`, `submitLabel`, `noRollMessage`, `help`, `check`, `test`, `effect`, `scale`, `resource`, `info` |
-| entryRolls.source | `value`, `field`, `itemField`, `formula`, `variables`, `overrideKey`, `resolver`, `fallback` |
+| entryRolls.source | `ruleId`, `dataId`, `value`, `field`, `itemField`, `formula`, `variables`, `overrideKey`, `resolver`, `fallback` |
 | entryRolls.check | `label`, `toggleLabel`, `expressionLabel`, `modifierLabel`, `enabled`, `expression`, `modifier` |
 | entryRolls.effect | `label`, `resultLabel`, `buttonLabel`, `expression` |
 | entryRolls.scale | `base`, `min`, `max`, `step`, `label`, `incrementLabel`, `increment`, `noScaleHelp` |

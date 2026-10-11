@@ -14,6 +14,7 @@ export function compositionBindingIssues(container,system,path='container'){
     }
     for(const [i,c]of (owner.components||[]).entries()){
       const slot=at+'.components['+i+']';if(c.dataId!==undefined||c.dataParameter!==undefined)check(c.dataId??parameters[c.dataParameter],slot+'.dataId');
+      if(c.ruleId){const rule=system.rules?.find(r=>r.id===c.ruleId);if(rule?.context){check(rule.context.dataId,slot+'.ruleId');if(!scopes.includes(rule.context.dataId))issues.push({path:slot+'.ruleId',message:rule.label+': exige contexto de entrada do cálculo'});}}
       if(c.type==='group')visit(c,slot,scopes,parameters,seen,depth+1);
       if(c.type==='componentInstance'){
         const definition=system.componentDefinitions?.find(d=>d.id===c.definitionId);if(!definition||seen.includes(definition.id))continue;
@@ -61,6 +62,7 @@ export function expandComposition(container,system,character={},options={}) {
       }
       if(component.dataParameter!==undefined){component.dataId=parameters[component.dataParameter];delete component.dataParameter;if(!component.dataId)throw new Error('Parâmetro de composto sem vínculo');}
       if(component.dataId!==undefined){dataDefinition(system,component.dataId);component.field=dataPath(system,character,component.dataId,occurrence.context);component.boundData=true;component.dataContext=occurrence.context;}
+      if(component.ruleId!==undefined)component.dataContext=occurrence.context;
       if(component.field)pathKeys(component.field);
       if(output.length>=COMPOSITION_LIMITS.expanded)throw new Error('Expansão de componentes excede10000 entradas');
       output.push({...component,sourcePath:[...(canonicalSource||source)],groupTrail:JSON.parse(JSON.stringify(groups)),occurrenceIds:(occurrence.context.entries||[]).map(e=>e.entryId)});

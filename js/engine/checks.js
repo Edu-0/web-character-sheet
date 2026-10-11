@@ -36,7 +36,7 @@ export function checkSources(config, character, system = {}) {
     }));
     const entry = { id: source.id ?? String(index), sourceId:source.id ?? String(index), label: source.label };
     try {
-      if (source.formula) {
+      if (source.formula||source.ruleId) {
         entry.value = computedValue({...source,character,system});
       } else entry.value = getByPath(character, source.field);
     } catch (error) {

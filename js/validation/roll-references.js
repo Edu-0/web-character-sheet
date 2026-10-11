@@ -8,7 +8,7 @@ export function validateRollReferences(pkg, character = pkg.system.characterTemp
   for(const [li,layout] of pkg.layouts.entries()) for(const [ti,tab] of (layout.tabs || []).entries()) for(const [si,section] of (tab.sections || []).entries()) for(const [ci,container] of (section.containers || []).entries()) {
     for(const [index,component] of expandComponents(container,pkg.system).entries()) components.push({component,layout,path:`package.layouts[${li}].tabs[${ti}].sections[${si}].containers[${ci}].components[${index % container.components.length}].roll`});
   }
-  const equivalent=(source,component)=>component.type==='computed' && component.mode!=='roll' && component.override!==false && computedKey(source)===computedKey(component) && source.formula===component.formula && JSON.stringify(source.variables || {})===JSON.stringify(component.variables || {});
+  const equivalent=(source,component)=>component.type==='computed' && component.mode!=='roll' && component.override!==false && computedKey({...source,system:pkg.system})===computedKey({...component,system:pkg.system}) && source.ruleId===component.ruleId && source.formula===component.formula && JSON.stringify(source.variables || {})===JSON.stringify(component.variables || {});
   for(const [key,config] of Object.entries(pkg.system.checks || {})) for(const [index,source] of config.sources.entries()) {
     if((source.overrideKey || source.variables) && !components.some(({component})=>equivalent(source,component))) add(`system.checks.${key}.sources[${index}]`,'fórmula/variáveis/chave sem cálculo compatível nos layouts');
   }

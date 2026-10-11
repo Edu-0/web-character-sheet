@@ -1,3 +1,5 @@
+import {evaluateRule} from './rule-registry.js';
+import {dataDefinition,readData} from './data-definitions.js';
 import { getByPath } from './paths.js';
 import { evaluate } from './formula.js';
 import { calculationValue } from './calculation-overrides.js';
@@ -8,7 +10,9 @@ export function registerRollValueResolver(name, resolver) { valueResolvers.set(n
 export function rollValue(source, context) {
   if (source === undefined) return undefined;
   let value;
-  if (Object.hasOwn(source, 'value')) value = source.value;
+  if(source.ruleId)value=evaluateRule(context.system,context.character,source.ruleId,context);
+  else if(source.dataId){const definition=dataDefinition(context.system,source.dataId),cell=readData(context.system,context.character,source.dataId,context.dataContext);if(!['number','integer','string'].includes(definition.type))throw Error('Fonte tipada incompatível');if(!cell.present||cell.value===null)throw Error('Fonte tipada ausente ou nula; configure alternativa na regra');value=cell.value;}
+  else if (Object.hasOwn(source, 'value')) value = source.value;
   else if (source.itemField) value = getByPath(context.item, source.itemField);
   else if (source.field) value = getByPath(context.character, source.field);
   else if (source.resolver) {
