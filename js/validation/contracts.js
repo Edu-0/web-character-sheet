@@ -27,7 +27,7 @@ export const RECOVERY_CONTRACT = {
 const p = (type, options = {}) => ({type,...options});
 const fields = (names, type = 'string') => Object.fromEntries(names.split(' ').filter(Boolean).map(name=>[name,p(type)]));
 export const COMMON_COMPONENT_PROPERTIES = {
-  type:p('string',{required:true}),label:p('string'),field:p('path'),variant:p('string'),help:p('string'),default:p('any'),
+  type:p('string',{required:true}),label:p('string'),field:p('path'),variant:p('string'),help:p('string'),default:p('any'),dataParameter:p('string'),
   disabledWhen:p('object',{semantic:'field/equals; bloqueia controles, sem apagar dados'}),print:p('object',{semantic:'perfil compact; validação em schemas.js'}),extensions:p('any'),
 };
 const calculation = {override:p('boolean'),overrideKey:p('path'),stepControls:p('boolean')};
@@ -40,6 +40,10 @@ function component(source, summary, field, properties = {}, semantic = 'schemas.
 }
 const basic='js/engine/fields.js',advanced='js/engine/advanced-fields.js',assisted='js/engine/assisted-fields.js',dnd='js/systems/dnd2024-fields.js';
 export const COMPONENT_CONTRACTS = {
+  information:component('js/engine/structured-fields.js','Informação estática segura, sem dado',false,{text:p('string')}),
+  group:component('js/engine/composition.js','Grupo de componentes, limitado a oito níveis',false,{components:p('array',{required:true}),layout:p('object'),repeat:p('object'),note:p('string')}),
+  componentInstance:component('js/engine/composition.js','Instância de composto local com vínculos explícitos',false,{definitionId:p('string',{required:true}),bindings:p('object',{required:true}),repeat:p('object'),note:p('string')}),
+  dataField:component('js/engine/structured-fields.js','Controle de dado tipado, registro ou coleção',false,{dataId:p('string',{required:true}),dataParameter:p('string')}),
   boolean:component(basic,'Escolha booleana',true,{dataId:p('string')}),
   number:component(basic,'Número preenchível; min/max legados não limitam este input',true,{dataId:p('string'),...roll,min:p('number',{inert:true}),max:p('number',{inert:true})}),
   text:component(basic,'Texto curto',true,{dataId:p('string'),placeholder:p('string')}),
@@ -79,7 +83,8 @@ export const ITEM_FIELD_CONTRACTS = Object.fromEntries(['text','textarea','numbe
 export function validateComponentShape(component, path, issues) {
   const contract=COMPONENT_CONTRACTS[component.type];if(!contract) return;
   const properties={...contract.properties};
-  if(component.dataId!==undefined && properties.dataId && properties.field)properties.field={...properties.field,required:false};
+  if((component.dataId!==undefined||component.dataParameter!==undefined) && properties.dataId && properties.field)properties.field={...properties.field,required:false};
+  if(component.dataParameter!==undefined && properties.dataId)properties.dataId={...properties.dataId,required:false};
   if(component.ruleId!==undefined && properties.formula)properties.formula={...properties.formula,required:false};
   validateParameterShape(component,properties,path,issues);
 }

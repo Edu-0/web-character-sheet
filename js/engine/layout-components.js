@@ -1,4 +1,5 @@
 import {dataDefinition} from './data-definitions.js';
+import {expandComposition} from './composition.js';
 import { pathKeys } from './paths.js';
 // Expansão compartilhada pela renderização e pelo índice de busca.
 export function resolveSource(root, path) {
@@ -23,7 +24,13 @@ function interpolate(value, context) {
   return value;
 }
 
-export function expandComponents(container, system) {
+export function expandComponents(container, system, character={}, options={}) {
+  if(system?.schemaVersion===3 || container.components?.some(c=>['group','componentInstance'].includes(c.type))){
+    return expandComposition(container,system,character,{...options,interpolate,legacyItems:source=>resolveSource(system,source)}).map(component=>{
+      if(component.optionsFrom&&!component.options)component.options=resolveSource(system,component.optionsFrom).map((option,index)=>option&&typeof option==='object'?{value:option.value??option.id??option.key??index,label:option.label??option.name??String(option.id??index+1)}:{value:option,label:String(option??'')});
+      return component;
+    });
+  }
   const items = container.repeat ? resolveSource(system, container.repeat.source) : [null];
   if (items.length * (container.components || []).length > 10000) throw new Error('Expansão de componentes excede 10000 entradas.');
   return items.flatMap((item, index) => {

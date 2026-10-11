@@ -1,16 +1,20 @@
-import {BOUND_COMPONENT_TYPES} from '../engine/data-definitions.js';
+import {BOUND_COMPONENT_TYPES,dataDefinition} from '../engine/data-definitions.js';
 import {createTypedDataPlan,createTypedRulePlan} from './typed-data-commands.js';
 import {COMPONENT_CONTRACTS} from '../validation/contracts.js';
 import {valueAt,object,destinations,structuralNodes,structureCommand} from './form-structure.js';
 import {generatedKey,compatibleData,dataIndex} from './data-index.js';
 import {pointerFor} from './source-map.js';
 export function namedDestinations(pkg,kind){const nodes=structuralNodes(pkg);return destinations(pkg,kind).map(destination=>({...destination,title:nodes.filter(n=>!['package','system'].includes(n.kind)&&n.path.length<destination.path.length&&n.path.every((part,i)=>part===destination.path[i])).map(n=>n.title).join(' › ')}));}
-export function insertionPlan(pkg,{type,name,destination,existingField,initial,hasInitial=false,formula,existingFormula,ruleId,ruleExpression,prototype,variables={},overrideKey,options=[]}){
+export function insertionPlan(pkg,{type,name,destination,existingField,initial,hasInitial=false,formula,existingFormula,ruleId,ruleExpression,prototype,variables={},overrideKey,options=[],dataId,text='',layout,repeat,definitionId,bindings}){
  if(!COMPONENT_CONTRACTS[type])throw new Error('Componente desconhecido.');
  if(!destinations(pkg,'component').some(d=>pointerFor(d.path)===pointerFor(destination)))throw new Error('Escolha um grupo da ficha.');
  const array=valueAt(pkg,destination);if(!Array.isArray(array))throw new Error('O grupo precisa de reparo explícito antes de receber componentes.');
  if(prototype){if(prototype.type!==type)throw new Error('Exemplo incompatível.');return {commands:[{type:'insertNode',path:destination,index:array.length,value:{...structuredClone(prototype),label:name||prototype.label}}],selection:[...destination,array.length],dependencies:['Reutiliza os mesmos dados e regras do exemplo.']};}
  const component={type,label:name||COMPONENT_CONTRACTS[type].summary},commands=[],dependencies=[];
+ if(type==='information')component.text=text;
+ if(type==='group'){component.components=[];component.layout=layout||{type:'stack'};if(repeat)component.repeat=repeat;}
+ if(type==='dataField'){dataDefinition(pkg.system,dataId);component.dataId=dataId;}
+ if(type==='componentInstance'){component.definitionId=definitionId;component.bindings=structuredClone(bindings||{});}
  if(COMPONENT_CONTRACTS[type].properties.field?.required){
   let field=existingField;
   if(field){if(!compatibleData(pkg,type).some(d=>d.field===field||d.dataId===field))throw new Error('Dado incompatível com este componente.');}
@@ -45,7 +49,8 @@ export function insertionPlan(pkg,{type,name,destination,existingField,initial,h
 }
 export function movePlan(pkg,node,destination,to){
  const sourceParent=valueAt(pkg,node.path.slice(0,-2)),targetParent=valueAt(pkg,destination.slice(0,-1));
- if(node.kind==='component'&&JSON.stringify(sourceParent?.repeat)!==JSON.stringify(targetParent?.repeat)&&/\{[^}]+\}/.test(JSON.stringify(node.value)))throw new Error('Este bloco usa entradas da repetição. Mova o grupo inteiro ou escolha vínculos comuns antes de movê-lo.');
+ const interpolated=value=>typeof value==='string'?/\{[^}]+\}/.test(value):Array.isArray(value)?value.some(interpolated):value&&typeof value==='object'?Object.entries(value).some(([key,value])=>key!=='extensions'&&interpolated(value)):false;
+ if(node.kind==='component'&&(sourceParent?.repeat?.source||targetParent?.repeat?.source)&&JSON.stringify(sourceParent?.repeat)!==JSON.stringify(targetParent?.repeat)&&interpolated(node.value))throw new Error('Este bloco usa entradas da repetição. Mova o grupo inteiro ou escolha vínculos comuns antes de movê-lo.');
  return structureCommand(pkg,node,'move',{destination,to});
 }
 export function moveChoices(pkg,node,destination){const array=valueAt(pkg,destination);if(!Array.isArray(array))return [];const same=pointerFor(node.path.slice(0,-1))===pointerFor(destination),items=array.filter((_,i)=>!same||i!==node.path.at(-1));return Array.from({length:items.length+1},(_,i)=>({to:i,label:i===0?'No início':i===items.length?'No fim':'Antes de '+(items[i]?.label||items[i]?.title||items[i]?.name||items[i]?.type||'bloco '+(i+1))}));}

@@ -54,6 +54,9 @@
           "required": true,
           "type": "path"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -101,6 +104,9 @@
         "dataId": {
           "type": "string"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -143,6 +149,9 @@
           "required": true,
           "type": "path"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -178,9 +187,66 @@
       "source": "js/engine/check-fields.js",
       "summary": "Teste sem mutação, com decisões manuais"
     },
+    "componentInstance": {
+      "properties": {
+        "bindings": {
+          "required": true,
+          "type": "object"
+        },
+        "dataParameter": {
+          "type": "string"
+        },
+        "default": {
+          "type": "any"
+        },
+        "definitionId": {
+          "required": true,
+          "type": "string"
+        },
+        "disabledWhen": {
+          "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "extensions": {
+          "type": "any"
+        },
+        "field": {
+          "type": "path"
+        },
+        "help": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "print": {
+          "semantic": "perfil compact; validação em schemas.js",
+          "type": "object"
+        },
+        "repeat": {
+          "type": "object"
+        },
+        "type": {
+          "required": true,
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
+      "semantic": "schemas.js",
+      "source": "js/engine/composition.js",
+      "summary": "Instância de composto local com vínculos explícitos"
+    },
     "computed": {
       "properties": {
         "actionLabel": {
+          "type": "string"
+        },
+        "dataParameter": {
           "type": "string"
         },
         "default": {
@@ -252,6 +318,9 @@
     },
     "counter": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -299,10 +368,57 @@
       "source": "js/engine/fields.js",
       "summary": "Contador com limites nos botões"
     },
+    "dataField": {
+      "properties": {
+        "dataId": {
+          "required": true,
+          "type": "string"
+        },
+        "dataParameter": {
+          "type": "string"
+        },
+        "default": {
+          "type": "any"
+        },
+        "disabledWhen": {
+          "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "extensions": {
+          "type": "any"
+        },
+        "field": {
+          "type": "path"
+        },
+        "help": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "print": {
+          "semantic": "perfil compact; validação em schemas.js",
+          "type": "object"
+        },
+        "type": {
+          "required": true,
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
+      "semantic": "schemas.js",
+      "source": "js/engine/structured-fields.js",
+      "summary": "Controle de dado tipado, registro ou coleção"
+    },
     "die": {
       "properties": {
         "allowComposite": {
           "type": "boolean"
+        },
+        "dataParameter": {
+          "type": "string"
         },
         "default": {
           "type": "any"
@@ -355,6 +471,9 @@
     },
     "dndAbility": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -408,6 +527,9 @@
     },
     "dndDerived": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -460,6 +582,9 @@
         "ability": {
           "type": "string"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -510,6 +635,9 @@
     },
     "effectList": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -545,9 +673,65 @@
       "source": "js/engine/effect-fields.js",
       "summary": "Instâncias/ativação/eventos/remoção de efeitos v2"
     },
+    "group": {
+      "properties": {
+        "components": {
+          "required": true,
+          "type": "array"
+        },
+        "dataParameter": {
+          "type": "string"
+        },
+        "default": {
+          "type": "any"
+        },
+        "disabledWhen": {
+          "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "extensions": {
+          "type": "any"
+        },
+        "field": {
+          "type": "path"
+        },
+        "help": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "layout": {
+          "type": "object"
+        },
+        "note": {
+          "type": "string"
+        },
+        "print": {
+          "semantic": "perfil compact; validação em schemas.js",
+          "type": "object"
+        },
+        "repeat": {
+          "type": "object"
+        },
+        "type": {
+          "required": true,
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
+      "semantic": "schemas.js",
+      "source": "js/engine/composition.js",
+      "summary": "Grupo de componentes, limitado a oito níveis"
+    },
     "image": {
       "properties": {
         "alt": {
+          "type": "string"
+        },
+        "dataParameter": {
           "type": "string"
         },
         "default": {
@@ -586,10 +770,56 @@
       "source": "js/engine/advanced-fields.js",
       "summary": "Imagem local segura"
     },
+    "information": {
+      "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
+        "default": {
+          "type": "any"
+        },
+        "disabledWhen": {
+          "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "extensions": {
+          "type": "any"
+        },
+        "field": {
+          "type": "path"
+        },
+        "help": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "print": {
+          "semantic": "perfil compact; validação em schemas.js",
+          "type": "object"
+        },
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "required": true,
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
+      "semantic": "schemas.js",
+      "source": "js/engine/structured-fields.js",
+      "summary": "Informação estática segura, sem dado"
+    },
     "inventorySummary": {
       "properties": {
         "carriedField": {
           "type": "path"
+        },
+        "dataParameter": {
+          "type": "string"
         },
         "default": {
           "type": "any"
@@ -662,6 +892,9 @@
         },
         "creationCost": {
           "type": "object"
+        },
+        "dataParameter": {
+          "type": "string"
         },
         "default": {
           "type": "any"
@@ -756,6 +989,9 @@
         "dataId": {
           "type": "string"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -810,6 +1046,9 @@
           "default": "pointBudget",
           "type": "path"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -847,6 +1086,9 @@
     },
     "poolBuilder": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -897,6 +1139,9 @@
           "required": true,
           "type": "path"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -942,6 +1187,9 @@
           "required": true,
           "type": "path"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -979,6 +1227,9 @@
     },
     "resource": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -1017,6 +1268,9 @@
     },
     "select": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -1076,6 +1330,9 @@
           "type": "string"
         },
         "categoriesFrom": {
+          "type": "string"
+        },
+        "dataParameter": {
           "type": "string"
         },
         "default": {
@@ -1140,6 +1397,9 @@
         "consumeLabel": {
           "type": "string"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -1194,6 +1454,9 @@
         },
         "creationCost": {
           "type": "object"
+        },
+        "dataParameter": {
+          "type": "string"
         },
         "default": {
           "type": "any"
@@ -1284,6 +1547,9 @@
         "creationCost": {
           "type": "object"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -1367,6 +1633,9 @@
     },
     "tagList": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -1412,6 +1681,9 @@
           "required": true,
           "type": "path"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -1450,6 +1722,9 @@
     "text": {
       "properties": {
         "dataId": {
+          "type": "string"
+        },
+        "dataParameter": {
           "type": "string"
         },
         "default": {
@@ -1496,6 +1771,9 @@
         "dataId": {
           "type": "string"
         },
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -1538,6 +1816,9 @@
     },
     "traitAllocation": {
       "properties": {
+        "dataParameter": {
+          "type": "string"
+        },
         "default": {
           "type": "any"
         },
@@ -1687,7 +1968,9 @@
     "check-rolls.package.json",
     "first-bindings.package.json",
     "generic-entry-rolls.package.json",
-    "recovery-actions.package.json"
+    "local-composition.package.json",
+    "recovery-actions.package.json",
+    "structured.package.json"
   ],
   "itemFields": {
     "boolean": {
@@ -1892,11 +2175,14 @@
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
     "js/engine/advanced-fields.js": "37e770aa6378bcf332334dbdcfedbcb549600731918e8a4f5ea4c27d4b9e8b8d",
     "js/engine/assisted-fields.js": "e79b086d6a73672bc6007001d51d4601366630fee42c152d86ec743f56b4b866",
-    "js/engine/bound-fields.js": "2a1b20c588bd53240492aeb7ef2252916182de6b50d53881b1016e5a1df0afa7",
+    "js/engine/bound-fields.js": "de42f98bb09c3893f7c87b2d121e8a5a31a382e9338287421960af5627909a8e",
     "js/engine/check-fields.js": "da205990eabc5d3b4e23454b57362f725b17d529ad3fa1b92dafda05e1e26171",
     "js/engine/checks.js": "7d7b7cb9e62949b92e2af7cf646ac42c040ae63828afac9b29f3897bae3c7fca",
+    "js/engine/composition.js": "fa18ded212270f508e774f1a95da7cab0b3e895693c81bd5e22f1aff712806a7",
     "js/engine/computed-values.js": "a6395209d9ef4a443f1c67bcd8b631b4069d3a3bc34c3d3191bfeb82f837e74f",
-    "js/engine/data-definitions.js": "b221d05b4fdd8b1fd272957a78980a7bea72e6ea81d912bcafb30350a9766415",
+    "js/engine/data-definitions.js": "b22785e5e5d3871716770a556f7ac8534f46632df4db72e4627852bb5ef25274",
+    "js/engine/data-references.js": "17c21973b702810c2f7dea62254722c8e481454268c4c7c45f329c83f1090d6d",
+    "js/engine/data-types.js": "4913c175d14cb2c43501210cc92dacf14728eec650b4a3d6638cc3b0c9f8362c",
     "js/engine/dice-resolver.js": "6e9e7d08602adeaa8db246a830610236dff749bddc8c720cdd4f3130194993ae",
     "js/engine/effect-fields.js": "19e14de1f04295eda9e81e52ffc77d32762f54750399e5a5aa5c32ff039f537f",
     "js/engine/effects.js": "405a2e811de38fb21f16d9585b86ff520c2b8cfbc0f6d56191c9f7e10ae8dcda",
@@ -1906,14 +2192,18 @@
     "js/engine/recovery-fields.js": "b93a066c424fd08a09d5df065e298d16068b2598a891ac1ddb06072dcbde6d24",
     "js/engine/recovery.js": "3d45355f2b6280f624913ad79402c06cab4765e0602280b2c6e1791b5aeb623e",
     "js/engine/rule-registry.js": "dbedd5fe00c3b687d748b645d704f5109856420afe3343639e0bd69c0e490218",
+    "js/engine/structured-fields.js": "dce4e747ea727d0d3c3cd33ee7283ce67ab3efc05a9b6c62e7e65edf5a5bb7f3",
     "js/engine/technique-fields.js": "e3785057b2d986001fb3bd98a4c7bb8ac267fa61f7de709b862a64bda0efdb9f",
+    "js/engine/typed-data-write.js": "049439c40503f04cd9daffc3bbdec0d4ba071a5dba6f99064c5581dc342445df",
+    "js/engine/typed-record-inputs.js": "d0f43c88cec1fd710bc2041bb74bee7d478ace2be9d62fa792b6577f58036cc3",
+    "js/engine/typed-value-format.js": "660043d9c59e0137a206cb781910c33728693a3db1dca12c836b69a36fb2ace6",
     "js/systems/dnd2024-fields.js": "5a2f55694f246994ea68e6769ba51e6fce39b4bd0ee414d46720807de6acb661",
     "js/validation/actions.js": "3d8e62491f7b2bcb0d41d3d86d72e2419c53844527cd0b7b33f4669e7abb6e4c",
     "js/validation/backup.js": "4ce1a50fcd8739ea086b846bc7a089731f0f493a2accb450752f81e8e38fa77a",
     "js/validation/catalog.js": "beda9ba194c9971424ed18e3666b14a0ccbbac7765b7a829b793eb85e25f549c",
     "js/validation/checks.js": "6551ebcfc038d585b4502bc3a50bab2c4d5fa9882a30884711773903b2806cba",
-    "js/validation/contracts.js": "191dad62b6b81b34ba3585fc9a181bf3684010e89b1aea6e45e6fab5fa5be506",
-    "js/validation/data-definitions.js": "8507ad1be8b4404e731fca4fc30e27f7cd3776c9ece20803c64eb80a90a21555",
+    "js/validation/contracts.js": "db5e24524b13de769e1aeec4fceca7d5f72de8d14c03ebf034331d232c492fe4",
+    "js/validation/data-definitions.js": "49b74b3979f4c9a3eec9a2b9fb90002338ff6d266eaa57a1f39147ebbf0b4c1e",
     "js/validation/diagnostics.js": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a",
     "js/validation/documents.js": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5",
     "js/validation/effects.js": "62b0bb57a0d6c6391e31abf5df11568c0d07c59bf2e403db47221805d0935998",
@@ -1922,7 +2212,7 @@
     "js/validation/recovery.js": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
     "js/validation/roll-references.js": "a7b19e3ddf1fa805c1df746b38f843db36f9f79c38326cd003457052a812f110",
-    "js/validation/schemas.js": "d0c14bf1a406d8fcbbab482d08e526ad2a26ff9109fbbb2ae817a9169d31ba30",
+    "js/validation/schemas.js": "865c6bde64534566984918e6e387c37bd3fd7a2ca80c78da874bf88ee698bef7",
     "js/validation/versions.js": "7a203c83ac2552a35aaf42379890a610dd8e3eb12af554d2606fc8acb2ba8781"
   },
   "supportedVersions": {
@@ -1957,6 +2247,17 @@
     "components": {
       "boolean": [
         "boolean"
+      ],
+      "dataField": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "enum",
+        "trait",
+        "record",
+        "collection",
+        "reference"
       ],
       "number": [
         "number",
@@ -2053,7 +2354,12 @@
       "string",
       "number",
       "integer",
-      "boolean"
+      "boolean",
+      "enum",
+      "trait",
+      "record",
+      "collection",
+      "reference"
     ]
   }
 }

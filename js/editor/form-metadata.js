@@ -1,4 +1,5 @@
 import {AUTHORING_LABELS} from './authoring-labels.js';
+import {DATA_TYPES} from '../engine/data-types.js';
 import {ACTION_OPERATIONS} from '../validation/actions.js';
 import {COMPONENT_CONTRACTS,ITEM_FIELD_CONTRACTS,CHECK_ALGORITHMS,RECOVERY_CONTRACT,EFFECT_EVENTS} from '../validation/contracts.js';
 const s=()=>({type:'string'}),path=()=>({type:'path'});
@@ -7,11 +8,11 @@ export const labelFor=key=>LABELS[key] || AUTHORING_LABELS[key] || key;
 export function nodeSchema(kind,value={}) {
   value??={};
   if(kind==='package')return {schemaVersion:{type:'integer'}};
-  if(kind==='system')return {id:s(),name:s(),description:s(),schemaVersion:{type:'integer'},characterTemplate:{type:'any',label:'Template do personagem'},dataDefinitions:{type:'array',items:{type:'object',properties:{id:s(),label:s(),description:s(),type:{type:'string',enum:['string','number','integer','boolean']},binding:path(),required:{type:'boolean'},nullable:{type:'boolean'},initial:{type:'any'}}}},rules:{type:'any',label:'Cálculos tipados (editar por operações)'},formulas:{type:'object',values:{type:'string',multiline:true}},diceSteps:{type:'boolean'},diceTray:{type:'boolean'},dieScale:{type:'array',items:{type:'integer'}},...SYSTEM_RULES};
+  if(kind==='system')return {id:s(),name:s(),description:s(),schemaVersion:{type:'integer'},characterTemplate:{type:'any',label:'Template do personagem'},dataDefinitions:{type:'array',items:{type:'object',typedDefinition:true}},catalogs:{type:'array',items:{type:'object',properties:{id:s(),label:s(),fields:{type:'array',items:{type:'object',typedDefinition:true}},entries:{type:'array',items:{type:'any'}}}}},componentDefinitions:{type:'array',items:{type:'object',properties:{id:s(),label:s(),revision:{type:'integer'},parameters:{type:'array',items:{type:'object',properties:{id:s(),label:s(),type:{type:'string',enum:DATA_TYPES}}}},layout:{type:'object',properties:{type:{type:'string',enum:['stack','grid','flex']},gap:{type:'number'},min:{type:'number'}}},components:{type:'array',items:{type:'any'}}}}},rules:{type:'any',label:'Cálculos tipados (editar por operações)'},formulas:{type:'object',values:{type:'string',multiline:true}},diceSteps:{type:'boolean'},diceTray:{type:'boolean'},dieScale:{type:'array',items:{type:'integer'}},...SYSTEM_RULES};
   if(kind==='layout')return {id:s(),name:s(),mode:{type:'string',enum:['sheet','table']},schemaVersion:{type:'integer'},showHeader:{type:'boolean',label:'Mostrar cabeçalho'}};
   if(kind==='tab')return {id:s(),label:s(),variant:s()};
   if(kind==='section')return {id:s(),title:s(),note:s(),notes:{type:'string',label:'Nota (alias existente)'},variant:s(),print:printSchema('section',value)};
-  if(kind==='container')return {id:s(),variant:s(),layout:{type:'object',properties:{type:{type:'string',enum:['stack','grid','flex']},gap:{type:'number',enum:[4,8,12,16,24,32]},min:{type:'number',enum:[120,140,160,180,220,260,300]}}},repeat:{type:'object',properties:{source:path()}},print:printSchema('container',value)};
+  if(kind==='container')return {id:s(),variant:s(),layout:{type:'object',properties:{type:{type:'string',enum:['stack','grid','flex']},gap:{type:'number',enum:[4,8,12,16,24,32]},min:{type:'number',enum:[120,140,160,180,220,260,300]}}},repeat:{type:'object',properties:{scope:{type:'string',enum:['character']},dataId:path(),source:path()}},print:printSchema('container',value)};
   if(kind==='component')return {type:{type:'string',enum:Object.keys(COMPONENT_CONTRACTS)},...Object.fromEntries(Object.entries(COMPONENT_CONTRACTS[value.type]?.properties || {}).filter(([key,desc])=>!desc.inert && !['extensions','type'].includes(key)).map(([key,desc])=>[key,{...desc,...(NESTED[key] || {}),...(['dataId','ruleId'].includes(key)?{type:'path'}:{}),...(key==='print'?printSchema('component',value):{})}]))};
   return {};
 }
@@ -25,6 +26,7 @@ const paths=names=>Object.fromEntries(names.split(' ').filter(Boolean).map(key=>
 const optionSchema={...obj({label:str,value:any}),option:true};
 const variable=obj({field:ref,system:ref,traitMaxField:ref,value:num,rollField:ref});variable.exclusive=['field','system','traitMaxField','value','rollField'];
 export const NESTED={
+  bindings:map(ref),repeat:obj({scope:{type:'string',enum:['character']},dataId:ref,source:ref}),
   default:any,
   disabledWhen:obj({field:ref,equals:any}),
   options:arr(optionSchema),
@@ -37,6 +39,8 @@ export const NESTED={
   print:obj({compact:obj({include:bool,fields:arr(str),presentation:{type:'string',enum:['table','records','cards','inline']}})}),
 };
 export function resolveSchema(desc,value) {
+  if(desc.typedDefinition){const type=value?.type,properties={id:s(),label:s(),description:s(),type:{type:'string',enum:DATA_TYPES},binding:path(),required:{type:'boolean'},nullable:{type:'boolean'},initial:{type:'any'}};
+    Object.assign(properties,['number','integer'].includes(type)?{minimum:num,maximum:num}:type==='string'?{maxLength:{type:'integer'}}:['record','collection'].includes(type)?{fields:arr({type:'object',typedDefinition:true}),...(type==='collection'?{minItems:{type:'integer'},maxItems:{type:'integer'},unique:arr(ref)}:{})}:type==='enum'?{options:arr(obj({id:str,label:str}))}:type==='trait'?{scale:arr({type:'integer'}),composite:bool}:type==='reference'?{multiple:bool,target:obj({scope:{type:'string',enum:['system','character']},...(value?.target?.scope==='system'?{catalogId:ref}:{dataId:ref})})}:{});return {...desc,properties};}
   if(desc.option && (value===null || typeof value!=='object' || Array.isArray(value)))return {type:'any'};
   if(desc.rollSource)return rollValue;
   if(desc.itemField){if(typeof value==='string')return {type:'string',enum:Object.keys(ITEM_FIELD_CONTRACTS),shorthand:true};return {...desc,properties:{type:{type:'string',enum:Object.keys(ITEM_FIELD_CONTRACTS)},...Object.fromEntries(Object.entries(ITEM_FIELD_CONTRACTS[value?.type] || {}).map(([key,parameter])=>[key,{...parameter,...(NESTED[key] || {})}]))}};}

@@ -23,6 +23,7 @@ function buildStructuralNodes(pkg) {
     if(kind==='tab')walk(value?.sections,[...next,'sections'],'section',node.pointer);
     if(kind==='section')walk(value?.containers,[...next,'containers'],'container',node.pointer);
     if(kind==='container')walk(value?.components,[...next,'components'],'component',node.pointer);
+    if(kind==='component'&&value?.type==='group')walk(value.components,[...next,'components'],'component',node.pointer);
   });};
   walk(pkg.layouts,['layouts'],'layout',null);return nodes;
 }
@@ -30,22 +31,22 @@ const children={system:'layouts',layout:'tabs',tab:'sections',section:'container
 const kinds={layouts:'layout',tabs:'tab',sections:'section',containers:'container',components:'component'};
 export function destinations(pkg,kind) {
   if(kind==='layout')return [{path:['layouts'],title:'Layouts'}];
-  return structuralNodes(pkg).filter(node=>children[node.kind] && kinds[children[node.kind]]===kind).map(node=>({path:[...node.path,children[node.kind]],title:node.title+' · '+node.pointer}));
+  return structuralNodes(pkg).filter(node=>children[node.kind] && kinds[children[node.kind]]===kind || kind==='component'&&node.kind==='component'&&node.value?.type==='group').map(node=>({path:[...node.path,node.kind==='component'?'components':children[node.kind]],title:node.title+' · '+node.pointer}));
 }
 export function uniqueName(base,existing) {let name=base,index=2;while(existing.includes(name))name=base+'-'+index++;return name;}
 export function safeKey(key) {if(typeof key!=='string' || !key || RESERVED_KEYS.has(key))throw new Error('Informe uma chave não vazia e não reservada.');return key;}
 export function blankNode(kind,pkg,type='text') {
-  const container=()=>({layout:{type:'stack'},components:[{type:'text',field:'identity.name',label:'Nome'}]});
+  const container=()=>({layout:{type:'stack'},components:pkg.system?.schemaVersion===3?[]:[{type:'text',field:'identity.name',label:'Nome'}]});
   const section=()=>({id:'secao',title:'Nova seção',containers:[container()]});
   const tab=()=>({id:'aba',label:'Nova aba',sections:[section()]});
   if(kind==='layout')return {schemaVersion:pkg.system?.schemaVersion===3?3:1,id:'layout',name:'Novo layout',system:pkg.system?.id,tabs:[tab()]};
   if(kind==='tab')return tab();if(kind==='section')return section();if(kind==='container')return container();
-  if(kind==='component')return {type,label:'Novo componente',...(['computed','poolBuilder','pointBudget','repertoire','actionGroup','recoveryGroup','techniqueUse','checkRoll','effectList','dndDerived'].includes(type)?{}:{field:'identity.name'})};
+  if(kind==='component')return {type,label:'Novo componente',...(type==='group'?{components:[],layout:{type:'stack'}}:type==='information'?{text:''}:['dataField','componentInstance','computed','poolBuilder','pointBudget','repertoire','actionGroup','recoveryGroup','techniqueUse','checkRoll','effectList','dndDerived'].includes(type)?{}:{field:'identity.name'})};
   throw new Error('Tipo estrutural desconhecido.');
 }
 export function structureCommand(pkg,node,action,{destination,to,type='text'}={}) {
   if(action==='add'){
-    const key=children[node.kind];if(!key)throw new Error('Selecione o pai para adicionar.');
+    const key=node.kind==='component'&&node.value?.type==='group'?'components':children[node.kind];if(!key)throw new Error('Selecione o pai para adicionar.');
     const path=node.kind==='system'?['layouts']:[...node.path,key],array=valueAt(pkg,path),kind=kinds[key];
     if(!Array.isArray(array)){const owner=valueAt(pkg,path.slice(0,-1));if(owner!=null && Object.hasOwn(Object(owner),path.at(-1)))throw new Error('Ramo estrutural existente incompatível. Corrija pelo JSON antes de adicionar; seu valor foi preservado.');return {commands:[{type:'setProperty',path,value:[blankNode(kind,pkg,type)]}],selection:[...path,0]};}
     const value=blankNode(kind,pkg,type);if(value.id)value.id=uniqueName(value.id,array.map(item=>item?.id));
@@ -59,6 +60,7 @@ export function structureCommand(pkg,node,action,{destination,to,type='text'}={}
     return {commands:[{type:'insertNode',path,index:index+1,value}],selection:[...path,index+1]};
   }
   if(action==='move'){
+    if(node.path.every((key,i)=>destination?.[i]===key))throw new Error('Não é possível mover grupo para seu descendente');
     if(!destinations(pkg,node.kind).some(item=>pointerFor(item.path)===pointerFor(destination)))throw new Error('Destino incompatível com o tipo de nó.');
     const dest=valueAt(pkg,destination);if(!Array.isArray(dest))throw new Error('Destino ausente.');
     if(node.value?.id && dest!==array && dest.some(item=>item?.id===node.value.id))throw new Error('ID já existe no destino. Renomeie explicitamente antes de mover.');

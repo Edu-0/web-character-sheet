@@ -6,11 +6,11 @@ export function printOptions(definition, profile) {
   return profile === 'compact' ? definition.print?.compact || {} : {};
 }
 
-export function componentsForPrint(container, system, profile) {
+export function componentsForPrint(container, system, profile,character={}) {
   if (printOptions(container, profile).include === false) return [];
-  return expandComponents(container, system).flatMap(component => {
+  return expandComponents(container, system,character).flatMap(component => {
     const options = printOptions(component, profile);
-    if (options.include === false) return [];
+    if (options.include === false || component.groupTrail?.some(group=>printOptions(group,profile).include===false)) return [];
     const itemSchema = options.fields && component.itemSchema
       ? Object.fromEntries(options.fields.map(key => [key, component.itemSchema[key]]))
       : component.itemSchema;

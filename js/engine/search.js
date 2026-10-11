@@ -1,4 +1,5 @@
 import {readData} from './data-definitions.js';
+import {typedSearchRecords} from './typed-value-format.js';
 import { getFieldType } from './fields.js';
 import { getByPath } from './paths.js';
 import { expandComponents, componentSearchKey } from './layout-components.js';
@@ -14,7 +15,9 @@ export function normalizeSearch(value) {
 function defaultEntries(component, character, system) {
   const label = component.label || component.heading || component.type;
   const value = component.field ? getByPath(character, component.field) : undefined;
-  if(component.boundData){const cell=readData(system,character,component.dataId);return [{label,value:!cell.present?'Ausente':cell.value===null?'null explícito':cell.value===''?'Texto vazio':formatSearchValue(cell.value,component,{character,system})}];}
+  if(component.type==='information')return [{label,value:component.text||'—'}];
+  if(component.type==='dataField')return typedSearchRecords({...component,character,system});
+  if(component.boundData){const cell=readData(system,character,component.dataId,component.dataContext);return [{label,value:!cell.present?'Ausente':cell.value===null?'null explícito':cell.value===''?'Texto vazio':formatSearchValue(cell.value,component,{character,system})}];}
   if (component.itemSchema && Array.isArray(value)) {
     return [
       { label, value: `${value.length} ${value.length === 1 ? 'item' : 'itens'}` },
@@ -39,7 +42,7 @@ function defaultEntries(component, character, system) {
 export function buildSearchIndex(layout, character, system) {
   const entries = [];
   for (const tab of layout?.tabs || []) for (const section of tab.sections || []) for (const container of section.containers || []) {
-    expandComponents(container, system).forEach((component, index) => {
+    expandComponents(container, system,character).forEach((component, index) => {
       if (component.searchable === false) return;
       const context = { ...component, character, system };
       const provider = getFieldType(component.type)?.search;

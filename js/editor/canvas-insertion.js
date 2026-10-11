@@ -3,9 +3,9 @@ import {valueAt,destinations} from './form-structure.js';
 import {generatedKey} from './data-index.js';
 import {pointerFor} from './source-map.js';
 export const TOOLBOX_GROUPS=[
- ['Textos',[['text','Texto curto'],['textarea','Texto longo']]],
- ['Elementos',[['number','Número'],['boolean','Sim / Não'],['select','Escolha'],['resource','Recurso'],['counter','Contador'],['die','Dado'],['image','Imagem']]],
- ['Caixas',[['section','Seção'],['container','Coluna'],['container-grid','Grade'],['container-flex','Linha flexível']]],
+ ['Textos',[['text','Texto curto'],['textarea','Texto longo'],['information','Orientação sem campo']]],
+ ['Elementos',[['number','Número'],['boolean','Sim / Não'],['select','Escolha'],['dataField','Valor tipado'],['resource','Recurso'],['counter','Contador'],['die','Dado'],['image','Imagem']]],
+ ['Caixas',[['section','Seção'],['container','Coluna'],['container-grid','Grade'],['container-flex','Linha flexível'],['group','Grupo aninhado'],['componentInstance','Composto local']]],
  ['Coleções',[['list','Lista de registros'],['table','Tabela'],['tagList','Marcadores'],['stateList','Estados'],['slotTracker','Usos'],['skillCatalog','Perícias']]],
  ['Cálculos',[['computed','Cálculo'],['inventorySummary','Carga']]],
  ['Regras',[['checkRoll','Teste'],['actionGroup','Ação'],['recoveryGroup','Recuperação'],['effectList','Efeito'],['traitAllocation','Distribuição'],['pointBudget','Criação e evolução'],['repertoire','Repertório'],['poolBuilder','Pool'],['techniqueUse','Técnicas']]],
@@ -19,6 +19,7 @@ export function canvasInsertionPlan(pkg,{type,destination,index}){
  if(!Array.isArray(array)||!destinations(pkg,kind).some(d=>pointerFor(d.path)===pointerFor(destination)))throw Error('Escolha uma posição compatível na ficha.');
  const at=Math.max(0,Math.min(index??array.length,array.length));
  if(kind!=='component'){
+  if(pkg.system.schemaVersion===3){const components=[],value=kind==='section'?{id:generatedKey('seção',array.map(v=>v.id)),title:'Nova seção',containers:[{layout:{type:'stack'},components}]}:{layout:{type:type==='container-grid'?'grid':type==='container-flex'?'flex':'stack'},components};return {commands:[{type:'insertNode',path:destination,index:at,value}],selection:[...destination,at],dependencies:['Caixa vazia v3; nenhum dado criado.']};}
   const seed=insertionPlan(pkg,{type:'text',name:'Texto curto',destination:destinations(pkg,'component')[0]?.path,hasInitial:true,initial:''});
   const components=[seed.commands.at(-1).value];
   const value=kind==='section'?{id:generatedKey('seção',array.map(v=>v.id)),title:'Nova seção',containers:[{layout:{type:'stack'},components}]}:{layout:{type:type==='container-grid'?'grid':type==='container-flex'?'flex':'stack'},components};

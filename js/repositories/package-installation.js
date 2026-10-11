@@ -12,7 +12,8 @@ export function installationPlan({candidate,base,currentPackage,builtinIds=[],ch
   if(currentPackage && prepareDocument(currentPackage,{kind:'package'}).status!=='ready')throw new Error('O pacote instalado está indisponível ou em versão não suportada. Preserve o original e trabalhe em uma cópia com outro ID.');
   if(currentPackage)assertValid(pkg.system,next=>validateEffectRevisionChange(currentPackage.system,next),'revisão de efeitos');
   if(currentPackage && characters.length && currentPackage.system.schemaVersion===3){
-    for(const old of currentPackage.system.dataDefinitions||[]){const next=pkg.system.dataDefinitions?.find(d=>d.id===old.id);if(!next || ['binding','type','required','nullable'].some(key=>next[key]!==old[key]))throw new Error('Mudança estrutural de dado instalado exige migração explícita, indisponível em AV-01. Preserve a definição ou trabalhe em cópia com outro ID.');}
+    const shape=definition=>Object.fromEntries(Object.entries(definition).filter(([key])=>!['label','description','initial','extensions'].includes(key)).map(([key,value])=>[key,key==='fields'?value.map(shape):key==='options'?value.map(option=>option.id):value]));
+    for(const old of currentPackage.system.dataDefinitions||[]){const next=pkg.system.dataDefinitions?.find(d=>d.id===old.id);if(!next || JSON.stringify(shape(old))!==JSON.stringify(shape(next)))throw new Error('Mudança estrutural de dado instalado exige migração explícita. Preserve a definição ou trabalhe em cópia com outro ID.');}
   }
   const warnings=[];
   for(const character of characters){const issues=validateCharacterForPackage(character,pkg);assertValid(character,()=>issues,`personagem ${character.meta.id}`);warnings.push(...issues.filter(issue=>issue.severity==='warning'));}

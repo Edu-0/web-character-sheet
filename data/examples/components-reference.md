@@ -2,14 +2,15 @@
 
 Gerada por `npm run build:reference`; confira com `npm run check:reference`. Não edite este arquivo à mão. Descritores são consumidos pela validação de formas/chaves; regras semânticas permanecem nos validadores indicados. Extras seguros são preservados como metadados inertes, sem ampliar operações permitidas.
 
-São 29 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
+São 33 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `44b0f6b86bd200e9a1d2e61e43d21a268f054ca9fd944e65d18ada30ee4e8fd0`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `5eda5a3a91fc1b75e6058bc1e7116ce48998912062c154bf56c330f3dc0f5bf5`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
 | Parâmetro | Tipo | Obrigatório | Default/enum/condição |
 | --- | --- | --- | --- |
+| `dataParameter` | string | não |  |
 | `default` | any | não |  |
 | `disabledWhen` | object | não | field/equals; bloqueia controles, sem apagar dados |
 | `extensions` | any | não |  |
@@ -53,6 +54,19 @@ Implementação: [js/engine/check-fields.js](../../js/engine/check-fields.js). V
 | --- | --- | --- | --- |
 | `configFrom` | path | sim |  |
 
+## componentInstance
+
+Instância de composto local com vínculos explícitos
+
+Implementação: [js/engine/composition.js](../../js/engine/composition.js). Validação semântica: schemas.js.
+
+| Parâmetro | Tipo | Obrigatório | Default/enum/condição |
+| --- | --- | --- | --- |
+| `bindings` | object | sim |  |
+| `definitionId` | string | sim |  |
+| `note` | string | não |  |
+| `repeat` | object | não |  |
+
 ## computed
 
 Cálculo nomeado; modo roll não recebe override/efeito derivado
@@ -84,6 +98,16 @@ Implementação: [js/engine/fields.js](../../js/engine/fields.js). Validação s
 | `max` | number | não |  |
 | `min` | number | não | default: 0 |
 | `roll` | object | não | check/sourceId; referências em roll-references.js; opt-in |
+
+## dataField
+
+Controle de dado tipado, registro ou coleção
+
+Implementação: [js/engine/structured-fields.js](../../js/engine/structured-fields.js). Validação semântica: schemas.js.
+
+| Parâmetro | Tipo | Obrigatório | Default/enum/condição |
+| --- | --- | --- | --- |
+| `dataId` | string | sim |  |
 
 ## die
 
@@ -152,6 +176,19 @@ Implementação: [js/engine/effect-fields.js](../../js/engine/effect-fields.js).
 | Parâmetro | Tipo | Obrigatório | Default/enum/condição |
 | --- | --- | --- | --- |
 
+## group
+
+Grupo de componentes, limitado a oito níveis
+
+Implementação: [js/engine/composition.js](../../js/engine/composition.js). Validação semântica: schemas.js.
+
+| Parâmetro | Tipo | Obrigatório | Default/enum/condição |
+| --- | --- | --- | --- |
+| `components` | array | sim |  |
+| `layout` | object | não |  |
+| `note` | string | não |  |
+| `repeat` | object | não |  |
+
 ## image
 
 Imagem local segura
@@ -162,6 +199,16 @@ Implementação: [js/engine/advanced-fields.js](../../js/engine/advanced-fields.
 | --- | --- | --- | --- |
 | `alt` | string | não |  |
 | `field` | path | sim |  |
+
+## information
+
+Informação estática segura, sem dado
+
+Implementação: [js/engine/structured-fields.js](../../js/engine/structured-fields.js). Validação semântica: schemas.js.
+
+| Parâmetro | Tipo | Obrigatório | Default/enum/condição |
+| --- | --- | --- | --- |
+| `text` | string | não |  |
 
 ## inventorySummary
 
@@ -558,6 +605,8 @@ Defaults compartilhados: {"historyLimit":20,"textareaRows":3,"counterMin":0,"che
 - [check-rolls.package.json](check-rolls.package.json)
 - [first-bindings.package.json](first-bindings.package.json)
 - [generic-entry-rolls.package.json](generic-entry-rolls.package.json)
+- [local-composition.package.json](local-composition.package.json)
 - [recovery-actions.package.json](recovery-actions.package.json)
+- [structured.package.json](structured.package.json)
 
 O gerador valida cada pacote e personagem-template pelo código real. Testes negativos/de preservação e comparação do registro de renderizadores ficam nas suítes Node/Playwright. Estes exemplos são fictícios; a referência não copia conteúdo de livros.

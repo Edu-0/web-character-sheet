@@ -4,6 +4,7 @@
 import {renderBoundField} from './bound-fields.js';
 import { getFieldType } from './fields.js';
 import './advanced-fields.js';
+import './structured-fields.js';
 import './point-fields.js';
 import './assisted-fields.js';
 import './recovery-fields.js';
@@ -52,15 +53,17 @@ export function renderSheet(host, layout, character, options = {}) {
   const tabs = [];
   const cleanups = [];
   const refreshers = new Set();
+  const structuralRefreshers=new Set();
   const componentOptions = {
     ...options,
-    registerRefresh(refresh) {
-      refreshers.add(refresh);
-      return () => refreshers.delete(refresh);
+    registerRefresh(refresh,{structural=false}={}) {
+      const callbacks=structural?structuralRefreshers:refreshers;callbacks.add(refresh);
+      return () => callbacks.delete(refresh);
     },
     onChange(updatedCharacter, component) {
       title.textContent = characterName(updatedCharacter);
-      refreshers.forEach((refresh) => refresh());
+      [...structuralRefreshers].forEach(refresh=>refresh());
+      [...refreshers].forEach((refresh) => refresh());
       options.onChange?.(updatedCharacter, component);
     },
   };
@@ -150,6 +153,7 @@ export function renderSheet(host, layout, character, options = {}) {
     destroy() {
       cleanups.forEach((cleanup) => cleanup());
       refreshers.clear();
+      structuralRefreshers.clear();
       host.innerHTML = '';
     },
   };
@@ -187,6 +191,8 @@ function renderSection(section, character, options) {
 }
 
 function renderContainer(container, character, options) {
+  const baseOptions=options,unsubscribers=[];
+  options={...options,registerRefresh:(refresh,settings)=>{const unregister=baseOptions.registerRefresh?.(refresh,settings);if(unregister)unsubscribers.push(unregister);return unregister;}};
   const layout = container.layout || { type: 'stack' };
   const variant = safeToken(container.variant);
   const content = element('div', `engine-container engine-container--${layout.type || 'stack'}${variant ? ` engine-container--${variant}` : ''}`);
@@ -194,17 +200,30 @@ function renderContainer(container, character, options) {
   addLayoutHintClass(content, 'min', layout.min);
   addLayoutHintClass(content, 'gap', layout.gap);
 
-  expandComponents(container, options.system).forEach((component, index) => {
+  const groups=new Map();
+  expandComponents(container, options.system,character,{sourcePath:options.sourcePath,includeEmptyGroups:options.preview}).forEach((component, index) => {
     const wrapper = renderComponent(component, character, options);
     // Repeat expands values, but each instance still comes from the original
     // component definition. Labels and field values are not source identities.
-    options.onRenderSource?.(wrapper, [...options.sourcePath,'components',index % container.components.length]);
+    options.onRenderSource?.(wrapper, component.sourcePath || [...options.sourcePath,'components',index % container.components.length]);
     wrapper.dataset.searchKey = componentSearchKey(options.searchSection, container, index);
-    content.appendChild(wrapper);
+    let parent=content;
+    for(const group of component.groupTrail||[]){
+      const key=JSON.stringify([group.path,group.occurrence]);let groupElement=groups.get(key);
+      if(!groupElement){const variant=safeToken(group.variant);groupElement=element('section','engine-container engine-container--'+(group.layout.type||'stack')+(variant?' engine-container--'+variant:''));addLayoutHintClass(groupElement,'min',group.layout.min);addLayoutHintClass(groupElement,'gap',group.layout.gap);if(group.label)groupElement.append(element('h3','engine-section__title',group.label));if(group.note)groupElement.append(element('p','engine-section__note',group.note));if(group.help)appendFieldHelp(groupElement,group.help,group.label||'Grupo');options.onRenderSource?.(groupElement,group.path);groups.set(key,groupElement);parent.append(groupElement);}
+      parent=groupElement;
+    }
+    parent.appendChild(wrapper);
   });
 
-  if (!content.children.length) {
+  if (!content.children.length && (options.system?.schemaVersion!==3 || options.preview)) {
     content.appendChild(element('p', 'engine-empty', 'Esta seção ainda não possui campos.'));
+  }
+  if(options.system?.schemaVersion===3){
+    // Structural collection edits rebuild this container; value edits retain focus.
+    const shape=()=>JSON.stringify(expandComponents(container,options.system,character).map(c=>[c.sourcePath,c.occurrenceIds]));let previous=shape();
+    const refresh=()=>{if(!content.isConnected)return;const current=shape();if(current===previous)return;previous=current;unsubscribers.forEach(unregister=>unregister());const replacement=renderContainer(container,character,baseOptions);content.replaceWith(replacement);};
+    options.registerRefresh?.(refresh,{structural:true});
   }
   return content;
 }
@@ -223,7 +242,7 @@ function renderComponent(component, character, options) {
     return wrapper;
   }
 
-  (component.boundData ? renderBoundField : fieldType.render)(wrapper, {
+  (component.boundData && component.type!=='dataField' ? renderBoundField : fieldType.render)(wrapper, {
     ...component,
     character,
     system: options.system,

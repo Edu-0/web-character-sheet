@@ -6,11 +6,14 @@ import { getByPath, pathKeys } from '../engine/paths.js';
 import { validateFormula } from '../engine/formula.js';
 import { inspectJson } from './limits.js';
 import { expandComponents } from '../engine/layout-components.js';
+import {compositionBindingIssues} from '../engine/composition.js';
 import { versionIssue } from './versions.js';
 import { validateReferences } from './references.js';
 import { validateActions } from './actions.js';
 import { validateEffects } from './effects.js';
 import {validateDataDefinitions, validateRules, validateBinding} from './data-definitions.js';
+import {dataDefinition,BOUND_COMPONENT_TYPES} from '../engine/data-definitions.js';
+import {DATA_TYPES,safeDataId} from '../engine/data-types.js';
 import {validateRollReferences} from './roll-references.js';
 
 export const KNOWN_COMPONENT_TYPES = new Set(Object.keys(COMPONENT_CONTRACTS));
@@ -127,7 +130,31 @@ export function validateSystem(system) {
   if (system.entryRolls !== undefined) validateEntryRolls(system.entryRolls, system, issues);
   if (system.diceTray !== undefined && typeof system.diceTray !== 'boolean') add(issues, 'system.diceTray', 'deve ser booleano');
   issues.push(...validateDataDefinitions(system), ...validateRules(system));
+  validateComponentDefinitions(system,issues);
   return issues;
+}
+
+function validateComponentDefinitions(system,issues) {
+  if(system.componentDefinitions===undefined)return;
+  if(system.schemaVersion!==3){add(issues,'system.componentDefinitions','composição local exige v3');return;}
+  if(!requireArray(system.componentDefinitions,'system.componentDefinitions',issues))return;
+  if(system.componentDefinitions.length>100)add(issues,'system.componentDefinitions','limite de100 compostos');
+  const ids=new Set();
+  for(const [i,definition]of system.componentDefinitions.entries()){
+    const path=`system.componentDefinitions[${i}]`;
+    if(!requireObject(definition,path,issues))continue;
+    if(!safeDataId(definition.id)||ids.has(definition.id))add(issues,path+'.id','ID estável único exigido');ids.add(definition.id);
+    requireString(definition.label,path+'.label',issues);
+    if(!Number.isSafeInteger(definition.revision)||definition.revision<1)add(issues,path+'.revision','revisão positiva exigida');
+    if(Object.keys(definition).some(key=>!['id','label','revision','parameters','components','layout','extensions'].includes(key)))add(issues,path,'opção de composto indisponível');
+    if(!requireArray(definition.parameters,path+'.parameters',issues))continue;
+    const parameters=new Map();for(const parameter of definition.parameters){if(!safeDataId(parameter?.id)||parameters.has(parameter?.id)||!DATA_TYPES.includes(parameter?.type)||typeof parameter?.label!=='string')add(issues,path+'.parameters','parâmetro nomeado/tipado com ID único exigido');parameters.set(parameter?.id,parameter?.type);}
+    if(definition.parameters.length>500)add(issues,path+'.parameters','limite de500 parâmetros');
+    validateContainer(definition,path,system,issues,3,0,parameters);
+    const dependencies=owner=>(owner.components||[]).flatMap(c=>c?.type==='componentInstance'?[c.definitionId]:c?.type==='group'?dependencies(c):[]);
+    const visit=(id,seen=[],depth=0)=>{if(depth>8||seen.includes(id))throw new Error('Ciclo ou profundidade de composto excedida');const current=system.componentDefinitions.find(d=>d?.id===id);if(!current)throw new Error('Composto referenciado inexistente');for(const next of dependencies(current))visit(next,[...seen,id],depth+1);};
+    try{visit(definition.id);}catch(error){add(issues,path,error.message);}
+  }
 }
 
 export function validateLayout(layout, { system = null } = {}) {
@@ -154,7 +181,7 @@ function validateTab(tab, tabIndex, system, issues, layoutVersion) {
   if (!requireObject(tab, path, issues)) return;
   requireString(tab.id, `${path}.id`, issues);
   requireString(tab.label, `${path}.label`, issues);
-  if (requireArray(tab.sections, `${path}.sections`, issues, { nonEmpty: true })) {
+  if (requireArray(tab.sections, `${path}.sections`, issues, { nonEmpty: layoutVersion!==3 })) {
     validateUniqueIds(tab.sections, `${path}.sections`, issues);
     tab.sections.forEach((section, sectionIndex) => validateSection(section, `${path}.sections[${sectionIndex}]`, system, issues, layoutVersion));
   }
@@ -164,13 +191,14 @@ function validateSection(section, path, system, issues, layoutVersion) {
   if (!requireObject(section, path, issues)) return;
   validatePrintOptions(section, path, issues);
   requireString(section.id, `${path}.id`, issues);
-  if (requireArray(section.containers, `${path}.containers`, issues, { nonEmpty: true })) {
+  if (requireArray(section.containers, `${path}.containers`, issues, { nonEmpty: layoutVersion!==3 })) {
     validateUniqueIds(section.containers, `${path}.containers`, issues);
     section.containers.forEach((container, index) => validateContainer(container, `${path}.containers[${index}]`, system, issues, layoutVersion));
   }
 }
 
-function validateContainer(container, path, system, issues, layoutVersion) {
+function validateContainer(container, path, system, issues, layoutVersion,depth=0,parameters=null) {
+  if(depth>8){add(issues,path,'composição excede oito grupos');return;}
   if (!requireObject(container, path, issues)) return;
   validatePrintOptions(container, path, issues);
   if (container.id !== undefined) requireString(container.id, `${path}.id`, issues);
@@ -182,12 +210,19 @@ function validateContainer(container, path, system, issues, layoutVersion) {
     }
   }
   if (container.repeat !== undefined) {
-    if (requireObject(container.repeat, `${path}.repeat`, issues)) requireString(container.repeat.source, `${path}.repeat.source`, issues);
+    if (requireObject(container.repeat, `${path}.repeat`, issues)){
+      if(container.repeat.scope==='character'){
+        if(layoutVersion!==3)add(issues,path+'.repeat','repeat de personagem exige v3');
+        if(system)try{if(dataDefinition(system,container.repeat.dataId).type!=='collection')throw new Error('repeat exige coleção tipada');}catch(error){add(issues,path+'.repeat',error.message);}
+        if(Object.keys(container.repeat).some(k=>!['scope','dataId'].includes(k)))add(issues,path+'.repeat','opção de repetição indisponível');
+      }else requireString(container.repeat.source, `${path}.repeat.source`, issues);
+    }
   }
   if (requireArray(container.components, `${path}.components`, issues, { nonEmpty: layoutVersion !== 3 })) {
-    container.components.forEach((component, index) => validateComponent(component, `${path}.components[${index}]`, system, issues, layoutVersion));
-    if (system) {
-      try { expandComponents(container, system).forEach((component, index) => {
+    container.components.forEach((component, index) => validateComponent(component, `${path}.components[${index}]`, system, issues, layoutVersion,depth,parameters));
+    if (system && !parameters && depth === 0) {
+      if(system.schemaVersion===3)issues.push(...compositionBindingIssues(container,system,path));
+      try { expandComponents(container, system,system.characterTemplate).forEach((component, index) => {
         const safety = inspectJson(component, `${path}.expanded[${index}]`);
         issues.push(...safety);
         if (!safety.length && component.field) validateFieldValue(component.default ?? getByPath(system.characterTemplate, component.field), component, `${path}.expanded[${index}].field`, issues);
@@ -196,7 +231,7 @@ function validateContainer(container, path, system, issues, layoutVersion) {
   }
 }
 
-function validateComponent(component, path, system, issues, layoutVersion) {
+function validateComponent(component, path, system, issues, layoutVersion,depth=0,parameters=null) {
   if (!requireObject(component, path, issues)) return;
   validatePrintOptions(component, path, issues, true);
   validateCalculationOptions(component, path, issues);
@@ -224,8 +259,25 @@ function validateComponent(component, path, system, issues, layoutVersion) {
     return;
   }
   if (component.type === 'effectList' && system?.schemaVersion < 2) add(issues, path, 'effectList exige sistema versão 2');
-  issues.push(...validateBinding(component,system,path,layoutVersion));
+  if(component.dataParameter!==undefined){
+    const type=parameters?.get(component.dataParameter);
+    if(layoutVersion!==3||!type||!BOUND_COMPONENT_TYPES[component.type]?.includes(type))add(issues,path+'.dataParameter','parâmetro inexistente ou consumidor incompatível');
+    if(component.dataId!==undefined||component.field!==undefined||component.default!==undefined)add(issues,path,'parâmetro não pode competir com fonte/inicial');
+  }else issues.push(...validateBinding(component,system,path,layoutVersion));
   validateComponentShape(component,path,issues);
+  if(['information','group','componentInstance','dataField'].includes(component.type)){
+    if(layoutVersion!==3 || system && system.schemaVersion!==3)add(issues,path,'novo componente exige v3');
+    if(component.field!==undefined||component.default!==undefined)add(issues,path,'composição/informação não cria campo nem inicial');
+    if(component.type==='group')validateContainer(component,path,system,issues,layoutVersion,depth+1,parameters);
+    if(component.type==='componentInstance'&&system){
+      if(component.repeat!==undefined){const repeated={...component,components:[]};validateContainer(repeated,path,system,issues,layoutVersion,depth+1,parameters);}
+      const definition=system.componentDefinitions?.find(d=>d?.id===component.definitionId);
+      if(!definition)add(issues,path+'.definitionId','composto local inexistente');
+      else {for(const parameter of definition.parameters||[])try{const d=dataDefinition(system,component.bindings?.[parameter.id]);if(d.type!==parameter.type && !(parameter.type==='number'&&d.type==='integer'))throw new Error('tipo de vínculo incompatível');}catch(error){add(issues,path+'.bindings',error.message);}
+        if(Object.keys(component.bindings||{}).some(id=>!definition.parameters?.some(p=>p.id===id)))add(issues,path+'.bindings','parâmetro desconhecido');}
+    }
+    return;
+  }
   if (component.type === 'checkRoll') {
     try { pathKeys(component.configFrom); } catch (error) { add(issues, `${path}.configFrom`, error.message); }
     if (typeof component.configFrom !== 'string' || !/^checks\.[^.]+$/.test(component.configFrom)) add(issues, `${path}.configFrom`, 'use checks.nome');
@@ -440,7 +492,7 @@ export function validateCharacterForPackage(character, pkg, {allowMissingId = fa
   issues.push(...validateEffects(character.activeEffects, {system:pkg.system}));
   if(pkg.system.sheetActions) validateActions(pkg.system.sheetActions,pkg.system,issues,'system.sheetActions',character);
   for (const layout of pkg.layouts) for (const tab of layout.tabs) for (const section of tab.sections) for (const container of section.containers) {
-    for (const component of expandComponents(container, pkg.system)) if (component.field) {
+    for (const component of expandComponents(container, pkg.system,character)) if (component.field) {
       try {
         validateFieldValue(getByPath(character, component.field), component, `character.${component.field}`, issues);
         if (component.type === 'slotTracker' && component.consumeField) validateFieldValue(getByPath(character, component.consumeField), 'boolean', `character.${component.consumeField}`, issues);

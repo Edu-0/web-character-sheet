@@ -1,4 +1,5 @@
-import {dataDefinition, readData, writeData} from './data-definitions.js';
+import {dataDefinition, readData} from './data-definitions.js';
+import {writeValidatedData as writeData} from './typed-data-write.js';
 
 // The canonical value stays in the character at the definition's explicit binding.
 export function renderBoundField(container, context) {
@@ -16,15 +17,15 @@ export function renderBoundField(container, context) {
   if(!definition.required || definition.nullable)wrap.append(presence);
   const status=document.createElement('span');status.setAttribute('role','status');wrap.append(status);
   const refresh=()=>{
-    const cell=readData(system,character,dataId);presence.value=!cell.present?'absent':cell.value===null?'null':'value';
+    const cell=readData(system,character,dataId,context.dataContext);presence.value=!cell.present?'absent':cell.value===null?'null':'value';
     if(document.activeElement!==input){if(type==='boolean')input.checked=cell.value===true;else input.value=cell.value??'';input.setCustomValidity('');status.textContent='';}
     input.disabled=cell.present && cell.value===null;
   };
   const write=()=>{
     let value=type==='boolean'?input.checked:type==='number'?(input.value===''?undefined:Number(input.value)):input.value;
     try {
-      if(type==='number' && value===undefined)writeData(system,character,dataId,{present:false});
-      else writeData(system,character,dataId,{present:true,value});
+      if(type==='number' && value===undefined)writeData(system,character,dataId,{present:false},context.dataContext);
+      else writeData(system,character,dataId,{present:true,value},context.dataContext);
       input.setCustomValidity('');status.textContent='';presence.value=type==='number'&&value===undefined?'absent':'value';onChange?.();
     }catch(error){input.setCustomValidity(error.message);status.textContent=error.message;}
   };
@@ -32,8 +33,8 @@ export function renderBoundField(container, context) {
   presence.addEventListener('change',()=>{
     const mode=presence.value;
     try {
-      const previous=readData(system,character,dataId);
-      writeData(system,character,dataId,mode==='absent'?{present:false}:{present:true,value:mode==='null'?null:previous.present&&previous.value!==null?previous.value:definition.type==='boolean'?false:definition.type==='string'?'':0});
+      const previous=readData(system,character,dataId,context.dataContext);
+      writeData(system,character,dataId,mode==='absent'?{present:false}:{present:true,value:mode==='null'?null:previous.present&&previous.value!==null?previous.value:definition.type==='boolean'?false:definition.type==='string'?'':0},context.dataContext);
       onChange?.();refresh();
     }catch(error){status.textContent=error.message;}
   });

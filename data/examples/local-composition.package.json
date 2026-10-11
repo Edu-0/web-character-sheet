@@ -1,0 +1,161 @@
+{
+  "kind": "rpg-system-package",
+  "schemaVersion": 3,
+  "system": {
+    "schemaVersion": 3,
+    "id": "example-local-composition",
+    "name": "Exemplo de composto local",
+    "characterTemplate": {
+      "schemaVersion": 1,
+      "meta": {
+        "system": "example-local-composition"
+      }
+    },
+    "dataDefinitions": [
+      {
+        "id": "data-ed4f2b59-adb4-4f9f-bad8-aa8e67b09ebf",
+        "label": "Ofícios",
+        "type": "collection",
+        "binding": "oficios",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-e6bff63c-4964-4028-ae9c-ca40bf595a7d",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": true,
+            "nullable": false,
+            "initial": "Novo ofício"
+          },
+          {
+            "id": "data-9763385a-d5ad-43bc-88a5-4728b0ef8f4d",
+            "label": "Peso",
+            "type": "number",
+            "binding": "peso",
+            "required": false,
+            "nullable": false,
+            "initial": 0
+          }
+        ]
+      },
+      {
+        "id": "office-value-0",
+        "label": "Valor do ofício 1",
+        "binding": "officeValue0",
+        "type": "number",
+        "required": false,
+        "nullable": false,
+        "initial": 2
+      },
+      {
+        "id": "office-value-1",
+        "label": "Valor do ofício 2",
+        "binding": "officeValue1",
+        "type": "number",
+        "required": false,
+        "nullable": false,
+        "initial": 9
+      }
+    ],
+    "rules": [],
+    "componentDefinitions": [
+      {
+        "id": "office",
+        "label": "Ofício compartilhado",
+        "revision": 1,
+        "parameters": [
+          {
+            "id": "value",
+            "label": "Valor",
+            "type": "number"
+          }
+        ],
+        "layout": {
+          "type": "stack"
+        },
+        "components": [
+          {
+            "type": "dataField",
+            "label": "Valor do ofício",
+            "dataParameter": "value"
+          }
+        ]
+      }
+    ]
+  },
+  "layouts": [
+    {
+      "schemaVersion": 3,
+      "id": "default",
+      "system": "example-local-composition",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "basic",
+              "title": "Personagem",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "information",
+                      "label": "Orientação",
+                      "text": "<script>isto é texto da mesa</script>"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Lista de ofícios",
+                      "dataId": "data-ed4f2b59-adb4-4f9f-bad8-aa8e67b09ebf"
+                    },
+                    {
+                      "type": "group",
+                      "label": "Ofícios repetidos",
+                      "components": [
+                        {
+                          "type": "number",
+                          "label": "Peso repetido",
+                          "dataId": "data-9763385a-d5ad-43bc-88a5-4728b0ef8f4d"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-ed4f2b59-adb4-4f9f-bad8-aa8e67b09ebf"
+                      }
+                    },
+                    {
+                      "type": "componentInstance",
+                      "label": "Ofício 1",
+                      "definitionId": "office",
+                      "bindings": {
+                        "value": "office-value-0"
+                      }
+                    },
+                    {
+                      "type": "componentInstance",
+                      "label": "Ofício 2",
+                      "definitionId": "office",
+                      "bindings": {
+                        "value": "office-value-1"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

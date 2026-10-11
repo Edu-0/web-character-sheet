@@ -1079,6 +1079,22 @@ a {
   flex: 1;
 }
 
+.engine-structured-field { display: block; min-width: 0; }
+.engine-structured-field fieldset, .engine-typed-input {
+  min-inline-size: 0; margin: var(--space-2) 0; padding: var(--space-3);
+  border: 1px solid var(--color-border); border-radius: 6px; overflow-wrap: anywhere;
+}
+.engine-structured-field legend, .engine-typed-input legend { max-width: 100%; font-weight: 600; }
+.engine-structured-field input:not([type="checkbox"]), .engine-structured-field select,
+.engine-typed-input input, .engine-typed-input select {
+  display: block; width: 100%; min-width: 0; max-width: 100%; min-height: 44px;
+  padding: var(--space-2); color: var(--color-text); background: var(--color-panel);
+  border: 1px solid var(--color-border); border-radius: 4px;
+}
+.engine-structured-field button, .engine-typed-input button { min-height: 44px; max-width: 100%; white-space: normal; margin: var(--space-1); }
+.engine-structured-field summary { min-height: 44px; cursor: pointer; }
+.engine-structured-field [role="status"]:empty { margin: 0; }
+
 .engine-component .field > span:first-child {
   min-height: 1.25rem;
 }

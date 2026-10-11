@@ -27,7 +27,7 @@ export function previewSources(pkg, layoutId) {
       const sectionPath=[...tabPath,'sections',s];add(sectionPath,tab.id);
       (section.containers || []).forEach((container,c)=>{
         const containerPath=[...sectionPath,'containers',c];add(containerPath,tab.id);
-        (container.components || []).forEach((_,i)=>add([...containerPath,'components',i],tab.id));
+        const walk=(owner,path,depth=0)=>{if(depth>8)return;(owner.components||[]).forEach((component,i)=>{const at=[...path,'components',i];add(at,tab.id);if(component.type==='group')walk(component,at,depth+1);});};walk(container,containerPath);
       });
     });
   });

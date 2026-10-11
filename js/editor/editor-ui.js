@@ -174,7 +174,7 @@ export class JsonEditor {
     else {this.refresh(false);if(!this.composing)this.validationTimer=setTimeout(()=>{this.session.validate();this.refresh();},350);}
     this.scheduleDraft?.();if(sync)this.queueCompositionPreview();
   }
-  queueCompositionPreview(){clearTimeout(this.compositionPreviewTimer);if(this.session.ui.mode!=='visual'||this.session.validation.status!=='ready'||this.lastRenderedCurrent)return;const session=this.session;this.compositionPreviewTimer=setTimeout(()=>{if(this.disposed||this.session!==session||session.ui.mode!=='visual'||session.validation.status!=='ready'||this.lastRenderedCurrent)return;this.run(()=>this.updatePreview());},100);}
+  queueCompositionPreview(){clearTimeout(this.compositionPreviewTimer);const live=()=>['visual','experiment'].includes(this.session.ui.mode);if(!live()||this.session.validation.status!=='ready'||this.lastRenderedCurrent)return;const session=this.session;this.compositionPreviewTimer=setTimeout(()=>{if(this.disposed||this.session!==session||!live()||session.validation.status!=='ready'||this.lastRenderedCurrent)return;this.run(()=>this.updatePreview());},100);}
   refresh(validated=true) {
     const session=this.session,result=session.validation;
     this.title.textContent=`${session.lastValid?.package.system.name || 'Rascunho'} · ${session.lastValid?.package.system.id || 'ID ainda inválido'} · origem: ${session.source.kind}${session.source.name?` (${session.source.name})`:''} · revisão ${session.revision} · última válida: ${session.lastValid?.revision ?? 'nenhuma'} · ${session.lastApplied?.revision===session.revision?'Aplicado':'Não aplicado'}`;
@@ -228,7 +228,7 @@ export class JsonEditor {
     clearTimeout(this.draftTimer);const session=this.session;
     this.savePromise=this.savePromise.catch(()=>{}).then(async()=>{
       if(this.disposed || session!==this.session)return;
-      session.validate();session.ui=this.currentUi();
+      session.validate();Object.assign(session.ui,this.currentUi());
       if(copy){session.draftId=crypto.randomUUID();this.savedRaw=null;this.draftConflict=false;}
       const envelope=session.envelope();
       try {const raw=await saveDraft(envelope,this.savedRaw);if(this.disposed || session!==this.session)return;this.savedRaw=raw;this.savedUi=JSON.stringify(envelope.ui);session.lastSavedRevision=envelope.revision;this.status.textContent=`Rascunho salvo nesta origem · revisão ${envelope.revision}. Fora de Exportar tudo.`;}

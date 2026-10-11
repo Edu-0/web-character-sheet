@@ -2,6 +2,8 @@
 
 Para um dado opcional compartilhado por dois componentes e um cálculo numérico desde pacote vazio, consulte [dados tipados v3](typed-data.md) e o [exemplo Primeiro vínculo](first-bindings.package.json).
 
+Para registros, coleções, escolhas, traços, referências, grupos e compostos locais, consulte [dados estruturados e composição v3](structured-data.md).
+
 Para criar essas configurações por fontes e construtores, consulte a [autoria visual em Compor](editor-visual.md). O [editor JSON com prévia](editor-json.md) continua disponível como acesso avançado e usa o mesmo pacote.
 
 Uma lista de técnicas, poderes, armas ou outras ações pode oferecer um painel de rolagem sem código específico para o sistema. A configuração das regras fica em `system.entryRolls`; o layout escolhe uma configuração:

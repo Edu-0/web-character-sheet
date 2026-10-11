@@ -1,4 +1,5 @@
 import {readData} from './data-definitions.js';
+import {typedComponentValue} from './typed-value-format.js';
 import { safeImageSource } from '../images.js';
 // Documento de leitura independente de abas, filtros e apresentação da tela.
 import { getFieldType } from './fields.js';
@@ -19,7 +20,7 @@ const node = (tag, className = '', text) => {
 
 export function buildPrintSheet(layout, source, system, appearance = {}) {
   const profile = normalizePrintProfile(appearance.printProfile);
-  const expand = container => componentsForPrint(container, system, profile);
+  const expand = container => componentsForPrint(container, system, profile,character);
   // Componentes existentes podem normalizar defaults ao renderizar. A cópia nunca
   // é inscrita no estado, e nenhum callback de edição ou de rolagem é chamado.
   const character = structuredClone(source);
@@ -67,10 +68,13 @@ export function buildPrintSheet(layout, source, system, appearance = {}) {
       const group = node('section', 'print-section');
       if (printOptions(section, profile).presentation === 'inline') group.classList.add('print-section--inline');
       if (section.title) group.append(node('h3', '', section.title));
+      if (system.schemaVersion === 3 && section.note) group.append(node('p', 'print-section__note', section.note));
       const fields = node('div', 'print-fields');
       for (const container of section.containers || []) {
         const target = printOptions(container, profile).presentation === 'inline' ? node('div', 'print-fields print-fields--inline') : fields;
+        const groupHeadings=new Set();
         for (const component of expand(container)) {
+          for(const group of component.groupTrail||[]){const key=JSON.stringify([group.path,group.occurrence]);if(groupHeadings.has(key))continue;groupHeadings.add(key);if(group.label||group.note)target.append(field(group.label||'Grupo',group.note||'',{type:'textarea'},{character,system}));}
           if (component.type === 'image' && component.field === portraitField) continue;
           if (component.itemSchema && component.field) {
             if (printedCollections.has(component.field)) continue;
@@ -83,7 +87,7 @@ export function buildPrintSheet(layout, source, system, appearance = {}) {
         }
         if (target !== fields && target.children.length) fields.append(target);
       }
-      if (fields.children.length) { group.append(fields); chapter.append(group); }
+      if (fields.children.length || system.schemaVersion === 3 && (section.title || section.note)) { if(fields.children.length)group.append(fields); chapter.append(group); }
     }
     if (chapter.children.length > 1) document.append(chapter);
   }
@@ -105,7 +109,9 @@ function field(label, value, definition, context) {
 function printComponent(context) {
   const { type, character, system, label, itemSchema } = context;
   const value = getByPath(character, context.field);
-  if(context.boundData){const cell=readData(system,character,context.dataId);if(!cell.present || cell.value===null || cell.value==='')return field(label,!cell.present?'Ausente':cell.value===null?'null explícito':'Texto vazio',{},context);}
+  if(context.type==='information')return field(label,context.text||'',{type:'textarea'},context);
+  if(context.type==='dataField')return field(label,typedComponentValue(context),{type:'textarea'},context);
+  if(context.boundData){const cell=readData(system,character,context.dataId,context.dataContext);if(!cell.present || cell.value===null || cell.value==='')return field(label,!cell.present?'Ausente':cell.value===null?'null explícito':'Texto vazio',{},context);}
   const custom = getFieldType(type)?.print;
   if (custom) return custom(context);
   if (type === 'poolBuilder' || type === 'traitAllocation') return null;
