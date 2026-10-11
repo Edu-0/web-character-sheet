@@ -1529,3 +1529,10 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .engine-check__controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; margin-bottom: 12px; }
 .engine-check__controls select, .engine-check__controls input:not([type="checkbox"]) { width: 100%; min-width: 0; }
 .engine-check__result { overflow-wrap: anywhere; }
+
+/* Conditional presentation remains editable in composition mode. */
+body[data-editor-composing] [data-condition-hidden] { display: block !important; opacity: .75; }
+.engine-condition-status { overflow-wrap: anywhere; white-space: normal; }
+.engine-condition-status[hidden], .engine-action-permission[hidden] { display: none; }
+.engine-action-item { display: flex; flex-direction: column; gap: .25rem; min-width: 0; max-width: 100%; }
+.engine-actions button[aria-disabled="true"] { opacity: .65; }

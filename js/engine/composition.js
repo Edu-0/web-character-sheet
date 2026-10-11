@@ -1,5 +1,6 @@
 import {dataDefinition,dataDefinitions,dataPath,readData} from './data-definitions.js';
 import {pathKeys} from './paths.js';
+import {predicateBindingIssue} from './predicates.js';
 export const COMPOSITION_LIMITS=Object.freeze({depth:8,expanded:10000,definitions:100});
 
 // Check entry scopes even when a collection currently has no occurrences.
@@ -12,13 +13,15 @@ export function compositionBindingIssues(container,system,path='container'){
       if(scopes.includes(owner.repeat.dataId))issues.push({path:at+'.repeat.dataId',message:'A mesma coleção não pode ser repetida duas vezes na cadeia de contexto'});
       check(owner.repeat.dataId,at+'.repeat.dataId');scopes=[...scopes,owner.repeat.dataId];
     }
+    for(const slot of ['visibleWhen','editableWhen'])if(owner[slot]!==undefined){const issue=predicateBindingIssue(system,owner[slot],{collections:scopes});if(issue)issues.push({path:at+'.'+slot,message:issue});}
     for(const [i,c]of (owner.components||[]).entries()){
       const slot=at+'.components['+i+']';if(c.dataId!==undefined||c.dataParameter!==undefined)check(c.dataId??parameters[c.dataParameter],slot+'.dataId');
+      if(!['group','componentInstance'].includes(c.type))for(const condition of ['visibleWhen','editableWhen'])if(c[condition]!==undefined){const issue=predicateBindingIssue(system,c[condition],{collections:scopes});if(issue)issues.push({path:slot+'.'+condition,message:issue});}
       if(c.ruleId){const rule=system.rules?.find(r=>r.id===c.ruleId);if(rule?.context){check(rule.context.dataId,slot+'.ruleId');if(!scopes.includes(rule.context.dataId))issues.push({path:slot+'.ruleId',message:rule.label+': exige contexto de entrada do cálculo'});}}
       if(c.type==='group')visit(c,slot,scopes,parameters,seen,depth+1);
       if(c.type==='componentInstance'){
         const definition=system.componentDefinitions?.find(d=>d.id===c.definitionId);if(!definition||seen.includes(definition.id))continue;
-        visit({...definition,...(c.repeat?{repeat:c.repeat}:{})},slot,scopes,{...parameters,...c.bindings},[...seen,definition.id],depth+1);
+        visit({...definition,visibleWhen:c.visibleWhen,editableWhen:c.editableWhen,...(c.repeat?{repeat:c.repeat}:{})},slot,scopes,{...parameters,...c.bindings},[...seen,definition.id],depth+1);
       }
     }
   };visit(container,path);return issues;
@@ -47,29 +50,29 @@ export function expandComposition(container,system,character={},options={}) {
     };
     if(!occurrences.length&&wrapper&&options.includeEmptyGroups)emptyPreview();
     for(const occurrence of occurrences){
-    const groups=wrapper?[...parents,{...wrapper,occurrence:occurrence.context.entries||[]}]:parents;
+    const groups=wrapper?[...parents,{...wrapper,dataContext:occurrence.context,occurrence:occurrence.context.entries||[]}]:parents;
     for(const [index,original]of (owner.components||[]).entries()){
       const source=[...path,'components',index],component=options.interpolate(original,occurrence.context.interpolation||{});
       if(component.type==='group') {
-        const group={label:component.label,note:component.note,help:component.help,variant:component.variant,print:component.print,layout:component.layout||{type:'stack'},path:canonicalSource||source};
+        const group={label:component.label,note:component.note,help:component.help,variant:component.variant,print:component.print,visibleWhen:component.visibleWhen,editableWhen:component.editableWhen,layout:component.layout||{type:'stack'},path:canonicalSource||source};
         visit(component,source,occurrence.context,groups,definitions,depth+1,parameters,canonicalSource,group);continue;
       }
       if(component.type==='componentInstance'){
         if(definitions.includes(component.definitionId))throw new Error('Ciclo de composição local');
         const definition=system?.componentDefinitions?.find(d=>d.id===component.definitionId);if(!definition)throw new Error('Composto local inexistente');
         const bindings={...parameters,...component.bindings};
-        visit({...definition,...(component.repeat?{repeat:component.repeat}:{})},source,occurrence.context,groups,[...definitions,definition.id],depth+1,bindings,canonicalSource||source,{label:component.label||definition.label,note:component.note,help:component.help,variant:component.variant,print:component.print,layout:definition.layout||{type:'stack'},path:canonicalSource||source});continue;
+        visit({...definition,...(component.repeat?{repeat:component.repeat}:{})},source,occurrence.context,groups,[...definitions,definition.id],depth+1,bindings,canonicalSource||source,{label:component.label||definition.label,note:component.note,help:component.help,variant:component.variant,print:component.print,visibleWhen:component.visibleWhen,editableWhen:component.editableWhen,layout:definition.layout||{type:'stack'},path:canonicalSource||source});continue;
       }
       if(component.dataParameter!==undefined){component.dataId=parameters[component.dataParameter];delete component.dataParameter;if(!component.dataId)throw new Error('Parâmetro de composto sem vínculo');}
       if(component.dataId!==undefined){dataDefinition(system,component.dataId);component.field=dataPath(system,character,component.dataId,occurrence.context);component.boundData=true;component.dataContext=occurrence.context;}
-      if(component.ruleId!==undefined)component.dataContext=occurrence.context;
+      component.dataContext=occurrence.context;
       if(component.field)pathKeys(component.field);
       if(output.length>=COMPOSITION_LIMITS.expanded)throw new Error('Expansão de componentes excede10000 entradas');
       output.push({...component,sourcePath:[...(canonicalSource||source)],groupTrail:JSON.parse(JSON.stringify(groups)),occurrenceIds:(occurrence.context.entries||[]).map(e=>e.entryId)});
     }
     if(!(owner.components||[]).length&&wrapper&&(wrapper.label||wrapper.note||options.includeEmptyGroups)){
       if(output.length>=COMPOSITION_LIMITS.expanded)throw new Error('Expansão excede orçamento');
-      output.push(JSON.parse(JSON.stringify({type:'information',label:wrapper.label,text:wrapper.note||(options.includeEmptyGroups?'Grupo vazio. Inclua componentes aqui.':''),help:wrapper.help,variant:wrapper.variant,print:wrapper.print,sourcePath:[...(canonicalSource||path)],groupTrail:parents,occurrenceIds:(occurrence.context.entries||[]).map(e=>e.entryId)})));
+      output.push(JSON.parse(JSON.stringify({type:'information',label:wrapper.label,text:wrapper.note||(options.includeEmptyGroups?'Grupo vazio. Inclua componentes aqui.':''),help:wrapper.help,variant:wrapper.variant,print:wrapper.print,visibleWhen:wrapper.visibleWhen,editableWhen:wrapper.editableWhen,dataContext:occurrence.context,sourcePath:[...(canonicalSource||path)],groupTrail:parents,occurrenceIds:(occurrence.context.entries||[]).map(e=>e.entryId)})));
     }
     }
   };

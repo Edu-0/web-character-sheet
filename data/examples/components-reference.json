@@ -65,6 +65,10 @@
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
           "type": "object"
         },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
+          "type": "object"
+        },
         "extensions": {
           "type": "any"
         },
@@ -94,6 +98,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -113,6 +121,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -138,6 +150,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -160,6 +176,10 @@
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
           "type": "object"
         },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
+          "type": "object"
+        },
         "extensions": {
           "type": "any"
         },
@@ -182,6 +202,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js / checks.js",
@@ -206,6 +230,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -236,6 +264,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -255,6 +287,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -311,6 +347,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js / references.js / roll-references.js",
@@ -327,6 +367,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -363,6 +407,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -383,6 +431,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -407,6 +459,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -426,6 +482,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -464,6 +524,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -480,6 +544,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -520,6 +588,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -536,6 +608,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -572,6 +648,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -591,6 +671,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -628,6 +712,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -644,6 +732,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -668,6 +760,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js / effects.js",
@@ -688,6 +784,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -721,6 +821,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -740,6 +844,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -765,6 +873,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -781,6 +893,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -808,6 +924,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -827,6 +947,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -877,6 +1001,10 @@
         "variant": {
           "type": "string"
         },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
+        },
         "weightField": {
           "required": true,
           "type": "path"
@@ -905,6 +1033,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "emptyLabel": {
@@ -979,6 +1111,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js / roll-references.js / entry-rolls.js",
@@ -998,6 +1134,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1035,6 +1175,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1055,6 +1199,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1079,6 +1227,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1095,6 +1247,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1128,6 +1284,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1148,6 +1308,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1176,6 +1340,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js / recovery.js",
@@ -1198,6 +1366,10 @@
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
           "type": "object"
         },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
+          "type": "object"
+        },
         "extensions": {
           "type": "any"
         },
@@ -1220,6 +1392,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1238,6 +1414,10 @@
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
           "type": "object"
         },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
+          "type": "object"
+        },
         "extensions": {
           "type": "any"
         },
@@ -1261,6 +1441,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1277,6 +1461,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1316,6 +1504,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1348,6 +1540,10 @@
         },
         "editLabel": {
           "type": "string"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
+          "type": "object"
         },
         "emptyLabel": {
           "type": "string"
@@ -1384,6 +1580,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1416,6 +1616,10 @@
           ],
           "type": "string"
         },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
+          "type": "object"
+        },
         "extensions": {
           "type": "any"
         },
@@ -1442,6 +1646,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1467,6 +1675,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "effectLabel": {
@@ -1534,6 +1746,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1559,6 +1775,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "emptyLabel": {
@@ -1626,6 +1846,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1642,6 +1866,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1670,6 +1898,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1692,6 +1924,10 @@
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
           "type": "object"
         },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
+          "type": "object"
+        },
         "extensions": {
           "type": "any"
         },
@@ -1714,6 +1950,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1733,6 +1973,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1761,6 +2005,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1780,6 +2028,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1809,6 +2061,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -1825,6 +2081,10 @@
         },
         "disabledWhen": {
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
         },
         "extensions": {
@@ -1858,6 +2118,10 @@
         },
         "variant": {
           "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
         }
       },
       "semantic": "schemas.js",
@@ -2177,11 +2441,11 @@
   "sources": {
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
     "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
-    "js/engine/assisted-fields.js": "e79b086d6a73672bc6007001d51d4601366630fee42c152d86ec743f56b4b866",
-    "js/engine/bound-fields.js": "de42f98bb09c3893f7c87b2d121e8a5a31a382e9338287421960af5627909a8e",
+    "js/engine/assisted-fields.js": "501f9c0539c7a1cdd24985e9399e52ff667d47c208b98f23baae909f876606df",
+    "js/engine/bound-fields.js": "2b19f0c9e8f1cb1660fc639a212a26d1516bf3a1b99e2143e4839d68da42da5e",
     "js/engine/check-fields.js": "da205990eabc5d3b4e23454b57362f725b17d529ad3fa1b92dafda05e1e26171",
     "js/engine/checks.js": "5d00b70016076cb3e309a86ae310375d84589fdb12ed120cb3a87313569764c5",
-    "js/engine/composition.js": "7d983e44c6c96a11e72abec28ae760439ead321b275a3d4a5fc4fbf6c8ffedc1",
+    "js/engine/composition.js": "8e1f48dbdfdada7ff414dcc3e4e48a99b817eed84f0c18f39cf665a7e1fd0085",
     "js/engine/computed-values.js": "c80991719813fcc2f5651fc6954660da689f802c53cc940003f4a6eeb37d98ec",
     "js/engine/data-definitions.js": "b22785e5e5d3871716770a556f7ac8534f46632df4db72e4627852bb5ef25274",
     "js/engine/data-references.js": "17c21973b702810c2f7dea62254722c8e481454268c4c7c45f329c83f1090d6d",
@@ -2192,10 +2456,11 @@
     "js/engine/entry-rolls.js": "9f4bce37658ed155987fbae0bb23dc21130f83dd85dd39993393ae90ed60e6c2",
     "js/engine/fields.js": "6399a2c05277384116c7ff96420cd7760dcfdcaf7014aa8f0555c50801fda4e5",
     "js/engine/point-fields.js": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612",
+    "js/engine/predicates.js": "bb5440f4ccceb2086397949c59554f095526d9f6684630a1a32a7225e6d47c02",
     "js/engine/recovery-fields.js": "b93a066c424fd08a09d5df065e298d16068b2598a891ac1ddb06072dcbde6d24",
     "js/engine/recovery.js": "3d45355f2b6280f624913ad79402c06cab4765e0602280b2c6e1791b5aeb623e",
     "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
-    "js/engine/rule-analysis.js": "dedce684bbde417d9619c203207035e665881c9a1cb48b8dc1b73b59bbd8b00c",
+    "js/engine/rule-analysis.js": "095be3e8e060ce845205c83aea2ad728863f18b0800f2720443cd04563e68399",
     "js/engine/rule-operations.js": "5854bbd399986532d257f74641cac7ab505a972c73ca2c173b245b425cbcbf3f",
     "js/engine/rule-registry.js": "3d8a32d8fcbcdfeed2b45a50f61c2978951a723e8f519e888e63fe9646cf3eee",
     "js/engine/structured-fields.js": "dce4e747ea727d0d3c3cd33ee7283ce67ab3efc05a9b6c62e7e65edf5a5bb7f3",
@@ -2204,11 +2469,11 @@
     "js/engine/typed-record-inputs.js": "d0f43c88cec1fd710bc2041bb74bee7d478ace2be9d62fa792b6577f58036cc3",
     "js/engine/typed-value-format.js": "660043d9c59e0137a206cb781910c33728693a3db1dca12c836b69a36fb2ace6",
     "js/systems/dnd2024-fields.js": "5a2f55694f246994ea68e6769ba51e6fce39b4bd0ee414d46720807de6acb661",
-    "js/validation/actions.js": "3d8e62491f7b2bcb0d41d3d86d72e2419c53844527cd0b7b33f4669e7abb6e4c",
+    "js/validation/actions.js": "ad9311f342e76efa6b11cf32282467bceae1640988772e0a70a805b2934f4b16",
     "js/validation/backup.js": "4ce1a50fcd8739ea086b846bc7a089731f0f493a2accb450752f81e8e38fa77a",
     "js/validation/catalog.js": "beda9ba194c9971424ed18e3666b14a0ccbbac7765b7a829b793eb85e25f549c",
     "js/validation/checks.js": "48db8458c7327c0996fe6e5e831663f26e7b002f021e98bd43adf9870e27c351",
-    "js/validation/contracts.js": "93a427ff92dcd0df3f4a9f5e92f17767250a572258160d11081ea6a4f49a3417",
+    "js/validation/contracts.js": "4afa9968dc3cce8fa2d975d5d63d899d3123ec25cd39bf642fd93895aead2a05",
     "js/validation/data-definitions.js": "ccdc2c1eed818ede57cf51fe34235c0818450259faa2cd5eb75b496c3bc9885e",
     "js/validation/diagnostics.js": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a",
     "js/validation/documents.js": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5",
@@ -2218,7 +2483,7 @@
     "js/validation/recovery.js": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
     "js/validation/roll-references.js": "bfe1051d6425682fe5043d16ce865091ae408fadf811ea0c9338891653721bcb",
-    "js/validation/schemas.js": "865c6bde64534566984918e6e387c37bd3fd7a2ca80c78da874bf88ee698bef7",
+    "js/validation/schemas.js": "4b2b447392a7b6e4aaf4983b1ac9fd4616bf3dbb4d519bd97d5d4196405d69d9",
     "js/validation/versions.js": "7a203c83ac2552a35aaf42379890a610dd8e3eb12af554d2606fc8acb2ba8781"
   },
   "supportedVersions": {

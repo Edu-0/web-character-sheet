@@ -3,6 +3,7 @@ import {COMPONENT_CONTRACTS} from '../validation/contracts.js';
 import { registerFieldType } from './fields.js';
 import { getByPath, setByPath } from './paths.js';
 import { executeSheetAction, inventoryCalculationKey, inventoryTotals, repertoireStatus, undoSheetAction } from './assistance.js';
+import {predicateStatus} from './predicates.js';
 import { traitLabel } from './traits.js';
 
 registerFieldType('inventorySummary', {
@@ -129,9 +130,13 @@ registerFieldType('actionGroup', {
           event.note = action.note || '';
           setByPath(context.character, historyField, event);
           context.onChange?.();
-        } catch (error) { feedback.textContent = error.message; }
+        } catch (error) { feedback.textContent = error.message; feedback.hidden=false; }
       });
-      row.appendChild(control);
+      if(action.allowWhen!==undefined){
+        const reason=node('small','engine-action-permission');reason.id='permission-'+crypto.randomUUID();reason.setAttribute('role','status');control.setAttribute('aria-describedby',reason.id);
+        const refreshPermission=()=>{const status=predicateStatus(context.system,context.character,action.allowWhen,{ruleEvaluation:context.ruleEvaluation});control.setAttribute('aria-disabled',String(!status.allowed));reason.textContent=status.message;reason.hidden=!reason.textContent;};
+        refreshPermission();context.registerRefresh?.(refreshPermission);const item=node('div','engine-action-item');item.append(control,reason);row.append(item);
+      }else row.appendChild(control);
     });
     undo.addEventListener('click', () => {
       const event = getByPath(context.character, historyField);

@@ -3,6 +3,8 @@ import { calculationValue } from './calculation-overrides.js';
 import { getByPath, setByPath } from './paths.js';
 import { traitDice, traitMaximum } from './traits.js';
 import { rollOne } from './dice-resolver.js';
+import {requirePredicate} from './predicates.js';
+import {validateDataDefinitions} from '../validation/data-definitions.js';
 
 export function inventoryCalculationKey(config, stat) {
   return config.overrideKeys?.[stat] || `inventory.${config.overrideKey || config.field}.${stat}`;
@@ -50,6 +52,7 @@ export function healState(grade, potency, success, scale, limited = false) {
 
 // Execução transacional de operações declarativas. Um erro não altera a ficha.
 export function executeSheetAction(character, action, system) {
+  if(action.allowWhen!==undefined)requirePredicate(system,character,action.allowWhen);
   const draft = structuredClone(character);
   const touched = new Set();
   const details = [];
@@ -89,6 +92,7 @@ export function executeSheetAction(character, action, system) {
       setByPath(draft, effect.field, updated);
     } else throw new Error(`Operação de ficha desconhecida: ${effect.type}`);
   });
+  if(system?.schemaVersion===3){const issues=validateDataDefinitions(system,draft,'character');if(issues.length)throw Error(issues[0].message);}
   const changes = [...touched].map((field) => ({ field, before: structuredClone(getByPath(character, field) ?? null), after: structuredClone(getByPath(draft, field) ?? null) }));
   changes.forEach((change) => setByPath(character, change.field, structuredClone(change.after)));
   return { id: action.id, label: action.label, date: new Date().toISOString(), changes, details };

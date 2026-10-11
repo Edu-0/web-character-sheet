@@ -18,6 +18,7 @@ import { expandComponents, componentSearchKey } from './layout-components.js';
 import { highlightSearchTarget } from './search.js';
 import {commitRenderedChanges} from './render-projection.js';
 import {createRuleContext} from './rule-registry.js';
+import {componentPresentation} from './predicates.js';
 
 export function renderSheet(host, layout, character, options = {}) {
   if(options.materializeDefaults===false && !options.projected){
@@ -55,19 +56,31 @@ export function renderSheet(host, layout, character, options = {}) {
   const cleanups = [];
   const refreshers = new Set();
   const structuralRefreshers=new Set();
+  const presentationRefreshers=new Set();
+  const presentationBlocks=new Map();
   const ruleEvaluation=options.system?.schemaVersion===3?createRuleContext(options.system,character):undefined;
   const componentOptions = {
     ...options,
     ruleEvaluation,
-    registerRefresh(refresh,{structural=false}={}) {
-      const callbacks=structural?structuralRefreshers:refreshers;callbacks.add(refresh);
+    blockPresentedControl(control,blocked) {
+      if(!blocked)return;
+      if(!presentationBlocks.has(control))presentationBlocks.set(control,control.disabled);
+      control.disabled=true;
+    },
+    registerRefresh(refresh,{structural=false,presentation=false}={}) {
+      const callbacks=structural?structuralRefreshers:presentation?presentationRefreshers:refreshers;callbacks.add(refresh);
       return () => callbacks.delete(refresh);
     },
     onChange(updatedCharacter, component) {
+      // Remove only our overlay before native refreshers recompute their own
+      // availability. Group and leaf conditions share the same saved baseline.
+      for(const [control,disabled]of presentationBlocks)if(control.isConnected)control.disabled=disabled;
+      presentationBlocks.clear();
       ruleEvaluation?.invalidate();
       title.textContent = characterName(updatedCharacter);
       [...structuralRefreshers].forEach(refresh=>refresh());
       [...refreshers].forEach((refresh) => refresh());
+      [...presentationRefreshers].forEach(refresh=>refresh());
       options.onChange?.(updatedCharacter, component);
     },
   };
@@ -158,6 +171,8 @@ export function renderSheet(host, layout, character, options = {}) {
       cleanups.forEach((cleanup) => cleanup());
       refreshers.clear();
       structuralRefreshers.clear();
+      presentationRefreshers.clear();
+      presentationBlocks.clear();
       host.innerHTML = '';
     },
   };
@@ -214,7 +229,7 @@ function renderContainer(container, character, options) {
     let parent=content;
     for(const group of component.groupTrail||[]){
       const key=JSON.stringify([group.path,group.occurrence]);let groupElement=groups.get(key);
-      if(!groupElement){const variant=safeToken(group.variant);groupElement=element('section','engine-container engine-container--'+(group.layout.type||'stack')+(variant?' engine-container--'+variant:''));addLayoutHintClass(groupElement,'min',group.layout.min);addLayoutHintClass(groupElement,'gap',group.layout.gap);if(group.label)groupElement.append(element('h3','engine-section__title',group.label));if(group.note)groupElement.append(element('p','engine-section__note',group.note));if(group.help)appendFieldHelp(groupElement,group.help,group.label||'Grupo');options.onRenderSource?.(groupElement,group.path);groups.set(key,groupElement);parent.append(groupElement);}
+      if(!groupElement){const variant=safeToken(group.variant);groupElement=element('section','engine-container engine-container--'+(group.layout.type||'stack')+(variant?' engine-container--'+variant:''));addLayoutHintClass(groupElement,'min',group.layout.min);addLayoutHintClass(groupElement,'gap',group.layout.gap);if(group.label)groupElement.append(element('h3','engine-section__title',group.label));if(group.note)groupElement.append(element('p','engine-section__note',group.note));if(group.help)appendFieldHelp(groupElement,group.help,group.label||'Grupo');options.onRenderSource?.(groupElement,group.path);groups.set(key,groupElement);parent.append(groupElement);attachPresentation(groupElement,group,character,options);}
       parent=groupElement;
     }
     parent.appendChild(wrapper);
@@ -260,15 +275,22 @@ function renderComponent(component, character, options) {
   });
   if (component.help) appendFieldHelp(wrapper.querySelector('.field') || wrapper, component.help, component.label || component.type);
   if (component.roll && component.type !== 'list') wrapper.append(createCheckButton({...component,character,system:options.system}));
-  if (component.disabledWhen) {
-    const refresh = () => {
-      const disabled = getByPath(character, component.disabledWhen.field) === component.disabledWhen.equals;
-      wrapper.querySelectorAll('input, select, textarea, button').forEach((control) => { if (!control.matches('.engine-help__trigger')) control.disabled = disabled || control.dataset.intrinsicDisabled === 'true'; });
-    };
-    refresh();
-    options.registerRefresh?.(refresh);
-  }
+  attachPresentation(wrapper,component,character,options);
   return wrapper;
+}
+
+function attachPresentation(wrapper,component,character,options){
+  if(!component.disabledWhen&&component.visibleWhen===undefined&&component.editableWhen===undefined&&!component.groupTrail?.some(g=>g.visibleWhen!==undefined||g.editableWhen!==undefined))return;
+  const feedback=element('p','engine-condition-status');feedback.setAttribute('role','status');feedback.id='condition-'+crypto.randomUUID();wrapper.append(feedback);
+  const refresh=()=>{
+    const status=componentPresentation(component,options.system,character,{ruleEvaluation:options.ruleEvaluation});
+    wrapper.hidden=!status.visible.allowed&&!status.visible.error;
+    wrapper.toggleAttribute('data-condition-hidden',wrapper.hidden);
+    const legacy=component.disabledWhen&&getByPath(character,component.disabledWhen.field)===component.disabledWhen.equals;
+    const blocked=legacy||!status.editable.allowed||status.visible.error;
+    feedback.textContent=[status.visible.error?status.visible.message:'',!status.editable.allowed?status.editable.message:''].filter(Boolean).join(' ');feedback.hidden=!feedback.textContent;
+    wrapper.querySelectorAll('input,select,textarea,button').forEach(control=>{if(control.matches('.engine-help__trigger'))return;options.blockPresentedControl?.(control,blocked);if(feedback.textContent)control.setAttribute('aria-describedby',[...new Set((control.getAttribute('aria-describedby')||'').split(' ').filter(Boolean).concat(feedback.id))].join(' '));else if(control.hasAttribute('aria-describedby')){const ids=control.getAttribute('aria-describedby').split(' ').filter(id=>id!==feedback.id);if(ids.length)control.setAttribute('aria-describedby',ids.join(' '));else control.removeAttribute('aria-describedby');}});
+  };refresh();options.registerRefresh?.(refresh,{presentation:true});
 }
 
 function addLayoutHintClass(elementNode, hint, value) {

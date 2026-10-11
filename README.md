@@ -80,6 +80,8 @@ Para acrescentar um pacote de arquivo, abra **Sistemas** → **Importar sistema*
 
 Em pacotes v3, componha também [registros, coleções e grupos](data/examples/structured-data.md): campos com identidades próprias, referências a catálogos, repetição por entrada e compostos locais compartilhados. Orientações podem aparecer sem criar um dado no personagem.
 
+Use [condições compartilhadas](data/examples/predicates.md) para mostrar componentes, permitir sua edição ou autorizar ações. Ocultar preserva os valores; executar uma ação verifica novamente a permissão atual.
+
 ## Seus dados
 
 A biblioteca e as preferências ficam no navegador, sem conta ou backend. Não há sincronização entre dispositivos ou backup em nuvem. **Use Exportar tudo regularmente**: limpar os dados do site ou trocar de navegador/endereço pode tornar a biblioteca anterior indisponível. O backup inclui personagens, sistemas importados e preferências; sistemas embutidos acompanham o app. Se uma gravação falhar, a ficha continua em memória e pode ser exportada. Os arquivos exportados podem conter nomes, notas, imagens e dados de recuperação; revise-os antes de compartilhar.

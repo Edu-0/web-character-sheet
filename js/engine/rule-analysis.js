@@ -13,7 +13,7 @@ export function compileRules(system){
  const fail=(info,port,message)=>{const error=Error((info?.rule?.label||'Regra')+' › '+(RULE_OPERATIONS[info?.node?.op]?.label||'Parte')+(port?' › '+port:'')+': '+message);error.path=(info?.path||'system.rules')+(port?'.'+port:'');error.nodeId=info?.node?.id;throw error;};
  for(const [i,rule]of rules.entries()){
   const at='system.rules['+i+']';if(!object(rule)||!safeId(rule.id)||index.has(rule.id))fail({rule,path:at},'id','identidade inválida ou duplicada');
-  if(!['calculation'].includes(rule.kind)||!['number','string','boolean'].includes(rule.resultType))fail({rule,path:at},'kind','espécie ou resultado indisponível');
+  if(!['calculation','predicate'].includes(rule.kind)||!['number','string','boolean'].includes(rule.resultType)||rule.kind==='predicate'&&rule.resultType!=='boolean')fail({rule,path:at},'kind','espécie ou resultado indisponível');
   if(!Number.isSafeInteger(rule.revision)||rule.revision<1||typeof rule.label!=='string'||!rule.label.trim())fail({rule,path:at},'revision','nome e revisão positiva exigidos');
   if(Object.keys(rule).some(k=>!['id','label','revision','kind','resultType','context','expression','extensions'].includes(k)))fail({rule,path:at},null,'parâmetro de regra indisponível');
   let contextCollections=[];if(rule.context!==undefined){const row=rows.find(r=>r.definition.id===rule.context?.dataId);if(!object(rule.context)||Object.keys(rule.context).some(k=>k!=='dataId')||row?.definition.type!=='collection')fail({rule,path:at},'context','selecione coleção para o contexto da entrada');contextCollections=[...row.ancestors.filter(d=>d.type==='collection').map(d=>d.id),row.definition.id];}

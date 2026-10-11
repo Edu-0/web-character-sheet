@@ -73,7 +73,7 @@ export function previewNavigation({sources,controller,send}) {
   return {
     geometry(){const rectangles=[];for(const [pointer,elements]of nodes){const node=[...elements].find(n=>n.isConnected&&!n.closest('[hidden]')&&n.getClientRects().length);if(!node)continue;const r=node.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight||r.right<0||r.left>innerWidth)continue;rectangles.push({pointer,x:r.x,y:r.y,width:r.width,height:r.height});if(rectangles.length>=10000)break;}return rectangles;},
     scroll(delta){if(composing&&Number.isFinite(delta))window.scrollBy(0,Math.max(-120,Math.min(120,delta)));},
-    register,inspect,compose(enabled,token){cancelGesture();composing=enabled===true;compositionToken=composing?token:null;document.querySelectorAll('.editor-canvas-handle').forEach(n=>n.remove());suppressClick=false;inspect(composing);},
+    register,inspect,compose(enabled,token){cancelGesture();composing=enabled===true;compositionToken=composing?token:null;document.body.toggleAttribute('data-editor-composing',composing);document.querySelectorAll('.editor-canvas-handle').forEach(n=>n.remove());suppressClick=false;inspect(composing);},
     reveal(pointer,{focus=true,scroll=true}={}){
       for(const node of document.querySelectorAll('[data-editor-source-highlight]'))node.removeAttribute('data-editor-source-highlight');
       const definition=sources.get(pointer),targets=[...(nodes.get(pointer) || [])].filter(node=>node.isConnected);

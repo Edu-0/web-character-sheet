@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 33 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `f72563cc89bcb679e4425283bf0d807d2d473e43122230cc4f7074e1a5f2a4e9`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `79a52d769177ee3e5bea2fcd39aed4620ac95d47d6902e5104a0a3200a4690f0`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -13,6 +13,7 @@ Fingerprint do código público consultado: `f72563cc89bcb679e4425283bf0d807d2d4
 | `dataParameter` | string | não |  |
 | `default` | any | não |  |
 | `disabledWhen` | object | não | field/equals; bloqueia controles, sem apagar dados |
+| `editableWhen` | object | não | v3; regra Sim/Não compartilhada; bloquear edição preserva dados |
 | `extensions` | any | não |  |
 | `field` | path | não |  |
 | `help` | string | não |  |
@@ -20,6 +21,7 @@ Fingerprint do código público consultado: `f72563cc89bcb679e4425283bf0d807d2d4
 | `print` | object | não | perfil compact; validação em schemas.js |
 | `type` | string | sim |  |
 | `variant` | string | não |  |
+| `visibleWhen` | object | não | v3; regra Sim/Não compartilhada; ocultar preserva dados |
 
 ## actionGroup
 

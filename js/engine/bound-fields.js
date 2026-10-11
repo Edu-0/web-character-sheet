@@ -35,7 +35,7 @@ export function renderBoundField(container, context) {
     try {
       const previous=readData(system,character,dataId,context.dataContext);
       writeData(system,character,dataId,mode==='absent'?{present:false}:{present:true,value:mode==='null'?null:previous.present&&previous.value!==null?previous.value:definition.type==='boolean'?false:definition.type==='string'?'':0},context.dataContext);
-      onChange?.();refresh();
+      refresh();onChange?.();
     }catch(error){status.textContent=error.message;}
   });
   refresh();registerRefresh?.(refresh);container.append(wrap);

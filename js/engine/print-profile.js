@@ -1,5 +1,6 @@
 // Metadados de apresentação pertencem ao layout, sem inferir nomes de sistemas.
 import { expandComponents } from './layout-components.js';
+import {componentPresentation} from './predicates.js';
 export const normalizePrintProfile = value => value === 'compact' ? 'compact' : 'full';
 
 export function printOptions(definition, profile) {
@@ -9,6 +10,7 @@ export function printOptions(definition, profile) {
 export function componentsForPrint(container, system, profile,character={}) {
   if (printOptions(container, profile).include === false) return [];
   return expandComponents(container, system,character).flatMap(component => {
+    if(!componentPresentation(component,system,character).visible.allowed)return [];
     const options = printOptions(component, profile);
     if (options.include === false || component.groupTrail?.some(group=>printOptions(group,profile).include===false)) return [];
     const itemSchema = options.fields && component.itemSchema

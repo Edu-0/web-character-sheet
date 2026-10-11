@@ -230,6 +230,102 @@
     },
     {
       "context": "component:information",
+      "property": "visibleWhen",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:information",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:information",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:information",
+      "property": "editableWhen",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:information",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:information",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:information",
       "property": "text",
       "consumer": "js/engine/structured-fields.js",
       "validation": "js/validation/schemas.js",
@@ -460,6 +556,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:group",
+      "property": "visibleWhen",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:group",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:group",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:group",
+      "property": "editableWhen",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:group",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:group",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -796,6 +988,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:componentInstance",
+      "property": "visibleWhen",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:componentInstance",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:componentInstance",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:componentInstance",
+      "property": "editableWhen",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:componentInstance",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:componentInstance",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/composition.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -1158,6 +1446,102 @@
     },
     {
       "context": "component:dataField",
+      "property": "visibleWhen",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dataField",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dataField",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dataField",
+      "property": "editableWhen",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dataField",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dataField",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/structured-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dataField",
       "property": "dataId",
       "consumer": "js/engine/structured-fields.js",
       "validation": "js/validation/schemas.js",
@@ -1396,6 +1780,102 @@
     },
     {
       "context": "component:boolean",
+      "property": "visibleWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:boolean",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:boolean",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:boolean",
+      "property": "editableWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:boolean",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:boolean",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:boolean",
       "property": "dataId",
       "consumer": "js/engine/fields.js",
       "validation": "js/validation/schemas.js",
@@ -1624,6 +2104,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:number",
+      "property": "visibleWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:number",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:number",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:number",
+      "property": "editableWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:number",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:number",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -1952,6 +2528,102 @@
     },
     {
       "context": "component:text",
+      "property": "visibleWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:text",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:text",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:text",
+      "property": "editableWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:text",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:text",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:text",
       "property": "dataId",
       "consumer": "js/engine/fields.js",
       "validation": "js/validation/schemas.js",
@@ -2206,6 +2878,102 @@
     },
     {
       "context": "component:textarea",
+      "property": "visibleWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:textarea",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:textarea",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:textarea",
+      "property": "editableWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:textarea",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:textarea",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:textarea",
       "property": "dataId",
       "consumer": "js/engine/fields.js",
       "validation": "js/validation/schemas.js",
@@ -2450,6 +3218,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:select",
+      "property": "visibleWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:select",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:select",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:select",
+      "property": "editableWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:select",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:select",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -2795,6 +3659,102 @@
       ]
     },
     {
+      "context": "component:resource",
+      "property": "visibleWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:resource",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:resource",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:resource",
+      "property": "editableWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:resource",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:resource",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
       "context": "component:counter",
       "property": "type",
       "consumer": "js/engine/fields.js",
@@ -3010,6 +3970,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:counter",
+      "property": "visibleWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:counter",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:counter",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:counter",
+      "property": "editableWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:counter",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:counter",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -3314,6 +4370,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:die",
+      "property": "visibleWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:die",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:die",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:die",
+      "property": "editableWhen",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:die",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:die",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -3660,6 +4812,102 @@
     },
     {
       "context": "component:image",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:image",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:image",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:image",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:image",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:image",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:image",
       "property": "alt",
       "consumer": "js/engine/advanced-fields.js",
       "validation": "js/validation/schemas.js",
@@ -3900,6 +5148,102 @@
     },
     {
       "context": "component:tagList",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:tagList",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:tagList",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:tagList",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:tagList",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:tagList",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:tagList",
       "property": "placeholder",
       "consumer": "js/engine/advanced-fields.js",
       "validation": "js/validation/schemas.js",
@@ -4130,6 +5474,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -4828,6 +6268,102 @@
     },
     {
       "context": "component:table",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:table",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:table",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:table",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:table",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:table",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:table",
       "property": "itemSchema",
       "consumer": "js/engine/advanced-fields.js",
       "validation": "js/validation/schemas.js",
@@ -5474,6 +7010,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:stateList",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:stateList",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:stateList",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:stateList",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:stateList",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:stateList",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -6332,6 +7964,102 @@
     },
     {
       "context": "component:skillCatalog",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:skillCatalog",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:skillCatalog",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:skillCatalog",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:skillCatalog",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:skillCatalog",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:skillCatalog",
       "property": "override",
       "consumer": "js/engine/advanced-fields.js",
       "validation": "js/validation/schemas.js",
@@ -6700,6 +8428,102 @@
     },
     {
       "context": "component:slotTracker",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:slotTracker",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:slotTracker",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:slotTracker",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:slotTracker",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:slotTracker",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:slotTracker",
       "property": "consumeLabel",
       "consumer": "js/engine/advanced-fields.js",
       "validation": "js/validation/schemas.js",
@@ -6978,6 +8802,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:computed",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:computed",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:computed",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:computed",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:computed",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:computed",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -7498,6 +9418,102 @@
     },
     {
       "context": "component:poolBuilder",
+      "property": "visibleWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:poolBuilder",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:poolBuilder",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:poolBuilder",
+      "property": "editableWhen",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:poolBuilder",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:poolBuilder",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:poolBuilder",
       "property": "traitSources",
       "consumer": "js/engine/advanced-fields.js",
       "validation": "js/validation/schemas.js",
@@ -7978,6 +9994,102 @@
     },
     {
       "context": "component:pointBudget",
+      "property": "visibleWhen",
+      "consumer": "js/engine/point-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:pointBudget",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/point-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:pointBudget",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/point-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:pointBudget",
+      "property": "editableWhen",
+      "consumer": "js/engine/point-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:pointBudget",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/point-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:pointBudget",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/point-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:pointBudget",
       "property": "configFrom",
       "consumer": "js/engine/point-fields.js",
       "validation": "js/validation/schemas.js",
@@ -8208,6 +10320,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:traitAllocation",
+      "property": "visibleWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:traitAllocation",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:traitAllocation",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:traitAllocation",
+      "property": "editableWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:traitAllocation",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:traitAllocation",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -8464,6 +10672,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:inventorySummary",
+      "property": "visibleWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:inventorySummary",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:inventorySummary",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:inventorySummary",
+      "property": "editableWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:inventorySummary",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:inventorySummary",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -8890,6 +11194,102 @@
     },
     {
       "context": "component:repertoire",
+      "property": "visibleWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:repertoire",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:repertoire",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:repertoire",
+      "property": "editableWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:repertoire",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:repertoire",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:repertoire",
       "property": "configFrom",
       "consumer": "js/engine/assisted-fields.js",
       "validation": "js/validation/schemas.js",
@@ -9120,6 +11520,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:actionGroup",
+      "property": "visibleWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:actionGroup",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:actionGroup",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:actionGroup",
+      "property": "editableWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:actionGroup",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:actionGroup",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -9402,6 +11898,102 @@
     },
     {
       "context": "component:recoveryGroup",
+      "property": "visibleWhen",
+      "consumer": "js/engine/recovery-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:recoveryGroup",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/recovery-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:recoveryGroup",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/recovery-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:recoveryGroup",
+      "property": "editableWhen",
+      "consumer": "js/engine/recovery-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:recoveryGroup",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/recovery-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:recoveryGroup",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/recovery-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:recoveryGroup",
       "property": "actionsFrom",
       "consumer": "js/engine/recovery-fields.js",
       "validation": "js/validation/schemas.js",
@@ -9658,6 +12250,102 @@
     },
     {
       "context": "component:techniqueUse",
+      "property": "visibleWhen",
+      "consumer": "js/engine/technique-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:techniqueUse",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/technique-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:techniqueUse",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/technique-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:techniqueUse",
+      "property": "editableWhen",
+      "consumer": "js/engine/technique-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:techniqueUse",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/technique-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:techniqueUse",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/technique-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:techniqueUse",
       "property": "configFrom",
       "consumer": "js/engine/technique-fields.js",
       "validation": "js/validation/schemas.js",
@@ -9898,6 +12586,102 @@
     },
     {
       "context": "component:checkRoll",
+      "property": "visibleWhen",
+      "consumer": "js/engine/check-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:checkRoll",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/check-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:checkRoll",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/check-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:checkRoll",
+      "property": "editableWhen",
+      "consumer": "js/engine/check-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:checkRoll",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/check-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:checkRoll",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/check-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:checkRoll",
       "property": "configFrom",
       "consumer": "js/engine/check-fields.js",
       "validation": "js/validation/schemas.js",
@@ -10137,6 +12921,102 @@
       ]
     },
     {
+      "context": "component:effectList",
+      "property": "visibleWhen",
+      "consumer": "js/engine/effect-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:effectList",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/effect-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:effectList",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/effect-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:effectList",
+      "property": "editableWhen",
+      "consumer": "js/engine/effect-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:effectList",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/effect-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:effectList",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/effect-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
       "context": "component:dndAbility",
       "property": "type",
       "consumer": "js/systems/dnd2024-fields.js",
@@ -10352,6 +13232,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndAbility",
+      "property": "visibleWhen",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndAbility",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndAbility",
+      "property": "visibleWhen.message",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndAbility",
+      "property": "editableWhen",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndAbility",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndAbility",
+      "property": "editableWhen.message",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -10666,6 +13642,102 @@
     },
     {
       "context": "component:dndSkill",
+      "property": "visibleWhen",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndSkill",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndSkill",
+      "property": "visibleWhen.message",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndSkill",
+      "property": "editableWhen",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndSkill",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndSkill",
+      "property": "editableWhen.message",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndSkill",
       "property": "key",
       "consumer": "js/systems/dnd2024-fields.js",
       "validation": "js/validation/schemas.js",
@@ -10960,6 +14032,102 @@
       "type": "any",
       "inert": false,
       "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndDerived",
+      "property": "visibleWhen",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndDerived",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndDerived",
+      "property": "visibleWhen.message",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndDerived",
+      "property": "editableWhen",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndDerived",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:dndDerived",
+      "property": "editableWhen.message",
+      "consumer": "js/systems/dnd2024-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
       "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
       "tests": [
         "tests/unit/editor-visual.test.mjs",
@@ -14693,6 +17861,54 @@
     {
       "context": "system",
       "property": "sheetActions.[].label",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/actions.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "sheetActions.[].allowWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/actions.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "sheetActions.[].allowWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/actions.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "sheetActions.[].allowWhen.message",
       "consumer": "js/engine/assisted-fields.js",
       "validation": "js/validation/actions.js",
       "type": "string",
@@ -21525,6 +24741,54 @@
     {
       "context": "rule:sheetActions",
       "property": "definition.[].label",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/actions.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:sheetActions",
+      "property": "definition.[].allowWhen",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/actions.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:sheetActions",
+      "property": "definition.[].allowWhen.ruleId",
+      "consumer": "js/engine/assisted-fields.js",
+      "validation": "js/validation/actions.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:sheetActions",
+      "property": "definition.[].allowWhen.message",
       "consumer": "js/engine/assisted-fields.js",
       "validation": "js/validation/actions.js",
       "type": "string",

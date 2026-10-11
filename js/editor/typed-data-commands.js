@@ -47,9 +47,9 @@ export function ruleNode(op='literal',previous={}) {
   }
   return node;
 }
-export function createTypedRulePlan(pkg,{name,expression,resultType='number',context}) {
+export function createTypedRulePlan(pkg,{name,expression,resultType='number',kind='calculation',context}) {
   if(pkg.system.schemaVersion!==3 || !name?.trim())throw new Error('Informe nome do cálculo em pacote v3.');
-  const rule={id:uuid('rule'),label:name.trim(),revision:1,kind:'calculation',resultType,expression:structuredClone(expression),...(context?{context:structuredClone(context)}:{})};
+  const rule={id:uuid('rule'),label:name.trim(),revision:1,kind,resultType,expression:structuredClone(expression),...(context?{context:structuredClone(context)}:{})};
   const commands=[];if(!pkg.system.rules)commands.push({type:'setProperty',path:['system','rules'],value:[]});
   commands.push({type:'insertNode',path:['system','rules'],index:pkg.system.rules?.length||0,value:rule});
   return {commands,rule};

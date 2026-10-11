@@ -29,6 +29,7 @@ const fields = (names, type = 'string') => Object.fromEntries(names.split(' ').f
 export const COMMON_COMPONENT_PROPERTIES = {
   type:p('string',{required:true}),label:p('string'),field:p('path'),variant:p('string'),help:p('string'),default:p('any'),dataParameter:p('string'),
   disabledWhen:p('object',{semantic:'field/equals; bloqueia controles, sem apagar dados'}),print:p('object',{semantic:'perfil compact; validação em schemas.js'}),extensions:p('any'),
+  visibleWhen:p('object',{semantic:'v3; regra Sim/Não compartilhada; ocultar preserva dados'}),editableWhen:p('object',{semantic:'v3; regra Sim/Não compartilhada; bloquear edição preserva dados'}),
 };
 const calculation = {override:p('boolean'),overrideKey:p('path'),stepControls:p('boolean')};
 const collection = {itemSchema:p('object'),itemDetails:p('object'),...fields('addLabel emptyLabel heading summaryFields'),

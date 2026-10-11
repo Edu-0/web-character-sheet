@@ -1,4 +1,5 @@
 import {readData} from './data-definitions.js';
+import {componentPresentation} from './predicates.js';
 import {typedSearchRecords} from './typed-value-format.js';
 import { getFieldType } from './fields.js';
 import { getByPath } from './paths.js';
@@ -43,7 +44,7 @@ export function buildSearchIndex(layout, character, system) {
   const entries = [];
   for (const tab of layout?.tabs || []) for (const section of tab.sections || []) for (const container of section.containers || []) {
     expandComponents(container, system,character).forEach((component, index) => {
-      if (component.searchable === false) return;
+      if (component.searchable === false || !componentPresentation(component,system,character).visible.allowed) return;
       const context = { ...component, character, system };
       const provider = getFieldType(component.type)?.search;
       let records;

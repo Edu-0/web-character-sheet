@@ -15,6 +15,7 @@ import {validateDataDefinitions, validateRules, validateBinding} from './data-de
 import {dataDefinition,BOUND_COMPONENT_TYPES} from '../engine/data-definitions.js';
 import {DATA_TYPES,safeDataId} from '../engine/data-types.js';
 import {validateRollReferences} from './roll-references.js';
+import {predicateBindingIssue} from '../engine/predicates.js';
 
 export const KNOWN_COMPONENT_TYPES = new Set(Object.keys(COMPONENT_CONTRACTS));
 
@@ -233,6 +234,10 @@ function validateContainer(container, path, system, issues, layoutVersion,depth=
 
 function validateComponent(component, path, system, issues, layoutVersion,depth=0,parameters=null) {
   if (!requireObject(component, path, issues)) return;
+  for(const slot of ['visibleWhen','editableWhen'])if(component[slot]!==undefined){
+    if(layoutVersion!==3)add(issues,path+'.'+slot,'Condição tipada exige layout v3.');
+    if(system){const issue=predicateBindingIssue(system,component[slot]);if(issue)add(issues,path+'.'+slot,issue);}
+  }
   validatePrintOptions(component, path, issues, true);
   validateCalculationOptions(component, path, issues);
   if (component.entryAction !== undefined && (component.type !== 'list' || !['roll', 'dndSpell', 'dndAttack'].includes(component.entryAction))) add(issues, `${path}.entryAction`, 'ação de lista desconhecida');
