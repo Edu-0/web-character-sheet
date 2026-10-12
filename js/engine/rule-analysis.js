@@ -1,5 +1,6 @@
 import {RULE_OPERATIONS,RULE_LIMITS} from './rule-operations.js';
 import {dataDefinitions} from './data-definitions.js';
+import {typedValueIssue} from './data-types.js';
 const object=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
 const safeId=v=>typeof v==='string'&&/^[a-zA-Z0-9_-]{1,100}$/.test(v)&&!['constructor','prototype','__proto__'].includes(v);
 export const QUERY_PORTS=Object.freeze({filter:'predicate',map:'value',any:'predicate',all:'predicate'});
@@ -28,7 +29,9 @@ export function compileRules(system,{actionScope}={}){
    if(Object.keys(node).some(k=>!['id','op','version','extensions',...operation.inputs,...operation.parameters].includes(k)))fail(info,null,'parâmetro indisponível');
    record.nodes.set(node.id,info);
    if(node.op==='literal'&&!(node.value===null||typeof node.value==='boolean'||typeof node.value==='string'&&node.value.length<=RULE_LIMITS.string||typeof node.value==='number'&&Number.isFinite(node.value)))fail(info,'value','literal primitivo finito exigido');
-   for(const p of operation.parameters)if(p!=='value'&&!(node.op==='rule'&&p==='mode'))if(!safeId(node[p]))fail(info,p,'identidade exigida');
+   for(const p of operation.parameters)if(p!=='value'&&!(node.op==='trait'&&p==='dice')&&!(['rule','read'].includes(node.op)&&p==='mode'))if(!safeId(node[p]))fail(info,p,'identidade exigida');
+   if(node.op==='trait'){const definition=rows.find(r=>r.definition.id===node.dataId)?.definition;if(definition?.type!=='trait')fail(info,'dataId','escolha um traço existente');const issue=typedValueIssue(definition,node.dice);if(issue)fail(info,'dice',issue);}
+   if(node.op==='read'&&node.mode!==undefined&&!['base','effective'].includes(node.mode))fail(info,'mode','escolha base ou efetivo');
    if(node.op==='rule'&&node.mode!==undefined&&!['automatic','effective'].includes(node.mode))fail(info,'mode','escolha automático ou efetivo');
    for(const p of operation.inputs)collect(node[p],path+'.'+p,QUERY_PORTS[node.op]===p?[...scopes,node.id]:scopes,depth+1);
   };collect(rule.expression,at+'.expression');
@@ -42,6 +45,8 @@ export function compileRules(system,{actionScope}={}){
   else if(n.op==='input'||n.op==='local'){
    const definition=(n.op==='input'?actionScope?.inputs:actionScope?.locals)?.find(d=>d.id===n[n.op==='input'?'inputId':'localId']);if(!definition)fail(info,null,n.op==='input'?'entrada da ação inexistente':'resultado ainda não produzido nesta etapa');result=definition.valueType??typeOfDefinition(definition);
   }
+  else if(n.op==='trait'){result=typeOfDefinition(rows.find(r=>r.definition.id===n.dataId).definition);result.optional=false;result.nullable=false;}
+  else if(n.op==='traitDice'){need(child('value'),'trait','value');result={type:'list',item:{type:'number',optional:false,nullable:false},optional:false,nullable:false};}
   else if(n.op==='read'||n.op==='empty'){
    const row=rows.find(r=>r.definition.id===n.dataId);if(!row)fail(info,'dataId','dado inexistente');
    const scopes=[...record.contextCollections,...scopeTypes().flatMap(t=>t.item?.collectionIds||[])];for(const a of row.ancestors)if(a.type==='collection'&&!scopes.includes(a.id))fail(info,'dataId',row.definition.label+' exige entrada de '+a.label);
@@ -51,7 +56,7 @@ export function compileRules(system,{actionScope}={}){
   }else if(n.op==='catalog'){
    const catalog=system.catalogs?.find(c=>c.id===n.catalogId);if(!catalog)fail(info,'catalogId','catálogo inexistente');result={type:'collection',definition:catalog,item:{type:'record',definition:catalog},optional:false,nullable:false};dependencies.get(record.rule.id).catalogIds.add(catalog.id);
   }else if(n.op==='rule'){
-   const target=index.get(n.ruleId);if(!target)fail(info,'ruleId','cálculo inexistente');const scopes=[...record.contextCollections,...scopeTypes().flatMap(t=>t.item?.collectionIds||[])];if(target.contextCollections.some(id=>!scopes.includes(id)))fail(info,'ruleId','cálculo exige contexto de entrada compatível');result=infer(target,target.nodes.get(target.rule.expression.id));if(target.rule.resultType!==result.type&&!(target.rule.resultType==='number'&&numeric(result)))fail(info,'ruleId','tipo de saída incompatível');if(n.mode==='effective')need(result,'number','mode');dependencies.get(record.rule.id).ruleIds.add(n.ruleId);
+   const target=index.get(n.ruleId);if(!target)fail(info,'ruleId','cálculo inexistente');const scopes=[...record.contextCollections,...scopeTypes().flatMap(t=>t.item?.collectionIds||[])];if(target.contextCollections.some(id=>!scopes.includes(id)))fail(info,'ruleId','cálculo exige contexto de entrada compatível');result=infer(target,target.nodes.get(target.rule.expression.id));if(target.rule.resultType!==result.type&&!(target.rule.resultType==='number'&&numeric(result)))fail(info,'ruleId','tipo de saída incompatível');if(n.mode==='effective'&&!['number','integer','string','boolean'].includes(result.type))fail(info,'mode','resultado escalar exigido');dependencies.get(record.rule.id).ruleIds.add(n.ruleId);
   }else if(n.op==='node'){
    const target=record.nodes.get(n.nodeId);if(!target)fail(info,'nodeId','parte inexistente');if(target.scopes.some(id=>!info.scopes.includes(id)))fail(info,'nodeId','parte pertence a outro contexto de entrada');result=infer(record,target);
   }else if(n.op==='item'){

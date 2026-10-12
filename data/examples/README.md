@@ -1,5 +1,7 @@
 # Rolagens de entradas configuradas por JSON
 
+[Efeitos tipados](typed-effects.md): projeção sobre base/cálculo, consumo e eventos confirmados em v3.
+
 [Eventos e gatilhos locais](rule-events.md): origens e cruzamentos explícitos, entradas tipadas, frequência, propostas e confirmação causal.
 
 Para um dado opcional compartilhado por dois componentes e um cálculo numérico desde pacote vazio, consulte [dados tipados v3](typed-data.md) e o [exemplo Primeiro vínculo](first-bindings.package.json).

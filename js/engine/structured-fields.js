@@ -5,6 +5,7 @@ import {initialRecord,typedValueIssue} from './data-types.js';
 import {referenceEntries,referenceValueIssue,entryLabel} from './data-references.js';
 import {typedSearchRecords} from './typed-value-format.js';
 import {mountRecordInputs} from './typed-record-inputs.js';
+import {mountEffectiveData} from './effective-data-field.js';
 const node=(tag,text='')=>{const element=document.createElement(tag);element.textContent=text;return element;};
 
 registerFieldType('information',{
@@ -84,7 +85,7 @@ registerFieldType('dataField',{
         body.replaceChildren();render(body,definition,context.label||definition.label,context.dataContext);
         if(label){const replacement=[...body.querySelectorAll('[aria-label]')].find(c=>c.getAttribute('aria-label')===label);replacement?.focus({preventScroll:true});if(replacement?.type==='text'&&start!=null)replacement.setSelectionRange(start,end);}
       }catch(error){status.textContent=error.message;}
-    };refresh();registerRefresh?.(refresh);
+    };refresh();registerRefresh?.(refresh);mountEffectiveData(host,context);
   },
   search:typedSearchRecords,
   revealSearchResult(wrapper,entry){let target=wrapper;for(const occurrence of entry.entryIds||[]){const found=[...target.querySelectorAll('details[data-entry-id]')].find(node=>node.dataset.collectionId===occurrence.dataId&&node.dataset.entryId===occurrence.entryId);if(found){found.open=true;target=found;}}return [...target.querySelectorAll('fieldset[data-data-id]')].find(node=>node.dataset.dataId===entry.dataId)||target;},

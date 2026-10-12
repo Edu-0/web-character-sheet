@@ -12,9 +12,9 @@ export function computedVariables(definitions = {}, character, system) {
       : definition.system ? getByPath(system,definition.system) ?? 0 : definition.rollField ? 0 : definition.value ?? 0]));
 }
 export function computedValue(context, automatic = false) {
-  if(context.ruleId!==undefined&&context.system.rules?.find(r=>r.id===context.ruleId)?.resultType!=='number')return evaluateRule(context.system,context.character,context.ruleId,context);
+  if(context.ruleId!==undefined&&context.system.rules?.find(r=>r.id===context.ruleId)?.resultType!=='number')return evaluateRule(context.system,context.character,context.ruleId,{...context,projected:true});
   const entry = getCalculationOverride(context.character,computedKey(context));
   if (!automatic && context.override !== false && entry?.mode === 'fixed') return entry.value;
-  const value = context.ruleId !== undefined ? evaluateRule(context.system,context.character,context.ruleId,context) : evaluate(context.system.formulas[context.formula],{vars:computedVariables(context.variables,context.character,context.system),data:context.character});
+  const value = context.ruleId !== undefined ? evaluateRule(context.system,context.character,context.ruleId,{...context,projected:true}) : evaluate(context.system.formulas[context.formula],{vars:computedVariables(context.variables,context.character,context.system),data:context.character});
   return automatic || context.override === false ? value : calculationValue(context.character,computedKey(context),value,{system:context.system});
 }

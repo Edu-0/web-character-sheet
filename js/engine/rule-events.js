@@ -7,6 +7,7 @@ import {changesBetween,applyCharacterChanges} from './character-history.js';
 import {validateDataDefinitions} from '../validation/data-definitions.js';
 import {RESERVED_KEYS} from './paths.js';
 import {compileTriggerInputs,triggerInputValues} from './event-inputs.js';
+import {consumeTypedEffects} from './typed-effect-state.js';
 
 export const EVENT_LIMITS=Object.freeze({triggers:100,thresholds:100,waves:16,firings:100,roots:1000,events:100,proposals:100,bytes:262144});
 const object=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
@@ -98,7 +99,7 @@ export function prepareEventChain(system,character,rootPlan,{origin='action',eve
   eventDefinition:JSON.stringify(system),...(record?{recordChange:{...rootPlan.recordChange,after:structuredClone(record)}}:{}),details:[...(rootPlan.details||[]),...causal.map(c=>c.label+': '+(c.mode==='propose'?'proposta guardada':'consequência incluída')+(c.limits.length?' (limites '+c.limits.join(', ')+')':'')+'.')]};
 }
 export function prepareManualEvent(system,character,dataId,cell,{id=crypto.randomUUID()}={}){dataDefinition(system,dataId);const draft=structuredClone(character);writeData(system,draft,dataId,cell);assertCandidate(system,draft);return prepareEventChain(system,character,{version:1,id,source:structuredClone(character),eventBasis:structuredClone(withoutMeta(character)),eventDefinition:JSON.stringify(system),patches:changesBetween(character,draft),details:[]},{origin:'manual',id});}
-export function prepareNamedEvent(system,character,eventName,{id=crypto.randomUUID(),resetScene=false}={}){return prepareEventChain(system,character,{version:1,id,source:structuredClone(character),patches:[],details:[]},{origin:'event',eventName,id,resetScene});}
+export function prepareNamedEvent(system,character,eventName,{id=crypto.randomUUID(),resetScene=false}={}){const draft=structuredClone(character),effectChanges=consumeTypedEffects(system,draft,[],{eventName});return prepareEventChain(system,character,{version:1,id,source:structuredClone(character),eventBasis:structuredClone(withoutMeta(character)),eventDefinition:JSON.stringify(system),patches:changesBetween(character,draft),effectChanges,details:effectChanges.map(e=>e.label+': '+e.before+' → '+e.after)},{origin:'event',eventName,id,resetScene});}
 
 export function prepareEventStateChange(system,character,{dismissId,archiveRoots=false}={}){
  const draft=structuredClone(character);if(!draft.ruleEventState)throw Error('Nenhum estado de eventos guardado.');

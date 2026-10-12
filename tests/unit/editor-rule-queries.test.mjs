@@ -40,6 +40,7 @@ test('AV-03 operações registradas têm execução comprovada, incluindo presen
  assert.equal(run(n('sum',{source:n('map',{source:read('items'),value:n('property',{value:n('item'),fieldId:'weight'})})})),11);covered.add('item');
  assert.equal(run(n('count',{source:n('empty',{dataId:'items'})})),0);covered.add('empty');
  assert.equal(run(n('text',{value:n('option',{dataId:'category',optionId:'deep'})}),'string',f=>f.system.dataDefinitions.push(d('category','enum',{options:[{id:'deep',label:'Profunda'}]}))),'Profunda');covered.add('option');
+ const traitData=d('trait-source','trait',{scale:[4,6,8,10],composite:true});assert.equal(run(n('exists',{value:n('trait',{dataId:traitData.id,dice:[8,6]})}),'boolean',f=>f.system.dataDefinitions.push(traitData)),true);covered.add('trait');assert.equal(run(n('sum',{source:n('traitDice',{value:n('trait',{dataId:traitData.id,dice:[8,6]})})}),'number',f=>f.system.dataDefinitions.push(traitData)),14);covered.add('traitDice');
  const shared=lit(3);assert.equal(run(n('add',{left:shared,right:n('node',{nodeId:shared.id})})),6);covered.add('node');
  const f=fixture();f.system.rules=[rule(lit(4),'number','base'),rule(n('rule',{ruleId:'base'}))];assert.equal(evaluateRule(f.system,f.character,'main'),4);covered.add('rule');assert.deepEqual([...covered].sort(),Object.keys(RULE_OPERATIONS).filter(id=>RULE_OPERATIONS[id].scope!=='action').sort());
 });

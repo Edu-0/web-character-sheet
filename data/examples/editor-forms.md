@@ -1,5 +1,7 @@
 # Editor por formulários
 
+O painel **Efeitos tipados e projeções** usa o construtor comum de operações e a mesma sessão. Os perfis de definição antigo e tipado têm descritores distintos; veja [contrato, provas e limites](typed-effects.md).
+
 Em **Sistemas**, abra ou crie um pacote e escolha **Editar por formulários**. A árvore mostra as definições de layouts, abas, seções, grupos e componentes. Selecione um bloco para configurar **Apresentação**, **Dados** e **Lógica**. É o mesmo pacote, rascunho, histórico, validador e fluxo de [prévia, recuperação, exportação e aplicação do editor JSON](editor-json.md).
 
 **Adicionar**, **Duplicar**, **Subir**, **Descer** e **Mover bloco** usam a definição original, inclusive em repeat. O destino e a posição (iniciando em 0) permitem mover entre grupos sem arrastar. Duplicar resolve IDs de irmãos com sufixo; mover para um destino com ID em conflito recusa a operação. Os componentes não recebem UUIDs no pacote. Na árvore, setas/Home/End movem o foco; Enter/Espaço selecionam. Os mesmos comandos estão disponíveis por toque. Mostrar na prévia usa o bloco selecionado na árvore; Localizar no JSON seleciona a mesma definição, recuperada ao voltar aos formulários. A navegação exige ensaio da revisão/layout atuais.

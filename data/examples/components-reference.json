@@ -2508,26 +2508,27 @@
   "schemaVersion": 1,
   "sources": {
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
-    "js/engine/action-expression.js": "c0add5098ca09383e3cd0b00215e8cb8c21f584d9a28fbe6c5aeeac952333b99",
-    "js/engine/action-fields.js": "d220c2344d7692e6e827303204a0c6716f80ab471188470f6d6f4b5aba58da0d",
-    "js/engine/action-plan.js": "5c675612081857ae9387e95f5b177547c1129585cb5b6a5bc9d0b9525aadb01c",
+    "js/engine/action-expression.js": "efab537b1edd027ab8aed2bacf4054eac93a212f966eb164eb0183939a3a9ed7",
+    "js/engine/action-fields.js": "53f792478809b8b434186d8631050d9d216a3d1a4868426976cbf62044666f01",
+    "js/engine/action-plan.js": "594271889e9aaec54715fbca4ff0899bf92d52683e25be7864e716eca06b7521",
     "js/engine/action-records.js": "ddbc47590d898d6f4e2e1496f29f61595d968764574b96cf9539df539c614d8d",
     "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
     "js/engine/assisted-fields.js": "203e3fb0aa9af0d40eb8e5e8f2989d561a6d74569d2bd360a18996ea68aa2a0a",
-    "js/engine/bound-fields.js": "2b19f0c9e8f1cb1660fc639a212a26d1516bf3a1b99e2143e4839d68da42da5e",
+    "js/engine/bound-fields.js": "ca4290143688e5218703c107b4b89b564eb2396bffc0a51d1b08eafbb35f30b4",
     "js/engine/character-history.js": "f46d865c00084773fd8ca8e12bca9fe02c8e9b0da241ec7005adb5accb3081e9",
     "js/engine/check-fields.js": "da205990eabc5d3b4e23454b57362f725b17d529ad3fa1b92dafda05e1e26171",
     "js/engine/checks.js": "5d00b70016076cb3e309a86ae310375d84589fdb12ed120cb3a87313569764c5",
     "js/engine/composition.js": "8e1f48dbdfdada7ff414dcc3e4e48a99b817eed84f0c18f39cf665a7e1fd0085",
-    "js/engine/computed-values.js": "c80991719813fcc2f5651fc6954660da689f802c53cc940003f4a6eeb37d98ec",
+    "js/engine/computed-values.js": "dec554abf84f89bd22de2dc54162542a11e22a0a7f73aaf746b747940805cd9c",
     "js/engine/data-definitions.js": "b22785e5e5d3871716770a556f7ac8534f46632df4db72e4627852bb5ef25274",
     "js/engine/data-references.js": "17c21973b702810c2f7dea62254722c8e481454268c4c7c45f329c83f1090d6d",
     "js/engine/data-types.js": "4913c175d14cb2c43501210cc92dacf14728eec650b4a3d6638cc3b0c9f8362c",
     "js/engine/dice-resolver.js": "6e9e7d08602adeaa8db246a830610236dff749bddc8c720cdd4f3130194993ae",
-    "js/engine/effect-fields.js": "19e14de1f04295eda9e81e52ffc77d32762f54750399e5a5aa5c32ff039f537f",
-    "js/engine/effects.js": "405a2e811de38fb21f16d9585b86ff520c2b8cfbc0f6d56191c9f7e10ae8dcda",
+    "js/engine/effect-fields.js": "be2e2a3c1cf8353e5464cfe9fc482ad977503626bd59e6b21519aa035d52a8e2",
+    "js/engine/effective-data-field.js": "411991055d9068eb7d6c4e5ffd27ae3f48e7b77e7a2ce534221adae7f2427941",
+    "js/engine/effects.js": "c73ae350cc29c937129a8a71e9a9a05595742a9f6a075b2eced766683aabfcbf",
     "js/engine/entry-rolls.js": "9f4bce37658ed155987fbae0bb23dc21130f83dd85dd39993393ae90ed60e6c2",
-    "js/engine/event-fields.js": "bfef51179720c95ae2c3cb18ad7ddcb4cce211dcb8d1ced93659c082d2d29a59",
+    "js/engine/event-fields.js": "c2547b6982132d14c9c052d14400497d85c411e653a0de7543eaaebf33ddd4f7",
     "js/engine/event-inputs.js": "64769b3c60b68ee73a152d5bbdd09b0462a6805153cf9e01c6e2e504b35990c6",
     "js/engine/fields.js": "6399a2c05277384116c7ff96420cd7760dcfdcaf7014aa8f0555c50801fda4e5",
     "js/engine/point-fields.js": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612",
@@ -2536,13 +2537,18 @@
     "js/engine/recovery.js": "3d45355f2b6280f624913ad79402c06cab4765e0602280b2c6e1791b5aeb623e",
     "js/engine/roll-transcript.js": "7222e52c7a5129921e5ed236fb3cc07173c5f8fc9deb514854aa0922b7b4f1f0",
     "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
-    "js/engine/rule-analysis.js": "cfa65cdd7e105f974d957aa41ac6347a297929361dad9b4b89172c44a217c5d5",
-    "js/engine/rule-events.js": "a0890b65cfc0b85fde1309a5ded602e6fda2c38b4aea100d890e4a0a47e35e51",
-    "js/engine/rule-operations.js": "27bc301c8d9ab7357d8e9ca2ccb4c6cccac2cca237afc548eff2dd261cb1d6aa",
-    "js/engine/rule-registry.js": "b944919ff910a7d2a94e970462e1806bf0d465b4abe7d207365ca66118634915",
-    "js/engine/structured-fields.js": "dce4e747ea727d0d3c3cd33ee7283ce67ab3efc05a9b6c62e7e65edf5a5bb7f3",
+    "js/engine/rule-analysis.js": "764f905a299ea28ddc87ebad9fcd92044c42fe602284c88ef1f67661f5767c85",
+    "js/engine/rule-events.js": "dfbba5dc2503cb9b29e8aa3a935e62f9293b25ac236735af0a6277e5429a9dea",
+    "js/engine/rule-operations.js": "5c349b2853d3ca474ce56957bb80c0bc502acf1b301b9da6f61a3aaa3648efe1",
+    "js/engine/rule-registry.js": "7be9339deb17900d7e99392beb161f18489af5a70a3aa9d62c56098d914961dd",
+    "js/engine/structured-fields.js": "6f7861bb134eed353d00845ae015160365cbef1dba719df2d9b155e18917da33",
     "js/engine/technique-fields.js": "e3785057b2d986001fb3bd98a4c7bb8ac267fa61f7de709b862a64bda0efdb9f",
     "js/engine/typed-data-write.js": "049439c40503f04cd9daffc3bbdec0d4ba071a5dba6f99064c5581dc342445df",
+    "js/engine/typed-effect-contract.js": "7aac98f672d4045f536cc2c49d2bd56aba2c9f3a6ea3827c3550b929fa623284",
+    "js/engine/typed-effect-fields.js": "340dac9e881a9df1c55ad69774b4593b1b12906092597c3a1cf8a26954acc39b",
+    "js/engine/typed-effect-projection.js": "ae383d36a02672bc59479db2d9d16db6c3aa2a37c9e1c11d6c1c12ea3665d347",
+    "js/engine/typed-effect-runtime.js": "82087b8437d2a013e5b211d7f95d87125ed1a266267838913dbb74f7d14ef55b",
+    "js/engine/typed-effect-state.js": "726956e597dd819fd48cac9032d5ccd89218a54826f4149e7575c38df4c76951",
     "js/engine/typed-record-inputs.js": "d0f43c88cec1fd710bc2041bb74bee7d478ace2be9d62fa792b6577f58036cc3",
     "js/engine/typed-value-format.js": "660043d9c59e0137a206cb781910c33728693a3db1dca12c836b69a36fb2ace6",
     "js/systems/dnd2024-fields.js": "5a2f55694f246994ea68e6769ba51e6fce39b4bd0ee414d46720807de6acb661",
@@ -2554,13 +2560,13 @@
     "js/validation/data-definitions.js": "f4d7691d836d04138b0a3b71ffb85a69d2684993b415ee95a344e3039b1a4c8e",
     "js/validation/diagnostics.js": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a",
     "js/validation/documents.js": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5",
-    "js/validation/effects.js": "62b0bb57a0d6c6391e31abf5df11568c0d07c59bf2e403db47221805d0935998",
+    "js/validation/effects.js": "f9ebd9ac26f4147e319afc8d0b78b34e3759b36c39a3452fa1a5e5913567ed16",
     "js/validation/entry-rolls.js": "31f6adf64d16c76b31a70d1cd197ae2b11e58f1b8b173a13fa6425cd167baf3b",
     "js/validation/limits.js": "059087b6170c07f86aa8c964d976b90ab8e3f45e17ddcf5ea76bb9c2d9d4eeb8",
     "js/validation/recovery.js": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
     "js/validation/roll-references.js": "bfe1051d6425682fe5043d16ce865091ae408fadf811ea0c9338891653721bcb",
-    "js/validation/schemas.js": "5c5c9efd2ddab9df0e3459d782f997275cee6bf01d9d05159db38839eb7cc479",
+    "js/validation/schemas.js": "3300089d251e4766b999dca7bf20d8fb1e5b60ce67a0af127422dd250f2db008",
     "js/validation/versions.js": "c9b2fd271721e72b489044f900e2cffc2ecd5da7d6bd4497e30571f850c7b172"
   },
   "supportedVersions": {
@@ -3086,11 +3092,12 @@
         "version": 1
       },
       "read": {
-        "help": "Lê o valor atual; ausência não equivale a zero.",
+        "help": "Escolha base armazenada ou projeção efetiva; ausência não equivale a zero.",
         "inputs": [],
         "label": "Ler dado",
         "parameters": [
-          "dataId"
+          "dataId",
+          "mode"
         ],
         "pure": true,
         "resultType": "data",
@@ -3158,6 +3165,31 @@
         "resultType": "string",
         "scope": "continuous",
         "version": 1
+      },
+      "trait": {
+        "help": "Escolha dados da escala deste traço; não escreve o dado-base.",
+        "inputs": [],
+        "label": "Traço da escala declarada",
+        "parameters": [
+          "dataId",
+          "dice"
+        ],
+        "pure": true,
+        "resultType": "trait",
+        "scope": "continuous",
+        "version": 1
+      },
+      "traitDice": {
+        "help": "Expõe os tamanhos dos dados para consultas; o traço permanece tipado.",
+        "inputs": [
+          "value"
+        ],
+        "label": "Faces dos dados do traço",
+        "parameters": [],
+        "pure": true,
+        "resultType": "list",
+        "scope": "continuous",
+        "version": 1
       }
     },
     "ruleLimits": {
@@ -3179,6 +3211,23 @@
       "record",
       "collection",
       "reference"
+    ]
+  },
+  "typedEffects": {
+    "guide": "typed-effects.md",
+    "operations": [
+      "replace",
+      "multiply",
+      "add",
+      "clamp",
+      "shiftTrait"
+    ],
+    "stacking": [
+      "unique",
+      "stack",
+      "highest",
+      "lowest",
+      "exclusive"
     ]
   }
 }

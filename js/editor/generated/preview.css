@@ -2456,6 +2456,8 @@ body[data-editor-composing] [data-condition-hidden] { display: block !important;
 .engine-action-item { display: flex; flex-direction: column; gap: .25rem; min-width: 0; max-width: 100%; }
 .engine-actions button[aria-disabled="true"] { opacity: .65; }
 
+.engine-effective-value{display:block;white-space:normal;overflow-wrap:anywhere;padding:8px;margin-top:6px;border-inline-start:3px solid var(--color-accent);font-size:.9rem}
+
 /* character-sheet.css — estilos específicos das seções da ficha */
 
 /* Cartão de identidade */

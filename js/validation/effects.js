@@ -2,10 +2,13 @@ import {EFFECT_LIMITS} from './contracts.js';
 import { CHECK_UNITS, EFFECT_EVENTS } from '../engine/effects.js';
 import { expandComponents } from '../engine/layout-components.js';
 import { pathKeys } from '../engine/paths.js';
+import {typedEffectDefinition,compileTypedEffect,validateTypedEffectDependencies} from '../engine/typed-effect-contract.js';
+import {validateTypedEffectInstance} from '../engine/typed-effect-state.js';
 
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
 export function validateEffectRevisionChange(previous, next) {
-  const semantic = def => JSON.stringify([def.stacking,def.group ?? null,def.applicability,def.duration?.type,def.duration?.event ?? null,
+  const ordered=value=>Array.isArray(value)?value.map(ordered):object(value)?Object.fromEntries(Object.keys(value).sort().map(k=>[k,ordered(value[k])])):value;
+  const semantic = def => typedEffectDefinition(def)?JSON.stringify(ordered({profile:def.profile,version:def.version,stacking:def.stacking,group:def.group,priority:def.priority,duration:def.duration,allowWhen:def.allowWhen,when:def.when,operations:def.operations})):JSON.stringify([def.stacking,def.group ?? null,def.applicability,def.duration?.type,def.duration?.event ?? null,
     def.operations?.map(op=>[op.type,op.target?.kind,op.target?.key,op.target?.unit ?? null,op.value])]);
   return (previous?.effectDefinitions || []).flatMap(old => {
     const current = next.effectDefinitions?.find(def=>def.id===old.id);
@@ -28,7 +31,7 @@ export function calculationTargets(pkg) {
   return targets;
 }
 
-export function validateEffects(value, { system, pkg, root = 'character', definitions = false } = {}) {
+export function validateEffects(value, { system, pkg, root = 'character', definitions = false,characterVersion=3 } = {}) {
   if (value === undefined) return [];
   const issues = [], ids = new Set(), active = new Set(), groups = new Set();
   const at = definitions ? 'system.effectDefinitions' : `${root}.activeEffects`;
@@ -46,6 +49,19 @@ export function validateEffects(value, { system, pkg, root = 'character', defini
     if (!object(entry)) { add(path, 'exige objeto'); return; }
     text(entry.id, `${path}.id`);
     if (ids.has(entry.id)) add(`${path}.id`, 'ID duplicado'); ids.add(entry.id);
+    if(definitions&&typedEffectDefinition(entry)){
+      try{compileTypedEffect(system,entry);}catch(error){add(path,error.message);}return;
+    }
+    if(!definitions&&entry.profile==='typed'){
+      const definition=system?.effectDefinitions?.find(d=>d.id===entry.definitionId);
+      for(const message of validateTypedEffectInstance(entry,definition,{system,characterVersion}))add(path,message);
+      if(system&&(!typedEffectDefinition(definition)||definition.revision!==entry.definitionRevision))add(`${path}.definitionId`,'definição/revisão indisponível; instância preservada',entry.status==='active'?'error':'warning');
+      if(entry.status==='active'&&typedEffectDefinition(definition)){
+        const own=value.filter(i=>i?.profile==='typed'&&i.status==='active'&&i.definitionId===entry.definitionId),mode=definition.stacking?.mode;if(mode==='unique'&&own.length>1||mode==='stack'&&own.length>definition.stacking.limit)add(path,'limite de empilhamento excedido');
+        if(definition.group)for(const other of value.filter(i=>i&&i.id!==entry.id&&i.status==='active')){const otherDef=system.effectDefinitions.find(d=>d.id===other.definitionId);if(otherDef?.group!==definition.group)continue;if(!typedEffectDefinition(otherDef)||mode==='exclusive'||otherDef.stacking?.mode==='exclusive'||mode!==otherDef.stacking?.mode)add(path,'políticas de grupo incompatíveis');}
+      }
+      return;
+    }
     duration(entry.duration, `${path}.duration`);
     if (definitions) {
       text(entry.label, `${path}.label`);
@@ -85,5 +101,6 @@ export function validateEffects(value, { system, pkg, root = 'character', defini
       }
     }
   });
+  if(definitions&&system?.schemaVersion===3&&value.some(typedEffectDefinition)){try{validateTypedEffectDependencies(system);}catch(error){add(at,error.message);}}
   return issues;
 }

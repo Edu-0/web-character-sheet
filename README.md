@@ -86,6 +86,8 @@ Configure [ações tipadas e resoluções](data/examples/action-flows.md) com en
 
 Acrescente [eventos e gatilhos locais](data/examples/rule-events.md) com origens explícitas, cruzamentos, frequência e prévia causal. Custos e consequências entram na mesma confirmação; escolhas podem ficar em propostas para revisão.
 
+Projete valores temporários com [efeitos tipados](data/examples/typed-effects.md): substituição, multiplicadores, passos de traço e duração por uso ou evento confirmado, preservando a base.
+
 ## Seus dados
 
 A biblioteca e as preferências ficam no navegador, sem conta ou backend. Não há sincronização entre dispositivos ou backup em nuvem. **Use Exportar tudo regularmente**: limpar os dados do site ou trocar de navegador/endereço pode tornar a biblioteca anterior indisponível. O backup inclui personagens, sistemas importados e preferências; sistemas embutidos acompanham o app. Se uma gravação falhar, a ficha continua em memória e pode ser exportada. Os arquivos exportados podem conter nomes, notas, imagens e dados de recuperação; revise-os antes de compartilhar.

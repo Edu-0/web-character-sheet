@@ -1,5 +1,6 @@
 import {dataDefinition, readData} from './data-definitions.js';
 import {writeValidatedData as writeData} from './typed-data-write.js';
+import {mountEffectiveData} from './effective-data-field.js';
 
 // The canonical value stays in the character at the definition's explicit binding.
 export function renderBoundField(container, context) {
@@ -38,5 +39,5 @@ export function renderBoundField(container, context) {
       refresh();onChange?.();
     }catch(error){status.textContent=error.message;}
   });
-  refresh();registerRefresh?.(refresh);container.append(wrap);
+  refresh();registerRefresh?.(refresh);mountEffectiveData(wrap,context);container.append(wrap);
 }

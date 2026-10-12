@@ -42,7 +42,8 @@ export function ruleNode(op='literal',previous={}) {
   const node={id:previous.id||uuid('node'),op,version:1,...(previous.extensions?{extensions:structuredClone(previous.extensions)}:{})};
   if(op==='literal')node.value=Object.hasOwn(previous,'value')&&(['string','number','boolean'].includes(typeof previous.value)||previous.value===null)?previous.value:0;
   else {
-    for(const parameter of operation.parameters||[])node[parameter]=previous[parameter]??(parameter==='mode'?'automatic':'');
+    for(const parameter of operation.parameters||[])node[parameter]=previous[parameter]??(parameter==='mode'?op==='read'?'base':'automatic':parameter==='dice'?[]:'');
+    if(op==='read'&&!['base','effective'].includes(node.mode))node.mode='base';
     for(const key of operation.inputs)node[key]=previous[key]&&typeof previous[key]==='object'?structuredClone(previous[key]):ruleNode('literal',{value:['condition','predicate'].includes(key)?false:0});
   }
   return node;

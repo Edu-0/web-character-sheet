@@ -9,6 +9,9 @@ import {applyRecovery} from '../../js/engine/recovery.js';
 import {prepareRollCost} from '../../js/engine/roll-cost.js';
 import {validateSystemPackage} from '../../js/validation/schemas.js';
 const swade=JSON.parse(readFileSync('data/systems/swade.system.json','utf8'));
+test('ativar efeito legado conserva versão3 e registros de ações/eventos existentes',()=>{
+ const character={...structuredClone(swade.characterTemplate),schemaVersion:3,actionRecords:[],ruleEventState:{version:1,scene:0,roots:[],frequencies:{},proposals:[],events:[]}},records=character.actionRecords,events=structuredClone(character.ruleEventState);activateEffect(character,swade,'joker','v3');assert.equal(character.schemaVersion,3);assert.equal(character.actionRecords,records);assert.deepEqual(character.ruleEventState,events);assert.equal(character.activeEffects[0].status,'active');assert.deepEqual(validateEffects(character.activeEffects,{system:swade}),[]);
+});
 test('Coringa: traço/dano +2, falha crítica prevalece, sem alterar base, expiração confirmada',()=>{
   const character=structuredClone(swade.characterTemplate), base=structuredClone(character.attributes);
   activateEffect(character,swade,'joker','one');

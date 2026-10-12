@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 33 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `c853104efaa4c6682571bbeb2c841602bad416a175961a6ecd2d192e16b0a914`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `6ba0c806f94874f487a82dbe6a474fee99eb4273a965d72cd7600fd7daaec6cc`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -573,7 +573,7 @@ Versões suportadas: manifest: 1; package: 1/2/3; system: 1/2/3; layout: 1/2/3; 
 
 Algoritmos: fate, percentile, d6Pool, d6Resistance, explodingTrait, explodingDamage, challenge, progress. progress não recebe efeitos de teste. Unidade por algoritmo: fate=total; percentile=bonusDice; d6Pool=dice; d6Resistance=dice; explodingTrait=total; explodingDamage=total; challenge=action.
 
-Efeitos: eventos endRound, endScene; limites {"definitions":100,"instances":100,"operations":20,"value":1000}; definição/revisão no sistema, instância no personagem. [Contrato e limites](effects.md).
+Efeitos: eventos endRound, endScene; limites {"definitions":100,"instances":100,"operations":20,"value":1000}; definição/revisão no sistema, instância no personagem. [Contrato e limites](effects.md). Projeções v3 sobre base e cálculo: [Efeitos tipados](typed-effects.md).
 
 Defaults compartilhados: {"historyLimit":20,"textareaRows":3,"counterMin":0,"checkEnabled":true,"scaleStep":1}.
 

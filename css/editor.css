@@ -74,3 +74,10 @@
 .editor-trigger-authoring input,.editor-trigger-authoring select{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:8px;background:var(--color-panel);color:var(--color-text);border:1px solid var(--color-border)}
 .editor-trigger-authoring button,.editor-trigger-authoring summary{min-height:44px;white-space:normal;margin:4px;scroll-margin-top:calc(var(--shell-height,64px) + 16px)}
 @media(min-width:1101px){.json-editor[data-authoring-mode=visual] .editor-trigger-authoring{grid-column:1;grid-row:8}}
+
+.editor-typed-effect-authoring{grid-column:1 / -1;min-width:0;padding:12px;border:1px solid var(--color-border);border-radius:8px;overflow-wrap:anywhere}
+.editor-typed-effect-authoring label{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.editor-typed-effect-authoring input,.editor-typed-effect-authoring select{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:8px;background:var(--color-panel);color:var(--color-text);border:1px solid var(--color-border)}
+.editor-typed-effect-authoring button,.editor-typed-effect-authoring summary{min-height:44px;white-space:normal;margin:4px;scroll-margin-top:calc(var(--shell-height,64px) + 16px)}
+.editor-typed-effect-authoring details{min-width:0;padding:8px;margin:8px 0;border:1px solid var(--color-border)}
+@media(min-width:1101px){.json-editor[data-authoring-mode=visual] .editor-typed-effect-authoring{grid-column:1;grid-row:9}}

@@ -32,7 +32,7 @@ export function activateEffect(character, system, definitionId, id = globalThis.
   if (definition.group && entries.some(entry => entry.available && entry.definition.group === definition.group)) throw new Error('Há outro efeito ativo neste grupo. Desative-o explicitamente antes de ativar este.');
   if ((character.activeEffects?.length || 0) >= EFFECT_LIMITS.instances) throw new Error('Limite de 100 instâncias. Remova uma instância encerrada.');
   if (character.activeEffects?.some(entry => entry.id === id)) throw new Error('ID de instância duplicado.');
-  character.schemaVersion = 2;
+  character.schemaVersion = Math.max(character.schemaVersion ?? 1, 2);
   character.activeEffects ??= [];
   const instance = { id, definitionId, definitionRevision: definition.revision, labelSnapshot: definition.label, status: 'active', duration: structuredClone(definition.duration) };
   character.activeEffects.push(instance);

@@ -6,6 +6,7 @@ import {dataDefinitions} from './data-definitions.js';
 import {typedValueIssue} from './data-types.js';
 import {calculationValue,getCalculationOverride} from './calculation-overrides.js';
 import {inspectJson} from '../validation/limits.js';
+import {projectTypedTarget} from './typed-effect-runtime.js';
 export {RULE_OPERATIONS,RULE_LIMITS,compileRules};
 const summary=cell=>!cell.present?'Ausente':cell.value===null?'null explícito':Array.isArray(cell.value)?cell.value.length+' entrada(s)':typeof cell.value==='object'?'Registro':cell.value===true?'Sim':cell.value===false?'Não':String(cell.value).slice(0,160);
 export function ruleCalculationKey(system,id,context={}){
@@ -16,7 +17,7 @@ export function ruleCalculationKey(system,id,context={}){
 }
 // One disposable context for a validated package/character revision. Mutable
 // callers use evaluateRule without a context and never receive stale caches.
-export function createRuleContext(system,character,{dataContext={},trace=false,budget,actionScope,actionInputs={},actionLocals={}}={}){
+export function createRuleContext(system,character,{dataContext={},trace=false,budget,actionScope,actionInputs={},actionLocals={},projectionSystem=system,projectionStack=new Set(),onEffectUse=()=>{}}={}){
  const safety=inspectJson(system,'system');if(safety.length)throw Error(safety[0].message);
  const compiled=compileRules(system,{actionScope}),memo=new Map(),readings=new Map(),traceRows=[];let indices=new WeakMap();
  let steps=0,visits=0;const shared=budget??{remaining:100000};
@@ -45,19 +46,21 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
  const visit=(record,info,frame)=>{
   charge();const key=keyFor(record,info,frame);if(memo.has(key))return memo.get(key);const n=info.node,child=p=>visit(record,record.nodes.get(n[p].id),frame),type=compiled.types.get(record.rule.id+':'+n.id);let cell;
   if(n.op==='literal')cell={present:true,value:n.value};
+  else if(n.op==='trait')cell={present:true,value:structuredClone(n.dice),definition:type.definition};
+  else if(n.op==='traitDice')cell={present:true,value:structuredClone(list(child('value'),info)),storageScope:'temporary'};
   else if(n.op==='input'||n.op==='local'){
    const key=n[n.op==='input'?'inputId':'localId'],values=n.op==='input'?actionInputs:actionLocals,definition=type.definition??{type:type.type,nullable:type.nullable},exists=Object.hasOwn(values,key);if(exists){const issue=typedValueIssue(definition,values[key]);if(issue)throw error(info,issue);}cell={present:exists,...(exists?{value:values[key]}:{}),definition,storageScope:'action',dataContext:frame.dataContext};
   }
   else if(n.op==='read'){
-   const context=contextFor(record,info,frame);cell=readData(system,character,n.dataId,context);const definition=compiled.rows.find(r=>r.definition.id===n.dataId).definition;cell={...cell,definition,dataContext:context,storageScope:'character'};readings.set(JSON.stringify([n.dataId,context]),{dataId:n.dataId,context:structuredClone(context),cell:structuredClone(cell)});
+   const context=contextFor(record,info,frame),base=readData(system,character,n.dataId,context);const definition=compiled.rows.find(r=>r.definition.id===n.dataId).definition;readings.set(JSON.stringify([n.dataId,context]),{dataId:n.dataId,context:structuredClone(context),cell:structuredClone(base)});cell=n.mode==='effective'?projectTypedTarget(projectionSystem,character,{kind:'data',dataId:n.dataId},base,{budget:shared,projectionStack,onEffectUse,onRead:reading=>readings.set(JSON.stringify([reading.dataId,reading.context]),structuredClone(reading))}).cell:base;cell={...cell,definition,dataContext:context,storageScope:'character'};
   }else if(n.op==='option')cell={present:true,value:n.optionId,definition:type.definition};
   else if(n.op==='empty')cell={present:true,value:[],definition:type.definition,dataContext:frame.dataContext,storageScope:'character'};
   else if(n.op==='catalog'){
    const catalog=system.catalogs.find(c=>c.id===n.catalogId),issue=typedValueIssue({type:'collection',fields:catalog.fields},catalog.entries);if(issue)throw error(info,issue);cell={present:true,value:catalog.entries,definition:catalog,storageScope:'system',dataContext:frame.dataContext};
   }else if(n.op==='rule'){
-   const target=compiled.index.get(n.ruleId),key=n.mode==='effective'?ruleCalculationKey(system,n.ruleId,frame.dataContext):null,fixed=key?getCalculationOverride(character,key):null;
+   const target=compiled.index.get(n.ruleId),key=n.mode==='effective'&&['number','integer'].includes(type.type)?ruleCalculationKey(system,n.ruleId,frame.dataContext):null,fixed=key?getCalculationOverride(character,key):null;
    if(fixed?.mode==='fixed')cell={present:true,value:fixed.value};
-   else {cell=visit(target,target.nodes.get(target.rule.expression.id),frame);if(n.mode==='effective')cell={...cell,value:calculationValue(character,key,number(cell,info),{system})};}
+   else {cell=visit(target,target.nodes.get(target.rule.expression.id),frame);if(n.mode==='effective')cell=projectTypedTarget(projectionSystem,character,{kind:'rule',ruleId:n.ruleId},cell,{budget:shared,projectionStack,onEffectUse,onRead:reading=>readings.set(JSON.stringify([reading.dataId,reading.context]),structuredClone(reading))}).cell;if(key)cell={...cell,value:calculationValue(character,key,number(cell,info),{system})};}
   }else if(n.op==='node')cell=visit(record,record.nodes.get(n.nodeId),frame);
   else if(n.op==='item')cell=frame.items.get(info.scopes.at(-1))?.cell;
   else if(n.op==='property'){
@@ -98,8 +101,8 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
   const record=compiled.index.get(id);if(!record)throw Error('Cálculo indisponível: '+id);for(const dataId of record.contextCollections)if(!currentContext.entries?.some(e=>e.dataId===dataId))throw Error(record.rule.label+': contexto de entrada ausente');
   const cell=visit(record,record.nodes.get(record.rule.expression.id),{dataContext:currentContext,items:new Map()}),value=present(cell,record.nodes.get(record.rule.expression.id),record.rule.id===actionScope?.ruleId);if(record.rule.resultType==='number'&&(typeof value!=='number'||!Number.isFinite(value)))throw Error('Resultado não numérico');if(['string','boolean'].includes(record.rule.resultType)&&typeof value!==record.rule.resultType)throw Error('Tipo de resultado incompatível');if(record.rule.id===actionScope?.ruleId&&!['infer','number','string','boolean','null'].includes(record.rule.resultType)){const issue=typedValueIssue(cell.definition,value);if(issue)throw Error(issue);}if(record.rule.resultType==='null'&&value!==null)throw Error('null explícito exigido.');return structuredClone(value);
  };
- return {system,character,compiled,evaluate,trace:traceRows,readings,metrics:()=>({steps,visits}),invalidate(){memo.clear();indices=new WeakMap();traceRows.length=0;readings.clear();steps=0;visits=0;if(!budget)shared.remaining=100000;checkCharacter();}};
+ return {system,character,compiled,evaluate,project:(target,cell)=>projectTypedTarget(projectionSystem,character,target,cell,{budget:shared,projectionStack,onEffectUse,onRead:reading=>readings.set(JSON.stringify([reading.dataId,reading.context]),structuredClone(reading))}),trace:traceRows,readings,metrics:()=>({steps,visits}),invalidate(){memo.clear();indices=new WeakMap();traceRows.length=0;readings.clear();steps=0;visits=0;if(!budget)shared.remaining=100000;checkCharacter();}};
 }
 export function evaluateRule(system,character,id,options={}){
- const context=options.ruleEvaluation??createRuleContext(system,character,options);if(context.system!==system||context.character!==character)throw Error('Contexto de avaliação pertence a outra revisão');return context.evaluate(id,options.dataContext);
+ const context=options.ruleEvaluation??createRuleContext(system,character,options);if(context.system!==system||context.character!==character)throw Error('Contexto de avaliação pertence a outra revisão');let value=context.evaluate(id,options.dataContext);if(options.projected)value=context.project({kind:'rule',ruleId:id},{present:true,value}).cell.value;for(const reading of context.readings.values())options.onRead?.(reading);return value;
 }

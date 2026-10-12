@@ -54,6 +54,7 @@ export async function openTypedAction(context,action){
    }
   }
   for(const payment of plan.payments)report.append(node('p',payment.label+': '+payment.before+' → '+payment.after+' (custo '+payment.amount+').'));
+  for(const effect of plan.effectChanges||[])report.append(node('p',effect.label+': usos '+effect.before+' → '+effect.after+(effect.status==='expired'?' · expirar após confirmar.':'.')));
   for(const cause of completedPlan?.causal||[]){report.append(node('h3',cause.label),node('p','Origem: '+cause.origin+(cause.before!==undefined?' · '+cause.before+' → '+cause.after:'')+(cause.limits.length?' · limites '+cause.limits.join(', '):'')+' · '+(cause.mode==='propose'?'Proposta guardada; executar exige nova confirmação.':'Consequência incluída nesta confirmação.')));for(const payment of cause.payments||[])report.append(node('p',payment.label+': '+payment.before+' → '+payment.after+' (custo '+payment.amount+').'));}
   for(const change of plan.changes||[]){const row=dataDefinitions(system).find(r=>r.ancestors.map(d=>d.binding).concat(r.definition.binding).join('.')===change.field);if(!row||plan.payments.some(p=>p.dataId===row.definition.id))continue;const format=(exists,value)=>formatTypedCell(system,character(),row.definition,exists?{present:true,value}:{present:false},plan.dataContext);report.append(node('p',row.definition.label+': '+format(change.beforeExists,change.before)+' → '+format(change.afterExists,change.after)));}
  };
@@ -89,6 +90,7 @@ export function openActionRecords(context){
   for(const result of record.results||[])box.append(node('p',result.label+': '+result.total+(result.success===undefined?'':result.success?' · sucesso':' · falha')));
   for(const transcript of Object.values(record.transcripts))box.append(node('p','Faces guardadas: '+transcript.draws.map(draw=>'d'+draw.sides+'='+draw.value).join(', ')));
   for(const payment of record.payments)box.append(node('p',(payment.label||'Recurso')+': '+payment.before+' → '+payment.after));
+  for(const effect of record.extensions?.effectChanges||[])box.append(node('p',effect.label+': usos '+effect.before+' → '+effect.after));
   if(record.error)box.append(node('p',record.error));
   if(record.phase==='complete'){const label=node('label','Arquivar '+(action?.label||record.actionId)),check=node('input');check.type='checkbox';label.prepend(check);body.append(label);selected.push({record,check});}
  }

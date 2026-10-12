@@ -29529,6 +29529,510 @@
         "tests/unit/editor-visual-audit.test.mjs",
         "tests/e2e/editor-rule-authoring.spec.js"
       ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.profile",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.version",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.id",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.label",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.revision",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.priority",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.stacking",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.stacking.mode",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.stacking.limit",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.group",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.allowWhen",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.allowWhen.ruleId",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.allowWhen.message",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.when",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.when.ruleId",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.when.message",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.duration",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.duration.type",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.duration.count",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.duration.consume",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.duration.eventName",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[]",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].id",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].type",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].target",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].target.kind",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].target.dataId",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].target.ruleId",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].expression",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].minimum",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "number",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].maximum",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "number",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].selection",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].index",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
+    },
+    {
+      "context": "rule:effectDefinitions:typed",
+      "property": "definition.operations.[].bounds",
+      "consumer": "js/engine/typed-effect-runtime.js",
+      "validation": "js/validation/effects.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Efeitos tipados e projeções; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/typed-effects.test.mjs",
+        "tests/e2e/editor-typed-effects.spec.js"
+      ]
     }
   ],
   "occurrences": [

@@ -1,6 +1,6 @@
 # Efeitos numéricos
 
-Sistemas, layouts, personagens, pacotes e backups aceitam versões 1 e 2. Manifesto continua em 1. Documentos sem mecanismos novos conservam versão 1; versão 2 nunca é rebaixada automaticamente. `effectDefinitions`, `activeEffects` e `effectList` exigem versão 2. O envelope acompanha a maior versão de seu conteúdo.
+Este guia descreve o perfil numérico legado v2, também preservado em documentos v3. O [perfil tipado v3](typed-effects.md) oferece substituição, passos de traço e multiplicação, com contratos próprios. Backups v2 podem encapsular pacotes/personagens v3. Manifesto continua em 1. Documentos sem mecanismos novos conservam versão 1; versão 2 nunca é rebaixada automaticamente. `effectDefinitions`, `activeEffects` e `effectList` exigem versão 2. O envelope acompanha a maior versão de seu conteúdo.
 
 Veja a definição executável do [Coringa SWADE](../systems/swade.system.json), baseada no [Test Drive oficial, p. 4](https://peg-swade.s3-us-west-2.amazonaws.com/SW_Test_Drive_2020.pdf). Carta, iniciativa, Benes e penalidades continuam manuais. Somente +2 nos testes de traço/dano recebe assistência; a mesa confirma ativação e fim da rodada.
 
@@ -16,4 +16,4 @@ O effectList é obrigatório em cada layout de um sistema com efeitos. Mostra co
 
 Instâncias inativas ou expiradas de revisão indisponível são preservadas com aviso, inclusive sua duração histórica. A duração precisa continuar estruturalmente válida; só é comparada à definição quando a revisão corresponde. Mesclar backup aplica a guarda de revisões aos pacotes substituídos e aos pacotes preservados que receberiam personagens novos. Pacote conflitante ignorado sem personagens novos não altera as regras locais. Restaurar integralmente um backup coerente e confirmado permite retornar a uma revisão anterior, substituindo juntos sistemas e personagens.
 
-Traços temporários, dados em degraus, Ascensão autoral, scripts, cronômetros, concentração, automação narrativa e custos novos estão fora deste motor. A assistência autoral existente permanece independente.
+Neste perfil legado, traços temporários, dados em degraus, Ascensão autoral, scripts, cronômetros, concentração, automação narrativa e custos novos estão fora deste motor. A assistência autoral existente permanece independente.

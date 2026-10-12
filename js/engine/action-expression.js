@@ -9,11 +9,11 @@ export function compileActionExpression(system,expression,resultType,scope={}){
  const record=compiled.index.get(ruleId),type=compiled.types.get(ruleId+':'+record.rule.expression.id);
  if(resultType&&type.type!==resultType&&!(resultType==='number'&&type.type==='integer')&&!(type.type==='null'&&scope.expectedDefinition?.nullable))throw Error('Resultado da ação exige '+resultType+', recebeu '+type.type+'.');
  if(scope.expectedDefinition&&!sameRuleType(type,typeOfDefinition(scope.expectedDefinition))&&!(type.type==='null'&&scope.expectedDefinition.nullable))throw Error('Tipo nominal do resultado incompatível com o destino da ação.');
- return {system:evaluationSystem,ruleId,actionScope,type,compiled};
+ return {system:evaluationSystem,baseSystem:system,ruleId,actionScope,type,compiled};
 }
 export function evaluateActionExpression(system,character,expression,resultType,scope={},options={}){
  const compiled=compileActionExpression(system,expression,resultType,scope);return evaluateCompiledActionExpression(compiled,character,options);
 }
 export function evaluateCompiledActionExpression(compiled,character,options={}){
- const evaluation=createRuleContext(compiled.system,character,{...options,actionScope:compiled.actionScope}),value=evaluation.evaluate(compiled.ruleId,options.dataContext);for(const reading of evaluation.readings.values())options.onRead?.(reading);return value;
+ const evaluation=createRuleContext(compiled.system,character,{projectionSystem:compiled.baseSystem,...options,actionScope:compiled.actionScope}),value=evaluation.evaluate(compiled.ruleId,options.dataContext);for(const reading of evaluation.readings.values())options.onRead?.(reading);return value;
 }

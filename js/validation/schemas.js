@@ -415,7 +415,7 @@ export function validateCharacter(character, { root = 'character', allowMissingI
   issues.push(...validateEventState(character,`${root}.ruleEventState`));
   if (character.activeEffects !== undefined) {
     if (character.schemaVersion < 2) add(issues, `${root}.schemaVersion`, 'activeEffects exige versão 2');
-    issues.push(...validateEffects(character.activeEffects, {root}));
+    issues.push(...validateEffects(character.activeEffects, {root,characterVersion:character.schemaVersion}));
   }
   if (!requireObject(character.meta, `${root}.meta`, issues)) return issues;
   if (!allowMissingId) requireString(character.meta.id, `${root}.meta.id`, issues);
@@ -499,7 +499,7 @@ export function validateCharacterForPackage(character, pkg, {allowMissingId = fa
   if (issues.length) return issues;
   issues.push(...validateDataDefinitions(pkg.system,character,template?'system.characterTemplate':'character'));
   validateCheckData(character, pkg.system.checks, issues);
-  issues.push(...validateEffects(character.activeEffects, {system:pkg.system}));
+  issues.push(...validateEffects(character.activeEffects, {system:pkg.system,characterVersion:character.schemaVersion}));
   if(pkg.system.sheetActions) validateActions(pkg.system.sheetActions,pkg.system,issues,'system.sheetActions',character);
   for (const layout of pkg.layouts) for (const tab of layout.tabs) for (const section of tab.sections) for (const container of section.containers) {
     for (const component of expandComponents(container, pkg.system,character)) if (component.field) {
