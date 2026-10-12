@@ -91,7 +91,7 @@ export function prepareProgressionChoice(system,character,{optionId,mode,selecti
  if(grants.length>PROGRESSION_LIMITS.acquisitionGrants)throw Error('Limite de concessões por aquisição excedido.');
  const amount=mode==='narrative'?0:evaluateCompiledActionExpression(row.costs[mode],character,{budget});integer(amount,0,1000000,'Custo da aquisição');const dataId=mode==='creation'?config.creationDataId:config.evolutionDataId,balance=readData(system,character,dataId);
  if(mode!=='narrative'&&(!balance.present||typeof balance.value!=='number'||!Number.isFinite(balance.value)||balance.value<amount))throw Error('Orçamento ausente ou insuficiente.');
- const draft=structuredClone(character),next=structuredClone(ledger),record={id,optionId,label:option.label,definitionRevision:config.revision,mode,status:'active',requires:structuredClone(option.requires),selections:structuredClone(selections),cost:{dataId,amount},grants:[],definitionSnapshot:structuredClone(option)},details=[option.label+' · '+mode+' · custo '+amount];
+ const draft=structuredClone(character),next=structuredClone(ledger),record={id,optionId,label:option.label,definitionRevision:config.revision,mode,status:'active',requires:structuredClone(option.requires),selections:structuredClone(selections),cost:{dataId,amount},grants:[],definitionSnapshot:structuredClone(option)},details=[option.label+' · '+({creation:'Criação',paid:'Evolução paga',narrative:'Concessão narrativa'})[mode]+' · custo '+amount];
  // Every expression observes the same source snapshot. No grant manufactures a
  // prerequisite or changes the price of a later grant in this acquisition.
  for(const compiled of grants){

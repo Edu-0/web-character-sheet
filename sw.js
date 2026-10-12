@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "c1a1e2cbf699604f158e";
+const VERSION = "9902349a21bb397fc7bd";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -51,7 +51,7 @@ const ASSETS = [
   },
   {
     "path": "css/editor.css",
-    "hash": "f94aa44ba07be6f932493c851c7292ae2206612978d5c46befae9a22ca379342"
+    "hash": "242cfbadc01b0ca63dc95864cafb2c4ead2816bb3165e6c020dd103423bff3c6"
   },
   {
     "path": "css/engine-shell.css",
@@ -258,6 +258,10 @@ const ASSETS = [
     "hash": "c261c933fa5cbccb8291182ad3d875402240ff85c918f25d2a9a09315dbc8348"
   },
   {
+    "path": "js/editor/authoring-pending.js",
+    "hash": "682ca417d5c4fdab062c972f5e63db2e6a84de110586a808d6d555c113d44a6f"
+  },
+  {
     "path": "js/editor/canvas-insertion.js",
     "hash": "276cf93c1bfc7f5d064dcc41d38724a6e32fe8cfca0ff3d1a3ff14ac435eeb85"
   },
@@ -283,7 +287,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/composition-gestures.js",
-    "hash": "e79fbc7163586accd910eee717fb723f0334e1ac281e4e2a6b1e2f3bb805fd6f"
+    "hash": "49ed63756bf6cab59c16c51ac73d77ef008de802bb989934537ebac02b4cf15c"
   },
   {
     "path": "js/editor/condition-builder.js",
@@ -303,7 +307,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/data-panel.js",
-    "hash": "c80c94019fa3d80a2f51bf315d8e1eb094fe3cccae3b365a7763efe9ab4698ca"
+    "hash": "a5acb250c3bc246a99ed0227502306cc2c67df4cc4ff911ba35029f2a31656b5"
   },
   {
     "path": "js/editor/data-picker.js",
@@ -327,7 +331,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/editor-ui.js",
-    "hash": "3039e8e75dc4ea96a5ea1cbe14b31d0fd158fb3bff90b01a22dcf99d3f5f4501"
+    "hash": "b245697e2d7bdbcfc5a7f4201301aac115a8554c3c3d8bf80dd283def501d302"
   },
   {
     "path": "js/editor/effect-recipe.js",
@@ -355,7 +359,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/form-view.js",
-    "hash": "5674a909841a6c5f036728c7de6ff70f1f3df906eb6974ef80cc0aae037cec7d"
+    "hash": "534c31652a5018e91791f2965c8f6caa9792e480e742a9a0308e442fe754506d"
   },
   {
     "path": "js/editor/formula-builder.js",
@@ -379,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "e3ee49d2832fc6ea90c57600162f6822b6fc1edb2347f40cc32a8a319b7933f5"
+    "hash": "7675feabae4213a900d0ef5168c78bfad5f2f1de6457c4ccf34e94ec66f44878"
   },
   {
     "path": "js/editor/history.js",
@@ -391,11 +395,11 @@ const ASSETS = [
   },
   {
     "path": "js/editor/inspector.js",
-    "hash": "f2a89b001ed33663b4c60ff85f95ba558661528c522d085833bdd099d7e3e7f9"
+    "hash": "6c5bf19e8605f2f9ebdb1f30d4212f23a8ffdcf13f88be02ad34243b6748a749"
   },
   {
     "path": "js/editor/layout-manager.js",
-    "hash": "8286c68b9893195033bae7321cd134e719b772c0400516b4f113f96025827ce3"
+    "hash": "a9ff62b4f261008ad5e48128c8b13094de8121e3360015cce30db89555775da2"
   },
   {
     "path": "js/editor/literal-editor.js",
@@ -475,11 +479,19 @@ const ASSETS = [
   },
   {
     "path": "js/editor/repeat-controls.js",
-    "hash": "eecdf69cbb3e07768382e4427af12e71186a86c6900c8e3038ba08a7d23a7229"
+    "hash": "5e1a10e72a5f15f8c70faf99edb0c17c4de6c35dd219d203f634f5db08238d83"
   },
   {
     "path": "js/editor/roll-source-editor.js",
     "hash": "04cc4d84100f9017880db5b0ff35c55920b6673989a1a7b074a5ba081d66b0dc"
+  },
+  {
+    "path": "js/editor/rule-connections.js",
+    "hash": "02fb6517c67031e7f7e36eae0a95e84d4e4f2e02c4030887a7e429257f3337b4"
+  },
+  {
+    "path": "js/editor/rule-graph-view.js",
+    "hash": "620cba91cf5ac72943b82c22cfc856012aabef584af67c6222f8664c1426e441"
   },
   {
     "path": "js/editor/rule-plans.js",
@@ -499,7 +511,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/structured-authoring.js",
-    "hash": "262e3ae45514c5438b2a0da19972e6c942ebc729183a325eac0e2aca39f9c6d5"
+    "hash": "3ce35555e188138b89dcdb18af54317958e6dc70a7a34f56b8c74d1de54bac4d"
   },
   {
     "path": "js/editor/technique-recipe.js",
@@ -507,7 +519,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/toolbox.js",
-    "hash": "6cef30d65c5fa4fe6a4c849afa30a855e1f859560220342780a060125e86ac4f"
+    "hash": "5ab4d4e8999fb271b77957ed761563ddef4173db8b9f9f22afd04cc8e56342b0"
   },
   {
     "path": "js/editor/trigger-authoring.js",
@@ -519,7 +531,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/typed-data-panel.js",
-    "hash": "cf201feb7e758dda01a4ae777e84e6ae735476e55c9c886c1ee2cb558a1de62d"
+    "hash": "e7b3207cfcd488bc3519bb01c70a82c94ef7738ee027579a0634d9a189e3b093"
   },
   {
     "path": "js/editor/typed-effect-authoring.js",
@@ -539,7 +551,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/variable-editor.js",
-    "hash": "b4953a6b6c9c8856196d5e9f5741897a2be712411cb1c33f7923c3f18d3052d7"
+    "hash": "2275444dc7d9b59bd9cb6f19e147b18f3ac7533e53495f9a4c9005864e7682af"
   },
   {
     "path": "js/engine/action-expression.js",
@@ -715,7 +727,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/progression-choices.js",
-    "hash": "148bad01c84ebf499bf551d330a7b4afe7cb72d2be5793cc8e6220bb3f3314f6"
+    "hash": "aa356849be561424d1693aff3201c121cfc2df4aa049fffaaf5188bd64ead4d2"
   },
   {
     "path": "js/engine/progression-fields.js",
@@ -991,7 +1003,7 @@ const ASSETS = [
   },
   {
     "path": "js/validation/schemas.js",
-    "hash": "214401f6e66a28e49cb8b7253f38915172fd7dfc4ee188874a4f5f4b416e1225"
+    "hash": "1da8e2cbe3b300733b5eeabb20d36351fd2f40b702d0a5e129e61ffaf29befe1"
   },
   {
     "path": "js/validation/versions.js",

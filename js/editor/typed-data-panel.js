@@ -1,3 +1,4 @@
+import {markAuthoringPending,commitAuthoringPending} from './authoring-pending.js';
 import {DATA_TYPES, BOUND_COMPONENT_TYPES} from '../engine/data-definitions.js';
 import {version3Plan} from './package-commands.js';
 import {createTypedDataPlan, bindDataPlan, createTypedRulePlan} from './typed-data-commands.js';
@@ -20,13 +21,13 @@ export function renderTypedDataPanel(view,pkg) {
   })));return panel;}
   const ui=view.session.ui;ui.typedInputs??={};const state=ui.typedInputs;
   panel.open=state.open===true;let populated=false;
-  const remember=(key,c)=>c.addEventListener('input',()=>{state[key]=c.value;view.onPending?.();});
-  const checkedCommit=async(commands,label,selection)=>{
+  const remember=(key,c)=>c.addEventListener('input',()=>{state[key]=c.value;const separate=key.startsWith('label:')||key.startsWith('binding:');markAuthoringPending(view,separate?'/draft/typed-data/'+key:'/draft/typed-data',{raw:separate?c.value:state.name||'Novo dado opcional',cleanupPaths:(separate?[key]:Object.keys(state).filter(k=>k!=='open'&&!k.startsWith('label:')&&!k.startsWith('binding:'))).map(k=>['typedInputs',k])});});
+  const checkedCommit=async(commands,label,selection,pendingKeys=[])=>{
     const result=prepareDocument(JSON.parse(applyOperations(view.session.text,commands)),{kind:'package'});
     if(result.status!=='ready')throw new Error(result.diagnostics.map(d=>d.message).slice(0,3).join('; '));
     const revision=view.session.revision;if(!await view.confirm(label+'? Cancelar conserva o pacote.'))return;
     if(revision!==view.session.revision)throw new Error('A revisão mudou.');
-    view.commit(commands,label,selection||view.selection);
+    if(label==='Criar dado tipado')pendingKeys.push('/draft/typed-data');commitAuthoringPending(view,pendingKeys,commands,label,selection||view.selection);
   };
   const populate=()=>{
     if(populated || !panel.open)return;populated=true;
@@ -41,14 +42,14 @@ export function renderTypedDataPanel(view,pkg) {
       const row=el('details');row.append(el('summary',d.label+' · '+d.type+' · '+(d.required?'obrigatório':'opcional')));
       const usages=nodes.filter(n=>n.value.dataId===d.id);row.append(el('p','Identidade: '+d.id+'. Binding: '+d.binding+'. '+usages.length+' componentes usam este dado.'));
       for(const n of usages)row.append(button('Mostrar uso: '+n.title,()=>{view.selectPointer(n.pointer);view.refresh(true);view.onPending?.();}));
-      const title=input('Novo rótulo de '+d.label,state['label:'+d.id]??d.label);remember('label:'+d.id,title.input);row.append(title.wrap,button('Aplicar rótulo de '+d.label,()=>view.run(()=>checkedCommit([{type:'setProperty',path:['system','dataDefinitions',i,'label'],value:title.input.value}],'Renomear rótulo sem mudar identidade'))));
+      const title=input('Novo rótulo de '+d.label,state['label:'+d.id]??d.label);remember('label:'+d.id,title.input);row.append(title.wrap,button('Aplicar rótulo de '+d.label,()=>view.run(()=>checkedCommit([{type:'setProperty',path:['system','dataDefinitions',i,'label'],value:title.input.value}],'Renomear rótulo sem mudar identidade',undefined,['/draft/typed-data/label:'+d.id]))));
       panel.append(row);
     }
     const selected=nodes.find(n=>pointerFor(n.path)===pointerFor(view.selection||[]));
     if(selected && BOUND_COMPONENT_TYPES[selected.value.type]){
       const options=(pkg.system.dataDefinitions||[]).filter(d=>BOUND_COMPONENT_TYPES[selected.value.type].includes(d.type));
-      const binding=choose('Vincular valor de '+selected.title,[['','Escolha um dado'],...options.map(d=>[d.id,d.label+' · '+d.type])],selected.value.dataId||'');
-      panel.append(binding.wrap,button('Revisar vínculo do componente',()=>view.run(()=>checkedCommit(bindDataPlan(pkg,selected.path,binding.input.value).commands,'Vincular componente ao dado existente',selected.path))));
+      const binding=choose('Vincular valor de '+selected.title,[['','Escolha um dado'],...options.map(d=>[d.id,d.label+' · '+d.type])],state['binding:'+selected.pointer]??selected.value.dataId??'');
+      remember('binding:'+selected.pointer,binding.input);panel.append(binding.wrap,button('Revisar vínculo do componente',()=>view.run(()=>checkedCommit(bindDataPlan(pkg,selected.path,binding.input.value).commands,'Vincular componente ao dado existente',selected.path,['/draft/typed-data/binding:'+selected.pointer]))));
     }
     panel.append(renderTypedRules(view,pkg,checkedCommit));
   };
@@ -60,9 +61,9 @@ function renderTypedRules(view,pkg,checkedCommit){
   const body=el('div');host.append(body);
   const draw=()=>{
     body.replaceChildren();state.id=select.input.value;const index=(pkg.system.rules||[]).findIndex(r=>r.id===state.id),rule=pkg.system.rules?.[index];state.drafts??={};const draft=state.drafts[state.id||'new']??={};if(rule&&!draft.dirty){draft.ast=structuredClone(rule.expression);draft.resultType=rule.resultType;draft.kind=rule.kind;draft.contextDataId=rule.context?.dataId||'';}draft.ruleId=rule?.id;
-    const name=input('Nome do cálculo tipado',draft.name??rule?.label??'');body.append(name.wrap);name.input.addEventListener('input',()=>{draft.name=name.input.value;view.onPending?.();});
-    const builder=el('div');body.append(builder);const pointer=rule?pointerFor(['system','rules',index,'expression']):null;
-    const pending=()=>{if(pointer){ui.formPending??={};if(draft.dirty)ui.formPending[pointer]={raw:JSON.stringify(draft.ast),mode:'value',valueType:'object'};else delete ui.formPending[pointer];}view.onPending?.();};
+    const name=input('Nome do cálculo tipado',draft.name??rule?.label??'');body.append(name.wrap);name.input.addEventListener('input',()=>{draft.name=name.input.value;draft.dirty=true;pending();});
+    const builder=el('div');body.append(builder);const pointer=rule?pointerFor(['system','rules',index,'expression']):'/draft/typed-rule/new';
+    const pending=()=>{if(pointer){ui.formPending??={};if(draft.dirty)ui.formPending[pointer]={raw:JSON.stringify(draft.ast),mode:'value',valueType:'object',builder:'typedRule',ruleKey:state.id||'new'};else{delete ui.formPending[pointer];draft.name=rule?.label||'';name.input.value=draft.name;}}view.onPending?.();};
     mountTypedRuleBuilder(builder,{pkg,state:draft,expression:rule?.expression,resultType:rule?.resultType,kind:rule?.kind,context:rule?.context,onEdit:pending,onApply:expression=>view.run(async()=>{
       const commands=rule?[{type:'setProperty',path:['system','rules',index,'kind'],value:draft.kind},{type:'setProperty',path:['system','rules',index,'resultType'],value:draft.resultType},{type:'setProperty',path:['system','rules',index,'expression'],value:expression},{type:'setProperty',path:['system','rules',index,'label'],value:name.input.value},{type:'setProperty',path:['system','rules',index,'revision'],value:rule.revision+1}]:createTypedRulePlan(pkg,{name:name.input.value,expression,resultType:draft.resultType,kind:draft.kind,...(draft.contextDataId?{context:{dataId:draft.contextDataId}}:{})}).commands;
       if(rule){if(draft.contextDataId)commands.push({type:'setProperty',path:['system','rules',index,'context'],value:{dataId:draft.contextDataId}});else if(rule.context)commands.push({type:'removeProperty',path:['system','rules',index,'context']});}

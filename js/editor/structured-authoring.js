@@ -1,3 +1,4 @@
+import {markAuthoringPending,commitAuthoringPending} from './authoring-pending.js';
 import {DATA_TYPES,dataDefinitions} from '../engine/data-definitions.js';
 import {createTypedDataPlan,addTypedFieldPlan,createCatalogPlan,definitionPaths} from './typed-data-commands.js';
 import {createComponentDefinitionPlan,detachComponentPlan,copyComponentDefinitionPlan} from './component-definition-commands.js';
@@ -14,12 +15,13 @@ export function renderStructuredAuthoring(view,pkg){
   const host=el('details','','editor-structured-authoring');host.append(el('summary','Registros, coleções e compostos'));
   if(pkg.system?.schemaVersion!==3){host.append(el('p','Estas capacidades exigem habilitação explícita de v3.'));return host;}
   const ui=view.session.ui;ui.structuredInputs??={};const state=ui.structuredInputs;host.open=state.open===true;let populated=false;
-  const remember=(key,c)=>c.addEventListener('input',()=>{state[key]=c.value;view.onPending?.();});
-  const checkedCommit=async(plan,label)=>{
+  const markNew=()=>markAuthoringPending(view,'/draft/structured-data',{raw:state.name||'Novo dado tipado',cleanupPaths:Object.keys(state).filter(k=>!['open','catalogName','compoundName','catalogDrafts','catalogEdits','uniqueDrafts'].includes(k)&&!k.startsWith('componentLabel:')&&!k.startsWith('compoundLabel:')).map(k=>['structuredInputs',k])});
+  const remember=(key,c)=>c.addEventListener('input',()=>{state[key]=c.value;if(key.startsWith('componentLabel:')||key.startsWith('compoundLabel:'))markAuthoringPending(view,'/draft/structured-label/'+key,{raw:c.value,cleanupPaths:[['structuredInputs',key]],label:'Rótulo compartilhado em edição'});else if(key==='catalogName'||key==='compoundName')markAuthoringPending(view,'/draft/structured-'+key,{raw:c.value,cleanupPaths:[['structuredInputs',key]]});else markAuthoringPending(view,'/draft/structured-data',{raw:state.name||'Novo dado tipado',cleanupPaths:Object.keys(state).filter(k=>!['open','catalogName','compoundName','catalogDrafts','catalogEdits','uniqueDrafts'].includes(k)&&!k.startsWith('componentLabel:')&&!k.startsWith('compoundLabel:')).map(k=>['structuredInputs',k])});});
+  const checkedCommit=async(plan,label,pendingKeys=[])=>{
     const result=prepareDocument(JSON.parse(applyOperations(view.session.text,plan.commands)),{kind:'package'});
     if(result.status!=='ready')throw new Error(result.diagnostics.slice(0,3).map(d=>d.message).join('; '));
     const revision=view.session.revision;if(!await view.confirm(label+'? Nenhum personagem instalado será preenchido ou migrado.'))return;
-    if(revision!==view.session.revision)throw new Error('A revisão mudou');view.commit(plan.commands,label,plan.selection||view.selection);
+    if(revision!==view.session.revision)throw new Error('A revisão mudou');if(label==='Criar definição tipada')pendingKeys.push('/draft/structured-data');if(label==='Criar catálogo do sistema')pendingKeys.push('/draft/structured-catalogName');if(label==='Compartilhar apresentação como composto local')pendingKeys.push('/draft/structured-compoundName');commitAuthoringPending(view,pendingKeys,plan.commands,label,plan.selection||view.selection);
   };
   const populate=()=>{
     if(populated||!host.open)return;populated=true;
@@ -44,11 +46,11 @@ export function renderStructuredAuthoring(view,pkg){
       };
       if(kind==='enum'){
         const list=el('div'),label=input('Nome da opção estruturada',state.optionLabel||'');remember('optionLabel',label.input);settings.append(list,label.wrap);
-        const drawOptions=()=>{list.replaceChildren();for(const [i,option]of state.options.entries())list.append(el('span',option.label),button('Remover opção estruturada '+option.label,()=>{state.options.splice(i,1);drawOptions();drawInitial();view.onPending?.();}));};drawOptions();settings.append(button('Adicionar opção estruturada',()=>{if(!label.input.value.trim())return;state.options.push({id:'option-'+crypto.randomUUID(),label:label.input.value.trim()});drawOptions();drawInitial();view.onPending?.();}));options=()=>({options:structuredClone(state.options)});
+        const drawOptions=()=>{list.replaceChildren();for(const [i,option]of state.options.entries())list.append(el('span',option.label),button('Remover opção estruturada '+option.label,()=>{state.options.splice(i,1);drawOptions();drawInitial();markNew();}));};drawOptions();settings.append(button('Adicionar opção estruturada',()=>{if(!label.input.value.trim())return;state.options.push({id:'option-'+crypto.randomUUID(),label:label.input.value.trim()});drawOptions();drawInitial();markNew();}));options=()=>({options:structuredClone(state.options)});
       }
       if(kind==='trait'){
-        const composite=choose('Traço admite composição',[['false','Um dado'],['true','Vários dados']],state.composite||'false'),list=el('div'),next=input('Novo tamanho de dado','20');remember('composite',composite.input);settings.append(composite.wrap,list,next.wrap);
-        const drawScale=()=>{list.replaceChildren();for(const [i,n]of state.scale.entries())list.append(el('span','d'+n),button('Remover d'+n+' da escala',()=>{state.scale.splice(i,1);drawScale();drawInitial();view.onPending?.();}));};drawScale();settings.append(button('Acrescentar tamanho à escala',()=>view.run(()=>{state.scale.push(numberFromText(next.input.value));state.scale.sort((a,b)=>a-b);drawScale();drawInitial();view.onPending?.();})));options=()=>({scale:structuredClone(state.scale),composite:composite.input.value==='true'});
+        const composite=choose('Traço admite composição',[['false','Um dado'],['true','Vários dados']],state.composite||'false'),list=el('div'),next=input('Novo tamanho de dado',state.nextScale??'20');remember('composite',composite.input);remember('nextScale',next.input);settings.append(composite.wrap,list,next.wrap);
+        const drawScale=()=>{list.replaceChildren();for(const [i,n]of state.scale.entries())list.append(el('span','d'+n),button('Remover d'+n+' da escala',()=>{state.scale.splice(i,1);drawScale();drawInitial();markNew();}));};drawScale();settings.append(button('Acrescentar tamanho à escala',()=>view.run(()=>{state.scale.push(numberFromText(next.input.value));state.scale.sort((a,b)=>a-b);drawScale();drawInitial();markNew();})));options=()=>({scale:structuredClone(state.scale),composite:composite.input.value==='true'});
       }
       if(kind==='reference'){
         const catalogField=(pkg.system.catalogs||[]).some(c=>c.id===parent.input.value)||parents.some(r=>r.definition.id===parent.input.value&&r.path[1]==='catalogs');
@@ -66,20 +68,20 @@ export function renderStructuredAuthoring(view,pkg){
     const catalogName=input('Nome do novo catálogo',state.catalogName||'');remember('catalogName',catalogName.input);host.append(catalogName.wrap,button('Revisar novo catálogo',()=>view.run(()=>checkedCommit(createCatalogPlan(pkg,catalogName.input.value),'Criar catálogo do sistema'))));
     for(const row of definitionPaths(pkg).filter(r=>r.definition.type==='collection')){
       const definition=row.definition,box=el('details');box.append(el('summary','Unicidade de '+definition.label));
-      const fields=(definition.fields||[]).map(field=>{const control=input('Valor único · '+definition.label+' · '+field.label,'','checkbox');control.input.checked=(definition.unique||[]).includes(field.id);box.append(control.wrap);return {field,control};});
-      box.append(button('Revisar unicidade de '+definition.label,()=>view.run(()=>checkedCommit({commands:[{type:'setProperty',path:[...row.path,'unique'],value:fields.filter(r=>r.control.input.checked).map(r=>r.field.id)}]},'Alterar restrições de unicidade'))));host.append(box);
+      state.uniqueDrafts??={};const draft=state.uniqueDrafts[definition.id]??={};const fields=(definition.fields||[]).map(field=>{const control=input('Valor único · '+definition.label+' · '+field.label,'','checkbox');control.input.checked=draft[field.id]??(definition.unique||[]).includes(field.id);control.input.addEventListener('input',()=>{draft[field.id]=control.input.checked;markAuthoringPending(view,'/draft/structured-unique/'+definition.id,{raw:'Unicidade de '+definition.label,cleanupPaths:[['structuredInputs','uniqueDrafts',definition.id]]});});box.append(control.wrap);return {field,control};});
+      box.append(button('Revisar unicidade de '+definition.label,()=>view.run(()=>checkedCommit({commands:[{type:'setProperty',path:[...row.path,'unique'],value:fields.filter(r=>r.control.input.checked).map(r=>r.field.id)}]},'Alterar restrições de unicidade',['/draft/structured-unique/'+definition.id]))));host.append(box);
     }
     for(const [i,catalog]of (pkg.system.catalogs||[]).entries()){
       const row=el('details');row.append(el('summary',catalog.label+' · '+catalog.entries.length+' entradas'));host.append(row);state.catalogDrafts??={};const draft=state.catalogDrafts[catalog.id]??={};
-      const readEntry=mountRecordInputs(row,{definition:catalog,system:pkg.system,character:pkg.system.characterTemplate,label:'Nova entrada · '+catalog.label,state:draft,onEdit:()=>view.onPending?.()});
+      const readEntry=mountRecordInputs(row,{definition:catalog,system:pkg.system,character:pkg.system.characterTemplate,label:'Nova entrada · '+catalog.label,state:draft,onEdit:()=>markAuthoringPending(view,'/draft/catalog-new/'+catalog.id,{raw:'Nova entrada de '+catalog.label,cleanupPaths:[['structuredInputs','catalogDrafts',catalog.id]]})});
       row.append(button('Adicionar entrada no catálogo '+catalog.label,()=>view.run(()=>{
         const entry={...readEntry(),id:'entry-'+crypto.randomUUID()};
-        return checkedCommit({commands:[{type:'insertNode',path:['system','catalogs',i,'entries'],index:catalog.entries.length,value:entry}]},'Adicionar entrada de catálogo');
+        return checkedCommit({commands:[{type:'insertNode',path:['system','catalogs',i,'entries'],index:catalog.entries.length,value:entry}]},'Adicionar entrada de catálogo',['/draft/catalog-new/'+catalog.id]);
       })));
       for(const [j,entry]of catalog.entries.entries()){
         const label=catalog.fields.map(field=>entry[field.binding]).filter(v=>v!==undefined&&v!==null&&typeof v!=='object').join(' · ')||entry.id,edit=el('details');edit.append(el('summary','Editar entrada · '+catalog.label+' · '+label));state.catalogEdits??={};const draft=state.catalogEdits[entry.id]??={};
-        const read=mountRecordInputs(edit,{definition:catalog,system:pkg.system,character:pkg.system.characterTemplate,label:'Editar entrada · '+catalog.label+' · '+label,state:draft,base:entry,onEdit:()=>view.onPending?.()});
-        edit.append(button('Revisar entrada de catálogo '+label,()=>view.run(()=>checkedCommit({commands:[{type:'removeNode',path:['system','catalogs',i,'entries'],index:j},{type:'insertNode',path:['system','catalogs',i,'entries'],index:j,value:{...read(),id:entry.id}}]},'Editar entrada de catálogo'))));
+        const read=mountRecordInputs(edit,{definition:catalog,system:pkg.system,character:pkg.system.characterTemplate,label:'Editar entrada · '+catalog.label+' · '+label,state:draft,base:entry,onEdit:()=>markAuthoringPending(view,'/draft/catalog-edit/'+entry.id,{raw:'Entrada de '+catalog.label+' em edição',cleanupPaths:[['structuredInputs','catalogEdits',entry.id]]})});
+        edit.append(button('Revisar entrada de catálogo '+label,()=>view.run(()=>checkedCommit({commands:[{type:'removeNode',path:['system','catalogs',i,'entries'],index:j},{type:'insertNode',path:['system','catalogs',i,'entries'],index:j,value:{...read(),id:entry.id}}]},'Editar entrada de catálogo',['/draft/catalog-edit/'+entry.id]))));
         row.append(edit,button('Remover entrada de catálogo '+label,()=>view.run(()=>checkedCommit({commands:[{type:'removeNode',path:['system','catalogs',i,'entries'],index:j}]},'Remover entrada de catálogo'))));
       }
     }
@@ -89,10 +91,10 @@ export function renderStructuredAuthoring(view,pkg){
     for(const [i,definition]of (pkg.system.componentDefinitions||[]).entries()){
       const editLabels=(components,path,row)=>{for(const [j,component]of components.entries()){
         const at=[...path,j],label=input('Texto compartilhado · '+definition.label+' · '+(component.label||component.type),state['componentLabel:'+at.join('/')]??component.label??'');remember('componentLabel:'+at.join('/'),label.input);
-        row.append(label.wrap,button('Revisar texto compartilhado · '+(component.label||component.type),()=>view.run(()=>checkedCommit({commands:[{type:'setProperty',path:[...at,'label'],value:label.input.value},{type:'setProperty',path:['system','componentDefinitions',i,'revision'],value:definition.revision+1}]},'Editar componente compartilhado'))));
+        row.append(label.wrap,button('Revisar texto compartilhado · '+(component.label||component.type),()=>view.run(()=>checkedCommit({commands:[{type:'setProperty',path:[...at,'label'],value:label.input.value},{type:'setProperty',path:['system','componentDefinitions',i,'revision'],value:definition.revision+1}]},'Editar componente compartilhado',['/draft/structured-label/componentLabel:'+at.join('/')]))));
         if(component.type==='group')editLabels(component.components||[],[...at,'components'],row);
       }};
-      const row=el('details');row.append(el('summary',definition.label+' · revisão'+definition.revision));const label=input('Rótulo compartilhado de '+definition.label,state['compoundLabel:'+definition.id]??definition.label);remember('compoundLabel:'+definition.id,label.input);row.append(label.wrap,button('Revisar rótulo compartilhado de '+definition.label,()=>view.run(()=>checkedCommit({commands:[{type:'setProperty',path:['system','componentDefinitions',i,'label'],value:label.input.value},{type:'setProperty',path:['system','componentDefinitions',i,'revision'],value:definition.revision+1}]},'Editar apresentação compartilhada'))),button('Revisar copiar definição '+definition.label,()=>view.run(()=>checkedCommit(copyComponentDefinitionPlan(pkg,definition.id),'Copiar definição independente'))));editLabels(definition.components,['system','componentDefinitions',i,'components'],row);host.append(row);
+      const row=el('details');row.append(el('summary',definition.label+' · revisão'+definition.revision));const label=input('Rótulo compartilhado de '+definition.label,state['compoundLabel:'+definition.id]??definition.label);remember('compoundLabel:'+definition.id,label.input);row.append(label.wrap,button('Revisar rótulo compartilhado de '+definition.label,()=>view.run(()=>checkedCommit({commands:[{type:'setProperty',path:['system','componentDefinitions',i,'label'],value:label.input.value},{type:'setProperty',path:['system','componentDefinitions',i,'revision'],value:definition.revision+1}]},'Editar apresentação compartilhada',['/draft/structured-label/compoundLabel:'+definition.id]))),button('Revisar copiar definição '+definition.label,()=>view.run(()=>checkedCommit(copyComponentDefinitionPlan(pkg,definition.id),'Copiar definição independente'))));editLabels(definition.components,['system','componentDefinitions',i,'components'],row);host.append(row);
     }
   };
   host.addEventListener('toggle',()=>{state.open=host.open;populate();view.onPending?.();});populate();return host;

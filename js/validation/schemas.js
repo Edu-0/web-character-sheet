@@ -317,7 +317,7 @@ function validateComponent(component, path, system, issues, layoutVersion,depth=
   }
   if (component.options !== undefined && !Array.isArray(component.options)) add(issues, `${path}.options`, 'deve ser uma lista');
   if(component.type==='progressionChoices'){
-    if(system?.schemaVersion!==3||component.configFrom!==undefined&&component.configFrom!=='progressionChoices'||!system?.progressionChoices)add(issues,path,'Escolhas tipadas exigem sistema v3 e progressionChoices declarada.');
+    if(layoutVersion!==3||component.configFrom!==undefined&&component.configFrom!=='progressionChoices'||system&&(system.schemaVersion!==3||!system.progressionChoices))add(issues,path,'Escolhas tipadas exigem layout v3, sistema v3 e configuração progressionChoices no pacote.');
   }
   if (['pointBudget', 'repertoire', 'techniqueUse'].includes(component.type)) {
     const configFrom = component.configFrom ?? COMPONENT_CONTRACTS[component.type].properties.configFrom.default;

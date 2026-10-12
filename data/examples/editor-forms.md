@@ -1,5 +1,7 @@
 # Editor por formulários
 
+Em **Compor**, [fontes, vínculos e grafo de regras](rule-connections.md) oferecem edição por menus e cabos sobre o mesmo documento. Receitas de inclusão, nomes, entradas de catálogo e vínculos não confirmados preservam suas pendências no rascunho; trocar de receita não as descarta.
+
 O painel **Criação, evolução e concessões** configura opções, custos e escolhas com a mesma sessão e o construtor de operações. [Contrato e cobertura](progression-choices.md).
 
 O painel **Efeitos tipados e projeções** usa o construtor comum de operações e a mesma sessão. Os perfis de definição antigo e tipado têm descritores distintos; veja [contrato, provas e limites](typed-effects.md).

@@ -5,6 +5,7 @@ import {compileProgression,prepareProgressionChoice,prepareProgressionPhase,prep
 import {applyCharacterChanges} from '../../js/engine/character-history.js';
 import {evaluateRule} from '../../js/engine/rule-registry.js';
 import {prepareDocument} from '../../js/validation/documents.js';
+import {validateLayout} from '../../js/validation/schemas.js';
 const literal=value=>({id:crypto.randomUUID(),op:'literal',version:1,value});
 const grant=(id,type,dataId,value)=>({id,label:id,type,dataId,expression:literal(value)});
 const option=(id,grants,extra={})=>({id,label:id,modes:['creation','paid','narrative'],requires:[],maxAcquisitions:1,cost:{creation:literal(2),paid:literal(2)},grants,choices:[],...extra});
@@ -48,4 +49,7 @@ test('AV-08: entradas concedidas têm identidade própria; revogar preserva entr
 });
 test('AV-08: narrativa não exige nem materializa orçamento opcional ausente',()=>{
  const {system,character}=fixture();commit(character,prepareProgressionChoice(system,character,{optionId:'career-1',mode:'creation'}));commit(character,prepareProgressionPhase(system,character,'complete'));character.experience=2;delete character.evolution;commit(character,prepareProgressionChoice(system,character,{optionId:'career-2',mode:'narrative',selections:{talent:['talent-a']}}));assert.equal(Object.hasOwn(character,'evolution'),false);assert.equal(character.progressionLedger.records.at(-1).cost.amount,0);assert.equal(character.level,2);
+});
+test('AV-09: controle de progressão admite layout v3 isolado e exige configuração no pacote',()=>{
+ const pkg=minimalPackage('layout'),layout=pkg.layouts[0];layout.tabs[0].sections[0].containers[0].components.push({type:'progressionChoices',label:'Escolhas'});assert.deepEqual(validateLayout(layout),[]);assert.ok(validateLayout(layout,{system:pkg.system}).some(issue=>issue.message.includes('progressionChoices')));layout.schemaVersion=2;assert.ok(validateLayout(layout).some(issue=>issue.message.includes('v3')));
 });

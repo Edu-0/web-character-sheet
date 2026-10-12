@@ -88,3 +88,20 @@
 .editor-progression-authoring button,.editor-progression-authoring summary{min-height:44px;white-space:normal;margin:4px;scroll-margin-top:calc(var(--shell-height,64px) + 16px)}
 .editor-progression-authoring fieldset,.editor-progression-authoring details{min-width:0;padding:8px;margin:8px 0;border:1px solid var(--color-border)}
 @media(min-width:1101px){.json-editor[data-authoring-mode=visual] .editor-progression-authoring{grid-column:1;grid-row:10}}
+
+.editor-rule-graph{grid-column:1/-1;min-width:0;padding:12px;border:1px solid var(--color-border);border-radius:8px;overflow-wrap:anywhere}
+.editor-rule-graph label{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.editor-rule-graph input,.editor-rule-graph select{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:8px;background:var(--color-panel);color:var(--color-text);border:1px solid var(--color-border)}
+.editor-rule-graph button,.editor-rule-graph summary{min-height:44px;white-space:normal;scroll-margin-top:calc(var(--shell-height,64px) + 16px)}
+.editor-rule-graph details{min-width:0;padding:8px;margin:8px 0;border:1px solid var(--color-border)}
+.editor-rule-diagram__pane{max-width:100%;max-height:480px;overflow:auto;border:1px solid var(--color-border)}
+.editor-rule-diagram svg rect{fill:var(--color-panel);stroke:var(--color-border)}
+.editor-rule-diagram svg text{fill:var(--color-text);font-size:12px;pointer-events:none}
+.editor-rule-diagram svg g[role=button]{cursor:grab;touch-action:none}
+.editor-rule-diagram svg g[role=button]:focus rect{stroke:var(--color-accent);stroke-width:3}
+.editor-rule-diagram__edges path{fill:none;stroke:var(--color-accent);stroke-width:2;pointer-events:none}
+@media(min-width:1101px){.json-editor[data-authoring-mode=visual] .editor-rule-graph{grid-column:1;grid-row:11}}
+
+.editor-rule-diagram__port{cursor:crosshair;touch-action:none}.editor-rule-diagram__port>rect{fill:transparent;stroke:none}.editor-rule-diagram__port circle{fill:var(--color-accent);stroke:var(--color-text)}.editor-rule-diagram__port:focus circle{stroke-width:3}.editor-rule-diagram__wire{fill:none;stroke:var(--color-accent);stroke-width:3;pointer-events:none}
+
+.editor-rule-diagram svg .editor-rule-diagram__port>rect{fill:transparent;stroke:none}
