@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 34 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `653caa8913c7f04301f8301f6ba0a18942af5f03126cdbadd3e8e1b374ce6161`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `63920cb31eb5e0859ab71612939fb344a6cb00d6adf633ff885a79e7dafce698`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 

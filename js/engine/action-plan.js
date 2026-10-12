@@ -9,16 +9,14 @@ import {changesBetween,readCharacterCell,applyCharacterChanges} from './characte
 import {pathKeys} from './paths.js';
 import {assertActionRecordCapacity,validateActionRecords} from './action-records.js';
 import {consumeTypedEffects} from './typed-effect-state.js';
+import {resolutionResultDefinition,resolutionResultValue} from './resolution-results.js';
+export {resolutionResultDefinition} from './resolution-results.js';
 
 export const ACTION_LIMITS=Object.freeze({steps:128,inputs:32,costs:32,records:50,recordBytes:65536,recordsBytes:524288});
 const object=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
 const keys=(v,allowed,label)=>{if(!object(v)||Object.keys(v).some(k=>!allowed.includes(k)))throw Error(label+': parâmetros indisponíveis.');};
 const finite=(v,label,{min=-1000000,max=1000000,integer=false}={})=>{if(typeof v!=='number'||!Number.isFinite(v)||v<min||v>max||integer&&!Number.isSafeInteger(v))throw Error(label+': valor fora do intervalo permitido.');return v;};
 const literal=value=>({id:'literal',op:'literal',version:1,value});
-export function resolutionResultDefinition(step){
- const fields=[['total','number',true],['success','boolean',Boolean(step.success||step.otherwise)],['rolled','boolean',true],['outcome','string',true]].map(([binding,type,required])=>({id:step.id+'_'+binding,label:binding,binding,type,required,nullable:false}));
- return {id:step.id+'_result',label:step.label||step.id,type:'record',required:true,nullable:false,fields};
-}
 
 export function compileActionFlow(system,action){
  if(!safeDataId(action.id)||typeof action.label!=='string'||!action.label.trim())throw Error('Ação nomeada com identidade estável exigida.');
@@ -26,7 +24,7 @@ export function compileActionFlow(system,action){
  if(action.effects!==undefined||action.operations!==undefined||action.requirements!==undefined)throw Error('Fluxo tipado não deve ser combinado com operações/requisitos legados.');
  const inputs=flow.inputs||[],costs=flow.costs||[];if(!Array.isArray(inputs)||inputs.length>ACTION_LIMITS.inputs||!Array.isArray(costs)||costs.length>ACTION_LIMITS.costs||!Array.isArray(flow.steps)||flow.steps.length>ACTION_LIMITS.steps)throw Error('Limite de entradas/custos/etapas de ação excedido.');
  let inputRoot='action_inputs';while(system.dataDefinitions?.some(d=>d.binding===inputRoot||d.binding.startsWith(inputRoot+'.')))inputRoot+='_new';const inputSystem={...system,dataDefinitions:[...(system.dataDefinitions||[]),...inputs.map(d=>({...d,binding:inputRoot+'.'+d.id}))]};const issues=validateDataDefinitions(inputSystem,{},'action.inputs',{definitionsOnly:true});if(issues.length)throw Error(issues[0].message);if(inputs.some(d=>d.binding!==d.id))throw Error('Binding de entrada deve ser sua identidade local.');
- const locals=[],steps=[],ids=new Set();let consequence=false,prefixLocals;
+ const locals=[],steps=[],ids=new Set(),resolutionIds=new Set();let consequence=false,prefixLocals;
  const expression=(ast,type,scopeLocals=locals,expectedDefinition)=>compileActionExpression(system,ast,type,{inputs,locals:[...scopeLocals],expectedDefinition,label:action.label});
  for(const step of flow.steps){
   if(!object(step)||!safeDataId(step.id)||ids.has(step.id)||typeof step.label!=='string'||!step.label.trim())throw Error('Etapa nomeada com identidade única exigida.');ids.add(step.id);
@@ -44,7 +42,7 @@ export function compileActionFlow(system,action){
    });
    if(step.success){keys(step.success,['comparison','threshold'],'Critério de sucesso');validateResolution({version:1,groups:[],success:{comparison:step.success.comparison,threshold:0}});}if(step.otherwise&&!step.success)throw Error('Ambos os ramos da resolução devem declarar sucesso.');
    const when=step.when?expression(step.when,'boolean'):null;if(when&&!step.otherwise)throw Error('Resolução condicional exige resultado explícito para o outro ramo.');let otherwise;if(step.otherwise){keys(step.otherwise,['total','success','outcome'],'Resultado sem lançamento');otherwise={total:expression(step.otherwise.total,'number'),success:expression(step.otherwise.success,'boolean'),outcome:expression(step.otherwise.outcome,'string')};}
-   steps.push({step,groups,when,otherwise,modifier:step.modifier?expression(step.modifier,'number'):null,success:step.success?{comparison:step.success.comparison,threshold:expression(step.success.threshold,'number')}:null});locals.push({id:step.id,label:step.label,valueType:{type:'record',definition:resolutionResultDefinition(step),optional:false,nullable:false}});continue;
+   const resultDefinition=resolutionResultDefinition(step),ports=definition=>{for(const field of definition.fields||[]){if(resolutionIds.has(field.id))throw Error('Identidade de porta temporária ambígua; renomeie a etapa.');resolutionIds.add(field.id);ports(field);}};ports(resultDefinition);steps.push({step,groups,when,otherwise,modifier:step.modifier?expression(step.modifier,'number'):null,success:step.success?{comparison:step.success.comparison,threshold:expression(step.success.threshold,'number')}:null});locals.push({id:step.id,label:step.label,valueType:{type:'record',definition:resultDefinition,optional:false,nullable:false}});continue;
   }
   consequence=true;keys(step,['id','label','type','dataId','expression','when','entryId','values'],'Consequência');if(!['set','add','remove','insert','update','deleteEntry'].includes(step.type))throw Error('Consequência de ação indisponível.');const definition=dataDefinition(system,step.dataId),when=step.when?expression(step.when,'boolean'):null;let value,entry,values;
   if(['set','add'].includes(step.type))value=expression(step.expression,step.type==='add'?'number':definition.type,locals,step.type==='set'?definition:undefined);
@@ -83,9 +81,9 @@ export function resolveActionIntent(system,character,action,intent,{die,choices=
    if(step.type==='value'){if(!activation||!prefix)locals[step.id]=evaluate(row.value);continue;}
    if(step.type!=='resolve')continue;
    prefix=false;
-   if(row.when&&!evaluate(row.when)){const result={total:evaluate(row.otherwise.total),success:evaluate(row.otherwise.success),rolled:false,outcome:evaluate(row.otherwise.outcome)};locals[step.id]=result;results.push({id:step.id,label:step.label,...result});continue;}
-   const groups=row.groups.map(source=>{if(source.group.type==='sharedPercentile')return {...source.group,bonus:evaluate(source.bonus)};const dice=source.sources.flatMap(s=>{const value=evaluate(s.value),sides=s.source.resultType==='trait'?value:[value],count=s.count?finite(evaluate(s.count),'Quantidade de dados',{min:0,max:100,integer:true}):1;return Array.from({length:count},()=>sides).flat();});return {...source.group,dice};}),configuration={version:1,groups,modifier:row.modifier?evaluate(row.modifier):0,...(row.success?{success:{comparison:row.success.comparison,threshold:evaluate(row.success.threshold)}}:{}),...(step.ranges?{ranges:step.ranges}:{})};
-   let result;try{result=resolveRollTranscript(configuration,{actionId:intent.id+':'+step.id,die,transcript:transcripts[step.id],choices:choices[step.id]||{},budget:drawBudget});}catch(error){if(error.transcript)transcripts[step.id]=error.transcript;throw error;}transcripts[step.id]=result.transcript;const summary={total:result.total,...(result.success!==undefined?{success:result.success}:{}),rolled:result.transcript.draws.length>0,outcome:result.rangeLabel||''};locals[step.id]=summary;results.push({id:step.id,label:step.label,...summary,groups:result.groups});
+   if(row.when&&!evaluate(row.when)){const result={total:evaluate(row.otherwise.total),success:evaluate(row.otherwise.success),rolled:false,outcome:evaluate(row.otherwise.outcome)};locals[step.id]=resolutionResultValue(result);results.push({id:step.id,label:step.label,...result});continue;}
+   const groups=row.groups.map(source=>{if(source.group.type==='sharedPercentile')return {...source.group,bonus:evaluate(source.bonus)};const dice=source.sources.flatMap(s=>{const count=s.count?finite(evaluate(s.count),'Quantidade de dados',{min:0,max:100,integer:true}):1;if(count===0)return [];const value=evaluate(s.value),sides=s.source.resultType==='trait'?value:[value];return Array.from({length:count},()=>sides).flat();});return {...source.group,dice};}).filter(group=>group.type!=='dice'||group.dice.length>0),configuration={version:1,groups,modifier:row.modifier?evaluate(row.modifier):0,...(row.success?{success:{comparison:row.success.comparison,threshold:evaluate(row.success.threshold)}}:{}),...(step.ranges?{ranges:step.ranges}:{})};
+   let result;try{result=resolveRollTranscript(configuration,{actionId:intent.id+':'+step.id,die,transcript:transcripts[step.id],choices:choices[step.id]||{},budget:drawBudget});}catch(error){if(error.transcript)transcripts[step.id]=error.transcript;throw error;}transcripts[step.id]=result.transcript;const summary={total:result.total,...(result.success!==undefined?{success:result.success}:{}),rolled:result.transcript.draws.length>0,outcome:result.rangeLabel||''};locals[step.id]=resolutionResultValue(summary,result.groups);results.push({id:step.id,label:step.label,...summary,groups:result.groups});
   }
   const success=compiled.outcome?evaluate(compiled.outcome):null,payments=[];
   const prices=compiled.costs.filter(row=>row.cost.stage==='result'&&!(row.cost.when==='success'&&success!==true||row.cost.when==='failure'&&success!==false)).map(row=>({row,amount:finite(evaluate(row.amount),row.cost.label||'Custo',{min:0})}));

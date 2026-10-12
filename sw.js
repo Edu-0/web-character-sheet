@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "9902349a21bb397fc7bd";
+const VERSION = "c08eec7a9eddeedbaa6b";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -383,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "7675feabae4213a900d0ef5168c78bfad5f2f1de6457c4ccf34e94ec66f44878"
+    "hash": "584046dd630c2e442c9e0f4c29b4cde2ca40d00439b46a1d6747514956677173"
   },
   {
     "path": "js/editor/history.js",
@@ -563,7 +563,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/action-plan.js",
-    "hash": "594271889e9aaec54715fbca4ff0899bf92d52683e25be7864e716eca06b7521"
+    "hash": "9c1ed341ab818fe3f71a3e0890b180761bd62ba6ba5da558ba210c533994dc2d"
   },
   {
     "path": "js/engine/action-records.js",
@@ -748,6 +748,10 @@ const ASSETS = [
   {
     "path": "js/engine/renderer.js",
     "hash": "b13467d51f42192362fb25c7f13a9aeb739096db18de7250ecd8757bc398d429"
+  },
+  {
+    "path": "js/engine/resolution-results.js",
+    "hash": "77a6663b32fbfd408456fed9ead2315e21e29b3cf453c059cea479a17e3a2dd7"
   },
   {
     "path": "js/engine/resolution.js",
