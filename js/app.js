@@ -9,6 +9,7 @@ import {executeSheetAction} from './engine/assistance.js';
 import {setByPath} from './engine/paths.js';
 import {changesBetween,applyCharacterChanges} from './engine/character-history.js';
 import {archiveCompletedRecords} from './engine/action-records.js';
+import {assertEventBasis} from './engine/rule-events.js';
 // app.js — shell global, bibliotecas e apresentações da ficha ativa.
 import { state } from './state.js';
 import * as storage from './storage.js';
@@ -472,6 +473,14 @@ function commitPreparedAction(action,plan,{historyField}={}) {
   },{label:action.label,group:'action:'+plan.id});
 }
 
+function commitPreparedMutation(plan,{label='Confirmar evento',recovery=false}={}) {
+  const current=state.get();
+  return commitPreparedCharacter((candidate,pkg)=>{
+    assertEventBasis(candidate,plan,pkg.system);
+    applyCharacterChanges(candidate,plan.patches,{validate:value=>assertValid(value,entry=>validateCharacterForPackage(entry,pkg),'personagem')});
+  },{label,group:'event:'+plan.id,copies:recovery?[migrationCopyChange(`rule-events:${current.meta.id}`,current)]:[]});
+}
+
 async function upgradeActionCharacter() {
   const current=state.get();
   if(current.schemaVersion===3)return current;
@@ -494,6 +503,7 @@ function renderGenericSheet(character) {
       system: activePackage.system,
       getCharacter:()=>state.get(),
       commitPreparedAction,
+      commitPreparedMutation,
       upgradeActionCharacter,
       archiveActionRecords,
       exportActionCharacter:()=>{const file=characters.exportCharacter(state.get());storage.downloadJson(file.data,file.filename);},

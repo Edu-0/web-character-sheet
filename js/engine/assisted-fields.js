@@ -5,6 +5,7 @@ import { getByPath, setByPath } from './paths.js';
 import { executeSheetAction, inventoryCalculationKey, inventoryTotals, repertoireStatus, undoSheetAction } from './assistance.js';
 import {predicateStatus} from './predicates.js';
 import {openTypedAction,openActionRecords} from './action-fields.js';
+import {openRuleEvents} from './event-fields.js';
 import { traitLabel } from './traits.js';
 
 registerFieldType('inventorySummary', {
@@ -123,6 +124,7 @@ registerFieldType('actionGroup', {
     feedback.setAttribute('aria-label', context.label || 'Resultado da ação');
     const undo = button('Desfazer última ação');
     const historyField = context.historyField || COMPONENT_CONTRACTS.actionGroup.properties.historyField.default;
+    if(context.system.schemaVersion===3&&(context.system.ruleTriggers?.length||context.character.ruleEventState)){const events=button('Eventos e gatilhos');events.addEventListener('click',()=>{try{openRuleEvents(context,{openAction:(ctx,action)=>openTypedAction(ctx,action).catch(error=>{feedback.textContent=error.message;feedback.hidden=false;})});}catch(error){feedback.textContent=error.message;feedback.hidden=false;}});row.append(events);}
     if((getByPath(context.system,context.actionsFrom)||[]).some(action=>action.flow)){const records=button('Registros de ações');records.addEventListener('click',()=>openActionRecords(context));row.append(records);}
     (getByPath(context.system, context.actionsFrom) || []).forEach((action) => {
       const control = button(action.label);

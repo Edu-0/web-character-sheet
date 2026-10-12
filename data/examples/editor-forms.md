@@ -24,6 +24,7 @@ A cobertura abaixo descreve formulários próprios para as propriedades consumid
 
 | Família / componentes | Configurável por formulários | Avançado via JSON / limite |
 | --- | --- | --- |
+| Gatilhos locais v3 (Compor) | Origem, cruzamento/evento, frequência, prioridade, condição, ação e vínculos tipados de entradas. [Prévia causal e registros](rule-events.md). | Edições comuns não executam automação; escolhas/dados usam proposta. Escritas simultâneas conflitantes são recusadas. |
 | Ações tipadas v3 (Compor) | Entradas temporárias, etapas/ASTs, grupos, percentil compartilhado, faixas, seleção, rerrolagem/explosão, custos e consequências no documento comum. [Execução e registros](action-flows.md). | Sem scripts ou transações entre personagens. Registros em personagens antigos exigem habilitação v3 explícita. |
 | Estrutura | Pacote/versões, sistema, layouts/modo, abas, seções, grupos stack/grid/flex, gap/min suportados, repeat/source, criação/movimento/duplicação/remoção | Metadados, showHeader e print.compact de seção/grupo via JSON; pixels livres, toolbox e arrasto não estão nesta entrega |
 | text, textarea, number, boolean | Campo, rótulo, ajuda, variante, default tipado, placeholder/rows compatíveis, bloqueio por igualdade | min/max de number de topo são legados inertes e não ganham controles funcionais |

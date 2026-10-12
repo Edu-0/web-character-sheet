@@ -272,6 +272,7 @@ function renderComponent(component, character, options) {
     upgradeActionCharacter:options.upgradeActionCharacter,
     getCharacter:options.getCharacter || (()=>character),
     commitPreparedAction:options.commitPreparedAction,
+    commitPreparedMutation:options.commitPreparedMutation,
     archiveActionRecords:options.archiveActionRecords,
     exportActionCharacter:options.exportActionCharacter,
     validateCharacter:options.validateCharacter,

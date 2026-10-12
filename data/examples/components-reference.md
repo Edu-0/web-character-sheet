@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 33 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `feef68396617fd2890e2413c418f622452000f3ba63a123bf11ec38f4d353888`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `c853104efaa4c6682571bbeb2c841602bad416a175961a6ecd2d192e16b0a914`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -598,6 +598,10 @@ Defaults compartilhados: {"historyLimit":20,"textareaRows":3,"counterMin":0,"che
 | recovery.operation | `type`, `field`, `maxField`, `value`, `valueField`, `filterField`, `filterValues`, `requireCurrentMin`, `label` |
 | recovery.operations | `restoreValue`, `set`, `restoreCollection`, `setCollection` |
 | recovery.maxActions | 30 |
+
+## Eventos locais
+
+Origens e cruzamentos explícitos, vínculos de entradas, propostas e confirmação causal. Limites e contrato em [Eventos e gatilhos locais](rule-events.md).
 
 ## Ações tipadas e resoluções
 

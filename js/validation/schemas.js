@@ -17,6 +17,7 @@ import {DATA_TYPES,safeDataId} from '../engine/data-types.js';
 import {validateRollReferences} from './roll-references.js';
 import {predicateBindingIssue} from '../engine/predicates.js';
 import {validateActionRecords} from '../engine/action-records.js';
+import {compileTriggers,validateEventState} from '../engine/rule-events.js';
 
 export const KNOWN_COMPONENT_TYPES = new Set(Object.keys(COMPONENT_CONTRACTS));
 
@@ -125,6 +126,7 @@ export function validateSystem(system) {
   if (system.diceSteps === true) validateStepScale(system, 'system.dieScale', issues);
   if (system.recoveryActions !== undefined) validateRecoveryActions(system.recoveryActions, system, issues);
   if (system.sheetActions !== undefined) validateActions(system.sheetActions,system,issues);
+  if (system.ruleTriggers !== undefined) { try { compileTriggers(system); } catch(error) { add(issues,'system.ruleTriggers',error.message,'rule-events'); } }
   if (system.checks !== undefined) {
     validateChecks(system.checks, issues, system);
     validateCheckData(system.characterTemplate, system.checks, issues, 'system.characterTemplate');
@@ -410,6 +412,7 @@ export function validateCharacter(character, { root = 'character', allowMissingI
   if (!requireObject(character, root, issues)) return issues;
   validateVersion(character, root, issues);
   issues.push(...validateActionRecords(character,{root}));
+  issues.push(...validateEventState(character,`${root}.ruleEventState`));
   if (character.activeEffects !== undefined) {
     if (character.schemaVersion < 2) add(issues, `${root}.schemaVersion`, 'activeEffects exige versão 2');
     issues.push(...validateEffects(character.activeEffects, {root}));

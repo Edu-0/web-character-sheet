@@ -68,3 +68,9 @@
 @media(min-width:1101px){.json-editor[data-authoring-mode=visual] .editor-preview{height:calc(100dvh - 122px);display:flex;flex-direction:column;gap:8px}.json-editor[data-authoring-mode=visual] .editor-preview>h2,.json-editor[data-authoring-mode=visual] .editor-preview>p{margin:0}.json-editor[data-authoring-mode=visual] .editor-preview>.editor-note{display:none}.json-editor[data-authoring-mode=visual] .editor-preview-tools{gap:6px;flex-shrink:0}.json-editor[data-authoring-mode=visual] .editor-frame-wrap{flex:1;min-height:0}.json-editor[data-authoring-mode=visual] .editor-preview-frame{height:100%;min-height:0}}
 .editor-drop-label{pointer-events:none}
 @media(min-width:1101px){.json-editor[data-authoring-mode=visual] .editor-toolbox{max-height:45vh}.json-editor[data-authoring-mode=visual] .editor-tree{max-height:25vh}}
+
+.editor-trigger-authoring{grid-column:1 / -1;min-width:0;padding:12px;border:1px solid var(--color-border);border-radius:8px;overflow-wrap:anywhere}
+.editor-trigger-authoring label{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.editor-trigger-authoring input,.editor-trigger-authoring select{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:8px;background:var(--color-panel);color:var(--color-text);border:1px solid var(--color-border)}
+.editor-trigger-authoring button,.editor-trigger-authoring summary{min-height:44px;white-space:normal;margin:4px;scroll-margin-top:calc(var(--shell-height,64px) + 16px)}
+@media(min-width:1101px){.json-editor[data-authoring-mode=visual] .editor-trigger-authoring{grid-column:1;grid-row:8}}

@@ -5,6 +5,7 @@ import {actionSignature} from './action-records.js';
 import {compareRollValue} from './roll-transcript.js';
 import {formatTypedCell} from './typed-value-format.js';
 import {dataDefinitions} from './data-definitions.js';
+import {prepareEventChain,completeEventProposal,bindEventProposal} from './rule-events.js';
 
 const node=(tag,text='')=>{const el=document.createElement(tag);el.textContent=text;return el;};
 const button=(label,fn)=>{const el=node('button',label);el.type='button';el.className='button';el.addEventListener('click',fn);return el;};
@@ -20,7 +21,7 @@ export async function openTypedAction(context,action){
  const status=node('p');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
  const explanation=node('p',action.flow.profile==='activation'?'A confirmação de ativação paga os custos declarados antes de revelar dados. Fechar depois disso conserva a ativação para retomar.':'Resolver mostra uma prévia. Recursos e consequências mudam somente na confirmação. Cancelar a prévia conserva a ficha.');
  const inputs=node('div'),report=node('div'),controls=node('div');controls.className='engine-budget__actions';body.append(explanation,inputs,report,status,controls);
- let busy=false,intent,plan,record=character().actionRecords?.find(r=>r.actionId===action.id&&r.phase!=='complete'),choices={},readInputs,closed=false;
+ let busy=false,intent,plan,completedPlan,record=character().actionRecords?.find(r=>r.actionId===action.id&&r.phase!=='complete'&&(!context.proposalId||r.extensions?.proposal?.id===context.proposalId)),choices={},readInputs,closed=false;
  if(record){intent=resumeActionIntent(system,character(),action,record,signature);const retry=retries.get(record.id);if(retry?.signature===signature)intent=retry.intent;}
  const commit=async prepared=>{await context.commitPreparedAction(action,prepared,{historyField:context.historyField||'scene.lastAction'});record=character().actionRecords?.find(r=>r.id===prepared.id);};
  const run=async fn=>{if(busy)return;busy=true;drawControls();try{await fn();}catch(error){status.textContent=error.message;}finally{busy=false;if(!closed)drawControls();}};
@@ -31,13 +32,14 @@ export async function openTypedAction(context,action){
   retries.delete(intent.id);
  };
  const resolve=async()=>{
-  report.replaceChildren();
+  report.replaceChildren();completedPlan=undefined;
   if(record)intent={...resumeActionIntent(system,character(),action,record,signature),transcripts:structuredClone(intent.transcripts)};
   else intent??=prepareActionIntent(system,character(),action,{inputs:readInputs()});
   try{plan=resolveActionIntent(system,character(),action,intent,{choices,...(record?{activation:record,signature}:{})});intent=plan.intent;}
   catch(error){if(error.actionIntent)intent=error.actionIntent;plan=undefined;await saveResolution(error.message);throw error;}
   await saveResolution();
   if(record){intent=resumeActionIntent(system,character(),action,record,signature);plan=resolveActionIntent(system,character(),action,intent,{activation:record,signature,die:()=>{throw Error('Transcript incompleto; retome a resolução.');}});intent=plan.intent;}
+  completedPlan=completeEventProposal(system,character(),prepareEventChain(system,character(),prepareCompletionMilestone(system,character(),action,plan,signature,{...(record?{activation:record}:{})})),context.proposalId||record?.extensions?.proposal?.id,action.id);
   showResult();status.textContent='Resultado preparado. Revise os custos e confirme a aplicação.';
  };
  const showResult=()=>{
@@ -52,6 +54,7 @@ export async function openTypedAction(context,action){
    }
   }
   for(const payment of plan.payments)report.append(node('p',payment.label+': '+payment.before+' → '+payment.after+' (custo '+payment.amount+').'));
+  for(const cause of completedPlan?.causal||[]){report.append(node('h3',cause.label),node('p','Origem: '+cause.origin+(cause.before!==undefined?' · '+cause.before+' → '+cause.after:'')+(cause.limits.length?' · limites '+cause.limits.join(', '):'')+' · '+(cause.mode==='propose'?'Proposta guardada; executar exige nova confirmação.':'Consequência incluída nesta confirmação.')));for(const payment of cause.payments||[])report.append(node('p',payment.label+': '+payment.before+' → '+payment.after+' (custo '+payment.amount+').'));}
   for(const change of plan.changes||[]){const row=dataDefinitions(system).find(r=>r.ancestors.map(d=>d.binding).concat(r.definition.binding).join('.')===change.field);if(!row||plan.payments.some(p=>p.dataId===row.definition.id))continue;const format=(exists,value)=>formatTypedCell(system,character(),row.definition,exists?{present:true,value}:{present:false},plan.dataContext);report.append(node('p',row.definition.label+': '+format(change.beforeExists,change.before)+' → '+format(change.afterExists,change.after)));}
  };
  const drawControls=()=>{
@@ -61,16 +64,16 @@ export async function openTypedAction(context,action){
    await context.upgradeActionCharacter();closed=true;
   })));return;}
   if(!record && action.flow.profile==='activation')controls.append(button('Comprometer ativação',()=>run(async()=>{
-   intent??=prepareActionIntent(system,character(),action,{inputs:readInputs()});const prepared=prepareActivationMilestone(system,character(),action,intent,signature);await commit(prepared);intent=resumeActionIntent(system,character(),action,record,signature);inputs.replaceChildren();status.textContent='Ativação guardada. Os custos de ativação já foram pagos; retomar não paga novamente.';
+   intent??=prepareActionIntent(system,character(),action,{inputs:readInputs()});const prepared=bindEventProposal(system,character(),prepareActivationMilestone(system,character(),action,intent,signature),context.proposalId,action.id);await commit(prepared);intent=resumeActionIntent(system,character(),action,record,signature);inputs.replaceChildren();status.textContent='Ativação guardada. Os custos de ativação já foram pagos; retomar não paga novamente.';
   })));
   else controls.append(button(record?'Resolver ou retomar execução':'Resolver prévia',()=>run(resolve)));
-  if(plan && !retries.has(plan.id))controls.append(button('Confirmar resultado',()=>run(async()=>{
-   const completed=prepareCompletionMilestone(system,character(),action,plan,signature,{...(record?{activation:record}:{})});await commit(completed);retries.delete(completed.id);status.textContent='Resultado aplicado e registrado.';closed=true;close();focusAction(action.label);
+  if(plan && completedPlan && !retries.has(plan.id))controls.append(button('Confirmar resultado',()=>run(async()=>{
+   await commit(completedPlan);retries.delete(completedPlan.id);status.textContent='Resultado aplicado e registrado.';closed=true;close();focusAction(action.label);
   })));
   if(record && retries.has(record.id))controls.append(button('Guardar transcript e retomar',()=>run(async()=>{await saveResolution();await resolve();})));
   if(busy)for(const control of controls.querySelectorAll('button'))control.disabled=true;
  };
- if(!record)readInputs=mountRecordInputs(inputs,{definition:{fields:action.flow.inputs||[]},system,character:character(),label:action.label,state:{},onEdit:()=>{if(intent&&!record){intent=undefined;plan=undefined;report.replaceChildren();drawControls();}}});
+ if(!record)readInputs=mountRecordInputs(inputs,{definition:{fields:action.flow.inputs||[]},system,character:character(),label:action.label,state:{},base:context.actionInputs||{},onEdit:()=>{if(intent&&!record){intent=undefined;plan=undefined;report.replaceChildren();drawControls();}}});
  else status.textContent='Execução pendente encontrada. Retomar usa as faces já guardadas.';
  drawControls();
  const close=openModal({title:action.label,contentEl:body,onClose:()=>{closed=true;focusAction(action.label);},actions:[{label:action.flow.profile==='activation'?'Fechar e retomar depois':'Cancelar prévia',className:'button button--ghost',onClick:()=>{closed=true;focusAction(action.label);}}]});

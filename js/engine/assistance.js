@@ -7,6 +7,7 @@ import { rollOne } from './dice-resolver.js';
 import {requirePredicate} from './predicates.js';
 import {validateDataDefinitions} from '../validation/data-definitions.js';
 import {assertPreparedAction} from './action-plan.js';
+import {assertEventBasis} from './rule-events.js';
 
 export function inventoryCalculationKey(config, stat) {
   return config.overrideKeys?.[stat] || `inventory.${config.overrideKey || config.field}.${stat}`;
@@ -56,6 +57,7 @@ export function healState(grade, potency, success, scale, limited = false) {
 export function executeSheetAction(character, action, system,options={}) {
   if(action.allowWhen!==undefined)requirePredicate(system,character,action.allowWhen);
   if(action.flow!==undefined){
+    assertEventBasis(character,options.plan||{},system);
     const plan=assertPreparedAction(system,character,action,options.plan),validate=draft=>{const issues=validateDataDefinitions(system,draft,'character');if(issues.length)throw Error(issues[0].message);options.validate?.(draft);};
     applyCharacterChanges(character,plan.patches,{validate});return {version:plan.recordChange?3:2,id:action.id,runId:plan.id,label:action.label,date:new Date().toISOString(),changes:structuredClone(plan.changes),patches:structuredClone(plan.recordChange?plan.patches.filter(p=>p.path[0]!=='actionRecords'):plan.patches),...(plan.recordChange?{recordChange:structuredClone(plan.recordChange)}:{}),details:structuredClone(plan.details),result:{inputs:structuredClone(plan.inputs),results:structuredClone(plan.results),transcripts:structuredClone(plan.transcripts)}};
   }

@@ -1,5 +1,7 @@
 # Rolagens de entradas configuradas por JSON
 
+[Eventos e gatilhos locais](rule-events.md): origens e cruzamentos explícitos, entradas tipadas, frequência, propostas e confirmação causal.
+
 Para um dado opcional compartilhado por dois componentes e um cálculo numérico desde pacote vazio, consulte [dados tipados v3](typed-data.md) e o [exemplo Primeiro vínculo](first-bindings.package.json).
 
 Para registros, coleções, escolhas, traços, referências, grupos e compostos locais, consulte [dados estruturados e composição v3](structured-data.md).

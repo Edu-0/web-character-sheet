@@ -14,6 +14,7 @@ import {closeModal} from '../modal.js';
 import {executeSheetAction} from '../engine/assistance.js';
 import {setByPath} from '../engine/paths.js';
 import {CharacterHistory,changesBetween,applyCharacterChanges} from '../engine/character-history.js';
+import {assertEventBasis} from '../engine/rule-events.js';
 import {archiveCompletedRecords} from '../engine/action-records.js';
 
 let port, context, character, controller, original, navigation;
@@ -59,6 +60,11 @@ function bootstrap(event) {
           for(const key of Object.keys(character))delete character[key];Object.assign(character,candidate);
           characterHistory.record(character,{label:action.label,group:'action:'+plan.id,mergeAcrossTime:true});
           controller?.refresh();return character;
+        },
+        commitPreparedMutation:async(plan,{label='Confirmar evento'}={})=>{
+          assertEventBasis(character,plan,pkg.system);
+          applyCharacterChanges(character,plan.patches,{validate:value=>{if(prepareDocument(value,{kind:'character',pkg}).status!=='ready')throw Error('Evento de ensaio inválido.');}});
+          characterHistory.record(character,{label,group:'event:'+plan.id,mergeAcrossTime:true});controller?.refresh();return character;
         },
         upgradeActionCharacter:async()=>{
           const candidate={...structuredClone(character),schemaVersion:3};

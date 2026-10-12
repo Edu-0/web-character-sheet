@@ -1,5 +1,6 @@
 import {AUTHORING_LABELS} from './authoring-labels.js';
 import {DATA_TYPES} from '../engine/data-types.js';
+import {EVENT_INPUT_PORTS} from '../engine/event-inputs.js';
 import {ACTION_OPERATIONS} from '../validation/actions.js';
 import {COMPONENT_CONTRACTS,ITEM_FIELD_CONTRACTS,CHECK_ALGORITHMS,RECOVERY_CONTRACT,EFFECT_EVENTS} from '../validation/contracts.js';
 const s=()=>({type:'string'}),path=()=>({type:'path'});
@@ -80,7 +81,9 @@ Object.assign(NESTED,{
   recovery:obj({note:{type:'string',multiline:true}}),
   categoriesFrom:{type:'path'},baseDieFrom:{type:'path'},
 });
+const trigger=obj({version:{type:'integer'},id:str,label:str,enabled:bool,origins:arr(en(['action','manual','event'])),dataId:ref,eventName:str,direction:en(['up','down']),strict:bool,thresholds:arr(num),dispatch:en(['aggregate','each']),frequency:en(['event','scene','character','rearm']),mode:en(['execute','propose']),actionId:ref,priority:{type:'integer'},allowWhen:obj({ruleId:ref,message:str}),inputBindings:arr(obj({inputId:ref,port:en(Object.keys(EVENT_INPUT_PORTS))}))});
 export const SYSTEM_RULES={
+  ruleTriggers:arr(trigger),
   checks:map(check),entryRolls:map(entryRoll),sheetActions:arr(action),recoveryActions:arr(recovery),effectDefinitions:arr(effect),
   pointBudget:budget,repertoire,techniqueUse:technique,
   attributes:arr(obj({key:str,label:str,short:str})),

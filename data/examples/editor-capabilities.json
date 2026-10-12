@@ -15540,6 +15540,370 @@
     },
     {
       "context": "system",
+      "property": "ruleTriggers",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[]",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].version",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].id",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].label",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].enabled",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].origins",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].origins.[]",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].dataId",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].eventName",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].direction",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].strict",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].thresholds",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].thresholds.[]",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "number",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].dispatch",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].frequency",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].mode",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].actionId",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].priority",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].allowWhen",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].allowWhen.ruleId",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].allowWhen.message",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].inputBindings",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].inputBindings.[]",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].inputBindings.[].inputId",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "ruleTriggers.[].inputBindings.[].port",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "system",
       "property": "checks",
       "consumer": "js/engine/checks.js",
       "validation": "js/validation/checks.js",
@@ -22416,6 +22780,370 @@
         "tests/unit/editor-rule-authoring.test.mjs",
         "tests/unit/editor-visual-audit.test.mjs",
         "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[]",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].version",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].id",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].label",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].enabled",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].origins",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].origins.[]",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].dataId",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].eventName",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].direction",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].strict",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].thresholds",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].thresholds.[]",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "number",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].dispatch",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].frequency",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].mode",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].actionId",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].priority",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].allowWhen",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].allowWhen.ruleId",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].allowWhen.message",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].inputBindings",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].inputBindings.[]",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].inputBindings.[].inputId",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
+      ]
+    },
+    {
+      "context": "rule:ruleTriggers",
+      "property": "definition.[].inputBindings.[].port",
+      "consumer": "js/engine/rule-events.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/rule-events.test.mjs",
+        "tests/e2e/editor-rule-events.spec.js"
       ]
     },
     {

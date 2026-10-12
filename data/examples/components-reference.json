@@ -2275,6 +2275,29 @@
       "fallback"
     ]
   },
+  "events": {
+    "inputPorts": {
+      "after": "Valor posterior",
+      "before": "Valor anterior",
+      "count": "Quantidade de limites",
+      "directionUp": "Cruzamento ascendente",
+      "eventId": "Identidade do evento raiz",
+      "limit": "Limite desta execução",
+      "limits": "Lista de limites cruzados",
+      "origin": "Origem da transição",
+      "scene": "Número da cena explícita"
+    },
+    "limits": {
+      "bytes": 262144,
+      "events": 100,
+      "firings": 100,
+      "proposals": 100,
+      "roots": 1000,
+      "thresholds": 100,
+      "triggers": 100,
+      "waves": 16
+    }
+  },
   "examples": [
     "check-buttons.package.json",
     "check-rolls.package.json",
@@ -2486,11 +2509,11 @@
   "sources": {
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
     "js/engine/action-expression.js": "c0add5098ca09383e3cd0b00215e8cb8c21f584d9a28fbe6c5aeeac952333b99",
-    "js/engine/action-fields.js": "b6cbef63142438a6825947fb3efafc47a8cf39ad54281371d7dc86fc8c03f8c6",
-    "js/engine/action-plan.js": "00861e3d4567ef43311a7f9a68a58f07c4ddfd7f95f57a5bc76dde3b4effe3c4",
+    "js/engine/action-fields.js": "d220c2344d7692e6e827303204a0c6716f80ab471188470f6d6f4b5aba58da0d",
+    "js/engine/action-plan.js": "5c675612081857ae9387e95f5b177547c1129585cb5b6a5bc9d0b9525aadb01c",
     "js/engine/action-records.js": "ddbc47590d898d6f4e2e1496f29f61595d968764574b96cf9539df539c614d8d",
     "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
-    "js/engine/assisted-fields.js": "eb9e2fcf436dd2691f178b013957aa403fad0dfb4ba7bb2cabae3eb67f368252",
+    "js/engine/assisted-fields.js": "203e3fb0aa9af0d40eb8e5e8f2989d561a6d74569d2bd360a18996ea68aa2a0a",
     "js/engine/bound-fields.js": "2b19f0c9e8f1cb1660fc639a212a26d1516bf3a1b99e2143e4839d68da42da5e",
     "js/engine/character-history.js": "f46d865c00084773fd8ca8e12bca9fe02c8e9b0da241ec7005adb5accb3081e9",
     "js/engine/check-fields.js": "da205990eabc5d3b4e23454b57362f725b17d529ad3fa1b92dafda05e1e26171",
@@ -2504,6 +2527,8 @@
     "js/engine/effect-fields.js": "19e14de1f04295eda9e81e52ffc77d32762f54750399e5a5aa5c32ff039f537f",
     "js/engine/effects.js": "405a2e811de38fb21f16d9585b86ff520c2b8cfbc0f6d56191c9f7e10ae8dcda",
     "js/engine/entry-rolls.js": "9f4bce37658ed155987fbae0bb23dc21130f83dd85dd39993393ae90ed60e6c2",
+    "js/engine/event-fields.js": "bfef51179720c95ae2c3cb18ad7ddcb4cce211dcb8d1ced93659c082d2d29a59",
+    "js/engine/event-inputs.js": "64769b3c60b68ee73a152d5bbdd09b0462a6805153cf9e01c6e2e504b35990c6",
     "js/engine/fields.js": "6399a2c05277384116c7ff96420cd7760dcfdcaf7014aa8f0555c50801fda4e5",
     "js/engine/point-fields.js": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612",
     "js/engine/predicates.js": "bb5440f4ccceb2086397949c59554f095526d9f6684630a1a32a7225e6d47c02",
@@ -2512,6 +2537,7 @@
     "js/engine/roll-transcript.js": "7222e52c7a5129921e5ed236fb3cc07173c5f8fc9deb514854aa0922b7b4f1f0",
     "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
     "js/engine/rule-analysis.js": "cfa65cdd7e105f974d957aa41ac6347a297929361dad9b4b89172c44a217c5d5",
+    "js/engine/rule-events.js": "a0890b65cfc0b85fde1309a5ded602e6fda2c38b4aea100d890e4a0a47e35e51",
     "js/engine/rule-operations.js": "27bc301c8d9ab7357d8e9ca2ccb4c6cccac2cca237afc548eff2dd261cb1d6aa",
     "js/engine/rule-registry.js": "b944919ff910a7d2a94e970462e1806bf0d465b4abe7d207365ca66118634915",
     "js/engine/structured-fields.js": "dce4e747ea727d0d3c3cd33ee7283ce67ab3efc05a9b6c62e7e65edf5a5bb7f3",
@@ -2525,7 +2551,7 @@
     "js/validation/catalog.js": "beda9ba194c9971424ed18e3666b14a0ccbbac7765b7a829b793eb85e25f549c",
     "js/validation/checks.js": "48db8458c7327c0996fe6e5e831663f26e7b002f021e98bd43adf9870e27c351",
     "js/validation/contracts.js": "4afa9968dc3cce8fa2d975d5d63d899d3123ec25cd39bf642fd93895aead2a05",
-    "js/validation/data-definitions.js": "6b1d061d76f8dd67b7a1701d73a9bb19458aa2f0699584f79bc7b9d42db3e80d",
+    "js/validation/data-definitions.js": "f4d7691d836d04138b0a3b71ffb85a69d2684993b415ee95a344e3039b1a4c8e",
     "js/validation/diagnostics.js": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a",
     "js/validation/documents.js": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5",
     "js/validation/effects.js": "62b0bb57a0d6c6391e31abf5df11568c0d07c59bf2e403db47221805d0935998",
@@ -2534,7 +2560,7 @@
     "js/validation/recovery.js": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
     "js/validation/roll-references.js": "bfe1051d6425682fe5043d16ce865091ae408fadf811ea0c9338891653721bcb",
-    "js/validation/schemas.js": "ec95c32c18ccf57570f64b20e70443c8455e8e42f74972de85004145729c9c86",
+    "js/validation/schemas.js": "5c5c9efd2ddab9df0e3459d782f997275cee6bf01d9d05159db38839eb7cc479",
     "js/validation/versions.js": "c9b2fd271721e72b489044f900e2cffc2ecd5da7d6bd4497e30571f850c7b172"
   },
   "supportedVersions": {
