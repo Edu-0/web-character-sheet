@@ -7,6 +7,7 @@ import {typedValueIssue} from './data-types.js';
 import {calculationValue,getCalculationOverride} from './calculation-overrides.js';
 import {inspectJson} from '../validation/limits.js';
 import {projectTypedTarget} from './typed-effect-runtime.js';
+import {stepCost} from './point-budget.js';
 export {RULE_OPERATIONS,RULE_LIMITS,compileRules};
 const summary=cell=>!cell.present?'Ausente':cell.value===null?'null explícito':Array.isArray(cell.value)?cell.value.length+' entrada(s)':typeof cell.value==='object'?'Registro':cell.value===true?'Sim':cell.value===false?'Não':String(cell.value).slice(0,160);
 export function ruleCalculationKey(system,id,context={}){
@@ -48,6 +49,11 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
   if(n.op==='literal')cell={present:true,value:n.value};
   else if(n.op==='trait')cell={present:true,value:structuredClone(n.dice),definition:type.definition};
   else if(n.op==='traitDice')cell={present:true,value:structuredClone(list(child('value'),info)),storageScope:'temporary'};
+  else if(n.op==='stepCost'){
+   const catalog=system.catalogs.find(catalog=>catalog.id===n.catalogId),definition=compiled.rows.find(row=>row.definition.id===n.dataId).definition,fields=['fromFieldId','toFieldId','costFieldId'].map(key=>catalog.fields.find(field=>field.id===n[key])),costs={};
+   for(const entry of catalog.entries){charge();const [from,to,cost]=fields.map(field=>entry[field.binding]);if(!Number.isSafeInteger(from)||!Number.isSafeInteger(to)||typeof cost!=='number'||!Number.isFinite(cost)||cost<0)throw error(info,'Tabela de passos exige origens/destinos inteiros e custo finito não negativo');const key=from+'->'+to;if(Object.hasOwn(costs,key))throw error(info,'Preço de transição duplicado');costs[key]=cost;}
+   const from=number(child('from'),info),to=number(child('to'),info);if(![0,...definition.scale].includes(from)||![0,...definition.scale].includes(to))throw error(info,'Patamar fora da escala declarada');const value=stepCost(from,to,definition.scale,costs);if(value===null)throw error(info,'Custo cumulativo indisponível: transição ausente ou escala incompatível');cell={present:true,value};
+  }
   else if(n.op==='input'||n.op==='local'){
    const key=n[n.op==='input'?'inputId':'localId'],values=n.op==='input'?actionInputs:actionLocals,definition=type.definition??{type:type.type,nullable:type.nullable},exists=Object.hasOwn(values,key);if(exists){const issue=typedValueIssue(definition,values[key]);if(issue)throw error(info,issue);}cell={present:exists,...(exists?{value:values[key]}:{}),definition,storageScope:'action',dataContext:frame.dataContext};
   }

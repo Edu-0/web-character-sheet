@@ -2458,6 +2458,10 @@ body[data-editor-composing] [data-condition-hidden] { display: block !important;
 
 .engine-effective-value{display:block;white-space:normal;overflow-wrap:anywhere;padding:8px;margin-top:6px;border-inline-start:3px solid var(--color-accent);font-size:.9rem}
 
+.engine-progression{display:grid;gap:12px;min-width:0}.engine-progression section{display:grid;gap:8px}.engine-progression select,.engine-progression button{min-height:44px;max-width:100%;white-space:normal}.engine-progression fieldset{min-width:0;display:grid;gap:8px}.engine-progression label{display:flex;align-items:center;min-height:44px;gap:8px}@media print{.engine-progression button,.engine-progression select,.engine-progression fieldset{display:none}}
+
+.engine-progression select{padding:8px;background:var(--color-panel);color:var(--color-text);border:1px solid var(--color-border)}
+
 /* character-sheet.css — estilos específicos das seções da ficha */
 
 /* Cartão de identidade */

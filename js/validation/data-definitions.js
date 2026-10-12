@@ -48,7 +48,7 @@ export function validateDataDefinitions(system, character=system.characterTempla
     try {
       const keys=pathKeys(d.binding);
       if(nested){if(keys.length!==1||keys[0]==='id')throw new Error('Campo aninhado exige chave única não reservada à identidade');}
-      if(!nested&&['schemaVersion','meta','activeEffects','calculationOverrides','actionRecords','ruleEventState'].includes(keys[0])) throw new Error('Binding reservado ao documento');
+      if(!nested&&['schemaVersion','meta','activeEffects','calculationOverrides','actionRecords','ruleEventState','progressionLedger'].includes(keys[0])) throw new Error('Binding reservado ao documento');
       if(!nested && bindings.some(b=>b===d.binding || b.startsWith(d.binding+'.') || d.binding.startsWith(b+'.'))) throw new Error('Binding sobreposto a outra identidade');
       if(!nested)bindings.push(d.binding);
       if(Object.hasOwn(d,'initial')) {const problem=typedValueIssue(d,d.initial,{allowInitial:true});if(problem)add(at+'.initial',problem);}

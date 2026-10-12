@@ -47,6 +47,12 @@ export function compileRules(system,{actionScope}={}){
   }
   else if(n.op==='trait'){result=typeOfDefinition(rows.find(r=>r.definition.id===n.dataId).definition);result.optional=false;result.nullable=false;}
   else if(n.op==='traitDice'){need(child('value'),'trait','value');result={type:'list',item:{type:'number',optional:false,nullable:false},optional:false,nullable:false};}
+  else if(n.op==='stepCost'){
+   need(child('from'),'number','from');need(child('to'),'number','to');const definition=rows.find(row=>row.definition.id===n.dataId)?.definition,catalog=system.catalogs?.find(catalog=>catalog.id===n.catalogId);
+   if(definition?.type!=='trait'||!catalog)fail(info,null,'escolha escala de traço e catálogo existentes');
+   const fields=['fromFieldId','toFieldId','costFieldId'].map(key=>catalog.fields.find(field=>field.id===n[key]));if(new Set(fields).size!==3||fields.some(field=>!field||!['number','integer'].includes(field.type)))fail(info,null,'escolha três campos numéricos distintos do catálogo');
+   dependencies.get(record.rule.id).dataIds.add(n.dataId);dependencies.get(record.rule.id).catalogIds.add(catalog.id);result={type:'number',optional:false,nullable:false};
+  }
   else if(n.op==='read'||n.op==='empty'){
    const row=rows.find(r=>r.definition.id===n.dataId);if(!row)fail(info,'dataId','dado inexistente');
    const scopes=[...record.contextCollections,...scopeTypes().flatMap(t=>t.item?.collectionIds||[])];for(const a of row.ancestors)if(a.type==='collection'&&!scopes.includes(a.id))fail(info,'dataId',row.definition.label+' exige entrada de '+a.label);

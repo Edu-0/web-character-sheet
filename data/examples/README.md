@@ -1,5 +1,7 @@
 # Rolagens de entradas configuradas por JSON
 
+[Criação e evolução tipadas](progression-choices.md): opções com requisitos, custo, escolhas e concessões por origem.
+
 [Efeitos tipados](typed-effects.md): projeção sobre base/cálculo, consumo e eventos confirmados em v3.
 
 [Eventos e gatilhos locais](rule-events.md): origens e cruzamentos explícitos, entradas tipadas, frequência, propostas e confirmação causal.

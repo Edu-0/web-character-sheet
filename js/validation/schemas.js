@@ -18,6 +18,7 @@ import {validateRollReferences} from './roll-references.js';
 import {predicateBindingIssue} from '../engine/predicates.js';
 import {validateActionRecords} from '../engine/action-records.js';
 import {compileTriggers,validateEventState} from '../engine/rule-events.js';
+import {compileProgression,progressionLedgerIssues} from '../engine/progression-choices.js';
 
 export const KNOWN_COMPONENT_TYPES = new Set(Object.keys(COMPONENT_CONTRACTS));
 
@@ -127,6 +128,7 @@ export function validateSystem(system) {
   if (system.recoveryActions !== undefined) validateRecoveryActions(system.recoveryActions, system, issues);
   if (system.sheetActions !== undefined) validateActions(system.sheetActions,system,issues);
   if (system.ruleTriggers !== undefined) { try { compileTriggers(system); } catch(error) { add(issues,'system.ruleTriggers',error.message,'rule-events'); } }
+  if (system.schemaVersion===3&&system.progressionChoices!==undefined) {try {compileProgression(system);}catch(error){add(issues,'system.progressionChoices',error.message,'progression');}}
   if (system.checks !== undefined) {
     validateChecks(system.checks, issues, system);
     validateCheckData(system.characterTemplate, system.checks, issues, 'system.characterTemplate');
@@ -314,6 +316,9 @@ function validateComponent(component, path, system, issues, layoutVersion,depth=
     if (!Array.isArray(fields) || !fields.length || new Set(fields).size !== fields.length || fields.some(key => typeof key !== 'string' || !Object.hasOwn(component.itemSchema || {}, key))) add(issues, `${path}.itemDetails.fields`, 'exige campos distintos presentes em itemSchema');
   }
   if (component.options !== undefined && !Array.isArray(component.options)) add(issues, `${path}.options`, 'deve ser uma lista');
+  if(component.type==='progressionChoices'){
+    if(system?.schemaVersion!==3||component.configFrom!==undefined&&component.configFrom!=='progressionChoices'||!system?.progressionChoices)add(issues,path,'Escolhas tipadas exigem sistema v3 e progressionChoices declarada.');
+  }
   if (['pointBudget', 'repertoire', 'techniqueUse'].includes(component.type)) {
     const configFrom = component.configFrom ?? COMPONENT_CONTRACTS[component.type].properties.configFrom.default;
     if (requireString(configFrom, `${path}.configFrom`, issues) && system) {
@@ -413,6 +418,7 @@ export function validateCharacter(character, { root = 'character', allowMissingI
   validateVersion(character, root, issues);
   issues.push(...validateActionRecords(character,{root}));
   issues.push(...validateEventState(character,`${root}.ruleEventState`));
+  issues.push(...progressionLedgerIssues(character));
   if (character.activeEffects !== undefined) {
     if (character.schemaVersion < 2) add(issues, `${root}.schemaVersion`, 'activeEffects exige versão 2');
     issues.push(...validateEffects(character.activeEffects, {root,characterVersion:character.schemaVersion}));
@@ -500,6 +506,7 @@ export function validateCharacterForPackage(character, pkg, {allowMissingId = fa
   issues.push(...validateDataDefinitions(pkg.system,character,template?'system.characterTemplate':'character'));
   validateCheckData(character, pkg.system.checks, issues);
   issues.push(...validateEffects(character.activeEffects, {system:pkg.system,characterVersion:character.schemaVersion}));
+  issues.push(...progressionLedgerIssues(character,pkg.system));
   if(pkg.system.sheetActions) validateActions(pkg.system.sheetActions,pkg.system,issues,'system.sheetActions',character);
   for (const layout of pkg.layouts) for (const tab of layout.tabs) for (const section of tab.sections) for (const container of section.containers) {
     for (const component of expandComponents(container, pkg.system,character)) if (component.field) {

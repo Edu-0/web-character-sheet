@@ -63,6 +63,7 @@ export const COMPONENT_CONTRACTS = {
   computed:component(advanced,'Cálculo nomeado; modo roll não recebe override/efeito derivado',false,{ruleId:p('string'),...calculation,...roll,formula:p('path',{required:true}),variables:p('object'),mode:p('string',{enum:['roll']}),format:p('string'),actionLabel:p('string')},'schemas.js / references.js / roll-references.js'),
   poolBuilder:component(advanced,'Pool autoral e oposição assistida',false,{traitSources:p('array'),...fields('rollLabel resolveLabel')}),
   pointBudget:component('js/engine/point-fields.js','Criação e evolução paga/narrativa separadas',false,{configFrom:p('path',{default:'pointBudget'})}),
+  progressionChoices:component('js/engine/progression-fields.js','Escolhas tipadas, orçamento e concessões com proveniência',false,{configFrom:p('path',{default:'progressionChoices'})}),
   traitAllocation:component(assisted,'Distribuição de traços conforme configuração',true,{presetsFrom:p('path',{required:true}),traitsFrom:p('path',{required:true})}),
   inventorySummary:component(assisted,'Peso/capacidade/excesso derivados',true,{...calculation,overrideKeys:p('object'),...Object.fromEntries(['weightField','quantityField','strengthField','multiplierField'].map(key=>[key,p('path',{required:true})])),carriedField:p('path')}),
   repertoire:component(assisted,'Repertório configurado',false,{configFrom:p('path',{required:true})}),

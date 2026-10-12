@@ -1,5 +1,7 @@
 # Consultas e cálculos visuais — AV-03
 
+**Custo cumulativo pelos passos** usa escala declarada e catálogo de transições, com patamar inicial/final explícitos; preço ausente/duplicado bloqueia e zero permanece válido. Veja [criação e evolução](progression-choices.md).
+
 Em **Compor → Dados tipados e vínculos → Cálculos tipados**, escolha o resultado **Número**, **Texto** ou **Sim/Não**. Monte a árvore selecionando operações, fontes e partes pelos nomes. Uma regra pode ser compartilhada por vários componentes **Cálculo**. Ela usa os dados atuais do personagem; seu resultado não é salvo como um segundo valor.
 
 Para calcular carga equipada, crie uma coleção com Peso, Quantidade e Equipado. Monte **Somar valores da lista → Transformar cada entrada → Filtrar entradas**. O filtro lê Equipado; a transformação multiplica Peso por Quantidade. Em Experimentar, incluir, alterar ou reordenar entradas atualiza o resultado pelos IDs. Uma coleção presente e vazia soma zero. Uma coleção ausente exige uma alternativa explícita, por exemplo **Usar se ausente → Coleção vazia explícita**.

@@ -1339,6 +1339,58 @@
       "source": "js/engine/advanced-fields.js",
       "summary": "Pool autoral e oposição assistida"
     },
+    "progressionChoices": {
+      "properties": {
+        "configFrom": {
+          "default": "progressionChoices",
+          "type": "path"
+        },
+        "dataParameter": {
+          "type": "string"
+        },
+        "default": {
+          "type": "any"
+        },
+        "disabledWhen": {
+          "semantic": "field/equals; bloqueia controles, sem apagar dados",
+          "type": "object"
+        },
+        "editableWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
+          "type": "object"
+        },
+        "extensions": {
+          "type": "any"
+        },
+        "field": {
+          "type": "path"
+        },
+        "help": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "print": {
+          "semantic": "perfil compact; validação em schemas.js",
+          "type": "object"
+        },
+        "type": {
+          "required": true,
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        },
+        "visibleWhen": {
+          "semantic": "v3; regra Sim/Não compartilhada; ocultar preserva dados",
+          "type": "object"
+        }
+      },
+      "semantic": "schemas.js",
+      "source": "js/engine/progression-fields.js",
+      "summary": "Escolhas tipadas, orçamento e concessões com proveniência"
+    },
     "recoveryGroup": {
       "properties": {
         "actionsFrom": {
@@ -2465,6 +2517,19 @@
       }
     }
   },
+  "progression": {
+    "guide": "progression-choices.md",
+    "limits": {
+      "acquisitionGrants": 100,
+      "alternatives": 20,
+      "bytes": 262144,
+      "choices": 20,
+      "grantDefinitions": 500,
+      "grants": 20,
+      "options": 100,
+      "records": 100
+    }
+  },
   "recovery": {
     "fields": [
       "id",
@@ -2531,16 +2596,19 @@
     "js/engine/event-fields.js": "c2547b6982132d14c9c052d14400497d85c411e653a0de7543eaaebf33ddd4f7",
     "js/engine/event-inputs.js": "64769b3c60b68ee73a152d5bbdd09b0462a6805153cf9e01c6e2e504b35990c6",
     "js/engine/fields.js": "6399a2c05277384116c7ff96420cd7760dcfdcaf7014aa8f0555c50801fda4e5",
+    "js/engine/point-budget.js": "b665cc20098b85373b66835b138f5953fcb3d13161b3596f2cae3c71a2411946",
     "js/engine/point-fields.js": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612",
     "js/engine/predicates.js": "bb5440f4ccceb2086397949c59554f095526d9f6684630a1a32a7225e6d47c02",
+    "js/engine/progression-choices.js": "148bad01c84ebf499bf551d330a7b4afe7cb72d2be5793cc8e6220bb3f3314f6",
+    "js/engine/progression-fields.js": "2d88e9db63921dcf18f07d82052220639f3d683cd6fe485e155364efc1c384ea",
     "js/engine/recovery-fields.js": "0376f86ecc50c64a9eaef03c277450b095b9611221a23fd4f989a23044646cbc",
     "js/engine/recovery.js": "3d45355f2b6280f624913ad79402c06cab4765e0602280b2c6e1791b5aeb623e",
     "js/engine/roll-transcript.js": "7222e52c7a5129921e5ed236fb3cc07173c5f8fc9deb514854aa0922b7b4f1f0",
     "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
-    "js/engine/rule-analysis.js": "764f905a299ea28ddc87ebad9fcd92044c42fe602284c88ef1f67661f5767c85",
+    "js/engine/rule-analysis.js": "7828baff8f7afd65e22d4dc91f67141533ba7335b5e211cffda41b9923fc7980",
     "js/engine/rule-events.js": "dfbba5dc2503cb9b29e8aa3a935e62f9293b25ac236735af0a6277e5429a9dea",
-    "js/engine/rule-operations.js": "5c349b2853d3ca474ce56957bb80c0bc502acf1b301b9da6f61a3aaa3648efe1",
-    "js/engine/rule-registry.js": "7be9339deb17900d7e99392beb161f18489af5a70a3aa9d62c56098d914961dd",
+    "js/engine/rule-operations.js": "7f6bf03d525e58f68c37540d09654e2921e1b6948653714f7093496f3ec8dcf4",
+    "js/engine/rule-registry.js": "20d252aa2095e22c220b35304d4f1bb1caf4ceb96a89e0b902c0c3cf741042e3",
     "js/engine/structured-fields.js": "6f7861bb134eed353d00845ae015160365cbef1dba719df2d9b155e18917da33",
     "js/engine/technique-fields.js": "e3785057b2d986001fb3bd98a4c7bb8ac267fa61f7de709b862a64bda0efdb9f",
     "js/engine/typed-data-write.js": "049439c40503f04cd9daffc3bbdec0d4ba071a5dba6f99064c5581dc342445df",
@@ -2556,8 +2624,8 @@
     "js/validation/backup.js": "4ce1a50fcd8739ea086b846bc7a089731f0f493a2accb450752f81e8e38fa77a",
     "js/validation/catalog.js": "beda9ba194c9971424ed18e3666b14a0ccbbac7765b7a829b793eb85e25f549c",
     "js/validation/checks.js": "48db8458c7327c0996fe6e5e831663f26e7b002f021e98bd43adf9870e27c351",
-    "js/validation/contracts.js": "4afa9968dc3cce8fa2d975d5d63d899d3123ec25cd39bf642fd93895aead2a05",
-    "js/validation/data-definitions.js": "f4d7691d836d04138b0a3b71ffb85a69d2684993b415ee95a344e3039b1a4c8e",
+    "js/validation/contracts.js": "3d49943b65bf6f8b6f5df81e2d5979a070fed833ea787e5237fc5bb0f65d118b",
+    "js/validation/data-definitions.js": "756ea8f8b2e87acdd8a86e5366127bc5dac2a1a0a1819393e4c4ac49e678891e",
     "js/validation/diagnostics.js": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a",
     "js/validation/documents.js": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5",
     "js/validation/effects.js": "f9ebd9ac26f4147e319afc8d0b78b34e3759b36c39a3452fa1a5e5913567ed16",
@@ -2566,7 +2634,7 @@
     "js/validation/recovery.js": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
     "js/validation/roll-references.js": "bfe1051d6425682fe5043d16ce865091ae408fadf811ea0c9338891653721bcb",
-    "js/validation/schemas.js": "3300089d251e4766b999dca7bf20d8fb1e5b60ce67a0af127422dd250f2db008",
+    "js/validation/schemas.js": "214401f6e66a28e49cb8b7253f38915172fd7dfc4ee188874a4f5f4b416e1225",
     "js/validation/versions.js": "c9b2fd271721e72b489044f900e2cffc2ecd5da7d6bd4497e30571f850c7b172"
   },
   "supportedVersions": {
@@ -3126,6 +3194,25 @@
         ],
         "pure": true,
         "resultType": "rule",
+        "scope": "continuous",
+        "version": 1
+      },
+      "stepCost": {
+        "help": "Usa a escala do traço e uma tabela explícita de transições. Preço ausente ou duplicado bloqueia; zero é preço válido.",
+        "inputs": [
+          "from",
+          "to"
+        ],
+        "label": "Custo cumulativo pelos passos",
+        "parameters": [
+          "dataId",
+          "catalogId",
+          "fromFieldId",
+          "toFieldId",
+          "costFieldId"
+        ],
+        "pure": true,
+        "resultType": "number",
         "scope": "continuous",
         "version": 1
       },

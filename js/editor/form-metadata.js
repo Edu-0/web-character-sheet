@@ -84,7 +84,10 @@ Object.assign(NESTED,{
   categoriesFrom:{type:'path'},baseDieFrom:{type:'path'},
 });
 const trigger=obj({version:{type:'integer'},id:str,label:str,enabled:bool,origins:arr(en(['action','manual','event'])),dataId:ref,eventName:str,direction:en(['up','down']),strict:bool,thresholds:arr(num),dispatch:en(['aggregate','each']),frequency:en(['event','scene','character','rearm']),mode:en(['execute','propose']),actionId:ref,priority:{type:'integer'},allowWhen:obj({ruleId:ref,message:str}),inputBindings:arr(obj({inputId:ref,port:en(Object.keys(EVENT_INPUT_PORTS))}))});
+const progressionGrant=obj({id:str,label:str,type:en(['set','add','append']),dataId:ref,expression:any,values:map(any),actionId:ref});
+const progressionOption=obj({id:str,label:str,modes:arr(en(['creation','paid','narrative'])),requires:arr(ref),allowWhen:obj({ruleId:ref,message:str}),maxAcquisitions:{type:'integer'},cost:obj({creation:any,paid:any}),grants:arr(progressionGrant),choices:arr(obj({id:str,label:str,minimum:{type:'integer'},maximum:{type:'integer'},options:arr(obj({id:str,label:str,grants:arr(progressionGrant)}))}))});
 export const SYSTEM_RULES={
+ progressionChoices:obj({version:{type:'integer'},revision:{type:'integer'},creationDataId:ref,evolutionDataId:ref,reopenCreation:bool,revocation:en(['noRefund','originalCost']),options:arr(progressionOption)}),
   ruleTriggers:arr(trigger),
   checks:map(check),entryRolls:map(entryRoll),sheetActions:arr(action),recoveryActions:arr(recovery),effectDefinitions:arr(effect),
   pointBudget:budget,repertoire,techniqueUse:technique,

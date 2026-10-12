@@ -1,5 +1,7 @@
 # Editor por formulários
 
+O painel **Criação, evolução e concessões** configura opções, custos e escolhas com a mesma sessão e o construtor de operações. [Contrato e cobertura](progression-choices.md).
+
 O painel **Efeitos tipados e projeções** usa o construtor comum de operações e a mesma sessão. Os perfis de definição antigo e tipado têm descritores distintos; veja [contrato, provas e limites](typed-effects.md).
 
 Em **Sistemas**, abra ou crie um pacote e escolha **Editar por formulários**. A árvore mostra as definições de layouts, abas, seções, grupos e componentes. Selecione um bloco para configurar **Apresentação**, **Dados** e **Lógica**. É o mesmo pacote, rascunho, histórico, validador e fluxo de [prévia, recuperação, exportação e aplicação do editor JSON](editor-json.md).

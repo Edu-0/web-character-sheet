@@ -6,6 +6,7 @@ import { getFieldType } from './fields.js';
 import './advanced-fields.js';
 import './structured-fields.js';
 import './point-fields.js';
+import './progression-fields.js';
 import './assisted-fields.js';
 import './recovery-fields.js';
 import './check-fields.js';

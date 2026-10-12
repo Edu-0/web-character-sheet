@@ -1,5 +1,7 @@
 # Ficha RPG
 
+Configure [criação, evolução e concessões](data/examples/progression-choices.md) com requisitos, orçamento, escolhas e benefícios registrados por origem. Edição direta continua separada de compras.
+
 **Versão 0.5.0 — pré-lançamento.** Novidades e limites em [Histórico de versões](CHANGELOG.md).
 
 **Fichas bonitas, organizadas e prontas para a sessão.**

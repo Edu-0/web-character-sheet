@@ -2,9 +2,9 @@
 
 Gerada por `npm run build:reference`; confira com `npm run check:reference`. Não edite este arquivo à mão. Descritores são consumidos pela validação de formas/chaves; regras semânticas permanecem nos validadores indicados. Extras seguros são preservados como metadados inertes, sem ampliar operações permitidas.
 
-São 33 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
+São 34 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `6ba0c806f94874f487a82dbe6a474fee99eb4273a965d72cd7600fd7daaec6cc`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `358130bb9555be5e3a78f3aed4bd83cfcfa82d16e1869a3ac71ceb06aada2331`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -293,6 +293,16 @@ Implementação: [js/engine/advanced-fields.js](../../js/engine/advanced-fields.
 | `resolveLabel` | string | não |  |
 | `rollLabel` | string | não |  |
 | `traitSources` | array | não |  |
+
+## progressionChoices
+
+Escolhas tipadas, orçamento e concessões com proveniência
+
+Implementação: [js/engine/progression-fields.js](../../js/engine/progression-fields.js). Validação semântica: schemas.js.
+
+| Parâmetro | Tipo | Obrigatório | Default/enum/condição |
+| --- | --- | --- | --- |
+| `configFrom` | path | não | default: "progressionChoices" |
 
 ## recoveryGroup
 
@@ -598,6 +608,10 @@ Defaults compartilhados: {"historyLimit":20,"textareaRows":3,"counterMin":0,"che
 | recovery.operation | `type`, `field`, `maxField`, `value`, `valueField`, `filterField`, `filterValues`, `requireCurrentMin`, `label` |
 | recovery.operations | `restoreValue`, `set`, `restoreCollection`, `setCollection` |
 | recovery.maxActions | 30 |
+
+## Criação e evolução tipadas
+
+[Escolhas e concessões](progression-choices.md). Limites: {"options":100,"choices":20,"alternatives":20,"grants":20,"grantDefinitions":500,"acquisitionGrants":100,"records":100,"bytes":262144}. Criação, paga e narrativa têm registros separados; preço e origem são preservados.
 
 ## Eventos locais
 

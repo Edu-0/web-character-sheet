@@ -5,6 +5,7 @@ export const RULE_OPERATIONS=Object.freeze({
  literal:operation('Valor literal',[],'literal',['value'],'Número, texto, Sim/Não ou null explícito.'),
  trait:operation('Traço da escala declarada',[],'trait',['dataId','dice'],'Escolha dados da escala deste traço; não escreve o dado-base.'),
  traitDice:operation('Faces dos dados do traço',['value'],'list',[],'Expõe os tamanhos dos dados para consultas; o traço permanece tipado.'),
+ stepCost:operation('Custo cumulativo pelos passos',['from','to'],'number',['dataId','catalogId','fromFieldId','toFieldId','costFieldId'],'Usa a escala do traço e uma tabela explícita de transições. Preço ausente ou duplicado bloqueia; zero é preço válido.'),
  read:operation('Ler dado',[],'data',['dataId','mode'],'Escolha base armazenada ou projeção efetiva; ausência não equivale a zero.'),
  input:{...operation('Ler entrada desta ação',[],'input',['inputId']),scope:'action'},
  local:{...operation('Usar resultado anterior desta ação',[],'local',['localId']),scope:'action'},

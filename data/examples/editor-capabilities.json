@@ -10105,6 +10105,342 @@
       ]
     },
     {
+      "context": "component:progressionChoices",
+      "property": "type",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "label",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "field",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "variant",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "help",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "default",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "dataParameter",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "disabledWhen",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "disabledWhen.field",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "disabledWhen.equals",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "print",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "print.compact",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "print.compact.include",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "extensions",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "valor tipado preservado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "visibleWhen",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "visibleWhen.ruleId",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "visibleWhen.message",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "editableWhen",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "editableWhen.ruleId",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "editableWhen.message",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "component:progressionChoices",
+      "property": "configFrom",
+      "consumer": "js/engine/progression-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "seletor contextual",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
       "context": "component:traitAllocation",
       "property": "type",
       "consumer": "js/engine/assisted-fields.js",
@@ -15536,6 +15872,734 @@
         "tests/unit/editor-rule-authoring.test.mjs",
         "tests/unit/editor-visual-audit.test.mjs",
         "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.version",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.revision",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.creationDataId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.evolutionDataId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.reopenCreation",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.revocation",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].modes",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].modes.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].requires",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].requires.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].allowWhen",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].allowWhen.ruleId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].allowWhen.message",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].maxAcquisitions",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].cost",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].cost.creation",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].cost.paid",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[].type",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[].dataId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[].expression",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[].values",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[].values.*",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].grants.[].actionId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].minimum",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].maximum",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[].type",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[].dataId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[].expression",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[].values",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[].values.*",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "system",
+      "property": "progressionChoices.options.[].choices.[].options.[].grants.[].actionId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
       ]
     },
     {
@@ -22780,6 +23844,734 @@
         "tests/unit/editor-rule-authoring.test.mjs",
         "tests/unit/editor-visual-audit.test.mjs",
         "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.version",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.revision",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.creationDataId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.evolutionDataId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.reopenCreation",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "boolean",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.revocation",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].modes",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].modes.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].requires",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].requires.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].allowWhen",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].allowWhen.ruleId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].allowWhen.message",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].maxAcquisitions",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].cost",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].cost.creation",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].cost.paid",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[].type",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[].dataId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[].expression",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[].values",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[].values.*",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].grants.[].actionId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].minimum",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].maximum",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[]",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[].id",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[].label",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[].type",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[].dataId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[].expression",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[].values",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "object",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[].values.*",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "any",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
+      ]
+    },
+    {
+      "context": "rule:progressionChoices",
+      "property": "definition.options.[].choices.[].options.[].grants.[].actionId",
+      "consumer": "js/engine/progression-choices.js",
+      "validation": "js/validation/schemas.js",
+      "type": "path",
+      "inert": false,
+      "control": "painel Criação, evolução e concessões; expressão pelo construtor comum",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/progression-choices.test.mjs",
+        "tests/e2e/editor-progression-choices.spec.js"
       ]
     },
     {
