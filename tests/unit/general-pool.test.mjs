@@ -1,0 +1,26 @@
+// Pure integration of the descriptors driven through controls in the GUI journey.
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {poolSteps} from '../helpers/general-pool.mjs';
+import {minimalPackage} from '../../js/editor/minimal-package.js';
+import {prepareActionIntent,resolveActionIntent} from '../../js/engine/action-plan.js';
+import {resolvePool,potencyOptions} from '../../js/engine/pool.js';
+const ast=value=>Array.isArray(value)?value.map(ast):value&&typeof value==='object'?{...(value.op?{id:crypto.randomUUID(),version:1}:{}),...Object.fromEntries(Object.entries(value).map(([key,part])=>[key,ast(part)]))}:value;
+const n=value=>({op:'literal',value}),read=dataId=>({op:'read',dataId}),d=(id,type,extra={})=>({id,label:id,binding:id,type,required:false,nullable:false,...extra});
+async function fixture(){
+ const system=minimalPackage('pool-authored').system,ids=['primary','base','extra6','extra4'];system.dataDefinitions=[...ids.map(id=>d(id,'trait',{scale:[4,6,8,10,12],composite:true})),...ids.map(id=>d('use_'+id,'boolean')),d('manual','boolean'),d('manualResult','number')];system.rules=[{id:'allowed',label:'Fontes participantes',revision:1,kind:'predicate',resultType:'boolean',expression:ast(ids.map(id=>read('use_'+id)).reduce((left,right)=>({op:'or',left,right})))}];
+ const character={schemaVersion:3,primary:[8,6],base:[4],extra6:[6],extra4:[4],use_primary:true,use_base:true,use_extra6:false,use_extra4:false,manual:false,manualResult:3},action={id:'pool',label:'Pool declarada',allowWhen:{ruleId:'allowed'},flow:{version:1,revision:1,profile:'preview',inputs:[],costs:[],steps:[{id:'roll',label:'Fontes',type:'resolve',groups:ids.map(id=>({id,label:id,type:'dice',dice:[{resultType:'trait',expression:ast(read(id)),count:ast({op:'if',condition:read('use_'+id),then:n(1),else:n(0)})}]}))}]}};let serial=0;
+ const produce=async(label,resultType,expression)=>{const id='value_'+ ++serial;action.flow.steps.push({id,label,type:'value',resultType,expression:ast(expression)});return id;},choices={};
+ const choose=async(label,source,fieldId,{when,otherwise})=>{const id='choice_'+ ++serial;action.flow.steps.push({id,label,type:'choose',source:ast(source),fieldId,when:ast(when),otherwise:ast(otherwise)});choices[label]=id;return id;};
+ const ports=await poolSteps({resolve:'roll',manualFlag:'manual',manualValue:'manualResult',produce,choose});return {system,character,action,ports,choices};
+}
+test('AV-10 Pool declarada preserva fonte composta, peso único, piso e escolha dos restantes',async()=>{
+ const f=await fixture(),before=structuredClone(f.character),faces=[4,3,2],plan=resolveActionIntent(f.system,f.character,f.action,prepareActionIntent(f.system,f.character,f.action),{die:()=>faces.shift()});assert.equal(plan.locals[f.ports.highest],7);assert.equal(plan.locals[f.ports.lowest],2);assert.equal(plan.locals[f.ports.weight],9);assert.equal(plan.locals[f.ports.potency],4);assert.deepEqual(f.character,before);
+ Object.assign(f.character,{use_extra6:true,use_extra4:true});const draws=[4,3,2,3,4],pending=resolveActionIntent(f.system,f.character,f.action,prepareActionIntent(f.system,f.character,f.action),{die:()=>draws.shift()});assert.equal(pending.awaitingSelection,true);assert.deepEqual(pending.selection.options.map(option=>option.id),['extra6','extra4']);const completed=resolveActionIntent(f.system,f.character,f.action,pending.intent,{selections:{[f.choices['Fonte de potência']]:'extra6'},die:()=>assert.fail('Escolha conserva faces')});assert.equal(completed.locals[f.ports.weight],9);assert.equal(completed.locals[f.ports.potency],6);assert.equal(completed.locals[f.ports.rest],10);
+ const native=resolvePool(completed.locals.roll.groups.map(group=>({source:group.id,result:group.total,sides:Math.max(...group.dice.map(d=>d.sides))})));assert.equal(native.weight,9);assert.deepEqual(potencyOptions(native,4).map(option=>option.sides),[6,4]);
+});
+test('AV-10 Pool declarada diferencia uma fonte, empate composto, vazio e resultado manual',async()=>{
+ const f=await fixture();f.character.use_base=false;let draws=[4,3],plan=resolveActionIntent(f.system,f.character,f.action,prepareActionIntent(f.system,f.character,f.action),{die:()=>draws.shift()});assert.equal(plan.locals[f.ports.weight],7);assert.equal(plan.locals[f.ports.potency],4);f.character.use_base=true;draws=[1,1,2];plan=resolveActionIntent(f.system,f.character,f.action,prepareActionIntent(f.system,f.character,f.action),{die:()=>draws.shift()});assert.equal(plan.locals[f.ports.apex].id,'primary');assert.equal(plan.locals[f.ports.base].id,'base');assert.equal(plan.locals[f.ports.weight],4);
+ f.character.manual=true;draws=[4,3,2];const pending=resolveActionIntent(f.system,f.character,f.action,prepareActionIntent(f.system,f.character,f.action),{die:()=>draws.shift()});plan=resolveActionIntent(f.system,f.character,f.action,pending.intent,{selections:{[f.choices['Fonte com resultado informado']]:'primary'},die:()=>assert.fail('Sem novo RNG')});assert.equal(plan.locals[f.ports.weight],5);assert.equal(plan.locals[f.ports.highest],3);assert.equal(plan.locals.roll.groups[0].total,7);assert.equal(plan.locals[f.ports.potency],4);
+ Object.assign(f.character,{use_primary:false,use_base:false});assert.throws(()=>prepareActionIntent(f.system,f.character,f.action),/condição não atendida/);
+});

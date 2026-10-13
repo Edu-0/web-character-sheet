@@ -1,7 +1,7 @@
 import {RULE_OPERATIONS,RULE_LIMITS} from './rule-operations.js';
 import {compileRules,QUERY_PORTS} from './rule-analysis.js';
 import {readData} from './data-definitions.js';
-import {referenceValueIssue} from './data-references.js';
+import {referenceValueIssue,referenceEntries} from './data-references.js';
 import {dataDefinitions} from './data-definitions.js';
 import {typedValueIssue,safeDataId} from './data-types.js';
 import {calculationValue,getCalculationOverride} from './calculation-overrides.js';
@@ -71,20 +71,29 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
   else if(n.op==='item')cell=frame.items.get(info.scopes.at(-1))?.cell;
   else if(n.op==='property'){
    const owner=child('value'),value=present(owner,info),field=owner.definition.fields.find(f=>f.id===n.fieldId);if(!value||typeof value!=='object'||Array.isArray(value))throw error(info,'Registro exigido');const exists=Object.hasOwn(value,field.binding);if(exists){const issue=typedValueIssue(field,value[field.binding]);if(issue)throw error(info,issue);}cell={present:exists,...(exists?{value:value[field.binding]}:{}),definition:field,dataContext:owner.dataContext,storageScope:owner.storageScope};
+  }else if(n.op==='entryReference'){
+   const owner=child('value'),definition=type.definition;if(!owner.present)cell={present:false,definition};else{const value=present(owner,info),target=definition.target;if(owner.storageScope!==target.scope||!safeDataId(value?.id))throw error(info,'Escopo ou identidade da entrada incompatível com a referência');let context=owner.dataContext??frame.dataContext;
+    if(target.scope==='character'){const row=compiled.rows.find(row=>row.definition.id===target.dataId),ids=row.ancestors.filter(parent=>parent.type==='collection').map(parent=>parent.id);context={entries:ids.map(dataId=>context.entries?.findLast(entry=>entry.dataId===dataId)).filter(Boolean)};const basis=readData(system,character,target.dataId,context);readings.set(JSON.stringify([target.dataId,context]),{dataId:target.dataId,context:structuredClone(context),cell:structuredClone(basis)});}
+    const entries=referenceEntries(system,character,definition,context);if(!indexFor({present:true,value:entries},info).has(value.id))throw error(info,'Destino da referência ausente');cell={present:true,value:value.id,definition,dataContext:context,storageScope:'character'};
+   }
+  }else if(n.op==='flatten'){
+   const source=list(child('source'),info),values=[];for(const part of source){const members=list({present:true,value:part},info);charge(1+members.length);if(values.length+members.length>10000)throw error(info,'Lista excede limite de consulta');values.push(...members);}cell={present:true,value:values};
+  }else if(n.op==='withField'){
+   const owner=child('value'),value=present(owner,info),field=owner.definition.fields.find(field=>field.id===n.fieldId),replacement=present(child('replacement'),info,true),issue=typedValueIssue(field,replacement);if(issue)throw error(info,issue);cell={...owner,value:{...value,[field.binding]:structuredClone(replacement)}};
   }else if(n.op==='entryIdentity'){
    const source=child('value');if(!source.present)cell={present:false};else{const value=present(source,info);if(!safeDataId(value?.id))throw error(info,'Identidade de entrada inválida');cell={present:true,value:value.id};}
   }else if(n.op==='only'||n.op==='first'){
    const source=child('source'),values=list(source,info);if(n.op==='only'&&values.length!==1)throw error(info,'Exige exatamente uma entrada; encontrou '+values.length);indexFor(source,info);const entry=values[0];cell=entry?{present:true,value:entry,definition:source.definition,storageScope:source.storageScope,dataContext:source.storageScope==='character'?{entries:[...(source.dataContext?.entries||[]),{dataId:source.definition.id,entryId:entry.id}]}:frame.dataContext}:{present:false,definition:source.definition};
   }else if(n.op==='lookup'){
    const source=child('source'),id=present(child('key'),info),entry=indexFor(source,info).get(id);charge();if(!entry)throw error(info,'Identidade '+id+' inexistente ou ambígua');cell={present:true,value:entry,definition:source.definition,storageScope:source.storageScope,dataContext:source.storageScope==='character'?{entries:[...(source.dataContext?.entries||[]),{dataId:source.definition.id,entryId:entry.id}]}:frame.dataContext};
-  }else if(n.op==='filter'||n.op==='map'||n.op==='any'||n.op==='all'){
+  }else if(n.op==='filter'||n.op==='map'||n.op==='mapEntries'||n.op==='any'||n.op==='all'){
    const source=child('source'),values=list(source,info),selected=[],cells=[];let outcome=n.op==='all';
    for(const [i,item]of values.entries()){
     charge(1);const current=callbackFrame(source,item,i,n.id,frame),result=visit(record,record.nodes.get(n[QUERY_PORTS[n.op]].id),current);
-    if(n.op==='map'){selected.push(present(result,info));cells.push({...result,dataContext:result.dataContext??current.dataContext});continue;}
+    if(n.op==='map'||n.op==='mapEntries'){const value=present(result,info);if(n.op==='mapEntries'&&(!safeDataId(item?.id)||value?.id!==item.id))throw error(info,'Preserve a identidade de cada entrada');selected.push(value);cells.push({...result,dataContext:result.dataContext??current.dataContext});continue;}
     const yes=boolean(result,info);if(n.op==='filter'){if(yes){selected.push(item);if(source.cells)cells.push(source.cells[i]);}}else if(n.op==='any'&&yes||n.op==='all'&&!yes){outcome=yes;break;}
    }
-   cell=n.op==='filter'?{...source,value:selected,...(source.cells?{cells}:{})}:n.op==='map'?{present:true,value:selected,cells}:{present:true,value:outcome};
+   cell=n.op==='mapEntries'?{...source,value:selected,cells}:n.op==='filter'?{...source,value:selected,...(source.cells?{cells}:{})}:n.op==='map'?{present:true,value:selected,cells}:{present:true,value:outcome};
   }else if(['sum','count','min','max'].includes(n.op)){
    const values=list(child('source'),info);let value=n.op==='count'?values.length:0;if(n.op!=='count')for(const [i,v]of values.entries()){charge(1);if(typeof v!=='number'||!Number.isFinite(v))throw error(info,'Lista contém valor não numérico');value=n.op==='sum'?value+v:i===0?v:n.op==='min'?Math.min(value,v):Math.max(value,v);}cell=['min','max'].includes(n.op)&&!values.length?{present:false}:{present:true,value};
   }else if(n.op==='ifAbsent'){const value=child('value');cell=value.present?value:child('fallback');}

@@ -2578,16 +2578,16 @@
   "schemaVersion": 1,
   "sources": {
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
-    "js/editor/action-authoring.js": "086ed71c8cf7b4e9a7815b3b6a6a7d1c0110084f4ff6371474125c2b71742b4f",
+    "js/editor/action-authoring.js": "34ec1bca378f01580830cc3b74eaf458a2818a150582460115509f54e2ad8a38",
     "js/editor/authoring-pending.js": "682ca417d5c4fdab062c972f5e63db2e6a84de110586a808d6d555c113d44a6f",
     "js/editor/data-picker.js": "8f01eb3193350b8ee1a1187743d9092c6857a4ac70eaad9cf0cbb75d0c7e4725",
     "js/editor/operation-recipe.js": "41c9fc1e5b68cf67eede3da95ccc6089b4adda1b8fd799cf265ade2d891112d2",
-    "js/editor/rule-connections.js": "3f6d9441b14dbfe9d2a382f4dc90158e43c0a395ca8622d9d1451fb29dbd8d99",
+    "js/editor/rule-connections.js": "f0e193f4652b90dcfb210e1f960987e41efd48fbb57b9f4036e7edd5552cd093",
     "js/editor/rule-plans.js": "2087bd43044e51fabe4ee0fe4f7eed4a6fe486c02e1203377607818375da4c7e",
     "js/engine/action-choices.js": "13635a9966b8daab2b2ad5b58b99bc6e0218e3a26633cb1f608e807aa67d7c5d",
     "js/engine/action-expression.js": "efab537b1edd027ab8aed2bacf4054eac93a212f966eb164eb0183939a3a9ed7",
     "js/engine/action-fields.js": "bee4d6789c95d592a4c0d1357f42ef05b7259935e330c09a4ae15a1df1816487",
-    "js/engine/action-plan.js": "f1e05ca950fde89dd9b2a507e40161e5dae1e643dc7dd1fdb4333a501513ac48",
+    "js/engine/action-plan.js": "4a648af7bdfbdd117b71e1f453296b1a1808a42b1312dfd65588dbb9f667fecd",
     "js/engine/action-progressions.js": "f4a13df5fa4296745a9b43f60ee4ca88c0f0971490678d4fb1acd57dea7ab303",
     "js/engine/action-records.js": "a6d20d02d39769e53d0859edd0d34d495a1456c3e9478e623df58b293c565374",
     "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
@@ -2619,10 +2619,10 @@
     "js/engine/resolution-results.js": "77a6663b32fbfd408456fed9ead2315e21e29b3cf453c059cea479a17e3a2dd7",
     "js/engine/roll-transcript.js": "7222e52c7a5129921e5ed236fb3cc07173c5f8fc9deb514854aa0922b7b4f1f0",
     "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
-    "js/engine/rule-analysis.js": "b4340f5ea1407fd7269d71e98ba6c06bdd04ed997f0ae67bd94848befbc1c40b",
+    "js/engine/rule-analysis.js": "b5ecb1151784463fea065ab8a1b42c21bb415a321f5fa97abf010a06fd70ed50",
     "js/engine/rule-events.js": "dfbba5dc2503cb9b29e8aa3a935e62f9293b25ac236735af0a6277e5429a9dea",
-    "js/engine/rule-operations.js": "dc54416e272ba645e9060e17e9293932ea701764eb3822ab05042efe61d41b09",
-    "js/engine/rule-registry.js": "743353aeb572636306635bf0937ac0f24a2de2be1f7a3a92d10ea2556e66b84a",
+    "js/engine/rule-operations.js": "0fb80bc49936f95c41b19a296e991c4bffdb8f33507869b644782ad334be6473",
+    "js/engine/rule-registry.js": "570e6e77c518c19c63b82be79e4aca03f83b02cb22d7a2d64b02c7540bfa1c85",
     "js/engine/structured-fields.js": "6f7861bb134eed353d00845ae015160365cbef1dba719df2d9b155e18917da33",
     "js/engine/technique-fields.js": "e3785057b2d986001fb3bd98a4c7bb8ac267fa61f7de709b862a64bda0efdb9f",
     "js/engine/typed-data-write.js": "049439c40503f04cd9daffc3bbdec0d4ba071a5dba6f99064c5581dc342445df",
@@ -2846,6 +2846,20 @@
         "scope": "continuous",
         "version": 1
       },
+      "entryReference": {
+        "help": "Usa uma referência singular declarada para a coleção ou catálogo da entrada. Não converte texto em referência; o destino deve existir.",
+        "inputs": [
+          "value"
+        ],
+        "label": "Referência à entrada",
+        "parameters": [
+          "dataId"
+        ],
+        "pure": true,
+        "resultType": "reference",
+        "scope": "continuous",
+        "version": 1
+      },
       "equal": {
         "help": "",
         "inputs": [
@@ -2893,6 +2907,18 @@
         "parameters": [],
         "pure": true,
         "resultType": "record",
+        "scope": "continuous",
+        "version": 1
+      },
+      "flatten": {
+        "help": "Reúne um nível de listas do mesmo tipo, conservando ordem e valores; consulta limitada, sem rolagem ou escrita.",
+        "inputs": [
+          "source"
+        ],
+        "label": "Reunir listas em uma lista",
+        "parameters": [],
+        "pure": true,
+        "resultType": "list",
         "scope": "continuous",
         "version": 1
       },
@@ -3093,6 +3119,19 @@
         "parameters": [],
         "pure": true,
         "resultType": "list",
+        "scope": "continuous",
+        "version": 1
+      },
+      "mapEntries": {
+        "help": "Produz uma coleção do mesmo tipo, na mesma ordem e com as mesmas identidades. Use condições para preservar entradas não selecionadas.",
+        "inputs": [
+          "source",
+          "value"
+        ],
+        "label": "Atualizar campos de cada entrada",
+        "parameters": [],
+        "pure": true,
+        "resultType": "collection",
         "scope": "continuous",
         "version": 1
       },
@@ -3325,6 +3364,21 @@
         "parameters": [],
         "pure": true,
         "resultType": "list",
+        "scope": "continuous",
+        "version": 1
+      },
+      "withField": {
+        "help": "Produz uma cópia tipada preservando identidade e demais campos; não altera a ficha até a confirmação.",
+        "inputs": [
+          "value",
+          "replacement"
+        ],
+        "label": "Registro com campo substituído",
+        "parameters": [
+          "fieldId"
+        ],
+        "pure": true,
+        "resultType": "record",
         "scope": "continuous",
         "version": 1
       }

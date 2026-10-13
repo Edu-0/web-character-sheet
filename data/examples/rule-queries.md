@@ -12,6 +12,12 @@ Para consultar uma tabela por uma condição, use **Filtrar entradas → Única 
 
 **Primeira entrada da coleção** escolhe pela ordem declarada; uma coleção vazia produz ausência. Use quando a ordem fizer parte da regra, como desempatar fontes já filtradas. **Identidade desta entrada** permite comparar ou excluir a entrada selecionada por seu ID estável, preservando nomes e ordem das demais. Registros comuns não possuem identidade de entrada. Para preços que exigem uma correspondência única, conserve **Única entrada da coleção**. Entradas selecionadas também podem ser reutilizadas como registros locais das ações, com seu contexto derivado; isso não cria outro dado salvo.
 
+**Referência à entrada** produz uma referência singular do tipo escolhido em **Tipo da referência à entrada**. A entrada deve pertencer à coleção ou ao catálogo de destino; texto e registros comuns não viram referências. Ausência continua ausente. A consulta verifica identidade, escopo, destino e contexto, inclusive em coleções aninhadas. Uma consequência pode usar essa referência para relacionar uma nova entrada à origem selecionada.
+
+**Registro com campo substituído** prepara uma cópia do registro com um campo tipado alterado. **Atualizar campos de cada entrada** aplica essa expressão a uma coleção do mesmo tipo, preservando IDs, ordem e demais campos. Combine **Se… então… senão** com a categoria e a marca de recuperação para alterar só as entradas elegíveis. Use **Ler campo de registro** para consultar a cópia produzida; **Ler dado** continua consultando a ficha. Uma ação pode definir a coleção com esse resultado na confirmação; preparar ou cancelar não escreve.
+
+**Reunir listas em uma lista** reúne um nível de listas do mesmo tipo, preservando ordem e valores. Por exemplo, transforme uma coleção de especializações em **Faces dos dados do traço** e reúna os resultados para alimentar uma fonte **Lista de faces por consulta** em uma ação. Vazio permanece uma lista vazia, sem dados artificiais ou rolagem na consulta.
+
 **Se… então… senão**, **E**, **OU**, **Usar se ausente** e **Usar se nulo** avaliam somente a parte necessária. Todos os ramos são validados antes de admitir a regra: uma operação desconhecida ou vínculo inexistente continua inválido mesmo num ramo que não será executado. Ausência, null, false, zero e texto vazio são distintos. Não há conversões implícitas entre tipos; **Converter valor para texto** é explícito.
 
 | Família | Operações disponíveis |
@@ -20,7 +26,8 @@ Para consultar uma tabela por uma condição, use **Filtrar entradas → Única 
 | Presença e decisão | Usar se ausente, Usar se nulo, Se… então… senão, Existe a propriedade, É null explícito, É vazio, Referência resolvida |
 | Números e comparações | Somar, Subtrair, Multiplicar, Dividir, Arredondar para baixo, Valor absoluto, Igual, Menor/Maior que, Menor/Maior ou igual |
 | Lógica e texto | E, OU, Não, Converter valor para texto, Juntar textos |
-| Consultas | Consultar catálogo, Coleção vazia explícita, Filtrar entradas, Transformar cada entrada, Valor desta entrada, Somar/Contar/Menor/Maior valor da lista, Alguma/Todas as entradas atendem, Primeira entrada da coleção, Única entrada da coleção, Identidade desta entrada, Buscar entrada por identidade, Ler campo de registro |
+| Consultas | Consultar catálogo, Coleção vazia explícita, Filtrar entradas, Transformar cada entrada, Reunir listas em uma lista, Valor desta entrada, Somar/Contar/Menor/Maior valor da lista, Alguma/Todas as entradas atendem, Primeira entrada da coleção, Única entrada da coleção, Identidade desta entrada, Referência à entrada, Buscar entrada por identidade, Ler campo de registro |
+| Cópias tipadas | Registro com campo substituído, Atualizar campos de cada entrada |
 
 Lista vazia tem soma/contagem zero, **Alguma** false e **Todas** true. Menor/Maior de lista vazia produz ausência; use uma alternativa quando necessário. Dados inválidos não são descartados pelo somatório. Divisão por zero e resultados não finitos produzem erro.
 

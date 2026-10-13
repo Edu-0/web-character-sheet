@@ -5,7 +5,7 @@ import {ruleNode,stepRecipe} from './typed-data-commands.js';
 import {numberFromText} from './form-commands.js';
 import {el,button,choose,input} from './authoring-dom.js';
 import {compileActionExpression} from '../engine/action-expression.js';
-const portLabels={left:'Editar primeiro operando tipado',right:'Editar segundo operando tipado',value:'Editar valor tipado',fallback:'Editar alternativa se ausente',condition:'Editar condição tipada',then:'Editar ramo verdadeiro tipado',else:'Editar ramo falso tipado',source:'Editar coleção fonte tipada',predicate:'Editar condição desta entrada',key:'Editar identidade procurada',from:'Editar patamar inicial',to:'Editar patamar final'};
+const portLabels={left:'Editar primeiro operando tipado',right:'Editar segundo operando tipado',value:'Editar valor tipado',fallback:'Editar alternativa se ausente',condition:'Editar condição tipada',then:'Editar ramo verdadeiro tipado',else:'Editar ramo falso tipado',source:'Editar coleção fonte tipada',predicate:'Editar condição desta entrada',key:'Editar identidade procurada',replacement:'Editar substituição do campo',from:'Editar patamar inicial',to:'Editar patamar final'};
 const title=row=>row.ancestors.map(d=>d.label).concat(row.definition.label).join(' › ');
 export function mountTypedRuleBuilder(host,{pkg,state,expression,resultType='number',kind='calculation',context,actionScope,scopeLabel='Expressão temporária da ação',onEdit=()=>{},onApply}){
  state.ast??=structuredClone(expression||ruleNode());state.selection??=[];state.rawValues??={};state.errors??={};state.resultType??=resultType;state.kind??=kind;state.contextDataId??=context?.dataId||'';
@@ -41,6 +41,7 @@ export function mountTypedRuleBuilder(host,{pkg,state,expression,resultType='num
   const parameter=(key,label,choices)=>{const control=choose(label,choices,node[key]||'');host.append(control.wrap);control.input.addEventListener('change',()=>{node[key]=control.input.value;changed();render();});};
   if(['read','empty'].includes(node.op))parameter('dataId','Dado fonte da operação tipada',[['','Escolha um dado'],...sources.filter(r=>node.op!=='empty'||r.definition.type==='collection').map(r=>[r.definition.id,title(r)+' · '+r.definition.type])]);
   if(node.op==='read'){const mode=choose('Valor do dado usado',[['base','Base armazenada'],['effective','Efetivo com projeções de efeitos']],node.mode||'base');host.append(mode.wrap);mode.input.addEventListener('change',()=>{node.mode=mode.input.value;changed();render();});}
+  if(node.op==='entryReference')parameter('dataId','Tipo da referência à entrada',[['','Escolha referência singular'],...sources.filter(row=>row.definition.type==='reference'&&!row.definition.multiple).map(row=>[row.definition.id,title(row)])]);
   if(node.op==='stepCost'){
    parameter('dataId','Escala do custo cumulativo',[['','Escolha traço'],...sources.filter(row=>row.definition.type==='trait').map(row=>[row.definition.id,title(row)])]);parameter('catalogId','Tabela do custo cumulativo',[['','Escolha tabela'],...(pkg.system.catalogs||[]).map(catalog=>[catalog.id,catalog.label])]);
    const fields=pkg.system.catalogs?.find(catalog=>catalog.id===node.catalogId)?.fields.filter(field=>['number','integer'].includes(field.type))||[];for(const [key,label]of [['fromFieldId','Origem na tabela de passos'],['toFieldId','Destino na tabela de passos'],['costFieldId','Preço na tabela de passos']])parameter(key,label,[['','Escolha campo'],...fields.map(field=>[field.id,field.label])]);
@@ -53,7 +54,7 @@ export function mountTypedRuleBuilder(host,{pkg,state,expression,resultType='num
    parameter('optionId','Opção da operação tipada',[['','Escolha uma opção'],...(sources.find(r=>r.definition.id===node.dataId)?.definition.options||[]).map(o=>[o.id,o.label])]);
   }
   if(node.op==='catalog')parameter('catalogId','Catálogo fonte da operação tipada',[['','Escolha um catálogo'],...(pkg.system.catalogs||[]).map(c=>[c.id,c.label])]);
-  if(node.op==='property')parameter('fieldId','Campo do registro na operação tipada',[['','Escolha um campo'],...fields.filter(r=>r.ancestors.length).map(r=>[r.definition.id,title(r)+' · '+r.definition.type])]);
+  if(['property','withField'].includes(node.op))parameter('fieldId','Campo do registro na operação tipada',[['','Escolha um campo'],...fields.filter(r=>r.ancestors.length).map(r=>[r.definition.id,title(r)+' · '+r.definition.type])]);
   if(node.op==='rule'){
    parameter('ruleId','Cálculo usado pela operação tipada',[['','Escolha um cálculo'],...(pkg.system.rules||[]).filter(r=>r.id!==state.ruleId).map(r=>[r.id,r.label+' · '+r.resultType])]);
    parameter('mode','Valor do cálculo usado',[['automatic','Automático'],['effective','Efetivo com ajustes numéricos']]);

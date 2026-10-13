@@ -3,7 +3,7 @@ import {dataDefinitions} from './data-definitions.js';
 import {typedValueIssue} from './data-types.js';
 const object=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
 const safeId=v=>typeof v==='string'&&/^[a-zA-Z0-9_-]{1,100}$/.test(v)&&!['constructor','prototype','__proto__'].includes(v);
-export const QUERY_PORTS=Object.freeze({filter:'predicate',map:'value',any:'predicate',all:'predicate'});
+export const QUERY_PORTS=Object.freeze({filter:'predicate',map:'value',mapEntries:'value',any:'predicate',all:'predicate'});
 const numeric=t=>['number','integer'].includes(t?.type);
 export const sameRuleType=(a,b)=>numeric(a)&&numeric(b)||a?.type===b?.type&&(!['record','collection','enum','reference','trait'].includes(a?.type)||a.definition?.id===b.definition?.id)&&(!a?.item||sameRuleType(a.item,b.item));
 export function typeOfDefinition(definition){return {type:definition.type,definition,optional:!definition.required,nullable:definition.nullable,...(definition.type==='collection'?{item:{type:'record',definition,collectionEntry:true,collectionIds:[definition.id]}}:{})};}
@@ -69,6 +69,14 @@ export function compileRules(system,{actionScope}={}){
    const source=scopeTypes().at(-1);if(!source)fail(info,null,'exige contexto de entrada');result=source.item;
   }else if(n.op==='property'){
    const value=need(child('value'),'record','value'),field=value.definition?.fields?.find(f=>f.id===n.fieldId);if(!field)fail(info,'fieldId','campo não pertence ao registro');result=typeOfDefinition(field);if(result.item)result={...result,item:{...result.item,collectionIds:[...(value.collectionIds||[]),field.id]}};else if(result.type==='record')result={...result,collectionIds:value.collectionIds};
+  }else if(n.op==='entryReference'){
+   const value=need(child('value'),'record','value'),definition=rows.find(row=>row.definition.id===n.dataId)?.definition;if(!value.collectionEntry)fail(info,'value','referência exige entrada de coleção, não registro comum');if(definition?.type!=='reference'||definition.multiple)fail(info,'dataId','escolha referência singular existente');if((definition.target?.dataId??definition.target?.catalogId)!==value.definition?.id)fail(info,'value','destino de referência incompatível');dependencies.get(record.rule.id).dataIds.add(definition.id);if(definition.target.scope==='character')dependencies.get(record.rule.id).dataIds.add(definition.target.dataId);else dependencies.get(record.rule.id).catalogIds.add(definition.target.catalogId);result={...typeOfDefinition(definition),optional:value.optional,nullable:false};
+  }else if(n.op==='withField'){
+   const owner=need(child('value'),'record','value'),field=owner.definition?.fields?.find(field=>field.id===n.fieldId);if(!field)fail(info,'fieldId','campo não pertence ao registro');const replacement=child('replacement');if(!sameRuleType(replacement,typeOfDefinition(field))&&!(replacement.type==='null'&&field.nullable))fail(info,'replacement','tipo nominal incompatível com campo');result=owner;
+  }else if(n.op==='flatten'){
+   const source=need(child('source'),'list','source');need(source.item,'list','source');result={type:'list',item:source.item.item,optional:false,nullable:false};
+  }else if(n.op==='mapEntries'){
+   const source=need(child('source'),'collection','source'),body=need(child('value'),'record','value');if(!body.collectionEntry||!sameRuleType(source.item,body))fail(info,'value','preserve o tipo nominal da entrada');result={...source,optional:false,nullable:false};
   }else if(n.op==='entryIdentity'){
    const value=need(child('value'),'record','value');if(!value.collectionEntry)fail(info,'value','identidade exige entrada de coleção, não registro comum');result={type:'string',optional:value.optional,nullable:false};
   }else if(n.op==='only'||n.op==='first'){
