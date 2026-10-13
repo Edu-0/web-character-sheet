@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "c08eec7a9eddeedbaa6b";
+const VERSION = "29d02fa2b4303bf8a37f";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -235,7 +235,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/action-authoring.js",
-    "hash": "acd23149c6a223ac5323a6925ae629ef93cacc4c3237babe67b7db52982de28a"
+    "hash": "b90fbe7366eb8738d7ab6f443bd09bc39fab9388c1c68cd49ce64369a9bf5ef9"
   },
   {
     "path": "js/editor/assisted-plans.js",
@@ -383,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "584046dd630c2e442c9e0f4c29b4cde2ca40d00439b46a1d6747514956677173"
+    "hash": "232efc512cae0ee01ac51641d38e838861d47f40eb0cbc88455a92e93ea1d739"
   },
   {
     "path": "js/editor/history.js",
@@ -487,11 +487,11 @@ const ASSETS = [
   },
   {
     "path": "js/editor/rule-connections.js",
-    "hash": "02fb6517c67031e7f7e36eae0a95e84d4e4f2e02c4030887a7e429257f3337b4"
+    "hash": "3f6d9441b14dbfe9d2a382f4dc90158e43c0a395ca8622d9d1451fb29dbd8d99"
   },
   {
     "path": "js/editor/rule-graph-view.js",
-    "hash": "620cba91cf5ac72943b82c22cfc856012aabef584af67c6222f8664c1426e441"
+    "hash": "b48a2a5e72bc65813574fad90e218d3128196ec8a6adfa11645ec1b335b075c7"
   },
   {
     "path": "js/editor/rule-plans.js",
@@ -559,11 +559,15 @@ const ASSETS = [
   },
   {
     "path": "js/engine/action-fields.js",
-    "hash": "53f792478809b8b434186d8631050d9d216a3d1a4868426976cbf62044666f01"
+    "hash": "cf7c25ef32f8d71c5340d3a2df3e905c40d6383f8b8d4e31283b5f848cb5f4ce"
   },
   {
     "path": "js/engine/action-plan.js",
-    "hash": "9c1ed341ab818fe3f71a3e0890b180761bd62ba6ba5da558ba210c533994dc2d"
+    "hash": "97045f0fa058fc62ea6ae5b6b159f37090fab8cae135a2d3f86dbd79ce77d1a6"
+  },
+  {
+    "path": "js/engine/action-progressions.js",
+    "hash": "f4a13df5fa4296745a9b43f60ee4ca88c0f0971490678d4fb1acd57dea7ab303"
   },
   {
     "path": "js/engine/action-records.js",
@@ -663,7 +667,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/event-fields.js",
-    "hash": "c2547b6982132d14c9c052d14400497d85c411e653a0de7543eaaebf33ddd4f7"
+    "hash": "122e9f345eeb326c3cdd33630b0dc5e9fa5ac329345b07ec1f0b657887790ab1"
   },
   {
     "path": "js/engine/event-inputs.js",
@@ -727,7 +731,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/progression-choices.js",
-    "hash": "aa356849be561424d1693aff3201c121cfc2df4aa049fffaaf5188bd64ead4d2"
+    "hash": "fc9cb5f8e7cddc01197d27ae3675370f56a53d64b2189840732dc5635dc92629"
   },
   {
     "path": "js/engine/progression-fields.js",

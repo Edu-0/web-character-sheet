@@ -53,10 +53,11 @@ export async function openTypedAction(context,action){
     }
    }
   }
+  for(const acquisition of plan.acquisitions||[]){report.append(node('h3','Aquisição com proveniência'),...acquisition.details.map(detail=>node('p',detail)),node('p','O registro da aquisição será incluído nesta confirmação.'));}
   for(const payment of plan.payments)report.append(node('p',payment.label+': '+payment.before+' → '+payment.after+' (custo '+payment.amount+').'));
   for(const effect of plan.effectChanges||[])report.append(node('p',effect.label+': usos '+effect.before+' → '+effect.after+(effect.status==='expired'?' · expirar após confirmar.':'.')));
   for(const cause of completedPlan?.causal||[]){report.append(node('h3',cause.label),node('p','Origem: '+cause.origin+(cause.before!==undefined?' · '+cause.before+' → '+cause.after:'')+(cause.limits.length?' · limites '+cause.limits.join(', '):'')+' · '+(cause.mode==='propose'?'Proposta guardada; executar exige nova confirmação.':'Consequência incluída nesta confirmação.')));for(const payment of cause.payments||[])report.append(node('p',payment.label+': '+payment.before+' → '+payment.after+' (custo '+payment.amount+').'));}
-  for(const change of plan.changes||[]){const row=dataDefinitions(system).find(r=>r.ancestors.map(d=>d.binding).concat(r.definition.binding).join('.')===change.field);if(!row||plan.payments.some(p=>p.dataId===row.definition.id))continue;const format=(exists,value)=>formatTypedCell(system,character(),row.definition,exists?{present:true,value}:{present:false},plan.dataContext);report.append(node('p',row.definition.label+': '+format(change.beforeExists,change.before)+' → '+format(change.afterExists,change.after)));}
+  for(const change of plan.changes||[]){if(plan.acquisitions?.length&&(change.field==='progressionLedger'||change.field.startsWith('progressionLedger.')))continue;const row=dataDefinitions(system).find(r=>r.ancestors.map(d=>d.binding).concat(r.definition.binding).join('.')===change.field);if(!row||plan.payments.some(p=>p.dataId===row.definition.id))continue;const format=(exists,value)=>formatTypedCell(system,character(),row.definition,exists?{present:true,value}:{present:false},plan.dataContext);report.append(node('p',row.definition.label+': '+format(change.beforeExists,change.before)+' → '+format(change.afterExists,change.after)));}
  };
  const drawControls=()=>{
   controls.replaceChildren();

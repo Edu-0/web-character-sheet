@@ -19,8 +19,8 @@ export function ruleSources(pkg){
  return cachedProjection(pkg,'connectionSources',()=>buildRuleSources(pkg));
 }
 function buildRuleSources(pkg){
- const rows=[],seen=new Set(),add=(kind,value,label,extra={})=>{const key=kind+':'+(extra.actionId?extra.actionId+':':extra.definitionId?extra.definitionId+':':'')+value;if(seen.has(key))return;seen.add(key);rows.push({key,kind,value,label,...extra});};
- for(const row of dataDefinitions(pkg.system)){const label=row.ancestors.map(parent=>parent.label).concat(row.definition.label).join(' › ');add(row.ancestors.length?'field':'data',row.definition.id,label,{type:row.definition.type,definition:row.definition});if(row.ancestors.length)add('data',row.definition.id,label,{type:row.definition.type,definition:row.definition});}
+ const rows=[],seen=new Set(),add=(kind,value,label,extra={})=>{const key=kind+':'+(extra.actionId?extra.actionId+':':extra.definitionId?extra.definitionId+':':extra.enumDataId?extra.enumDataId+':':'')+value;if(seen.has(key))return;seen.add(key);rows.push({key,kind,value,label,...extra});};
+ for(const row of dataDefinitions(pkg.system)){const label=row.ancestors.map(parent=>parent.label).concat(row.definition.label).join(' › ');add(row.ancestors.length?'field':'data',row.definition.id,label,{type:row.definition.type,definition:row.definition});if(row.ancestors.length)add('data',row.definition.id,label,{type:row.definition.type,definition:row.definition});if(row.definition.type==='enum')for(const option of row.definition.options||[])add('enumOption',option.id,label+' › '+option.label,{enumDataId:row.definition.id});}
  for(const catalog of pkg.system.catalogs||[]){add('catalog',catalog.id,catalog.label);const walk=fields=>{for(const field of fields){add('field',field.id,catalog.label+' › '+field.label,{type:field.type,definition:field});if(field.fields)walk(field.fields);}};walk(catalog.fields);}
  for(const rule of pkg.system.rules||[])add('rule',rule.id,rule.label,{type:rule.resultType,context:rule.context,purpose:rule.kind});
  for(const [name]of Object.entries(pkg.system.formulas||{}))add('formula',name,name);
@@ -51,7 +51,7 @@ function buildRuleConnections(pkg){
   if(key==='values'&&child&&typeof child==='object'&&typeof value.dataId==='string')for(const fieldId of Object.keys(child)){const target=[...next,fieldId];slots.set(pointerFor(target),{pointer:pointerFor(target),value:fieldId,role:'field',fieldKey:true,targetDataId:value.dataId,actionId:actionOwner(pkg,path)});}
   walk(child,next);
  }};for(const root of roots)walk(pkg.system[root],['system',root]);
- return [...slots.values()].map(slot=>{const path=pointerPath(pkg,slot.pointer),owner=valueAt(pkg,path.slice(0,-1));return {...slot,path,label:slot.pointer,role:slot.role==='effect'&&owner?.type==='componentInstance'?'composition':slot.role,definitionId:path[0]==='system'&&path[1]==='componentDefinitions'?pkg.system.componentDefinitions[path[2]]?.id:undefined,actionId:slot.actionId||actionOwner(pkg,path),checkId:owner?.check,expressionSource:!slot.fieldKey&&['read','rule'].includes(owner?.op)&&['dataId','ruleId'].includes(path.at(-1))};});
+ return [...slots.values()].map(slot=>{const path=pointerPath(pkg,slot.pointer),owner=valueAt(pkg,path.slice(0,-1));return {...slot,path,label:slot.pointer,role:slot.role==='effect'&&owner?.type==='componentInstance'?'composition':slot.role==='option'&&owner?.op==='option'?'enumOption':slot.role,enumDataId:owner?.op==='option'?owner.dataId:undefined,expectedDataType:slot.role==='data'&&path.at(-1)==='dataId'?{option:'enum',trait:'trait',empty:'collection'}[owner?.op]:undefined,definitionId:path[0]==='system'&&path[1]==='componentDefinitions'?pkg.system.componentDefinitions[path[2]]?.id:undefined,actionId:slot.actionId||actionOwner(pkg,path),checkId:owner?.check,expressionSource:!slot.fieldKey&&['read','rule'].includes(owner?.op)&&['dataId','ruleId'].includes(path.at(-1))};});
 }
 
 export function connectionOwner(pkg,slot){
@@ -63,12 +63,12 @@ export function connectionOwner(pkg,slot){
 }
 
 export function connectionSources(pkg,slot){
- return cachedProjection(pkg,'connectionCandidates:'+JSON.stringify([slot.pointer,slot.role,slot.actionId,slot.definitionId,slot.targetDataId,slot.expressionSource,slot.fieldKey]),()=>buildConnectionSources(pkg,slot));
+ return cachedProjection(pkg,'connectionCandidates:'+JSON.stringify([slot.pointer,slot.role,slot.actionId,slot.definitionId,slot.targetDataId,slot.expressionSource,slot.fieldKey,slot.enumDataId,slot.expectedDataType]),()=>buildConnectionSources(pkg,slot));
 }
 function buildConnectionSources(pkg,slot){
  const sources=ruleSources(pkg),allowed=slot.expressionSource?new Set(['data','rule']):new Set([slot.role]);
  let fields;if(slot.fieldKey)fields=dataDefinitions(pkg.system).find(row=>row.definition.id===slot.targetDataId)?.definition.fields?.map(field=>field.id);
- return sources.filter(source=>allowed.has(source.kind)&&(!['input','local'].includes(source.kind)||source.actionId===slot.actionId)&&(source.kind!=='parameter'||source.definitionId===slot.definitionId)&&(!source.actionId||source.actionId===slot.actionId)&&(source.kind!=='checkSource'||source.checkId===slot.checkId)&&(!slot.fieldKey||fields?.includes(source.value)));
+ return sources.filter(source=>allowed.has(source.kind)&&(!slot.expectedDataType||source.type===slot.expectedDataType)&&(source.kind!=='enumOption'||source.enumDataId===slot.enumDataId)&&(!['input','local'].includes(source.kind)||source.actionId===slot.actionId)&&(source.kind!=='parameter'||source.definitionId===slot.definitionId)&&(!source.actionId||source.actionId===slot.actionId)&&(source.kind!=='checkSource'||source.checkId===slot.checkId)&&(!slot.fieldKey||fields?.includes(source.value)));
 }
 
 export function connectRuleSource(pkg,pointer,sourceKey,{mode}={}){

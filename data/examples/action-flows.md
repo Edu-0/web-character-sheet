@@ -38,3 +38,13 @@ Uma fonte composta d8+d6 com faces4+3 produz total7 para essa fonte. Com outra f
 No percentil com unidade0 e dezenas0/5, a coleção de candidatos contém100/50. Ela pode alimentar mínimo, máximo ou outra classificação declarada. As faces originais, usadas e descartadas continuam distinguíveis; cada dado tem identidade relativa dentro do grupo. Essas coleções descrevem o mesmo transcript, sem rolagem adicional ou binding no personagem.
 
 O ramo sem lançamento tem grupos vazios. Quantidade explicitamente zero não consulta o valor da fonte e omite seu grupo se não houver outro dado nele; assim não introduz um zero falso em mínimo/máximo das fontes participantes. Fontes e operações continuam validadas estaticamente. Grupos/dados seguem os limites de32/100; uma identidade sintética ambígua é diagnosticada antes da execução. Os campos anteriores de total/sucesso/lançamento/faixa mantêm suas identidades usuais.
+
+## Aquisição com proveniência na ação
+
+Em **Tipo da nova etapa**, escolha **Adquirir opção com proveniência**. Selecione uma opção já configurada em [Criação, evolução e concessões](progression-choices.md), declare a origem e configure as condições de escolha das alternativas. Cada condição usa o mesmo construtor; entradas booleanas podem representar escolhas da pessoa que executa a ação. A cardinalidade continua sendo a da progressão.
+
+Essa etapa reutiliza o plano de aquisição, seu orçamento, requisitos e registro de origem. Não duplique seu preço nos custos diretos da ação. Custos diretos e aquisições compartilham a reserva de saldo antes do RNG, com limite combinado de32 custos potenciais. O preço final da aquisição não pode superar a reserva. Uma concessão narrativa não exige nem cria um saldo opcional ausente.
+
+Uma ação determinística com aquisição é ensaiada em um candidato descartável antes de cobrar ativação; o ensaio usa os mesmos marcos e executor, sem gravar registro ou lançar dados. Requisitos e escolhas são conferidos novamente na preparação final. Em ações com dados, reserve os custos antes da rolagem; consequências condicionais só adquirem quando sua condição permitir. Aquisições sequenciais podem usar o requisito registrado pela anterior na mesma confirmação. Erro em qualquer etapa recusa a mudança inteira.
+
+As identidades da aquisição e dos benefícios permanecem nas tentativas de gravação e na retomada de uma ativação. Confirmar reúne preço, concessões, ledger, registros de ação e consumo de proposta na transação existente. Cancelar uma prévia não compra; desfazer/refazer não rola ou cobra novamente. Uma proposta determinística sem entradas mostra seu bloqueio no painel de eventos enquanto a opção estiver indisponível; propostas que exigem escolhas continuam sendo revisadas no painel da ação.

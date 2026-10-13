@@ -43,3 +43,5 @@ Até 100 opções; 20 escolhas, alternativas e concessões por ramo; 500 defini�
 `tests/unit/progression-choices.test.mjs` cobre fases, preços, pré-requisitos, cardinalidade, snapshots, proveniência, conflitos, entradas e importação. `tests/e2e/editor-progression-choices.spec.js` configura carreira e talentos desde vazio pela UI, executa aquisição paga/narrativa, ação concedida, cancelar, revogar, desfazer/refazer, recarga, pacote exportado/reimportado, quota/retry, rascunho inválido e custo cumulativo. A prévia também é exercitada por teclado nas doze aparências e três larguras.
 
 Sem alegação de compreensão de iniciantes, dispositivos físicos, leitores de tela reais ou automação integral de um livro. Novas concessões narrativas continuam sendo decisões da mesa.
+
+A [etapa de aquisição das ações tipadas](action-flows.md) permite usar estas opções em uma ação ou proposta de gatilho, com o mesmo custo, escolhas e ledger. A ação não implementa outro aplicador de concessões. Os campos atuais da ficha continuam sendo dados; editar um nível ou saldo diretamente não chama essa etapa.

@@ -81,23 +81,28 @@ function prepared(system,character,draft,id,details){
  return {version:1,id,eventBasis:basis,eventDefinition:JSON.stringify(system),patches:changesBetween(character,draft),details};
 }
 
-export function prepareProgressionChoice(system,character,{optionId,mode,selections={},id=crypto.randomUUID()}={}){
+export function progressionEligibility(system,character,{optionId,mode,evaluationBudget,onRead,onEffectUse}={}){
  if(character.schemaVersion!==3)throw Error('Habilite personagem v3 explicitamente.');const {config,index}=compileProgression(system),row=index.get(optionId);if(!row)throw Error('Opção de progressão inexistente.');
- const ledger=ledgerOf(character),{option}=row;if(!safeDataId(id)||ledger.records.some(record=>record.id===id))throw Error('Identidade de aquisição duplicada ou inválida.');
+ const ledger=ledgerOf(character),{option}=row;
  if(!option.modes.includes(mode)||mode==='creation'&&ledger.phase!=='creation'||mode!=='creation'&&ledger.phase!=='play')throw Error('Origem incompatível com a fase atual.');
  const acquired=ledger.records.filter(record=>record.status==='active');if(acquired.filter(record=>record.optionId===optionId).length>=option.maxAcquisitions)throw Error('Opção já adquirida até seu limite.');if(option.requires.some(required=>!acquired.some(record=>record.optionId===required)))throw Error('Pré-requisito de aquisição não atendido.');
- const budget={remaining:100000};requirePredicate(system,character,option.allowWhen,{budget});if(!object(selections)||Object.keys(selections).some(key=>!option.choices.some(choice=>choice.id===key)))throw Error('Escolha subordinada desconhecida.');
+ const budget=evaluationBudget||{remaining:100000};requirePredicate(system,character,option.allowWhen,{budget,onRead,onEffectUse});return {config,index,row,ledger,budget};
+}
+export function prepareProgressionChoice(system,character,{optionId,mode,selections={},id=crypto.randomUUID(),identityPrefix,evaluationBudget,onRead,onEffectUse}={}){
+ const {config,index,row,ledger,budget}=progressionEligibility(system,character,{optionId,mode,evaluationBudget,onRead,onEffectUse}),{option}=row;if(!safeDataId(id)||ledger.records.some(record=>record.id===id))throw Error('Identidade de aquisição duplicada ou inválida.');if(identityPrefix!==undefined&&(!safeDataId(identityPrefix)||identityPrefix.length>64))throw Error('Namespace de concessão indisponível.');
+ const evaluate=compiled=>evaluateCompiledActionExpression(compiled,character,{budget,onRead,onEffectUse}),observe=dataId=>{const cell=readData(system,character,dataId);onRead?.({dataId,context:{},cell:structuredClone(cell)});return cell;};
+ if(!object(selections)||Object.keys(selections).some(key=>!option.choices.some(choice=>choice.id===key)))throw Error('Escolha subordinada desconhecida.');
  const grants=[...row.grants];for(const choiceRow of row.choices){const selected=selections[choiceRow.choice.id]||[];if(!Array.isArray(selected)||new Set(selected).size!==selected.length||selected.length<choiceRow.choice.minimum||selected.length>choiceRow.choice.maximum||selected.some(id=>!choiceRow.options.some(row=>row.alternative.id===id)))throw Error(choiceRow.choice.label+': cardinalidade ou opção inválida.');for(const selectedId of selected)grants.push(...choiceRow.options.find(row=>row.alternative.id===selectedId).grants);}
  if(grants.length>PROGRESSION_LIMITS.acquisitionGrants)throw Error('Limite de concessões por aquisição excedido.');
- const amount=mode==='narrative'?0:evaluateCompiledActionExpression(row.costs[mode],character,{budget});integer(amount,0,1000000,'Custo da aquisição');const dataId=mode==='creation'?config.creationDataId:config.evolutionDataId,balance=readData(system,character,dataId);
+ const amount=mode==='narrative'?0:evaluate(row.costs[mode]);integer(amount,0,1000000,'Custo da aquisição');const dataId=mode==='creation'?config.creationDataId:config.evolutionDataId,balance=mode==='narrative'?{present:false}:observe(dataId);
  if(mode!=='narrative'&&(!balance.present||typeof balance.value!=='number'||!Number.isFinite(balance.value)||balance.value<amount))throw Error('Orçamento ausente ou insuficiente.');
  const draft=structuredClone(character),next=structuredClone(ledger),record={id,optionId,label:option.label,definitionRevision:config.revision,mode,status:'active',requires:structuredClone(option.requires),selections:structuredClone(selections),cost:{dataId,amount},grants:[],definitionSnapshot:structuredClone(option)},details=[option.label+' · '+({creation:'Criação',paid:'Evolução paga',narrative:'Concessão narrativa'})[mode]+' · custo '+amount];
  // Every expression observes the same source snapshot. No grant manufactures a
  // prerequisite or changes the price of a later grant in this acquisition.
  for(const compiled of grants){
-  const grant=compiled.grant,value=grant.type==='append'?{...initialRecord(compiled.definition),...Object.fromEntries(compiled.values.map(row=>[row.field.binding,evaluateCompiledActionExpression(row.expression,character,{budget})]))}:evaluateCompiledActionExpression(compiled.expression,character,{budget}),before=readData(system,draft,grant.dataId),contributors=[...activeGrants(next),...record.grants].filter(row=>row.dataId===grant.dataId);
+  const grant=compiled.grant;observe(grant.dataId);const value=grant.type==='append'?{...initialRecord(compiled.definition),...Object.fromEntries(compiled.values.map(row=>[row.field.binding,evaluate(row.expression)]))}:evaluate(compiled.expression),before=readData(system,draft,grant.dataId),contributors=[...activeGrants(next),...record.grants].filter(row=>row.dataId===grant.dataId);
   if(contributors.some(row=>row.type!==grant.type))throw Error('Concessões de tipos diferentes no mesmo dado exigem resolução explícita.');
-  const anchor=structuredClone(contributors[0]?.anchor||before),entry={id:crypto.randomUUID(),definitionId:grant.id,label:grant.label,type:grant.type,dataId:grant.dataId,anchor,...(grant.actionId?{actionId:grant.actionId}:{})};
+  const anchor=structuredClone(contributors[0]?.anchor||before),entry={id:identityPrefix?'grant-'+identityPrefix+'-'+record.grants.length:crypto.randomUUID(),definitionId:grant.id,label:grant.label,type:grant.type,dataId:grant.dataId,anchor,...(grant.actionId?{actionId:grant.actionId}:{})};
   if(grant.type==='set'){
    const replacement={present:true,value},dependencies=new Set(),visit=id=>{if(dependencies.has(id))return;dependencies.add(id);for(const dependency of index.get(id)?.option.requires||[])visit(dependency);};for(const dependency of option.requires)visit(dependency);
    const different=contributors.filter(row=>!cellEqual(row.cell,replacement));
@@ -105,7 +110,7 @@ export function prepareProgressionChoice(system,character,{optionId,mode,selecti
    if(contributors.length&&!cellEqual(before,contributors.at(-1).cell))throw Error('Dado concedido foi editado; aquisição bloqueada para preservar a edição.');entry.cell=structuredClone(replacement);writeData(system,draft,grant.dataId,entry.cell);
   }
   else if(grant.type==='add'){if(!before.present||typeof before.value!=='number'||!Number.isFinite(before.value)||typeof value!=='number'||!Number.isFinite(value))throw Error('Contribuição exige base e quantidade numéricas.');entry.amount=value;writeData(system,draft,grant.dataId,{present:true,value:before.value+value});}
-  else{if(!before.present||!Array.isArray(before.value)||!object(value))throw Error('Concessão de entrada exige coleção presente e registro.');entry.entryId=crypto.randomUUID();entry.cell={present:true,value:{...structuredClone(value),id:entry.entryId}};writeData(system,draft,grant.dataId,{present:true,value:[...before.value,entry.cell.value]});}
+  else{if(!before.present||!Array.isArray(before.value)||!object(value))throw Error('Concessão de entrada exige coleção presente e registro.');entry.entryId=identityPrefix?'entry-'+identityPrefix+'-'+record.grants.length:crypto.randomUUID();entry.cell={present:true,value:{...structuredClone(value),id:entry.entryId}};writeData(system,draft,grant.dataId,{present:true,value:[...before.value,entry.cell.value]});}
   record.grants.push(entry);details.push(grant.label+' → '+dataDefinition(system,grant.dataId).label);
  }
  // A grant cannot also overwrite its own budget: this would erase payment.

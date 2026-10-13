@@ -6,7 +6,7 @@ import {ENUM_LABELS} from './authoring-labels.js';
 import {labelFor} from './form-metadata.js';
 import {valueAt} from './form-structure.js';
 const ns='http://www.w3.org/2000/svg',svgNode=(tag,attributes={})=>{const node=document.createElementNS(ns,tag);for(const [key,value]of Object.entries(attributes))node.setAttribute(key,String(value));return node;};
-const kinds={data:'Dado',field:'Campo',rule:'Cálculo',action:'Ação',input:'Entrada da ação',local:'Resultado anterior',effect:'Efeito',option:'Aquisição',catalog:'Catálogo',formula:'Fórmula',configuration:'Configuração',component:'Componente',composition:'Composto local',fieldPath:'Campo da ficha',systemPath:'Valor do sistema',parameter:'Parâmetro do composto',eventPort:'Fonte do evento',check:'Teste',checkSource:'Fonte do teste',entryRoll:'Rolagem de entrada'};
+const kinds={data:'Dado',field:'Campo',rule:'Cálculo',action:'Ação',input:'Entrada da ação',local:'Resultado anterior',effect:'Efeito',option:'Aquisição',enumOption:'Opção do dado',catalog:'Catálogo',formula:'Fórmula',configuration:'Configuração',component:'Componente',composition:'Composto local',fieldPath:'Campo da ficha',systemPath:'Valor do sistema',parameter:'Parâmetro do composto',eventPort:'Fonte do evento',check:'Teste',checkSource:'Fonte do teste',entryRoll:'Rolagem de entrada'};
 const bindingLabel=(pkg,slot)=>{const parts=[];for(let index=2;index<slot.path.length;index++){const owner=valueAt(pkg,slot.path.slice(0,index));if(owner&&typeof owner==='object'&&(owner.label||owner.name))parts.push(owner.label||owner.name);}return [...new Set(parts),labelFor(slot.path.at(-1))].join(' › ');};
 
 export function renderRuleGraph(view,pkg){
