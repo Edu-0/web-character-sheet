@@ -35,3 +35,9 @@ Os cálculos numéricos de [primeiro vínculo](typed-data.md) mantêm seu recort
 [Exemplo de registros e composição](structured.package.json): criado pelos controles no percurso automatizado desde um pacote vazio, com apenas nome/ID do sistema ajustados para distribuição. Mostra coleção, campos filhos, orientação e apresentação repetida; não contém consultas ou regras ocultas.
 
 [Exemplo adicional de composto local](local-composition.package.json) acrescenta uma definição compartilhada e duas instâncias, ligadas a valores independentes 2 e 9. Este exemplo documenta o contrato; o teste visual também constrói duas instâncias pelos controles.
+
+
+As receitas de recuperação existentes também podem escolher dados v3 declarados e campos de coleções vazias. Os menus usam os bindings relativos dos campos, incluindo registros internos; não precisam de entradas de amostra. Cura por dados continua usando as fontes declaradas e o mesmo executor, prévia, confirmação e desfazer. Ausência de valor corrente bloqueia a execução sem criar um inicial. Recuperações em lote por caminho não percorrem coleções internas: consultas aninhadas têm seu escopo próprio. Ao criar outra recuperação no mesmo destino, um painel compatível sem condições adicionais é reutilizado; cada ação mantém a configuração explícita.
+
+
+Na cura por dados, o saldo mínimo para começar é uma escolha explícita e pode permanecer ausente. O cálculo do modificador usa o personagem da prévia e é relido ao aplicar; edição posterior da fonte impede usar uma prévia antiga. O contexto da renderização não é reutilizado em outra cópia do personagem. Nenhuma alteração na política de versões v1/v2 ou conversão ao abrir.

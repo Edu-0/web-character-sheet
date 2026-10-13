@@ -1,3 +1,5 @@
+import {dataDefinitions} from '../engine/data-definitions.js';
+import {typedValueIssue} from '../engine/data-types.js';
 import {RECOVERY_CONTRACT} from './contracts.js';
 import { pathKeys, getByPath } from '../engine/paths.js';
 import { validateRollValueSource } from './entry-rolls.js';
@@ -13,6 +15,8 @@ function path(value, label, issues) { try { pathKeys(value); } catch (error) { a
 function text(value, label, issues) { if (typeof value !== 'string' || !value.trim() || value.length > 2000) add(issues, label, 'deve ser texto não vazio de até 2000 caracteres'); }
 export function validateRecoveryActions(actions, system, issues, root = 'system.recoveryActions') {
   if (!Array.isArray(actions) || actions.length > RECOVERY_CONTRACT.maxActions) { add(issues, root, 'deve ser lista de até 30 ações'); return; }
+  const declared=new Map();try{for(const {definition,ancestors}of dataDefinitions(system))if(!ancestors.some(d=>d.type==='collection'))declared.set(ancestors.map(d=>d.binding).concat(definition.binding).join('.'),definition);}catch{}
+  const numeric=d=>['number','integer'].includes(d?.type),entryField=(definition,field)=>{let current=definition;try{for(const key of pathKeys(field)){if(!['collection','record'].includes(current?.type))return;current=current.fields?.find(d=>d.binding===key);}return current;}catch{return;}};
   const ids = new Set();
   actions.forEach((config, index) => {
     const label = `${root}[${index}]`;
@@ -25,6 +29,7 @@ export function validateRecoveryActions(actions, system, issues, root = 'system.
       for (const key of ['field', 'maxField', 'totalField', 'usedField', 'dieField']) {
         path(h[key], `${label}.healing.${key}`, issues);
         try {
+          const definition=declared.get(h[key]);if(definition){if(key==='dieField'?definition.type!=='string':!numeric(definition))add(issues,`${label}.healing.${key}`,'dado tipado incompatível com a recuperação');continue;}
           const value = getByPath(system.characterTemplate, h[key]);
           if (key === 'dieField' ? typeof value !== 'string' : !Number.isSafeInteger(value) || value < 0) add(issues, `${label}.healing.${key}`, 'campo do template incompatível com a recuperação');
         } catch {}
@@ -47,8 +52,20 @@ export function validateRecoveryActions(actions, system, issues, root = 'system.
       if (op.filterField && (!Array.isArray(op.filterValues) || !op.filterValues.length || op.filterValues.length > 30 || op.filterValues.some(value => !['number', 'string', 'boolean'].includes(typeof value)))) add(issues, `${opLabel}.filterValues`, 'exige lista não vazia de valores simples');
       if (op.requireCurrentMin !== undefined && (!Number.isSafeInteger(op.requireCurrentMin) || op.requireCurrentMin < 0)) add(issues, `${opLabel}.requireCurrentMin`, 'deve ser inteiro não negativo');
       if (op.label !== undefined) text(op.label, `${opLabel}.label`, issues);
-      if (op.type === 'restoreValue') { try { if (!Number.isSafeInteger(getByPath(system.characterTemplate, op.maxField))) add(issues, `${opLabel}.maxField`, 'deve apontar para um inteiro do template'); } catch {} }
-      try { if (getByPath(system.characterTemplate, op.field) === undefined) add(issues, `${opLabel}.field`, 'campo inexistente no template'); } catch {}
+      const definition=declared.get(op.field);
+      if(definition){
+        if(op.type==='restoreValue'&&!numeric(definition))add(issues,`${opLabel}.field`,'dado numérico exigido');
+        if(op.type==='set'){const issue=typedValueIssue(definition,op.value);if(issue)add(issues,`${opLabel}.value`,issue);}
+        if(['restoreCollection','setCollection'].includes(op.type)){
+          if(definition.type!=='collection')add(issues,`${opLabel}.field`,'coleção tipada exigida');
+          const value=entryField(definition,op.valueField);if(!numeric(value))add(issues,`${opLabel}.valueField`,'campo numérico da coleção exigido');
+          if(op.type==='restoreCollection'&&!numeric(entryField(definition,op.maxField)))add(issues,`${opLabel}.maxField`,'máximo numérico da coleção exigido');
+          if(op.type==='setCollection'&&value){const issue=typedValueIssue(value,op.value);if(issue)add(issues,`${opLabel}.value`,issue);}
+          if(op.filterField){const filter=entryField(definition,op.filterField);if(!filter||!['number','integer','string','boolean','enum'].includes(filter.type))add(issues,`${opLabel}.filterField`,'campo simples da coleção exigido');else if(Array.isArray(op.filterValues))for(const value of op.filterValues){const issue=typedValueIssue(filter,value);if(issue)add(issues,`${opLabel}.filterValues`,issue);}}
+        }
+      }
+      if (op.type === 'restoreValue') { try {const maximum=declared.get(op.maxField);if(maximum){if(!numeric(maximum))add(issues,`${opLabel}.maxField`,'máximo numérico exigido');}else { if (!Number.isSafeInteger(getByPath(system.characterTemplate, op.maxField))) add(issues, `${opLabel}.maxField`, 'deve apontar para um inteiro do template');} } catch {} }
+      try { if (!definition&&getByPath(system.characterTemplate, op.field) === undefined) add(issues, `${opLabel}.field`, 'campo inexistente no template'); } catch {}
     });
   });
 }

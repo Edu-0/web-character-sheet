@@ -18,7 +18,7 @@ export function recoveryDie(context, config, manual) {
   if (manual !== '') return Math.max(healing.minimum ?? 0, integer(Number(manual), 'Recuperação informada'));
   const die = parseDiceExpression(getByPath(context.character, healing.dieField));
   if (die.dice.length !== 1 || die.dice[0].count !== 1 || die.modifier !== 0) throw new Error('Configure um único dado de recuperação ou informe o resultado da mesa.');
-  const modifier = integer(rollValue(healing.modifier || { value: 0 }, context), 'Modificador', -1000000);
+  const modifier = integer(rollValue(healing.modifier || { value: 0 }, {...context,ruleEvaluation:undefined}), 'Modificador', -1000000);
   return Math.max(healing.minimum ?? 0, rollOne(die.dice[0].sides) + modifier);
 }
 
@@ -67,7 +67,7 @@ export function applyRecovery(context, config, rolls, baseline) {
     const fields = new Set((config.operations || []).flatMap(op=>[op.field,op.maxField]).filter(Boolean));
     if (config.healing) for (const key of ['field','maxField','usedField','totalField','dieField']) fields.add(config.healing[key]);
     return { values:[...fields].map(field=>getByPath(character,field)),
-      modifier:config.healing ? rollValue(config.healing.modifier || {value:0},{...context,character}) : null,
+      modifier:config.healing ? rollValue(config.healing.modifier || {value:0},{...context,character,ruleEvaluation:undefined}) : null,
       effects:character.activeEffects, overrides:character.calculationOverrides };
   };
   if (JSON.stringify(reads(context.character)) !== JSON.stringify(reads(baseline))) throw new Error('A ficha mudou enquanto este painel estava aberto. Feche e abra novamente para revisar os valores.');

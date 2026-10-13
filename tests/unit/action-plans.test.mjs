@@ -61,3 +61,15 @@ test('AV-05 ativação paga antes de revelar, guarda falha técnica e retoma sem
 test('AV-05 prévia integral só registra ao confirmar e arquivamento nunca remove pendências',async()=>{
  const f=fixture();f.character.schemaVersion=3;const signature=await actionSignature(f.system,f.action),{plan}=resolve(f,6),complete=prepareCompletionMilestone(f.system,f.character,f.action,plan,signature);assert.equal(f.character.actionRecords,undefined);const event=executeSheetAction(f.character,f.action,f.system,{plan:complete});assert.equal(f.character.actionRecords.length,1);assert.equal(f.character.actionRecords[0].phase,'complete');assert.deepEqual(archiveCompletedRecords(f.character,[plan.id]),[]);f.character.actionRecords[0].phase='activated';assert.throws(()=>archiveCompletedRecords(f.character,[plan.id]),/Só registros concluídos/);f.character.actionRecords[0].phase='complete';assert.equal(undoSheetAction(f.character,event),true);assert.equal(f.character.energy,4);assert.deepEqual(f.character.actionRecords,[]);
 });
+
+
+test('AV-10 consequências numéricas em inteiros validam valores sem coerção, inclusive campos de coleção',()=>{
+ for(const type of ['set','insert','update'])for(const amount of [12,12.5,Number.MAX_SAFE_INTEGER+1]){
+  const f=fixture();f.system.dataDefinitions.push(d('percent','integer',{minimum:0,maximum:100}));f.system.dataDefinitions.find(d=>d.id==='entries').fields.push(d('entryPercent','integer',{minimum:0,maximum:100}));f.character.entries=[{id:'existing',entryName:'Antiga',entryPercent:63}];f.character.percent=63;
+  f.action.flow.steps=[type==='set'?{id:'write',label:'Guardar inteiro',type,dataId:'percent',expression:lit(amount)}:{id:'write',label:'Guardar registro',type,dataId:'entries',...(type==='update'?{entryId:lit('existing')}:{ }),values:{entryName:lit('Nova'),entryPercent:lit(amount)}}];f.action.flow.costs=[];delete f.action.flow.outcome;
+  const before=structuredClone(f.character),intent=prepareActionIntent(f.system,f.character,f.action);
+  if(amount===12){const plan=resolveActionIntent(f.system,f.character,f.action,intent);const event=executeSheetAction(f.character,f.action,f.system,{plan});assert.equal(type==='set'?f.character.percent:f.character.entries.at(type==='insert'?-1:0).entryPercent,12);assert.equal(undoSheetAction(f.character,event),true);}
+  else assert.throws(()=>resolveActionIntent(f.system,f.character,f.action,intent),/inteiro|integer|limite/i);
+  assert.deepEqual(f.character,before);
+ }
+});

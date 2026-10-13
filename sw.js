@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "29d02fa2b4303bf8a37f";
+const VERSION = "d068593c2476e2e19606";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -235,7 +235,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/action-authoring.js",
-    "hash": "b90fbe7366eb8738d7ab6f443bd09bc39fab9388c1c68cd49ce64369a9bf5ef9"
+    "hash": "25c77523cf26c728f8571c5f742a7e06fdc8092f88e1c1922e5f607144c75378"
   },
   {
     "path": "js/editor/assisted-plans.js",
@@ -311,7 +311,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/data-picker.js",
-    "hash": "8bbd5156aee97dab03ce6e0a65da29eaba83fa05adade5bc22d2435e90b67300"
+    "hash": "8f01eb3193350b8ee1a1187743d9092c6857a4ac70eaad9cf0cbb75d0c7e4725"
   },
   {
     "path": "js/editor/dice-expression-editor.js",
@@ -383,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "232efc512cae0ee01ac51641d38e838861d47f40eb0cbc88455a92e93ea1d739"
+    "hash": "4fc89cfc06391e9623b09bda4acf5c3d3e809a5c024de1fbd91ba800cfe6c2f9"
   },
   {
     "path": "js/editor/history.js",
@@ -419,7 +419,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/operation-recipe.js",
-    "hash": "eb9c08f0266726c2d771bcbba506d4138549bd0ad7fd5dbc92086b7bc12c78ed"
+    "hash": "41c9fc1e5b68cf67eede3da95ccc6089b4adda1b8fd799cf265ade2d891112d2"
   },
   {
     "path": "js/editor/operations.js",
@@ -495,7 +495,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/rule-plans.js",
-    "hash": "79fa49206a06302107778098bc25b3958667be858a519b30f05675381a26d04e"
+    "hash": "2087bd43044e51fabe4ee0fe4f7eed4a6fe486c02e1203377607818375da4c7e"
   },
   {
     "path": "js/editor/session.js",
@@ -563,7 +563,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/action-plan.js",
-    "hash": "97045f0fa058fc62ea6ae5b6b159f37090fab8cae135a2d3f86dbd79ce77d1a6"
+    "hash": "6aba687bf9a3cfc2ce321aad85a4c6aa7103cb55b8d6c7b46933fef94b76f586"
   },
   {
     "path": "js/engine/action-progressions.js",
@@ -743,7 +743,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/recovery.js",
-    "hash": "3d45355f2b6280f624913ad79402c06cab4765e0602280b2c6e1791b5aeb623e"
+    "hash": "592dcb7258125d2dd049f6966c715048ce521ed24ee303614804ffce6f14b226"
   },
   {
     "path": "js/engine/render-projection.js",
@@ -999,7 +999,7 @@ const ASSETS = [
   },
   {
     "path": "js/validation/recovery.js",
-    "hash": "1ae7ba1acf3f8a3f2ec46191f28cd86236cab0423c55ec28c90da135d29080e9"
+    "hash": "5e25239416131e97fdd5964e5a52645242039d9641ba414213b576a679e41f1b"
   },
   {
     "path": "js/validation/references.js",
