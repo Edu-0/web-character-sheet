@@ -6,7 +6,7 @@ const safeId=v=>typeof v==='string'&&/^[a-zA-Z0-9_-]{1,100}$/.test(v)&&!['constr
 export const QUERY_PORTS=Object.freeze({filter:'predicate',map:'value',any:'predicate',all:'predicate'});
 const numeric=t=>['number','integer'].includes(t?.type);
 export const sameRuleType=(a,b)=>numeric(a)&&numeric(b)||a?.type===b?.type&&(!['record','collection','enum','reference','trait'].includes(a?.type)||a.definition?.id===b.definition?.id)&&(!a?.item||sameRuleType(a.item,b.item));
-export function typeOfDefinition(definition){return {type:definition.type,definition,optional:!definition.required,nullable:definition.nullable,...(definition.type==='collection'?{item:{type:'record',definition,collectionIds:[definition.id]}}:{})};}
+export function typeOfDefinition(definition){return {type:definition.type,definition,optional:!definition.required,nullable:definition.nullable,...(definition.type==='collection'?{item:{type:'record',definition,collectionEntry:true,collectionIds:[definition.id]}}:{})};}
 export function compileRules(system,{actionScope}={}){
  if(system?.schemaVersion!==3)throw Error('Regras declarativas exigem v3.');
  const rules=system.rules??[];if(!Array.isArray(rules)||rules.length>RULE_LIMITS.rules+(actionScope?1:0))throw Error('Lista de até '+RULE_LIMITS.rules+' regras exigida');
@@ -60,7 +60,7 @@ export function compileRules(system,{actionScope}={}){
   }else if(n.op==='option'){
    const row=rows.find(r=>r.definition.id===n.dataId);if(row?.definition.type!=='enum'||!row.definition.options?.some(o=>o.id===n.optionId))fail(info,'optionId','opção de escolha inexistente');result=typeOfDefinition(row.definition);result.optional=false;result.nullable=false;dependencies.get(record.rule.id).dataIds.add(n.dataId);
   }else if(n.op==='catalog'){
-   const catalog=system.catalogs?.find(c=>c.id===n.catalogId);if(!catalog)fail(info,'catalogId','catálogo inexistente');result={type:'collection',definition:catalog,item:{type:'record',definition:catalog},optional:false,nullable:false};dependencies.get(record.rule.id).catalogIds.add(catalog.id);
+   const catalog=system.catalogs?.find(c=>c.id===n.catalogId);if(!catalog)fail(info,'catalogId','catálogo inexistente');result={type:'collection',definition:catalog,item:{type:'record',definition:catalog,collectionEntry:true},optional:false,nullable:false};dependencies.get(record.rule.id).catalogIds.add(catalog.id);
   }else if(n.op==='rule'){
    const target=index.get(n.ruleId);if(!target)fail(info,'ruleId','cálculo inexistente');const scopes=[...record.contextCollections,...scopeTypes().flatMap(t=>t.item?.collectionIds||[])];if(target.contextCollections.some(id=>!scopes.includes(id)))fail(info,'ruleId','cálculo exige contexto de entrada compatível');result=infer(target,target.nodes.get(target.rule.expression.id));if(target.rule.resultType!==result.type&&!(target.rule.resultType==='number'&&numeric(result)))fail(info,'ruleId','tipo de saída incompatível');if(n.mode==='effective'&&!['number','integer','string','boolean'].includes(result.type))fail(info,'mode','resultado escalar exigido');dependencies.get(record.rule.id).ruleIds.add(n.ruleId);
   }else if(n.op==='node'){
@@ -69,8 +69,10 @@ export function compileRules(system,{actionScope}={}){
    const source=scopeTypes().at(-1);if(!source)fail(info,null,'exige contexto de entrada');result=source.item;
   }else if(n.op==='property'){
    const value=need(child('value'),'record','value'),field=value.definition?.fields?.find(f=>f.id===n.fieldId);if(!field)fail(info,'fieldId','campo não pertence ao registro');result=typeOfDefinition(field);if(result.item)result={...result,item:{...result.item,collectionIds:[...(value.collectionIds||[]),field.id]}};else if(result.type==='record')result={...result,collectionIds:value.collectionIds};
-  }else if(n.op==='only'){
-   const source=need(child('source'),'collection','source');result={...source.item,optional:false,nullable:false};
+  }else if(n.op==='entryIdentity'){
+   const value=need(child('value'),'record','value');if(!value.collectionEntry)fail(info,'value','identidade exige entrada de coleção, não registro comum');result={type:'string',optional:value.optional,nullable:false};
+  }else if(n.op==='only'||n.op==='first'){
+   const source=need(child('source'),'collection','source');result={...source.item,optional:n.op==='first',nullable:false};
   }else if(n.op==='lookup'){
    const source=need(child('source'),'collection','source'),key=child('key');if(key.type==='reference'){if(key.definition.multiple)fail(info,'key','referência singular exigida');const target=key.definition.target;if((target.catalogId??target.dataId)!==source.definition.id)fail(info,'key','destino de referência incompatível');}else need(key,'string','key');result={...source.item,optional:false};
   }else if(n.op==='filter'||n.op==='map'||n.op==='any'||n.op==='all'){

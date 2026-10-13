@@ -2581,7 +2581,7 @@
     "js/editor/rule-plans.js": "2087bd43044e51fabe4ee0fe4f7eed4a6fe486c02e1203377607818375da4c7e",
     "js/engine/action-expression.js": "efab537b1edd027ab8aed2bacf4054eac93a212f966eb164eb0183939a3a9ed7",
     "js/engine/action-fields.js": "cf7c25ef32f8d71c5340d3a2df3e905c40d6383f8b8d4e31283b5f848cb5f4ce",
-    "js/engine/action-plan.js": "6aba687bf9a3cfc2ce321aad85a4c6aa7103cb55b8d6c7b46933fef94b76f586",
+    "js/engine/action-plan.js": "966e27b585dfc812af85e5821b0885429c573b61b485910cb56bbda4179b78dc",
     "js/engine/action-progressions.js": "f4a13df5fa4296745a9b43f60ee4ca88c0f0971490678d4fb1acd57dea7ab303",
     "js/engine/action-records.js": "ddbc47590d898d6f4e2e1496f29f61595d968764574b96cf9539df539c614d8d",
     "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
@@ -2613,10 +2613,10 @@
     "js/engine/resolution-results.js": "77a6663b32fbfd408456fed9ead2315e21e29b3cf453c059cea479a17e3a2dd7",
     "js/engine/roll-transcript.js": "7222e52c7a5129921e5ed236fb3cc07173c5f8fc9deb514854aa0922b7b4f1f0",
     "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
-    "js/engine/rule-analysis.js": "5c7532480b4c5a012fd1587bc58ec8ed6067114027fb58a36479cfdce02fa02a",
+    "js/engine/rule-analysis.js": "b4340f5ea1407fd7269d71e98ba6c06bdd04ed997f0ae67bd94848befbc1c40b",
     "js/engine/rule-events.js": "dfbba5dc2503cb9b29e8aa3a935e62f9293b25ac236735af0a6277e5429a9dea",
-    "js/engine/rule-operations.js": "f419b18064b6997c99ff0a59fbbdd5c14371b4d7ffd1484c948415af3d53e840",
-    "js/engine/rule-registry.js": "f5a396ca100beda96d65077db9872df438ba5b294d008f6af43b2da3b665e00d",
+    "js/engine/rule-operations.js": "dc54416e272ba645e9060e17e9293932ea701764eb3822ab05042efe61d41b09",
+    "js/engine/rule-registry.js": "743353aeb572636306635bf0937ac0f24a2de2be1f7a3a92d10ea2556e66b84a",
     "js/engine/structured-fields.js": "6f7861bb134eed353d00845ae015160365cbef1dba719df2d9b155e18917da33",
     "js/engine/technique-fields.js": "e3785057b2d986001fb3bd98a4c7bb8ac267fa61f7de709b862a64bda0efdb9f",
     "js/engine/typed-data-write.js": "049439c40503f04cd9daffc3bbdec0d4ba071a5dba6f99064c5581dc342445df",
@@ -2828,6 +2828,18 @@
         "scope": "continuous",
         "version": 1
       },
+      "entryIdentity": {
+        "help": "Lê a identidade estável de uma entrada, sem copiar rótulos ou índices. Registro comum não possui identidade de entrada.",
+        "inputs": [
+          "value"
+        ],
+        "label": "Identidade desta entrada",
+        "parameters": [],
+        "pure": true,
+        "resultType": "string",
+        "scope": "continuous",
+        "version": 1
+      },
       "equal": {
         "help": "",
         "inputs": [
@@ -2863,6 +2875,18 @@
         "parameters": [],
         "pure": true,
         "resultType": "collection",
+        "scope": "continuous",
+        "version": 1
+      },
+      "first": {
+        "help": "Escolhe pela ordem explícita da coleção. Vazia produz ausência; não use para ocultar preços ausentes ou duplicados.",
+        "inputs": [
+          "source"
+        ],
+        "label": "Primeira entrada da coleção",
+        "parameters": [],
+        "pure": true,
+        "resultType": "record",
         "scope": "continuous",
         "version": 1
       },

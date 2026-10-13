@@ -44,6 +44,8 @@ export const RULE_OPERATIONS=Object.freeze({
  max:operation('Maior valor da lista',['source'],'number',[],'Lista vazia produz ausência; trate com Usar se ausente.'),
  any:operation('Alguma entrada atende',['source','predicate'],'boolean'),
  all:operation('Todas as entradas atendem',['source','predicate'],'boolean'),
+ first:operation('Primeira entrada da coleção',['source'],'record',[],'Escolhe pela ordem explícita da coleção. Vazia produz ausência; não use para ocultar preços ausentes ou duplicados.'),
+ entryIdentity:operation('Identidade desta entrada',['value'],'string',[],'Lê a identidade estável de uma entrada, sem copiar rótulos ou índices. Registro comum não possui identidade de entrada.'),
  only:operation('Única entrada da coleção',['source'],'record',[],'Exige exatamente uma entrada; nenhuma ou mais de uma bloqueia, sem preço ou valor implícito.'),
  lookup:operation('Buscar entrada por identidade',['source','key'],'record',[],'Exige exatamente uma correspondência; ID inexistente ou ambíguo é erro.'),
  property:operation('Ler campo de registro',['value'],'data',['fieldId']),

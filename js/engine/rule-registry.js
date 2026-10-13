@@ -3,7 +3,7 @@ import {compileRules,QUERY_PORTS} from './rule-analysis.js';
 import {readData} from './data-definitions.js';
 import {referenceValueIssue} from './data-references.js';
 import {dataDefinitions} from './data-definitions.js';
-import {typedValueIssue} from './data-types.js';
+import {typedValueIssue,safeDataId} from './data-types.js';
 import {calculationValue,getCalculationOverride} from './calculation-overrides.js';
 import {inspectJson} from '../validation/limits.js';
 import {projectTypedTarget} from './typed-effect-runtime.js';
@@ -18,7 +18,7 @@ export function ruleCalculationKey(system,id,context={}){
 }
 // One disposable context for a validated package/character revision. Mutable
 // callers use evaluateRule without a context and never receive stale caches.
-export function createRuleContext(system,character,{dataContext={},trace=false,budget,actionScope,actionInputs={},actionLocals={},projectionSystem=system,projectionStack=new Set(),onEffectUse=()=>{}}={}){
+export function createRuleContext(system,character,{dataContext={},trace=false,budget,actionScope,actionInputs={},actionLocals={},actionLocalContexts={},onResultContext,projectionSystem=system,projectionStack=new Set(),onEffectUse=()=>{}}={}){
  const safety=inspectJson(system,'system');if(safety.length)throw Error(safety[0].message);
  const compiled=compileRules(system,{actionScope}),memo=new Map(),readings=new Map(),traceRows=[];let indices=new WeakMap();
  let steps=0,visits=0;const shared=budget??{remaining:100000};
@@ -55,7 +55,7 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
    const from=number(child('from'),info),to=number(child('to'),info);if(![0,...definition.scale].includes(from)||![0,...definition.scale].includes(to))throw error(info,'Patamar fora da escala declarada');const value=stepCost(from,to,definition.scale,costs);if(value===null)throw error(info,'Custo cumulativo indisponível: transição ausente ou escala incompatível');cell={present:true,value};
   }
   else if(n.op==='input'||n.op==='local'){
-   const key=n[n.op==='input'?'inputId':'localId'],values=n.op==='input'?actionInputs:actionLocals,definition=type.definition??{type:type.type,nullable:type.nullable},exists=Object.hasOwn(values,key);if(exists){const issue=typedValueIssue(definition,values[key]);if(issue)throw error(info,issue);}cell={present:exists,...(exists?{value:values[key]}:{}),definition,storageScope:'action',dataContext:frame.dataContext};
+   const key=n[n.op==='input'?'inputId':'localId'],values=n.op==='input'?actionInputs:actionLocals,definition=type.definition??{type:type.type,nullable:type.nullable},exists=Object.hasOwn(values,key);if(exists){const issue=typedValueIssue(type.type==='record'?{...definition,type:'record'}:definition,values[key])||(type.collectionEntry&&!safeDataId(values[key]?.id)?'Identidade de entrada inválida':null);if(issue)throw error(info,issue);}const provenance=n.op==='local'?actionLocalContexts[key]:null;cell={present:exists,...(exists?{value:values[key]}:{}),definition,storageScope:provenance?.storageScope??'action',dataContext:provenance?.dataContext??frame.dataContext};
   }
   else if(n.op==='read'){
    const context=contextFor(record,info,frame),base=readData(system,character,n.dataId,context);const definition=compiled.rows.find(r=>r.definition.id===n.dataId).definition;readings.set(JSON.stringify([n.dataId,context]),{dataId:n.dataId,context:structuredClone(context),cell:structuredClone(base)});cell=n.mode==='effective'?projectTypedTarget(projectionSystem,character,{kind:'data',dataId:n.dataId},base,{budget:shared,projectionStack,onEffectUse,onRead:reading=>readings.set(JSON.stringify([reading.dataId,reading.context]),structuredClone(reading))}).cell:base;cell={...cell,definition,dataContext:context,storageScope:'character'};
@@ -71,8 +71,10 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
   else if(n.op==='item')cell=frame.items.get(info.scopes.at(-1))?.cell;
   else if(n.op==='property'){
    const owner=child('value'),value=present(owner,info),field=owner.definition.fields.find(f=>f.id===n.fieldId);if(!value||typeof value!=='object'||Array.isArray(value))throw error(info,'Registro exigido');const exists=Object.hasOwn(value,field.binding);if(exists){const issue=typedValueIssue(field,value[field.binding]);if(issue)throw error(info,issue);}cell={present:exists,...(exists?{value:value[field.binding]}:{}),definition:field,dataContext:owner.dataContext,storageScope:owner.storageScope};
-  }else if(n.op==='only'){
-   const source=child('source'),values=list(source,info);if(values.length!==1)throw error(info,'Exige exatamente uma entrada; encontrou '+values.length);const entry=values[0];indexFor(source,info);cell={present:true,value:entry,definition:source.definition,storageScope:source.storageScope,dataContext:source.storageScope==='character'?{entries:[...(source.dataContext?.entries||[]),{dataId:source.definition.id,entryId:entry.id}]}:frame.dataContext};
+  }else if(n.op==='entryIdentity'){
+   const source=child('value');if(!source.present)cell={present:false};else{const value=present(source,info);if(!safeDataId(value?.id))throw error(info,'Identidade de entrada inválida');cell={present:true,value:value.id};}
+  }else if(n.op==='only'||n.op==='first'){
+   const source=child('source'),values=list(source,info);if(n.op==='only'&&values.length!==1)throw error(info,'Exige exatamente uma entrada; encontrou '+values.length);indexFor(source,info);const entry=values[0];cell=entry?{present:true,value:entry,definition:source.definition,storageScope:source.storageScope,dataContext:source.storageScope==='character'?{entries:[...(source.dataContext?.entries||[]),{dataId:source.definition.id,entryId:entry.id}]}:frame.dataContext}:{present:false,definition:source.definition};
   }else if(n.op==='lookup'){
    const source=child('source'),id=present(child('key'),info),entry=indexFor(source,info).get(id);charge();if(!entry)throw error(info,'Identidade '+id+' inexistente ou ambígua');cell={present:true,value:entry,definition:source.definition,storageScope:source.storageScope,dataContext:source.storageScope==='character'?{entries:[...(source.dataContext?.entries||[]),{dataId:source.definition.id,entryId:entry.id}]}:frame.dataContext};
   }else if(n.op==='filter'||n.op==='map'||n.op==='any'||n.op==='all'){
@@ -107,7 +109,7 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
  };
  const evaluate=(id,currentContext=dataContext)=>{
   const record=compiled.index.get(id);if(!record)throw Error('Cálculo indisponível: '+id);for(const dataId of record.contextCollections)if(!currentContext.entries?.some(e=>e.dataId===dataId))throw Error(record.rule.label+': contexto de entrada ausente');
-  const cell=visit(record,record.nodes.get(record.rule.expression.id),{dataContext:currentContext,items:new Map()}),value=present(cell,record.nodes.get(record.rule.expression.id),record.rule.id===actionScope?.ruleId);if(record.rule.resultType==='number'&&(typeof value!=='number'||!Number.isFinite(value)))throw Error('Resultado não numérico');if(['string','boolean'].includes(record.rule.resultType)&&typeof value!==record.rule.resultType)throw Error('Tipo de resultado incompatível');if(record.rule.id===actionScope?.ruleId&&!['infer','number','string','boolean','null'].includes(record.rule.resultType)){const issue=typedValueIssue(cell.definition,value);if(issue)throw Error(issue);}if(record.rule.resultType==='null'&&value!==null)throw Error('null explícito exigido.');return structuredClone(value);
+  const cell=visit(record,record.nodes.get(record.rule.expression.id),{dataContext:currentContext,items:new Map()}),value=present(cell,record.nodes.get(record.rule.expression.id),record.rule.id===actionScope?.ruleId);if(record.rule.resultType==='number'&&(typeof value!=='number'||!Number.isFinite(value)))throw Error('Resultado não numérico');if(['string','boolean'].includes(record.rule.resultType)&&typeof value!==record.rule.resultType)throw Error('Tipo de resultado incompatível');if(record.rule.id===actionScope?.ruleId&&!['infer','number','string','boolean','null'].includes(record.rule.resultType)){const issue=typedValueIssue(cell.definition,value);if(issue)throw Error(issue);}if(record.rule.resultType==='null'&&value!==null)throw Error('null explícito exigido.');onResultContext?.({storageScope:cell.storageScope,dataContext:structuredClone(cell.dataContext??currentContext)});return structuredClone(value);
  };
  return {system,character,compiled,evaluate,project:(target,cell)=>projectTypedTarget(projectionSystem,character,target,cell,{budget:shared,projectionStack,onEffectUse,onRead:reading=>readings.set(JSON.stringify([reading.dataId,reading.context]),structuredClone(reading))}),trace:traceRows,readings,metrics:()=>({steps,visits}),invalidate(){memo.clear();indices=new WeakMap();traceRows.length=0;readings.clear();steps=0;visits=0;if(!budget)shared.remaining=100000;checkCharacter();}};
 }

@@ -39,6 +39,7 @@ test('AV-03 operações registradas têm execução comprovada, incluindo presen
  assert.equal(run(n('sum',{source:n('map',{source:n('filter',{source:read('items'),predicate:read('equipped')}),value:n('multiply',{left:read('weight'),right:read('quantity')})})})),6);covered.add('filter');covered.add('map');
  assert.equal(run(n('property',{value:n('lookup',{source:n('catalog',{catalogId:'routes'}),key:read('choice')}),fieldId:'price'})),0);for(const op of ['property','lookup','catalog'])covered.add(op);
  assert.equal(run(n('property',{fieldId:'price',value:n('only',{source:n('filter',{source:n('catalog',{catalogId:'routes'}),predicate:n('equal',{left:n('property',{fieldId:'price',value:n('item')}),right:lit(0)})})})})),0);covered.add('only');
+ assert.equal(run(n('entryIdentity',{value:n('first',{source:read('items')})}),'string'),'a');covered.add('first');covered.add('entryIdentity');
  assert.equal(run(n('sum',{source:n('map',{source:read('items'),value:n('property',{value:n('item'),fieldId:'weight'})})})),11);covered.add('item');
  assert.equal(run(n('count',{source:n('empty',{dataId:'items'})})),0);covered.add('empty');
  assert.equal(run(n('text',{value:n('option',{dataId:'category',optionId:'deep'})}),'string',f=>f.system.dataDefinitions.push(d('category','enum',{options:[{id:'deep',label:'Profunda'}]}))),'Profunda');covered.add('option');

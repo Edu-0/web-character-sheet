@@ -10,6 +10,8 @@ Para preço de uma rota, use **Consultar catálogo → Buscar entrada por identi
 
 Para consultar uma tabela por uma condição, use **Filtrar entradas → Única entrada da coleção → Ler campo de registro**. Por exemplo, filtre a Face de um catálogo de preços pela face escolhida na ficha. A consulta exige exatamente uma entrada: nenhuma ou mais de uma produz diagnóstico, sem escolher a primeira ou fornecer um preço padrão. Um preço declarado como zero continua válido. A entrada conserva seu contexto, inclusive para consultar coleções internas.
 
+**Primeira entrada da coleção** escolhe pela ordem declarada; uma coleção vazia produz ausência. Use quando a ordem fizer parte da regra, como desempatar fontes já filtradas. **Identidade desta entrada** permite comparar ou excluir a entrada selecionada por seu ID estável, preservando nomes e ordem das demais. Registros comuns não possuem identidade de entrada. Para preços que exigem uma correspondência única, conserve **Única entrada da coleção**. Entradas selecionadas também podem ser reutilizadas como registros locais das ações, com seu contexto derivado; isso não cria outro dado salvo.
+
 **Se… então… senão**, **E**, **OU**, **Usar se ausente** e **Usar se nulo** avaliam somente a parte necessária. Todos os ramos são validados antes de admitir a regra: uma operação desconhecida ou vínculo inexistente continua inválido mesmo num ramo que não será executado. Ausência, null, false, zero e texto vazio são distintos. Não há conversões implícitas entre tipos; **Converter valor para texto** é explícito.
 
 | Família | Operações disponíveis |
@@ -18,7 +20,7 @@ Para consultar uma tabela por uma condição, use **Filtrar entradas → Única 
 | Presença e decisão | Usar se ausente, Usar se nulo, Se… então… senão, Existe a propriedade, É null explícito, É vazio, Referência resolvida |
 | Números e comparações | Somar, Subtrair, Multiplicar, Dividir, Arredondar para baixo, Valor absoluto, Igual, Menor/Maior que, Menor/Maior ou igual |
 | Lógica e texto | E, OU, Não, Converter valor para texto, Juntar textos |
-| Consultas | Consultar catálogo, Coleção vazia explícita, Filtrar entradas, Transformar cada entrada, Valor desta entrada, Somar/Contar/Menor/Maior valor da lista, Alguma/Todas as entradas atendem, Única entrada da coleção, Buscar entrada por identidade, Ler campo de registro |
+| Consultas | Consultar catálogo, Coleção vazia explícita, Filtrar entradas, Transformar cada entrada, Valor desta entrada, Somar/Contar/Menor/Maior valor da lista, Alguma/Todas as entradas atendem, Primeira entrada da coleção, Única entrada da coleção, Identidade desta entrada, Buscar entrada por identidade, Ler campo de registro |
 
 Lista vazia tem soma/contagem zero, **Alguma** false e **Todas** true. Menor/Maior de lista vazia produz ausência; use uma alternativa quando necessário. Dados inválidos não são descartados pelo somatório. Divisão por zero e resultados não finitos produzem erro.
 
