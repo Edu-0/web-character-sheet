@@ -39,6 +39,8 @@ Texto inválido e edições pendentes ficam no rascunho da sessão e bloqueiam e
 
 ## Grupos e faces como resultados temporários
 
+Uma técnica pode consultar uma especialização por referência, usar seu traço junto de outras fontes e escolher a potência depois das faces, na mesma ação. Declare o preço por tabela, o momento do pagamento e os campos de concentração. A manutenção pode ter preço zero e exigir o grau já sustentado; aumentar o máximo permitido da técnica não aumenta esse grau automaticamente. Zero explícito e alternativa para preço ausente são escolhas diferentes. O editor não acrescenta essas regras ao criar um pacote.
+
 Uma fonte composta d8+d6 com faces4+3 produz total7 para essa fonte. Com outra fonte de resultado2, máximo/mínimo/soma dos **totais das fontes** produzem7/2/9; somar faces indiscriminadamente não define Ápice ou Base. O autor escolhe quais consultas representam seu sistema. Nenhuma medida chamada Pool é acrescentada automaticamente.
 
 No percentil com unidade0 e dezenas0/5, a coleção de candidatos contém100/50. Ela pode alimentar mínimo, máximo ou outra classificação declarada. As faces originais, usadas e descartadas continuam distinguíveis; cada dado tem identidade relativa dentro do grupo. Essas coleções descrevem o mesmo transcript, sem rolagem adicional ou binding no personagem.
