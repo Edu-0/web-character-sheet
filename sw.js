@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "d068593c2476e2e19606";
+const VERSION = "42f57b768ef3f7d08763";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -235,7 +235,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/action-authoring.js",
-    "hash": "25c77523cf26c728f8571c5f742a7e06fdc8092f88e1c1922e5f607144c75378"
+    "hash": "321418819b5c2e552123cdddb1a033206b7fec7a8a9f7d9f10ca1ea7a4b0b0f9"
   },
   {
     "path": "js/editor/assisted-plans.js",

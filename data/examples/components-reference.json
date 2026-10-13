@@ -2573,6 +2573,7 @@
   "schemaVersion": 1,
   "sources": {
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
+    "js/editor/action-authoring.js": "321418819b5c2e552123cdddb1a033206b7fec7a8a9f7d9f10ca1ea7a4b0b0f9",
     "js/editor/authoring-pending.js": "682ca417d5c4fdab062c972f5e63db2e6a84de110586a808d6d555c113d44a6f",
     "js/editor/data-picker.js": "8f01eb3193350b8ee1a1187743d9092c6857a4ac70eaad9cf0cbb75d0c7e4725",
     "js/editor/operation-recipe.js": "41c9fc1e5b68cf67eede3da95ccc6089b4adda1b8fd799cf265ade2d891112d2",

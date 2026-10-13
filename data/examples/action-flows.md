@@ -51,3 +51,6 @@ As identidades da aquisição e dos benefícios permanecem nas tentativas de gra
 
 
 Valores numéricos de consequências podem ter destino inteiro, inclusive campos de entradas. A execução valida o valor efetivo no candidato comum: frações, inteiros inseguros e valores fora das restrições do dado são recusados sem aplicar recursos ou consequências. Não há arredondamento nem coerção automática. O mesmo contrato já usado nas concessões de progressão vale para definir, inserir e atualizar pela ação.
+
+
+Os menus de fontes, destinos e recursos mostram o caminho de nomes dos dados. Registros como “Espaços › Nível 1 › Usados” e “Espaços › Nível 2 › Usados” permanecem distintos por identidade; os máximos dos custos oferecem fontes globais executáveis nesse perfil. Custos de recurso usado podem ter quantidade calculada zero em níveis não escolhidos, com preferência de consumo e regra de exceção declaradas visualmente. Nenhum vínculo depende do nome de um RPG.
