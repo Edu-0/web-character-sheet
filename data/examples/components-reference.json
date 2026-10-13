@@ -2612,7 +2612,7 @@
     "js/engine/point-budget.js": "b665cc20098b85373b66835b138f5953fcb3d13161b3596f2cae3c71a2411946",
     "js/engine/point-fields.js": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612",
     "js/engine/predicates.js": "bb5440f4ccceb2086397949c59554f095526d9f6684630a1a32a7225e6d47c02",
-    "js/engine/progression-choices.js": "fc9cb5f8e7cddc01197d27ae3675370f56a53d64b2189840732dc5635dc92629",
+    "js/engine/progression-choices.js": "6d1067fcb4cb9ee3c21216497c1a743439b315740809bd4ccdd5186751f04b15",
     "js/engine/progression-fields.js": "2d88e9db63921dcf18f07d82052220639f3d683cd6fe485e155364efc1c384ea",
     "js/engine/recovery-fields.js": "0376f86ecc50c64a9eaef03c277450b095b9611221a23fd4f989a23044646cbc",
     "js/engine/recovery.js": "592dcb7258125d2dd049f6966c715048ce521ed24ee303614804ffce6f14b226",

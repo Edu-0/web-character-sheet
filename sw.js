@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "44bd52fe4e4cf1c43cf3";
+const VERSION = "3600acb60458e7c9793b";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -383,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "24b65c36d136b0810f1833916e668af50a65e98c25ff3a4a563402488f0c3954"
+    "hash": "bd7e874984e016c21ce363650315722f8018904f510af8baf9fd65f4e928d148"
   },
   {
     "path": "js/editor/history.js",
@@ -455,7 +455,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/progression-authoring.js",
-    "hash": "1dc215547441d1c256ed8910752563d1fc81ac3c907551fd9f10acb1583d8476"
+    "hash": "bfc15a80f650293d16d5aa332894ac4d28c197e1c9fa64a6cb4bf6f2a6396f8c"
   },
   {
     "path": "js/editor/progression-plans.js",
@@ -735,7 +735,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/progression-choices.js",
-    "hash": "fc9cb5f8e7cddc01197d27ae3675370f56a53d64b2189840732dc5635dc92629"
+    "hash": "6d1067fcb4cb9ee3c21216497c1a743439b315740809bd4ccdd5186751f04b15"
   },
   {
     "path": "js/engine/progression-fields.js",

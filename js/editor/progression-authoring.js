@@ -31,14 +31,16 @@ export function renderProgressionAuthoring(view,pkg){
   };
   const grants=(at,rows,scope)=>{
    for(const grant of rows){const box=el('fieldset');box.append(el('legend','Concessão '+grant.id));at.append(box);text(box,grant,'label','Nome da concessão '+grant.id);
-    selection(box,grant,'type','Operação da concessão '+grant.id,[['set','Definir valor'],['add','Somar contribuição'],['append','Inserir entrada própria']],true);
-    const compatible=fields.filter(row=>grant.type==='add'?['number','integer'].includes(row.definition.type):grant.type==='append'?row.definition.type==='collection':!['record','collection'].includes(row.definition.type));
+    selection(box,grant,'type','Operação da concessão '+grant.id,[['set','Definir valor'],['add','Somar contribuição'],['append','Inserir entrada própria'],['setEntry','Definir campo de entrada existente']],true);
+    const compatible=fields.filter(row=>grant.type==='add'?['number','integer'].includes(row.definition.type):['append','setEntry'].includes(grant.type)?row.definition.type==='collection':!['record','collection'].includes(row.definition.type));
     selection(box,grant,'dataId','Dado da concessão '+grant.id,[['','Escolha dado'],...compatible.map(row=>[row.definition.id,row.definition.label+' · '+row.definition.type])],true);
     const action=selection(box,grant,'actionId','Ação vinculada à concessão '+grant.id,[['','Sem ação associada'],...(pkg.system.sheetActions||[]).map(action=>[action.id,action.label])]);action.input.addEventListener('change',()=>{if(!action.input.value)delete grant.actionId;});
     box.append(el('p','Para conceder uma ação, vincule este dado à permissão ou ao contador de usos da ação. A associação registra a origem; não cria custo ou permissão ocultos.'));
     const definition=fields.find(row=>row.definition.id===grant.dataId)?.definition;
-    if(grant.type==='append'){delete grant.expression;grant.values??={};for(const field of definition?.fields||[]){grant.values[field.id]??=literal(0);expression(box,'Campo concedido '+field.label+' · '+grant.id,grant.values,field.id,field.type==='integer'?'number':field.type,field);}}
-    else{delete grant.values;grant.expression??=literal(0);expression(box,'Valor concedido '+grant.id,grant,'expression',grant.type==='add'||definition?.type==='integer'?'number':definition?.type||'number',grant.type==='set'?definition:undefined);}
+    if(grant.type==='setEntry'){
+     delete grant.values;expression(box,'Identidade da entrada concedida '+grant.id,grant,'entryId','string');const candidates=definition?.fields.filter(field=>!['record','collection'].includes(field.type))||[];selection(box,grant,'fieldId','Campo da entrada concedida '+grant.id,[['','Escolha campo'],...candidates.map(field=>[field.id,field.label+' · '+field.type])],true);const field=candidates.find(field=>field.id===grant.fieldId);grant.expression??=literal(0);expression(box,'Valor concedido '+grant.id,grant,'expression',field?.type==='integer'?'number':field?.type||'number',field);box.append(el('p','A concessão altera somente esse campo na entrada escolhida por identidade. Outros campos e entradas são preservados; revogar verifica se o valor concedido ainda está intacto.'));
+    }else if(grant.type==='append'){delete grant.entryId;delete grant.fieldId;delete grant.expression;grant.values??={};for(const field of definition?.fields||[]){grant.values[field.id]??=literal(0);expression(box,'Campo concedido '+field.label+' · '+grant.id,grant.values,field.id,field.type==='integer'?'number':field.type,field);}}
+    else{delete grant.entryId;delete grant.fieldId;delete grant.values;grant.expression??=literal(0);expression(box,'Valor concedido '+grant.id,grant,'expression',grant.type==='add'||definition?.type==='integer'?'number':definition?.type||'number',grant.type==='set'?definition:undefined);}
     box.append(button('Remover concessão '+grant.id,()=>{rows.splice(rows.indexOf(grant),1);clearDrafts([grant.id]);changed();draw();}));
    }
    at.append(button('Adicionar concessão em '+scope,()=>{rows.push({id:id('grant'),label:'',type:'set',dataId:'',expression:literal(0)});changed();draw();}));

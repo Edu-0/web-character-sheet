@@ -20,7 +20,11 @@ A opção de avanço pode conceder nível 2 e exigir a aquisição de nível 1, 
 
 ## Benefícios e origem
 
-Concessões permitem definir valor escalar/traço, somar contribuição numérica ou inserir entrada de coleção com campos declarados. Alvos são dados globais, incluindo filhos de registros globais; entradas de coleções usam inserção com identidade própria. Cada concessão guarda origem, identidade e snapshot para retirada limitada.
+Concessões permitem definir valor escalar/traço, somar contribuição numérica, inserir entrada de coleção com campos declarados ou **Definir campo de entrada existente**. Os primeiros alvos são dados globais, incluindo filhos de registros globais. A inserção gera identidade própria; a melhoria por campo conserva a identidade da entrada. Cada concessão guarda origem, identidade e snapshot para retirada limitada.
+
+Para melhorar uma perícia já registrada, escolha a coleção e o campo, como seu traço. Em **Identidade da entrada concedida**, monte **Identidade desta entrada → Buscar entrada por identidade**, usando a coleção e uma referência escolhida na ficha. Configure o valor concedido pelo mesmo construtor. A prévia identifica a entrada, o campo e os valores antes/depois. Outros campos e entradas permanecem intactos. Criação, evolução paga e narrativa usam os orçamentos e preços declarados; editar o traço diretamente continua sem cobrança automática.
+
+A proveniência de uma melhoria é identificada por coleção, ID da entrada e ID do campo. Campos ou entradas diferentes têm origens independentes. Substituições incompatíveis no mesmo campo exigem dependência explícita, como os valores globais; editar o valor concedido impede nova substituição ou revogação que apagaria essa edição. Revogar uma melhoria restaura só seu campo, preservando nomes, anotações e reordenações. Revogar a inserção inteira continua bloqueado se a entrada foi alterada. Pré-requisitos de opções continuam sendo os declarados pelo autor; não se infere uma carreira por entrada.
 
 Para conceder uma ação, vincule o benefício ao dado de permissão ou contador de usos da ação. A associação à ação registra a proveniência; a receita não cria custo ou autorização ocultos. Por exemplo, uma alternativa concede +1 no contador de Talento A, e a ação A declara custo de um nesse contador. A alternativa B usa seu próprio contador. A aquisição concede somente o benefício escolhido.
 
