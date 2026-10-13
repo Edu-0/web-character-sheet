@@ -44,6 +44,7 @@ export const RULE_OPERATIONS=Object.freeze({
  max:operation('Maior valor da lista',['source'],'number',[],'Lista vazia produz ausência; trate com Usar se ausente.'),
  any:operation('Alguma entrada atende',['source','predicate'],'boolean'),
  all:operation('Todas as entradas atendem',['source','predicate'],'boolean'),
+ only:operation('Única entrada da coleção',['source'],'record',[],'Exige exatamente uma entrada; nenhuma ou mais de uma bloqueia, sem preço ou valor implícito.'),
  lookup:operation('Buscar entrada por identidade',['source','key'],'record',[],'Exige exatamente uma correspondência; ID inexistente ou ambíguo é erro.'),
  property:operation('Ler campo de registro',['value'],'data',['fieldId']),
  text:operation('Converter valor para texto',['value'],'string'),

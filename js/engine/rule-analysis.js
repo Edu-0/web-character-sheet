@@ -69,6 +69,8 @@ export function compileRules(system,{actionScope}={}){
    const source=scopeTypes().at(-1);if(!source)fail(info,null,'exige contexto de entrada');result=source.item;
   }else if(n.op==='property'){
    const value=need(child('value'),'record','value'),field=value.definition?.fields?.find(f=>f.id===n.fieldId);if(!field)fail(info,'fieldId','campo não pertence ao registro');result=typeOfDefinition(field);if(result.item)result={...result,item:{...result.item,collectionIds:[...(value.collectionIds||[]),field.id]}};else if(result.type==='record')result={...result,collectionIds:value.collectionIds};
+  }else if(n.op==='only'){
+   const source=need(child('source'),'collection','source');result={...source.item,optional:false,nullable:false};
   }else if(n.op==='lookup'){
    const source=need(child('source'),'collection','source'),key=child('key');if(key.type==='reference'){if(key.definition.multiple)fail(info,'key','referência singular exigida');const target=key.definition.target;if((target.catalogId??target.dataId)!==source.definition.id)fail(info,'key','destino de referência incompatível');}else need(key,'string','key');result={...source.item,optional:false};
   }else if(n.op==='filter'||n.op==='map'||n.op==='any'||n.op==='all'){

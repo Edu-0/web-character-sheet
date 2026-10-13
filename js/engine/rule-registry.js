@@ -71,6 +71,8 @@ export function createRuleContext(system,character,{dataContext={},trace=false,b
   else if(n.op==='item')cell=frame.items.get(info.scopes.at(-1))?.cell;
   else if(n.op==='property'){
    const owner=child('value'),value=present(owner,info),field=owner.definition.fields.find(f=>f.id===n.fieldId);if(!value||typeof value!=='object'||Array.isArray(value))throw error(info,'Registro exigido');const exists=Object.hasOwn(value,field.binding);if(exists){const issue=typedValueIssue(field,value[field.binding]);if(issue)throw error(info,issue);}cell={present:exists,...(exists?{value:value[field.binding]}:{}),definition:field,dataContext:owner.dataContext,storageScope:owner.storageScope};
+  }else if(n.op==='only'){
+   const source=child('source'),values=list(source,info);if(values.length!==1)throw error(info,'Exige exatamente uma entrada; encontrou '+values.length);const entry=values[0];indexFor(source,info);cell={present:true,value:entry,definition:source.definition,storageScope:source.storageScope,dataContext:source.storageScope==='character'?{entries:[...(source.dataContext?.entries||[]),{dataId:source.definition.id,entryId:entry.id}]}:frame.dataContext};
   }else if(n.op==='lookup'){
    const source=child('source'),id=present(child('key'),info),entry=indexFor(source,info).get(id);charge();if(!entry)throw error(info,'Identidade '+id+' inexistente ou ambígua');cell={present:true,value:entry,definition:source.definition,storageScope:source.storageScope,dataContext:source.storageScope==='character'?{entries:[...(source.dataContext?.entries||[]),{dataId:source.definition.id,entryId:entry.id}]}:frame.dataContext};
   }else if(n.op==='filter'||n.op==='map'||n.op==='any'||n.op==='all'){

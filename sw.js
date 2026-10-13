@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "42f57b768ef3f7d08763";
+const VERSION = "2150dd0c22061890007c";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -383,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "4fc89cfc06391e9623b09bda4acf5c3d3e809a5c024de1fbd91ba800cfe6c2f9"
+    "hash": "cf870e26bb0274818333bb78f22ee44e6ba897d690de81d00bf8e6743737689a"
   },
   {
     "path": "js/editor/history.js",
@@ -775,7 +775,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/rule-analysis.js",
-    "hash": "7828baff8f7afd65e22d4dc91f67141533ba7335b5e211cffda41b9923fc7980"
+    "hash": "5c7532480b4c5a012fd1587bc58ec8ed6067114027fb58a36479cfdce02fa02a"
   },
   {
     "path": "js/engine/rule-events.js",
@@ -783,11 +783,11 @@ const ASSETS = [
   },
   {
     "path": "js/engine/rule-operations.js",
-    "hash": "7f6bf03d525e58f68c37540d09654e2921e1b6948653714f7093496f3ec8dcf4"
+    "hash": "f419b18064b6997c99ff0a59fbbdd5c14371b4d7ffd1484c948415af3d53e840"
   },
   {
     "path": "js/engine/rule-registry.js",
-    "hash": "20d252aa2095e22c220b35304d4f1bb1caf4ceb96a89e0b902c0c3cf741042e3"
+    "hash": "f5a396ca100beda96d65077db9872df438ba5b294d008f6af43b2da3b665e00d"
   },
   {
     "path": "js/engine/search.js",

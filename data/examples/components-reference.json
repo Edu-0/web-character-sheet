@@ -2613,10 +2613,10 @@
     "js/engine/resolution-results.js": "77a6663b32fbfd408456fed9ead2315e21e29b3cf453c059cea479a17e3a2dd7",
     "js/engine/roll-transcript.js": "7222e52c7a5129921e5ed236fb3cc07173c5f8fc9deb514854aa0922b7b4f1f0",
     "js/engine/roll-values.js": "f29a0b5ac62d6850a43937e7647aea69ce461e1b9c91e45a549e2723895a1a03",
-    "js/engine/rule-analysis.js": "7828baff8f7afd65e22d4dc91f67141533ba7335b5e211cffda41b9923fc7980",
+    "js/engine/rule-analysis.js": "5c7532480b4c5a012fd1587bc58ec8ed6067114027fb58a36479cfdce02fa02a",
     "js/engine/rule-events.js": "dfbba5dc2503cb9b29e8aa3a935e62f9293b25ac236735af0a6277e5429a9dea",
-    "js/engine/rule-operations.js": "7f6bf03d525e58f68c37540d09654e2921e1b6948653714f7093496f3ec8dcf4",
-    "js/engine/rule-registry.js": "20d252aa2095e22c220b35304d4f1bb1caf4ceb96a89e0b902c0c3cf741042e3",
+    "js/engine/rule-operations.js": "f419b18064b6997c99ff0a59fbbdd5c14371b4d7ffd1484c948415af3d53e840",
+    "js/engine/rule-registry.js": "f5a396ca100beda96d65077db9872df438ba5b294d008f6af43b2da3b665e00d",
     "js/engine/structured-fields.js": "6f7861bb134eed353d00845ae015160365cbef1dba719df2d9b155e18917da33",
     "js/engine/technique-fields.js": "e3785057b2d986001fb3bd98a4c7bb8ac267fa61f7de709b862a64bda0efdb9f",
     "js/engine/typed-data-write.js": "049439c40503f04cd9daffc3bbdec0d4ba071a5dba6f99064c5581dc342445df",
@@ -3124,6 +3124,18 @@
         "parameters": [],
         "pure": true,
         "resultType": "boolean",
+        "scope": "continuous",
+        "version": 1
+      },
+      "only": {
+        "help": "Exige exatamente uma entrada; nenhuma ou mais de uma bloqueia, sem preço ou valor implícito.",
+        "inputs": [
+          "source"
+        ],
+        "label": "Única entrada da coleção",
+        "parameters": [],
+        "pure": true,
+        "resultType": "record",
         "scope": "continuous",
         "version": 1
       },
