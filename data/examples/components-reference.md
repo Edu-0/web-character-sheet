@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 34 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `1b31226ec1b9ad25bef747b18fad143d43356db25933ea75f4debe85aeca474a`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `7d929c3e779828d372e5f343d2dda75ead60fa1f09f9966b591a55cff8179ac8`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -619,7 +619,7 @@ Origens e cruzamentos explícitos, vínculos de entradas, propostas e confirmaç
 
 ## Ações tipadas e resoluções
 
-[Contrato e autoria visual](action-flows.md). Limites de ação: {"steps":128,"inputs":32,"costs":32,"records":50,"recordBytes":65536,"recordsBytes":524288}. Limites de resolução: {"groups":32,"draws":100,"sides":100000}. input/local são fontes puras restritas ao escopo de uma ação; cálculos contínuos não as admitem. Primitivas numéricas distribuídas: dice, sharedPercentile, select, reroll, explode, successes, ranges. O artefato JSON contém os descritores e fingerprints dos módulos reais, incluindo marcos e patches compartilhados.
+[Contrato e autoria visual](action-flows.md). Limites de ação: {"steps":128,"inputs":32,"costs":32,"records":50,"recordBytes":65536,"recordsBytes":524288,"choices":32}. Limites de resolução: {"groups":32,"draws":100,"sides":100000}. input/local são fontes puras restritas ao escopo de uma ação; cálculos contínuos não as admitem. Primitivas numéricas distribuídas: dice, sharedPercentile, select, reroll, explode, successes, ranges. O artefato JSON contém os descritores e fingerprints dos módulos reais, incluindo marcos e patches compartilhados.
 
 [Rolagens de entradas e suas condições](README.md), [testes/botões](testing.md), [recuperação](recovery.md) e [validação documental](validation.md) explicam o uso. As listas acima são as mesmas importadas pelos validadores; extensions é permitido como metadado inerte nos contratos estritos. Não traduzir uma regra narrativa para automação sem definição verificada.
 

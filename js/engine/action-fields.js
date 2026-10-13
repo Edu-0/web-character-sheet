@@ -33,12 +33,13 @@ export async function openTypedAction(context,action){
  };
  const resolve=async()=>{
   report.replaceChildren();completedPlan=undefined;
-  if(record)intent={...resumeActionIntent(system,character(),action,record,signature),transcripts:structuredClone(intent.transcripts)};
+  if(record)intent={...resumeActionIntent(system,character(),action,record,signature),transcripts:structuredClone(intent.transcripts),selections:structuredClone(intent.selections||{})};
   else intent??=prepareActionIntent(system,character(),action,{inputs:readInputs()});
   try{plan=resolveActionIntent(system,character(),action,intent,{choices,...(record?{activation:record,signature}:{})});intent=plan.intent;}
   catch(error){if(error.actionIntent)intent=error.actionIntent;plan=undefined;await saveResolution(error.message);throw error;}
   await saveResolution();
   if(record){intent=resumeActionIntent(system,character(),action,record,signature);plan=resolveActionIntent(system,character(),action,intent,{activation:record,signature,die:()=>{throw Error('Transcript incompleto; retome a resolução.');}});intent=plan.intent;}
+  if(plan.awaitingSelection){showResult();status.textContent='Escolha uma entrada para continuar; o resultado ainda não foi aplicado.';return;}
   completedPlan=completeEventProposal(system,character(),prepareEventChain(system,character(),prepareCompletionMilestone(system,character(),action,plan,signature,{...(record?{activation:record}:{})})),context.proposalId||record?.extensions?.proposal?.id,action.id);
   showResult();status.textContent='Resultado preparado. Revise os custos e confirme a aplicação.';
  };
@@ -53,6 +54,7 @@ export async function openTypedAction(context,action){
     }
    }
   }
+  if(plan.awaitingSelection){const selection=plan.selection,label=node('label','Escolha '+selection.label),select=node('select');select.setAttribute('aria-label','Escolha '+selection.label);const empty=node('option','Escolha uma entrada');empty.value='';select.append(empty);for(const option of selection.options){const item=node('option',option.label);item.value=option.id;select.append(item);}label.append(select);report.append(label);select.addEventListener('change',()=>{if(busy||!select.value)return;intent={...intent,selections:{...(intent.selections||{}),[selection.id]:select.value}};run(resolve);});}
   for(const acquisition of plan.acquisitions||[]){report.append(node('h3','Aquisição com proveniência'),...acquisition.details.map(detail=>node('p',detail)),node('p','O registro da aquisição será incluído nesta confirmação.'));}
   for(const payment of plan.payments)report.append(node('p',payment.label+': '+payment.before+' → '+payment.after+' (custo '+payment.amount+').'));
   for(const effect of plan.effectChanges||[])report.append(node('p',effect.label+': usos '+effect.before+' → '+effect.after+(effect.status==='expired'?' · expirar após confirmar.':'.')));
@@ -60,7 +62,7 @@ export async function openTypedAction(context,action){
   for(const change of plan.changes||[]){if(plan.acquisitions?.length&&(change.field==='progressionLedger'||change.field.startsWith('progressionLedger.')))continue;const row=dataDefinitions(system).find(r=>r.ancestors.map(d=>d.binding).concat(r.definition.binding).join('.')===change.field);if(!row||plan.payments.some(p=>p.dataId===row.definition.id))continue;const format=(exists,value)=>formatTypedCell(system,character(),row.definition,exists?{present:true,value}:{present:false},plan.dataContext);report.append(node('p',row.definition.label+': '+format(change.beforeExists,change.before)+' → '+format(change.afterExists,change.after)));}
  };
  const drawControls=()=>{
-  controls.replaceChildren();
+  controls.replaceChildren();for(const select of report.querySelectorAll('select'))select.disabled=busy;
   if(character().schemaVersion!==3){controls.append(button('Habilitar registros recuperáveis v3',()=>run(async()=>{
    if(!await confirmDialog('Habilitar registros de ações neste personagem? A ficha original será preservada em recuperação. Não altera os valores atuais.',{title:'Habilitar personagem v3',confirmLabel:'Habilitar v3'}))return;
    await context.upgradeActionCharacter();closed=true;

@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "571e367d8db0fc75bec5";
+const VERSION = "12e566ea05814b9d608f";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -235,7 +235,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/action-authoring.js",
-    "hash": "321418819b5c2e552123cdddb1a033206b7fec7a8a9f7d9f10ca1ea7a4b0b0f9"
+    "hash": "086ed71c8cf7b4e9a7815b3b6a6a7d1c0110084f4ff6371474125c2b71742b4f"
   },
   {
     "path": "js/editor/assisted-plans.js",
@@ -383,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "eefbbf54a36bc2fc6e5bdb5ea0d5b8f03cff80adb97a33cf785814303d57c294"
+    "hash": "bc2aa35002ab43a4fbdd69e4faa72b31489750f4f22fcd8714510cc0c6141d9c"
   },
   {
     "path": "js/editor/history.js",
@@ -554,16 +554,20 @@ const ASSETS = [
     "hash": "2275444dc7d9b59bd9cb6f19e147b18f3ac7533e53495f9a4c9005864e7682af"
   },
   {
+    "path": "js/engine/action-choices.js",
+    "hash": "13635a9966b8daab2b2ad5b58b99bc6e0218e3a26633cb1f608e807aa67d7c5d"
+  },
+  {
     "path": "js/engine/action-expression.js",
     "hash": "efab537b1edd027ab8aed2bacf4054eac93a212f966eb164eb0183939a3a9ed7"
   },
   {
     "path": "js/engine/action-fields.js",
-    "hash": "cf7c25ef32f8d71c5340d3a2df3e905c40d6383f8b8d4e31283b5f848cb5f4ce"
+    "hash": "bee4d6789c95d592a4c0d1357f42ef05b7259935e330c09a4ae15a1df1816487"
   },
   {
     "path": "js/engine/action-plan.js",
-    "hash": "966e27b585dfc812af85e5821b0885429c573b61b485910cb56bbda4179b78dc"
+    "hash": "f1e05ca950fde89dd9b2a507e40161e5dae1e643dc7dd1fdb4333a501513ac48"
   },
   {
     "path": "js/engine/action-progressions.js",
@@ -571,7 +575,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/action-records.js",
-    "hash": "ddbc47590d898d6f4e2e1496f29f61595d968764574b96cf9539df539c614d8d"
+    "hash": "a6d20d02d39769e53d0859edd0d34d495a1456c3e9478e623df58b293c565374"
   },
   {
     "path": "js/engine/advanced-fields.js",

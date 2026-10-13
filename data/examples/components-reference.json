@@ -1,6 +1,11 @@
 {
   "actions": {
+    "choiceLimits": {
+      "options": 100,
+      "steps": 32
+    },
     "limits": {
+      "choices": 32,
       "costs": 32,
       "inputs": 32,
       "recordBytes": 65536,
@@ -2573,17 +2578,18 @@
   "schemaVersion": 1,
   "sources": {
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
-    "js/editor/action-authoring.js": "321418819b5c2e552123cdddb1a033206b7fec7a8a9f7d9f10ca1ea7a4b0b0f9",
+    "js/editor/action-authoring.js": "086ed71c8cf7b4e9a7815b3b6a6a7d1c0110084f4ff6371474125c2b71742b4f",
     "js/editor/authoring-pending.js": "682ca417d5c4fdab062c972f5e63db2e6a84de110586a808d6d555c113d44a6f",
     "js/editor/data-picker.js": "8f01eb3193350b8ee1a1187743d9092c6857a4ac70eaad9cf0cbb75d0c7e4725",
     "js/editor/operation-recipe.js": "41c9fc1e5b68cf67eede3da95ccc6089b4adda1b8fd799cf265ade2d891112d2",
     "js/editor/rule-connections.js": "3f6d9441b14dbfe9d2a382f4dc90158e43c0a395ca8622d9d1451fb29dbd8d99",
     "js/editor/rule-plans.js": "2087bd43044e51fabe4ee0fe4f7eed4a6fe486c02e1203377607818375da4c7e",
+    "js/engine/action-choices.js": "13635a9966b8daab2b2ad5b58b99bc6e0218e3a26633cb1f608e807aa67d7c5d",
     "js/engine/action-expression.js": "efab537b1edd027ab8aed2bacf4054eac93a212f966eb164eb0183939a3a9ed7",
-    "js/engine/action-fields.js": "cf7c25ef32f8d71c5340d3a2df3e905c40d6383f8b8d4e31283b5f848cb5f4ce",
-    "js/engine/action-plan.js": "966e27b585dfc812af85e5821b0885429c573b61b485910cb56bbda4179b78dc",
+    "js/engine/action-fields.js": "bee4d6789c95d592a4c0d1357f42ef05b7259935e330c09a4ae15a1df1816487",
+    "js/engine/action-plan.js": "f1e05ca950fde89dd9b2a507e40161e5dae1e643dc7dd1fdb4333a501513ac48",
     "js/engine/action-progressions.js": "f4a13df5fa4296745a9b43f60ee4ca88c0f0971490678d4fb1acd57dea7ab303",
-    "js/engine/action-records.js": "ddbc47590d898d6f4e2e1496f29f61595d968764574b96cf9539df539c614d8d",
+    "js/engine/action-records.js": "a6d20d02d39769e53d0859edd0d34d495a1456c3e9478e623df58b293c565374",
     "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
     "js/engine/assisted-fields.js": "203e3fb0aa9af0d40eb8e5e8f2989d561a6d74569d2bd360a18996ea68aa2a0a",
     "js/engine/bound-fields.js": "ca4290143688e5218703c107b4b89b564eb2396bffc0a51d1b08eafbb35f30b4",

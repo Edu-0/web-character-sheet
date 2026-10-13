@@ -1,3 +1,4 @@
+import {validateActionSelections} from './action-choices.js';
 import {ACTION_LIMITS} from './action-plan.js';
 import {safeDataId} from './data-types.js';
 import {validateResolution} from './roll-transcript.js';
@@ -26,6 +27,7 @@ export function validateActionRecords(character,{root='character'}={}){
   }
   if(totalDraws>100)add('Orçamento global de100 lançamentos excedido no registro.');
   for(const payment of Array.isArray(record.payments)?record.payments:[])if(!object(payment)||!safeDataId(payment.dataId)||!['remaining','used'].includes(payment.mode)||['before','after','amount'].some(k=>typeof payment[k]!=='number'||!Number.isFinite(payment[k])||payment[k]<0)||payment.after!==(payment.mode==='used'?payment.before+payment.amount:payment.before-payment.amount))add('Pagamento registrado inválido.');
+  if(record.extensions?.selections!==undefined){try{validateActionSelections(record.extensions.selections);}catch(error){add(error.message);}}
   if(record.error!==undefined&&(typeof record.error!=='string'||record.error.length>2000))add('Diagnóstico de retomada inválido.');
   if(!Array.isArray(record.reserves)||record.reserves.length>ACTION_LIMITS.costs||!object(record.basis))add('Reservas e baseline de ajustes exigidos.');
   if(object(record.generatedIds)&&Object.entries(record.generatedIds).some(([key,value])=>!safeDataId(key)||!safeDataId(value)))add('Identidades de entradas geradas inválidas.');
