@@ -2356,13 +2356,17 @@
     }
   },
   "examples": [
+    "adventurers.package.json",
+    "cartographers.package.json",
     "check-buttons.package.json",
     "check-rolls.package.json",
     "first-bindings.package.json",
     "generic-entry-rolls.package.json",
+    "investigator.package.json",
     "local-composition.package.json",
     "recovery-actions.package.json",
-    "structured.package.json"
+    "structured.package.json",
+    "traits.package.json"
   ],
   "itemFields": {
     "boolean": {
@@ -2580,7 +2584,7 @@
     "js/dice.js": "442de0ae708453bd3ec76148ae40b83f467ccc4a3476011230bad0a055c37b59",
     "js/editor/action-authoring.js": "34ec1bca378f01580830cc3b74eaf458a2818a150582460115509f54e2ad8a38",
     "js/editor/authoring-pending.js": "682ca417d5c4fdab062c972f5e63db2e6a84de110586a808d6d555c113d44a6f",
-    "js/editor/data-picker.js": "8f01eb3193350b8ee1a1187743d9092c6857a4ac70eaad9cf0cbb75d0c7e4725",
+    "js/editor/data-picker.js": "b7bcb0d76cccb0c254d59c40851f133ae6cd345bb78c2b25b7f460de00730660",
     "js/editor/operation-recipe.js": "41c9fc1e5b68cf67eede3da95ccc6089b4adda1b8fd799cf265ade2d891112d2",
     "js/editor/rule-connections.js": "f0e193f4652b90dcfb210e1f960987e41efd48fbb57b9f4036e7edd5552cd093",
     "js/editor/rule-plans.js": "2087bd43044e51fabe4ee0fe4f7eed4a6fe486c02e1203377607818375da4c7e",
@@ -2612,7 +2616,7 @@
     "js/engine/point-budget.js": "b665cc20098b85373b66835b138f5953fcb3d13161b3596f2cae3c71a2411946",
     "js/engine/point-fields.js": "6c06aa5812ab233dfa8cd192d4fbca8a8c467f3f13062b53c1cb24d7932ef612",
     "js/engine/predicates.js": "bb5440f4ccceb2086397949c59554f095526d9f6684630a1a32a7225e6d47c02",
-    "js/engine/progression-choices.js": "6d1067fcb4cb9ee3c21216497c1a743439b315740809bd4ccdd5186751f04b15",
+    "js/engine/progression-choices.js": "e3f3cdb8a01e319d095de3f1f81dd87cb0add64ebeaa8a137d59a35111b8db1f",
     "js/engine/progression-fields.js": "2d88e9db63921dcf18f07d82052220639f3d683cd6fe485e155364efc1c384ea",
     "js/engine/recovery-fields.js": "0376f86ecc50c64a9eaef03c277450b095b9611221a23fd4f989a23044646cbc",
     "js/engine/recovery.js": "592dcb7258125d2dd049f6966c715048ce521ed24ee303614804ffce6f14b226",

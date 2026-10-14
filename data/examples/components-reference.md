@@ -4,7 +4,7 @@ Gerada por `npm run build:reference`; confira com `npm run check:reference`. Nã
 
 São 34 componentes e 7 tipos internos. As condições dependentes de sistema/layout/personagem são verificadas por [schemas](../../js/validation/schemas.js), [referências](../../js/validation/references.js) e [referências de rolagem](../../js/validation/roll-references.js). Valores default listados abaixo vêm de constantes consumidas pelo runtime; ausência de default significa que ele não foi extraído para este contrato, não uma promessa de valor vazio.
 
-Fingerprint do código público consultado: `7049c0ce7f54ef1ace6bad8eb648a6081000e9353f72b8dfe904ae771a85deae`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
+Fingerprint do código público consultado: `a47f9794bd9f2a54d350ed66c86f3649bc492afde24a1de703c5188f891fa4a8`. [Artefato de contrato e hashes](components-reference.json). O check recusa referência desatualizada após mudanças nestas fontes. Não é um JSON Schema completo.
 
 ## Propriedades comuns
 
@@ -625,12 +625,16 @@ Origens e cruzamentos explícitos, vínculos de entradas, propostas e confirmaç
 
 ## Exemplos verificados
 
+- [adventurers.package.json](adventurers.package.json)
+- [cartographers.package.json](cartographers.package.json)
 - [check-buttons.package.json](check-buttons.package.json)
 - [check-rolls.package.json](check-rolls.package.json)
 - [first-bindings.package.json](first-bindings.package.json)
 - [generic-entry-rolls.package.json](generic-entry-rolls.package.json)
+- [investigator.package.json](investigator.package.json)
 - [local-composition.package.json](local-composition.package.json)
 - [recovery-actions.package.json](recovery-actions.package.json)
 - [structured.package.json](structured.package.json)
+- [traits.package.json](traits.package.json)
 
 O gerador valida cada pacote e personagem-template pelo código real. Testes negativos/de preservação e comparação do registro de renderizadores ficam nas suítes Node/Playwright. Estes exemplos são fictícios; a referência não copia conteúdo de livros.

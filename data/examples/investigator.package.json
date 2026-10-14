@@ -1,0 +1,933 @@
+{
+  "kind": "rpg-system-package",
+  "schemaVersion": 3,
+  "system": {
+    "schemaVersion": 3,
+    "id": "pacote-f70fe167",
+    "name": "Caderno de investigação",
+    "characterTemplate": {
+      "schemaVersion": 3,
+      "meta": {
+        "system": "pacote-f70fe167"
+      }
+    },
+    "dataDefinitions": [
+      {
+        "id": "data-4dfa9d1e-796c-46e9-ad03-3275040e5131",
+        "label": "Perícias",
+        "type": "collection",
+        "binding": "pericias",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-f1e1d17e-0df5-4a46-a40d-a39468d2c5bb",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Perícia"
+          },
+          {
+            "id": "data-c47a91c5-962f-4609-944d-0ce710ba7904",
+            "label": "Percentual",
+            "type": "integer",
+            "binding": "percentual",
+            "required": false,
+            "nullable": false,
+            "initial": 63,
+            "minimum": 0,
+            "maximum": 100
+          },
+          {
+            "id": "data-2f17c5a2-1079-4bba-b3d5-d7fa6c00a60c",
+            "label": "Marca de evolução",
+            "type": "boolean",
+            "binding": "marca_de_evolucao",
+            "required": false,
+            "nullable": false,
+            "initial": false
+          }
+        ]
+      },
+      {
+        "id": "data-42ea73e3-d888-4637-912d-ea9323bab45c",
+        "label": "Perícia selecionada",
+        "type": "reference",
+        "binding": "pericia_selecionada",
+        "required": false,
+        "nullable": false,
+        "target": {
+          "scope": "character",
+          "dataId": "data-4dfa9d1e-796c-46e9-ad03-3275040e5131"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-8181e89e-8075-4e41-8e07-2363abdccdaa",
+        "label": "Saldo de bônus",
+        "type": "integer",
+        "binding": "saldo_de_bonus",
+        "required": false,
+        "nullable": false,
+        "initial": 0,
+        "minimum": -2,
+        "maximum": 2
+      },
+      {
+        "id": "data-6d8f90fa-1d97-4ed5-9f32-2175bd5ff6cf",
+        "label": "Último percentil",
+        "type": "integer",
+        "binding": "ultimo_percentil",
+        "required": false,
+        "nullable": false,
+        "initial": 0,
+        "minimum": 0,
+        "maximum": 100
+      },
+      {
+        "id": "data-57391731-3adf-4e55-93d9-e9a9ab15ab5d",
+        "label": "Sanidade",
+        "type": "integer",
+        "binding": "sanidade",
+        "required": false,
+        "nullable": false,
+        "initial": 10,
+        "minimum": 0
+      },
+      {
+        "id": "data-63e2fd7d-a88a-4ee5-8f34-55aab6218541",
+        "label": "Sorte",
+        "type": "integer",
+        "binding": "sorte",
+        "required": false,
+        "nullable": false,
+        "initial": 10,
+        "minimum": 0
+      },
+      {
+        "id": "data-43eb11e6-0441-4f7d-a89d-45088a3844e1",
+        "label": "PV",
+        "type": "integer",
+        "binding": "pv",
+        "required": false,
+        "nullable": false,
+        "initial": 10,
+        "minimum": 0
+      },
+      {
+        "id": "data-92e23e76-6bc1-4a7a-ba5f-feb5ca2f5d7c",
+        "label": "PM",
+        "type": "integer",
+        "binding": "pm",
+        "required": false,
+        "nullable": false,
+        "initial": 10,
+        "minimum": 0
+      },
+      {
+        "id": "data-e3235093-063f-4900-8898-1dac689898d3",
+        "label": "Máximo de Sanidade",
+        "type": "integer",
+        "binding": "maximo_de_sanidade",
+        "required": false,
+        "nullable": false,
+        "initial": 10,
+        "minimum": 0
+      },
+      {
+        "id": "data-370ff08b-2d0e-4138-94c2-6aa6d9f443e4",
+        "label": "Máximo de PV",
+        "type": "integer",
+        "binding": "maximo_de_pv",
+        "required": false,
+        "nullable": false,
+        "initial": 10,
+        "minimum": 0
+      },
+      {
+        "id": "data-6cf3e593-56ed-47e5-884d-98d57e656c1e",
+        "label": "Máximo de PM",
+        "type": "integer",
+        "binding": "maximo_de_pm",
+        "required": false,
+        "nullable": false,
+        "initial": 10,
+        "minimum": 0
+      },
+      {
+        "id": "data-83d3d6c7-f0da-400d-894e-b9d5616993c2",
+        "label": "Características",
+        "type": "record",
+        "binding": "caracteristicas",
+        "required": false,
+        "nullable": false,
+        "initial": {},
+        "fields": [
+          {
+            "id": "data-be92ac69-1344-496e-a05f-d081a87eab4c",
+            "label": "Vigor",
+            "type": "integer",
+            "binding": "vigor",
+            "required": false,
+            "nullable": false,
+            "initial": 50,
+            "minimum": 0,
+            "maximum": 100
+          }
+        ]
+      },
+      {
+        "id": "data-6bc870e9-f3dd-47b1-8195-ff7a7ce276da",
+        "label": "Notas da mesa",
+        "type": "string",
+        "binding": "notas_da_mesa",
+        "required": false,
+        "nullable": false,
+        "initial": "Dificuldade e ficção: decisão do Guardião."
+      },
+      {
+        "id": "data-5da0b3f9-65fc-4e07-bd6c-7c0d5d26c044",
+        "label": "Armas",
+        "type": "collection",
+        "binding": "armas",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-32e558af-11ff-4c2f-882d-6c707d465f00",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Registro manual"
+          }
+        ]
+      },
+      {
+        "id": "data-20ef1234-b3e6-469e-a387-88ba78dc82a9",
+        "label": "Pertences",
+        "type": "collection",
+        "binding": "pertences",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-9e8f4e1f-8fa1-444e-b489-18cd1ddd8d60",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Registro manual"
+          }
+        ]
+      },
+      {
+        "id": "data-b88580f9-f228-4b8d-91fd-2c6311ee6a82",
+        "label": "Histórico e condições",
+        "type": "collection",
+        "binding": "historico_e_condicoes",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-dfc2aab6-f34e-4e2a-beb2-e73f9a08d02d",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Registro manual"
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "rule-fe33670b-ec92-4b0e-b9b2-b87266816f28",
+        "label": "Chance atual",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-3ca1d065-80d4-47dd-abaf-65f0d3a599b1",
+          "op": "property",
+          "version": 1,
+          "fieldId": "data-c47a91c5-962f-4609-944d-0ce710ba7904",
+          "value": {
+            "id": "node-1806216f-214e-4e26-a5ee-c115ce09ee51",
+            "op": "lookup",
+            "version": 1,
+            "source": {
+              "id": "node-0064c6ca-d93d-4f0b-9568-cb22558a0221",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-4dfa9d1e-796c-46e9-ad03-3275040e5131",
+              "mode": "base"
+            },
+            "key": {
+              "id": "node-02985ecc-fc25-45f8-970e-91b1a5e0934a",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-42ea73e3-d888-4637-912d-ea9323bab45c",
+              "mode": "base"
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-e3dee83f-8ff2-47b3-83d8-ff696ba7ffb4",
+        "label": "Difícil",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-3ca1d065-80d4-47dd-abaf-65f0d3a599b1",
+          "op": "floor",
+          "version": 1,
+          "value": {
+            "id": "node-1806216f-214e-4e26-a5ee-c115ce09ee51",
+            "op": "divide",
+            "version": 1,
+            "left": {
+              "id": "node-f899b5bb-aba4-41b4-9e0e-7a65b0c892ec",
+              "op": "rule",
+              "version": 1,
+              "ruleId": "rule-fe33670b-ec92-4b0e-b9b2-b87266816f28",
+              "mode": "automatic"
+            },
+            "right": {
+              "id": "node-b3ec21a2-96d9-497e-b034-89a7ba8f4bb6",
+              "op": "literal",
+              "version": 1,
+              "value": 2
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-adfd03b2-a7ae-4588-9187-5785bbb067e0",
+        "label": "Extremo",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-3ca1d065-80d4-47dd-abaf-65f0d3a599b1",
+          "op": "floor",
+          "version": 1,
+          "value": {
+            "id": "node-1806216f-214e-4e26-a5ee-c115ce09ee51",
+            "op": "divide",
+            "version": 1,
+            "left": {
+              "id": "node-f899b5bb-aba4-41b4-9e0e-7a65b0c892ec",
+              "op": "rule",
+              "version": 1,
+              "ruleId": "rule-fe33670b-ec92-4b0e-b9b2-b87266816f28",
+              "mode": "automatic"
+            },
+            "right": {
+              "id": "node-b3ec21a2-96d9-497e-b034-89a7ba8f4bb6",
+              "op": "literal",
+              "version": 1,
+              "value": 5
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-bac1cb30-adea-4eb6-bdf8-ba1af409630c",
+        "label": "Classificação",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "string",
+        "expression": {
+          "id": "node-3ca1d065-80d4-47dd-abaf-65f0d3a599b1",
+          "op": "if",
+          "version": 1,
+          "condition": {
+            "id": "node-3bb8544d-bfe8-4cf3-a44c-8f0b8b6929f5",
+            "op": "lessEqual",
+            "version": 1,
+            "left": {
+              "id": "node-d452969c-783e-42f8-b7a0-d7d1b90cb5eb",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-6d8f90fa-1d97-4ed5-9f32-2175bd5ff6cf",
+              "mode": "base"
+            },
+            "right": {
+              "id": "node-927d719a-db5d-4b0e-9b36-38d3eca836d2",
+              "op": "rule",
+              "version": 1,
+              "ruleId": "rule-adfd03b2-a7ae-4588-9187-5785bbb067e0",
+              "mode": "automatic"
+            }
+          },
+          "then": {
+            "id": "node-b17a8a7d-b3c8-433f-a5c2-bd27441a7ef0",
+            "op": "literal",
+            "version": 1,
+            "value": "Extremo"
+          },
+          "else": {
+            "id": "node-66307d9f-861d-4950-b5b2-d3c077dce3b8",
+            "op": "if",
+            "version": 1,
+            "condition": {
+              "id": "node-6c6f019a-e786-42b0-8eed-85027676b23b",
+              "op": "lessEqual",
+              "version": 1,
+              "left": {
+                "id": "node-bf7b3b35-f9a5-486f-b88e-b7a02a1e9b76",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-6d8f90fa-1d97-4ed5-9f32-2175bd5ff6cf",
+                "mode": "base"
+              },
+              "right": {
+                "id": "node-e423be98-8c81-4f6e-a624-fa1faed2c0cf",
+                "op": "rule",
+                "version": 1,
+                "ruleId": "rule-e3dee83f-8ff2-47b3-83d8-ff696ba7ffb4",
+                "mode": "automatic"
+              }
+            },
+            "then": {
+              "id": "node-8e4ef47c-980b-48ff-b2b3-f0a9bf34f11e",
+              "op": "literal",
+              "version": 1,
+              "value": "Difícil"
+            },
+            "else": {
+              "id": "node-c358dd4e-f9e1-4f60-aac3-ef1044fb94ef",
+              "op": "if",
+              "version": 1,
+              "condition": {
+                "id": "node-5d01dc44-bc5d-44fb-b97e-f793ad901c0f",
+                "op": "lessEqual",
+                "version": 1,
+                "left": {
+                  "id": "node-00f9baf0-3282-4cb4-9bc9-b0f9be7839b9",
+                  "op": "read",
+                  "version": 1,
+                  "dataId": "data-6d8f90fa-1d97-4ed5-9f32-2175bd5ff6cf",
+                  "mode": "base"
+                },
+                "right": {
+                  "id": "node-e67304fb-3777-4155-a071-56b647869d9b",
+                  "op": "rule",
+                  "version": 1,
+                  "ruleId": "rule-fe33670b-ec92-4b0e-b9b2-b87266816f28",
+                  "mode": "automatic"
+                }
+              },
+              "then": {
+                "id": "node-596a8fc4-24c7-44ab-9ab0-001f573e5003",
+                "op": "literal",
+                "version": 1,
+                "value": "Regular"
+              },
+              "else": {
+                "id": "node-097470e3-64e7-4994-9295-240e29ba1d77",
+                "op": "literal",
+                "version": 1,
+                "value": "Acima"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-93d27c26-4312-4318-9ab4-227da4f7b6b7",
+        "label": "Perícia resolvida",
+        "revision": 1,
+        "kind": "predicate",
+        "resultType": "boolean",
+        "expression": {
+          "id": "node-3ca1d065-80d4-47dd-abaf-65f0d3a599b1",
+          "op": "resolved",
+          "version": 1,
+          "value": {
+            "id": "node-348e40fb-63b5-4157-9383-854b52b5b876",
+            "op": "read",
+            "version": 1,
+            "dataId": "data-42ea73e3-d888-4637-912d-ea9323bab45c",
+            "mode": "base"
+          }
+        }
+      }
+    ],
+    "sheetActions": [
+      {
+        "id": "action-1e097d04-0a5d-410e-818f-110da12377d2",
+        "label": "Testar perícia",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [
+            {
+              "id": "step-ec8540df-8842-4874-8195-a518d30fe90f",
+              "label": "Chance da tentativa",
+              "type": "value",
+              "expression": {
+                "id": "node-76c5c7c6-39eb-4a25-b130-b9818c173d7d",
+                "op": "rule",
+                "version": 1,
+                "ruleId": "rule-fe33670b-ec92-4b0e-b9b2-b87266816f28",
+                "mode": "automatic"
+              },
+              "resultType": "number"
+            },
+            {
+              "id": "step-caeeecb8-a248-48dd-a86c-bcf0903de006",
+              "label": "Percentil compartilhado",
+              "type": "resolve",
+              "groups": [
+                {
+                  "id": "group-15529142-2366-4434-9e96-6f434b178ff7",
+                  "label": "Unidade e dezenas",
+                  "type": "sharedPercentile",
+                  "bonus": {
+                    "id": "node-0edd7d63-2fb4-47ca-b72b-fc26e7031702",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-8181e89e-8075-4e41-8e07-2363abdccdaa",
+                    "mode": "base"
+                  }
+                }
+              ],
+              "modifier": {
+                "id": "node-4a569323-0f83-4ae2-bfc0-ed6e2ba8dba4",
+                "op": "literal",
+                "version": 1,
+                "value": 0
+              },
+              "ranges": []
+            },
+            {
+              "id": "step-a2ec1b1e-85e9-4cba-9f2a-1b04fcd04f02",
+              "label": "Escolher candidato",
+              "type": "value",
+              "expression": {
+                "id": "node-8f25ff47-8b6d-436b-8057-84e1756f5064",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-3bed0d9c-092c-4a7b-a633-a551a41b2c99",
+                  "op": "less",
+                  "version": 1,
+                  "left": {
+                    "id": "node-a19732cc-829e-4fed-90d5-3009740b7507",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-8181e89e-8075-4e41-8e07-2363abdccdaa",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-3e2f2d3e-24b2-435a-a8cf-69c1e7274aca",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 0
+                  }
+                },
+                "then": {
+                  "id": "node-90a4d4f1-eb35-463e-910b-643ed12d42b4",
+                  "op": "max",
+                  "version": 1,
+                  "source": {
+                    "id": "node-cd153e97-47c1-46ac-a00e-eec46133f0b4",
+                    "op": "map",
+                    "version": 1,
+                    "source": {
+                      "id": "node-a6c839f1-0a81-4a07-a6a5-01166fd043e7",
+                      "op": "property",
+                      "version": 1,
+                      "fieldId": "port_41_step-caeeecb8-a248-48dd-a86c-bcf0903de006_groups_candidates",
+                      "value": {
+                        "id": "node-11c99d39-9dad-442a-b3bd-c59bfedab70d",
+                        "op": "lookup",
+                        "version": 1,
+                        "source": {
+                          "id": "node-372e2ccd-3e87-414b-8dbc-fb8c4ef4c4f4",
+                          "op": "property",
+                          "version": 1,
+                          "fieldId": "port_41_step-caeeecb8-a248-48dd-a86c-bcf0903de006_groups",
+                          "value": {
+                            "id": "node-31106459-db03-403e-991b-eda725d98694",
+                            "op": "local",
+                            "version": 1,
+                            "localId": "step-caeeecb8-a248-48dd-a86c-bcf0903de006"
+                          }
+                        },
+                        "key": {
+                          "id": "node-16b17c68-4a48-4780-9dfd-5f4657cf2501",
+                          "op": "literal",
+                          "version": 1,
+                          "value": "group-15529142-2366-4434-9e96-6f434b178ff7"
+                        }
+                      }
+                    },
+                    "value": {
+                      "id": "node-bc1aa8c0-f5f4-4a9a-8c6a-a914389e78a9",
+                      "op": "property",
+                      "version": 1,
+                      "fieldId": "port_41_step-caeeecb8-a248-48dd-a86c-bcf0903de006_groups_candidates_value",
+                      "value": {
+                        "id": "node-ad20752a-bc7d-4a81-b012-981768ab4e3d",
+                        "op": "item",
+                        "version": 1
+                      }
+                    }
+                  }
+                },
+                "else": {
+                  "id": "node-8cf64d4d-c8c0-412b-bc3a-256f9d96d04d",
+                  "op": "min",
+                  "version": 1,
+                  "source": {
+                    "id": "node-0bad5b22-20a1-417b-ab64-5fdfc85521da",
+                    "op": "map",
+                    "version": 1,
+                    "source": {
+                      "id": "node-74edb96a-b3d5-412a-8b68-caffb3da90e7",
+                      "op": "property",
+                      "version": 1,
+                      "fieldId": "port_41_step-caeeecb8-a248-48dd-a86c-bcf0903de006_groups_candidates",
+                      "value": {
+                        "id": "node-709d2d5a-1c24-447b-9919-11b280577e55",
+                        "op": "lookup",
+                        "version": 1,
+                        "source": {
+                          "id": "node-dabd1617-e733-4ddf-b911-4bad0ff3e3b0",
+                          "op": "property",
+                          "version": 1,
+                          "fieldId": "port_41_step-caeeecb8-a248-48dd-a86c-bcf0903de006_groups",
+                          "value": {
+                            "id": "node-fb62d777-c69e-4c4f-aae2-95488c39ae75",
+                            "op": "local",
+                            "version": 1,
+                            "localId": "step-caeeecb8-a248-48dd-a86c-bcf0903de006"
+                          }
+                        },
+                        "key": {
+                          "id": "node-7b2b1c57-7914-4ecc-9c6d-82b9b3e43907",
+                          "op": "literal",
+                          "version": 1,
+                          "value": "group-15529142-2366-4434-9e96-6f434b178ff7"
+                        }
+                      }
+                    },
+                    "value": {
+                      "id": "node-e68ecd93-71d5-4407-b905-bab9a2810cb4",
+                      "op": "property",
+                      "version": 1,
+                      "fieldId": "port_41_step-caeeecb8-a248-48dd-a86c-bcf0903de006_groups_candidates_value",
+                      "value": {
+                        "id": "node-034146dd-947c-4a06-b0be-d4397fedc63a",
+                        "op": "item",
+                        "version": 1
+                      }
+                    }
+                  }
+                }
+              },
+              "resultType": "number"
+            },
+            {
+              "id": "step-fdd2d671-8f64-419e-900a-eada1f9d79e7",
+              "label": "Guardar resultado",
+              "type": "set",
+              "dataId": "data-6d8f90fa-1d97-4ed5-9f32-2175bd5ff6cf",
+              "expression": {
+                "id": "node-135fb614-f793-4e98-870f-5bd68b6846ff",
+                "op": "local",
+                "version": 1,
+                "localId": "step-a2ec1b1e-85e9-4cba-9f2a-1b04fcd04f02"
+              }
+            }
+          ],
+          "costs": []
+        },
+        "allowWhen": {
+          "ruleId": "rule-93d27c26-4312-4318-9ab4-227da4f7b6b7"
+        }
+      }
+    ]
+  },
+  "layouts": [
+    {
+      "schemaVersion": 3,
+      "id": "default",
+      "system": "pacote-f70fe167",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "basic",
+              "title": "Personagem",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "dataField",
+                      "label": "Sanidade",
+                      "dataId": "data-57391731-3adf-4e55-93d9-e9a9ab15ab5d"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Sorte",
+                      "dataId": "data-63e2fd7d-a88a-4ee5-8f34-55aab6218541"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PV",
+                      "dataId": "data-43eb11e6-0441-4f7d-a89d-45088a3844e1"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PM",
+                      "dataId": "data-92e23e76-6bc1-4a7a-ba5f-feb5ca2f5d7c"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Máximo de Sanidade",
+                      "dataId": "data-e3235093-063f-4900-8898-1dac689898d3"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Máximo de PV",
+                      "dataId": "data-370ff08b-2d0e-4138-94c2-6aa6d9f443e4"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Máximo de PM",
+                      "dataId": "data-6cf3e593-56ed-47e5-884d-98d57e656c1e"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Características",
+                      "dataId": "data-83d3d6c7-f0da-400d-894e-b9d5616993c2"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Notas da mesa",
+                      "dataId": "data-6bc870e9-f3dd-47b1-8195-ff7a7ce276da"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Armas",
+                      "dataId": "data-5da0b3f9-65fc-4e07-bd6c-7c0d5d26c044"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Pertences",
+                      "dataId": "data-20ef1234-b3e6-469e-a387-88ba78dc82a9"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Histórico e condições",
+                      "dataId": "data-b88580f9-f228-4b8d-91fd-2c6311ee6a82"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Perícias",
+                      "dataId": "data-4dfa9d1e-796c-46e9-ad03-3275040e5131"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Perícia selecionada",
+                      "dataId": "data-42ea73e3-d888-4637-912d-ea9323bab45c"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Saldo de bônus",
+                      "dataId": "data-8181e89e-8075-4e41-8e07-2363abdccdaa"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Último percentil",
+                      "dataId": "data-6d8f90fa-1d97-4ed5-9f32-2175bd5ff6cf"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Chance atual",
+                      "ruleId": "rule-fe33670b-ec92-4b0e-b9b2-b87266816f28"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Difícil",
+                      "ruleId": "rule-e3dee83f-8ff2-47b3-83d8-ff696ba7ffb4"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Extremo",
+                      "ruleId": "rule-adfd03b2-a7ae-4588-9187-5785bbb067e0"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Classificação",
+                      "ruleId": "rule-bac1cb30-adea-4eb6-bdf8-ba1af409630c"
+                    },
+                    {
+                      "type": "actionGroup",
+                      "label": "Testar perícia",
+                      "actionsFrom": "sheetActions"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schemaVersion": 3,
+      "id": "mesa",
+      "system": "pacote-f70fe167",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "basic",
+              "title": "Personagem",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "dataField",
+                      "label": "Sanidade",
+                      "dataId": "data-57391731-3adf-4e55-93d9-e9a9ab15ab5d"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Sorte",
+                      "dataId": "data-63e2fd7d-a88a-4ee5-8f34-55aab6218541"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PV",
+                      "dataId": "data-43eb11e6-0441-4f7d-a89d-45088a3844e1"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PM",
+                      "dataId": "data-92e23e76-6bc1-4a7a-ba5f-feb5ca2f5d7c"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Máximo de Sanidade",
+                      "dataId": "data-e3235093-063f-4900-8898-1dac689898d3"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Máximo de PV",
+                      "dataId": "data-370ff08b-2d0e-4138-94c2-6aa6d9f443e4"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Máximo de PM",
+                      "dataId": "data-6cf3e593-56ed-47e5-884d-98d57e656c1e"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Características",
+                      "dataId": "data-83d3d6c7-f0da-400d-894e-b9d5616993c2"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Notas da mesa",
+                      "dataId": "data-6bc870e9-f3dd-47b1-8195-ff7a7ce276da"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Armas",
+                      "dataId": "data-5da0b3f9-65fc-4e07-bd6c-7c0d5d26c044"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Pertences",
+                      "dataId": "data-20ef1234-b3e6-469e-a387-88ba78dc82a9"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Histórico e condições",
+                      "dataId": "data-b88580f9-f228-4b8d-91fd-2c6311ee6a82"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Perícias",
+                      "dataId": "data-4dfa9d1e-796c-46e9-ad03-3275040e5131"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Perícia selecionada",
+                      "dataId": "data-42ea73e3-d888-4637-912d-ea9323bab45c"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Saldo de bônus",
+                      "dataId": "data-8181e89e-8075-4e41-8e07-2363abdccdaa"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Último percentil",
+                      "dataId": "data-6d8f90fa-1d97-4ed5-9f32-2175bd5ff6cf"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Chance atual",
+                      "ruleId": "rule-fe33670b-ec92-4b0e-b9b2-b87266816f28"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Difícil",
+                      "ruleId": "rule-e3dee83f-8ff2-47b3-83d8-ff696ba7ffb4"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Extremo",
+                      "ruleId": "rule-adfd03b2-a7ae-4588-9187-5785bbb067e0"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Classificação",
+                      "ruleId": "rule-bac1cb30-adea-4eb6-bdf8-ba1af409630c"
+                    },
+                    {
+                      "type": "actionGroup",
+                      "label": "Testar perícia",
+                      "actionsFrom": "sheetActions"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "name": "Mesa",
+      "mode": "table"
+    }
+  ]
+}

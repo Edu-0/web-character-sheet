@@ -1,0 +1,4236 @@
+{
+  "kind": "rpg-system-package",
+  "schemaVersion": 3,
+  "system": {
+    "schemaVersion": 3,
+    "id": "pacote-80af7f32",
+    "name": "Caderno de aventuras",
+    "characterTemplate": {
+      "schemaVersion": 3,
+      "meta": {
+        "system": "pacote-80af7f32"
+      }
+    },
+    "dataDefinitions": [
+      {
+        "id": "data-ad3e512e-1844-4729-9812-798252cd69e2",
+        "label": "Atributos",
+        "type": "collection",
+        "binding": "atributos",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-093659f9-0555-4377-aba4-9ab1747b58bd",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Atributo"
+          },
+          {
+            "id": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+            "label": "Valor",
+            "type": "integer",
+            "binding": "valor",
+            "required": false,
+            "nullable": false,
+            "initial": 10,
+            "minimum": 1,
+            "maximum": 30
+          }
+        ]
+      },
+      {
+        "id": "data-d46060e2-4677-447f-8fb2-3b52e7d58228",
+        "label": "Nível",
+        "type": "integer",
+        "binding": "nivel",
+        "required": false,
+        "nullable": false,
+        "initial": 5,
+        "minimum": 1,
+        "maximum": 20
+      },
+      {
+        "id": "data-3faecf2f-34e7-49f2-a008-e64724a808ec",
+        "label": "Fonte da capacidade",
+        "type": "reference",
+        "binding": "fonte_da_capacidade",
+        "required": false,
+        "nullable": false,
+        "target": {
+          "scope": "character",
+          "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-dfc92135-7bd6-4d79-996e-a8d07d54356b",
+        "label": "Fonte da iniciativa",
+        "type": "reference",
+        "binding": "fonte_da_iniciativa",
+        "required": false,
+        "nullable": false,
+        "target": {
+          "scope": "character",
+          "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-5cb2bc97-23dc-4dc3-b38c-f713e872a05b",
+        "label": "Fonte da cura",
+        "type": "reference",
+        "binding": "fonte_da_cura",
+        "required": false,
+        "nullable": false,
+        "target": {
+          "scope": "character",
+          "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-bf2f1bc9-f484-4c87-8fc5-ac513b084fb9",
+        "label": "Fonte da conjuração",
+        "type": "reference",
+        "binding": "fonte_da_conjuracao",
+        "required": false,
+        "nullable": false,
+        "target": {
+          "scope": "character",
+          "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-3e8a3178-0274-4c04-817e-6603a3656a2a",
+        "label": "Perícias",
+        "type": "collection",
+        "binding": "pericias",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-7d62a59c-6c40-4bce-976d-90ca4a9e254a",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Perícia"
+          },
+          {
+            "id": "data-eb2b00e1-1b52-4560-ac11-1f0db68d1848",
+            "label": "Atributo vinculado",
+            "type": "reference",
+            "binding": "atributo_vinculado",
+            "required": false,
+            "nullable": false,
+            "target": {
+              "scope": "character",
+              "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+            },
+            "multiple": false
+          },
+          {
+            "id": "data-e75db2d0-a556-4084-9f07-526582fec842",
+            "label": "Treino",
+            "type": "enum",
+            "binding": "treino",
+            "required": false,
+            "nullable": false,
+            "initial": "option-74fcc20d-6b98-462b-9eef-65ba7bb3b599",
+            "options": [
+              {
+                "id": "option-74fcc20d-6b98-462b-9eef-65ba7bb3b599",
+                "label": "Sem treino"
+              },
+              {
+                "id": "option-1041daf7-a8d0-4cee-9ec9-74b78fc1b7e5",
+                "label": "Proficiente"
+              },
+              {
+                "id": "option-9ebfd9f6-970d-4ee3-a422-fe446bc62155",
+                "label": "Especialista"
+              }
+            ]
+          },
+          {
+            "id": "data-3e8439a3-c314-4b20-a366-17fb6466b5ad",
+            "label": "Bônus manual",
+            "type": "number",
+            "binding": "bonus_manual",
+            "required": false,
+            "nullable": false,
+            "initial": 0
+          }
+        ]
+      },
+      {
+        "id": "data-b4c64c9f-08fc-4d5d-a3f7-3e738a7f9ee3",
+        "label": "Resistências",
+        "type": "collection",
+        "binding": "resistencias",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-6be50cae-f970-48b4-b2d5-9833036592f8",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Resistência"
+          },
+          {
+            "id": "data-38e92654-c41f-4c15-91d2-48f687d36bbe",
+            "label": "Atributo vinculado",
+            "type": "reference",
+            "binding": "atributo_vinculado",
+            "required": false,
+            "nullable": false,
+            "target": {
+              "scope": "character",
+              "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+            },
+            "multiple": false
+          },
+          {
+            "id": "data-0ac234cd-ccec-431d-9d49-134585540314",
+            "label": "Treino",
+            "type": "enum",
+            "binding": "treino",
+            "required": false,
+            "nullable": false,
+            "initial": "option-02420d14-ff8a-4363-8a01-221736706094",
+            "options": [
+              {
+                "id": "option-02420d14-ff8a-4363-8a01-221736706094",
+                "label": "Sem treino"
+              },
+              {
+                "id": "option-e3477f73-2dc1-4858-af1c-37106c12a666",
+                "label": "Proficiente"
+              },
+              {
+                "id": "option-3753d037-d434-4214-9361-0032b11b8fd2",
+                "label": "Especialista"
+              }
+            ]
+          },
+          {
+            "id": "data-90bdcade-8fb6-40be-95d8-f612b8d949b1",
+            "label": "Bônus manual",
+            "type": "number",
+            "binding": "bonus_manual",
+            "required": false,
+            "nullable": false,
+            "initial": 0
+          }
+        ]
+      },
+      {
+        "id": "data-2f6ea341-9c97-4f66-9367-fe1d006c2b95",
+        "label": "Inventário",
+        "type": "collection",
+        "binding": "inventario",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-b5955d90-f71a-4f65-9918-b454b2865a09",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Item"
+          },
+          {
+            "id": "data-96f297ec-fcd9-403d-983b-bd2134fa86dc",
+            "label": "Quantidade",
+            "type": "integer",
+            "binding": "quantidade",
+            "required": false,
+            "nullable": false,
+            "initial": 1,
+            "minimum": 0
+          },
+          {
+            "id": "data-f39e2c8f-0076-4a15-9c86-583f0edcf2b6",
+            "label": "Peso",
+            "type": "number",
+            "binding": "peso",
+            "required": false,
+            "nullable": false,
+            "initial": 0,
+            "minimum": 0
+          }
+        ]
+      },
+      {
+        "id": "data-241131e9-b167-47fe-a207-19567f087c6f",
+        "label": "Moedas",
+        "type": "collection",
+        "binding": "moedas",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-642acc9f-f092-4439-8172-1cf7de65a407",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Moeda"
+          },
+          {
+            "id": "data-6f6a9ebc-d22f-4203-9f2b-9b7bd5470b9d",
+            "label": "Conversão",
+            "type": "reference",
+            "binding": "conversao",
+            "required": false,
+            "nullable": false,
+            "target": {
+              "scope": "system",
+              "catalogId": "catalog-fbb9ca0e-671f-4dbb-8378-21ca57f00329"
+            },
+            "multiple": false
+          },
+          {
+            "id": "data-95948f5d-ce38-4cb2-852d-5ec5e069fa5b",
+            "label": "Quantidade",
+            "type": "integer",
+            "binding": "quantidade",
+            "required": false,
+            "nullable": false,
+            "initial": 1,
+            "minimum": 0
+          }
+        ]
+      },
+      {
+        "id": "data-a1cc12b6-21de-4b0c-b5e3-eb8fa3f88315",
+        "label": "Perícia passiva escolhida",
+        "type": "reference",
+        "binding": "pericia_passiva_escolhida",
+        "required": false,
+        "nullable": false,
+        "target": {
+          "scope": "character",
+          "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-b30bcfbd-1987-42e9-8ac7-87670a8a8e5f",
+        "label": "PV",
+        "type": "integer",
+        "binding": "pv",
+        "required": false,
+        "nullable": false,
+        "initial": 5,
+        "minimum": 0
+      },
+      {
+        "id": "data-4143cb52-fcdf-4ded-9f06-44114779db30",
+        "label": "PV máximo",
+        "type": "integer",
+        "binding": "pv_maximo",
+        "required": false,
+        "nullable": false,
+        "initial": 12,
+        "minimum": 0
+      },
+      {
+        "id": "data-e3c423a9-d405-49c1-8b17-23aabce69525",
+        "label": "PV temporários",
+        "type": "integer",
+        "binding": "pv_temporarios",
+        "required": false,
+        "nullable": false,
+        "initial": 6,
+        "minimum": 0
+      },
+      {
+        "id": "data-a8d1e07e-2575-4b7d-a8b3-f8f9147c0395",
+        "label": "Dados de Vida usados",
+        "type": "integer",
+        "binding": "dados_de_vida_usados",
+        "required": false,
+        "nullable": false,
+        "initial": 0,
+        "minimum": 0
+      },
+      {
+        "id": "data-a7dafd95-8e3c-4fc5-80d6-b867a7f9f4ba",
+        "label": "Total de Dados de Vida",
+        "type": "integer",
+        "binding": "total_de_dados_de_vida",
+        "required": false,
+        "nullable": false,
+        "initial": 5,
+        "minimum": 0
+      },
+      {
+        "id": "data-a9f28cfd-5c58-4daf-b533-c033c3f22a43",
+        "label": "Dado de Vida",
+        "type": "string",
+        "binding": "dado_de_vida",
+        "required": false,
+        "nullable": false,
+        "initial": "d8"
+      },
+      {
+        "id": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+        "label": "Nível de espaço escolhido",
+        "type": "integer",
+        "binding": "nivel_de_espaco_escolhido",
+        "required": false,
+        "nullable": false,
+        "initial": 1,
+        "minimum": 1,
+        "maximum": 9
+      },
+      {
+        "id": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+        "label": "Consumir espaço",
+        "type": "boolean",
+        "binding": "consumir_espaco",
+        "required": false,
+        "nullable": false,
+        "initial": true
+      },
+      {
+        "id": "data-a4ba5907-9eb5-456f-a2c4-8af7a4694a1e",
+        "label": "Dados extras manuais",
+        "type": "integer",
+        "binding": "dados_extras_manuais",
+        "required": false,
+        "nullable": false,
+        "initial": 0,
+        "minimum": 0,
+        "maximum": 200
+      },
+      {
+        "id": "data-2765ab84-dc2f-48b5-b54b-1e29c8fbd5d9",
+        "label": "Último ataque",
+        "type": "number",
+        "binding": "ultimo_ataque",
+        "required": false,
+        "nullable": false,
+        "initial": 0
+      },
+      {
+        "id": "data-93cc6fc8-bca8-4a0c-ab2d-e6f5f488454b",
+        "label": "Último efeito",
+        "type": "number",
+        "binding": "ultimo_efeito",
+        "required": false,
+        "nullable": false,
+        "initial": 0
+      },
+      {
+        "id": "data-8eab8215-d5e0-4c36-873e-f0f4a9de848a",
+        "label": "Espaços",
+        "type": "record",
+        "binding": "espacos",
+        "required": false,
+        "nullable": false,
+        "initial": {},
+        "fields": [
+          {
+            "id": "data-57dfadc9-2a34-4245-a69c-03d78bf9d4c2",
+            "label": "Nível 1",
+            "type": "record",
+            "binding": "nivel_1",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-b67ed2d5-76b7-4780-bf57-1566ef40a6b4",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 3,
+                "minimum": 0
+              },
+              {
+                "id": "data-08b4a1f5-7f0f-452b-adee-e7fecaabe81b",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 1,
+                "minimum": 0
+              }
+            ]
+          },
+          {
+            "id": "data-ff3460ec-ee3d-492a-aa5a-6fcf85afcd42",
+            "label": "Nível 2",
+            "type": "record",
+            "binding": "nivel_2",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-3e131018-3e69-4590-833f-00159eee6f1f",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              },
+              {
+                "id": "data-7436b75b-9d42-4882-9f5c-6cc567980f57",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          },
+          {
+            "id": "data-92810a57-6a8b-4a61-b8ad-9d5fc8140d2e",
+            "label": "Nível 3",
+            "type": "record",
+            "binding": "nivel_3",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-c27d0352-18b2-435e-bc28-b027224ae3c3",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              },
+              {
+                "id": "data-2365aeb0-8eff-4e3c-81de-0051d6c0812c",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          },
+          {
+            "id": "data-dcf72e0c-3e50-43a4-a5aa-9d5802ad35ca",
+            "label": "Nível 4",
+            "type": "record",
+            "binding": "nivel_4",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-832c0b79-4654-4599-b36e-24bf51e2ee6d",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              },
+              {
+                "id": "data-13824455-729d-403c-8508-33a92f3a3a25",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          },
+          {
+            "id": "data-a3229da7-b6ad-4897-ade6-38d58009515c",
+            "label": "Nível 5",
+            "type": "record",
+            "binding": "nivel_5",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-4743c5bb-243d-4995-9608-275d0290d6d4",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              },
+              {
+                "id": "data-592cf13d-c881-47cd-ada7-2b49f8c04f46",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          },
+          {
+            "id": "data-44f1d463-55ec-4db8-a53f-3ee063a56af2",
+            "label": "Nível 6",
+            "type": "record",
+            "binding": "nivel_6",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-d2188530-10df-4055-8b5f-af1521077697",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              },
+              {
+                "id": "data-c884b510-6a60-4b77-a855-282118f4cd24",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          },
+          {
+            "id": "data-73b32aee-82f0-48bc-a56b-9f0a5d1b7023",
+            "label": "Nível 7",
+            "type": "record",
+            "binding": "nivel_7",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-a8c43c53-ce5f-41eb-960e-e98554d501c7",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              },
+              {
+                "id": "data-0943830e-1239-49d4-9163-1ccb027d2ac9",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          },
+          {
+            "id": "data-31ecb3a1-2db9-41ee-843d-72abbdea57a3",
+            "label": "Nível 8",
+            "type": "record",
+            "binding": "nivel_8",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-47ec9cf3-8810-453f-91d5-0b4e57b8275e",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              },
+              {
+                "id": "data-aa73868a-0d2f-4dad-b283-d1bb0881c3e0",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          },
+          {
+            "id": "data-eb680671-a7ae-4c1c-ae7f-6369381c35ce",
+            "label": "Nível 9",
+            "type": "record",
+            "binding": "nivel_9",
+            "required": false,
+            "nullable": false,
+            "initial": {},
+            "fields": [
+              {
+                "id": "data-d0e7fbec-fe57-4584-b153-1a09af886ae2",
+                "label": "Máximo",
+                "type": "integer",
+                "binding": "maximo",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              },
+              {
+                "id": "data-f5da2af0-4ace-44b1-94be-98e01ed9debf",
+                "label": "Usados",
+                "type": "integer",
+                "binding": "usados",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "data-962fbe41-b0a8-4977-a300-067d76dc0555",
+        "label": "Ataques",
+        "type": "collection",
+        "binding": "ataques",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-50deabe3-c228-4207-abde-0e674bf3ce3c",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Ataque"
+          },
+          {
+            "id": "data-8c448128-9e95-462a-93a7-96de275eec09",
+            "label": "Modificador",
+            "type": "number",
+            "binding": "modificador",
+            "required": false,
+            "nullable": false,
+            "initial": 2
+          },
+          {
+            "id": "data-dbb306f5-08a2-43fb-8207-a4b0b1291177",
+            "label": "Dados de dano",
+            "type": "trait",
+            "binding": "dados_de_dano",
+            "required": false,
+            "nullable": false,
+            "initial": [
+              6
+            ],
+            "scale": [
+              4,
+              6,
+              8,
+              10,
+              12
+            ],
+            "composite": true
+          }
+        ]
+      },
+      {
+        "id": "data-f6316429-10db-465f-b8b9-80961759f88e",
+        "label": "Ataque escolhido",
+        "type": "reference",
+        "binding": "ataque_escolhido",
+        "required": false,
+        "nullable": false,
+        "target": {
+          "scope": "character",
+          "dataId": "data-962fbe41-b0a8-4977-a300-067d76dc0555"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+        "label": "Magias",
+        "type": "collection",
+        "binding": "magias",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-8263111c-27c2-4880-9ae8-b3195094d1e0",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Magia"
+          },
+          {
+            "id": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+            "label": "Nível base",
+            "type": "integer",
+            "binding": "nivel_base",
+            "required": false,
+            "nullable": false,
+            "initial": 1,
+            "minimum": 0,
+            "maximum": 9
+          },
+          {
+            "id": "data-0792c00c-08ce-44ef-a7cc-3192d2970d87",
+            "label": "Dados de efeito",
+            "type": "trait",
+            "binding": "dados_de_efeito",
+            "required": false,
+            "nullable": false,
+            "initial": [
+              6
+            ],
+            "scale": [
+              4,
+              6,
+              8,
+              10,
+              12
+            ],
+            "composite": true
+          },
+          {
+            "id": "data-990f17ab-744a-4f56-a0e1-87ac90a1f3e8",
+            "label": "Tem dados",
+            "type": "boolean",
+            "binding": "tem_dados",
+            "required": false,
+            "nullable": false,
+            "initial": true
+          }
+        ]
+      },
+      {
+        "id": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+        "label": "Magia escolhida",
+        "type": "reference",
+        "binding": "magia_escolhida",
+        "required": false,
+        "nullable": false,
+        "target": {
+          "scope": "character",
+          "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-9793ce88-2a1d-4802-89d7-8e14391f1a6e",
+        "label": "Habilidades",
+        "type": "collection",
+        "binding": "habilidades",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-2a71a5c2-aaab-4fe8-88a9-6a996b8b74f5",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Habilidade"
+          },
+          {
+            "id": "data-31f87ac5-4e6e-49fe-8b31-36ef306fb3c1",
+            "label": "Usos atuais",
+            "type": "integer",
+            "binding": "usos_atuais",
+            "required": false,
+            "nullable": false,
+            "initial": 0
+          },
+          {
+            "id": "data-80eb1716-4bdb-4198-93b3-202709c2a1d0",
+            "label": "Usos máximos",
+            "type": "integer",
+            "binding": "usos_maximos",
+            "required": false,
+            "nullable": false,
+            "initial": 3
+          },
+          {
+            "id": "data-f5945ecd-4a47-45ca-a05c-b9b13c587f80",
+            "label": "Recuperar no descanso",
+            "type": "boolean",
+            "binding": "recuperar_no_descanso",
+            "required": false,
+            "nullable": false,
+            "initial": false
+          }
+        ]
+      },
+      {
+        "id": "data-3ce27077-9404-4f38-9df5-7525dff137b7",
+        "label": "Condições e notas manuais",
+        "type": "string",
+        "binding": "condicoes_e_notas_manuais",
+        "required": false,
+        "nullable": false,
+        "initial": "A mesa decide acertos, duração e condições."
+      }
+    ],
+    "rules": [
+      {
+        "id": "rule-666e2233-63fa-4737-9fab-013c8a58610a",
+        "label": "Modificador de atributo",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "floor",
+          "version": 1,
+          "value": {
+            "id": "node-a0ff41db-7969-4e71-a36d-4b2ac7f3c0b9",
+            "op": "divide",
+            "version": 1,
+            "left": {
+              "id": "node-b1c36841-9e1a-4f53-956c-af4173f8ec21",
+              "op": "subtract",
+              "version": 1,
+              "left": {
+                "id": "node-fedc770d-7108-41ad-96fb-3b436703b298",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+                "mode": "base"
+              },
+              "right": {
+                "id": "node-ec7aa4a5-0a72-4ef5-92e7-ac459af681d6",
+                "op": "literal",
+                "version": 1,
+                "value": 10
+              }
+            },
+            "right": {
+              "id": "node-6f0d6df2-a992-4764-935c-b1713b55e538",
+              "op": "literal",
+              "version": 1,
+              "value": 2
+            }
+          }
+        },
+        "context": {
+          "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+        }
+      },
+      {
+        "id": "rule-d27a63a5-9019-48a8-a8a1-d275044cbb90",
+        "label": "Proficiência",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "add",
+          "version": 1,
+          "left": {
+            "id": "node-6deb9d4b-c4c9-4c1a-9140-3a02853999c4",
+            "op": "literal",
+            "version": 1,
+            "value": 2
+          },
+          "right": {
+            "id": "node-9f1ead23-8f64-4cc0-897c-7a98440f61f8",
+            "op": "floor",
+            "version": 1,
+            "value": {
+              "id": "node-bd1d423a-6bd7-400f-abf7-9a6543fb5ba0",
+              "op": "divide",
+              "version": 1,
+              "left": {
+                "id": "node-63663d71-6798-4a58-a37b-2848ad3039a1",
+                "op": "subtract",
+                "version": 1,
+                "left": {
+                  "id": "node-28ed92bd-2f2e-4c3d-8cac-d542bfc177d4",
+                  "op": "read",
+                  "version": 1,
+                  "dataId": "data-d46060e2-4677-447f-8fb2-3b52e7d58228",
+                  "mode": "base"
+                },
+                "right": {
+                  "id": "node-eea2e2e7-e1f5-434a-83c0-76af1b2797da",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                }
+              },
+              "right": {
+                "id": "node-33667d7c-dab7-4a3f-975e-0e7bbae8cf39",
+                "op": "literal",
+                "version": 1,
+                "value": 4
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-7cae7c5d-a509-45a7-a08e-b451e39cadd4",
+        "label": "Total de Perícias",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "add",
+          "version": 1,
+          "left": {
+            "id": "node-6deb9d4b-c4c9-4c1a-9140-3a02853999c4",
+            "op": "add",
+            "version": 1,
+            "left": {
+              "id": "node-217f703a-cb1d-4709-8755-e40814b80e35",
+              "op": "floor",
+              "version": 1,
+              "value": {
+                "id": "node-c9d140dc-5db9-4b8d-b164-98d42e005af3",
+                "op": "divide",
+                "version": 1,
+                "left": {
+                  "id": "node-b126fc6a-44e6-4d1a-a434-5ee0a5fa0cd0",
+                  "op": "subtract",
+                  "version": 1,
+                  "left": {
+                    "id": "node-247dbb2a-1cab-4031-b01c-2ad550ad4d0c",
+                    "op": "property",
+                    "version": 1,
+                    "fieldId": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+                    "value": {
+                      "id": "node-1041e184-15d5-4873-8114-ca1c0411120d",
+                      "op": "lookup",
+                      "version": 1,
+                      "source": {
+                        "id": "node-a03b21e4-b99b-4176-b2fa-89d25189015e",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2",
+                        "mode": "base"
+                      },
+                      "key": {
+                        "id": "node-7a01d7be-5d1b-4725-ba71-5e12bb3cc727",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-eb2b00e1-1b52-4560-ac11-1f0db68d1848",
+                        "mode": "base"
+                      }
+                    }
+                  },
+                  "right": {
+                    "id": "node-ab6627c4-8588-4013-ab31-2ce5d625c07e",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 10
+                  }
+                },
+                "right": {
+                  "id": "node-a5eeba5c-af23-4ef5-8a34-fdf934d3ecf5",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 2
+                }
+              }
+            },
+            "right": {
+              "id": "node-2793ed4c-1f10-413f-a145-1c43673f5333",
+              "op": "multiply",
+              "version": 1,
+              "left": {
+                "id": "node-9321a273-cbce-47cb-8c36-b88413b397ee",
+                "op": "rule",
+                "version": 1,
+                "ruleId": "rule-d27a63a5-9019-48a8-a8a1-d275044cbb90",
+                "mode": "automatic"
+              },
+              "right": {
+                "id": "node-ef4445c7-3724-41ed-9333-0de19db0ad91",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-fda174e9-e30b-44bb-8e8b-afed3d4b94c3",
+                  "op": "equal",
+                  "version": 1,
+                  "left": {
+                    "id": "node-749b6ea8-4b14-4adb-8110-40fdff933f01",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-e75db2d0-a556-4084-9f07-526582fec842",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-094907d9-00b8-4e7f-9b12-28f8cc279b13",
+                    "op": "option",
+                    "version": 1,
+                    "dataId": "data-e75db2d0-a556-4084-9f07-526582fec842",
+                    "optionId": "option-9ebfd9f6-970d-4ee3-a422-fe446bc62155"
+                  }
+                },
+                "then": {
+                  "id": "node-28d61518-920f-41b7-8da1-3d806f15075d",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 2
+                },
+                "else": {
+                  "id": "node-92a502b4-4d8d-480e-81bf-022505e709c8",
+                  "op": "if",
+                  "version": 1,
+                  "condition": {
+                    "id": "node-4079b94c-0b69-4e63-a870-a912b2a1859b",
+                    "op": "equal",
+                    "version": 1,
+                    "left": {
+                      "id": "node-dc3ed8f8-d5f2-4182-85fc-34070bd89a05",
+                      "op": "read",
+                      "version": 1,
+                      "dataId": "data-e75db2d0-a556-4084-9f07-526582fec842",
+                      "mode": "base"
+                    },
+                    "right": {
+                      "id": "node-97e40253-7c2a-4d98-b202-1877997c55d6",
+                      "op": "option",
+                      "version": 1,
+                      "dataId": "data-e75db2d0-a556-4084-9f07-526582fec842",
+                      "optionId": "option-1041daf7-a8d0-4cee-9ec9-74b78fc1b7e5"
+                    }
+                  },
+                  "then": {
+                    "id": "node-fd2ba2ec-e32c-4d9b-9898-b7587ca4a84e",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 1
+                  },
+                  "else": {
+                    "id": "node-1125954a-759d-4940-81dc-6d410f03971b",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 0
+                  }
+                }
+              }
+            }
+          },
+          "right": {
+            "id": "node-9f1ead23-8f64-4cc0-897c-7a98440f61f8",
+            "op": "read",
+            "version": 1,
+            "dataId": "data-3e8439a3-c314-4b20-a366-17fb6466b5ad",
+            "mode": "base"
+          }
+        },
+        "context": {
+          "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a"
+        }
+      },
+      {
+        "id": "rule-155b0f66-67c1-4121-b15f-cc19fa82f84e",
+        "label": "Total de Resistências",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "add",
+          "version": 1,
+          "left": {
+            "id": "node-6deb9d4b-c4c9-4c1a-9140-3a02853999c4",
+            "op": "add",
+            "version": 1,
+            "left": {
+              "id": "node-217f703a-cb1d-4709-8755-e40814b80e35",
+              "op": "floor",
+              "version": 1,
+              "value": {
+                "id": "node-c9d140dc-5db9-4b8d-b164-98d42e005af3",
+                "op": "divide",
+                "version": 1,
+                "left": {
+                  "id": "node-b126fc6a-44e6-4d1a-a434-5ee0a5fa0cd0",
+                  "op": "subtract",
+                  "version": 1,
+                  "left": {
+                    "id": "node-247dbb2a-1cab-4031-b01c-2ad550ad4d0c",
+                    "op": "property",
+                    "version": 1,
+                    "fieldId": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+                    "value": {
+                      "id": "node-1041e184-15d5-4873-8114-ca1c0411120d",
+                      "op": "lookup",
+                      "version": 1,
+                      "source": {
+                        "id": "node-a03b21e4-b99b-4176-b2fa-89d25189015e",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2",
+                        "mode": "base"
+                      },
+                      "key": {
+                        "id": "node-7a01d7be-5d1b-4725-ba71-5e12bb3cc727",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-38e92654-c41f-4c15-91d2-48f687d36bbe",
+                        "mode": "base"
+                      }
+                    }
+                  },
+                  "right": {
+                    "id": "node-ab6627c4-8588-4013-ab31-2ce5d625c07e",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 10
+                  }
+                },
+                "right": {
+                  "id": "node-a5eeba5c-af23-4ef5-8a34-fdf934d3ecf5",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 2
+                }
+              }
+            },
+            "right": {
+              "id": "node-2793ed4c-1f10-413f-a145-1c43673f5333",
+              "op": "multiply",
+              "version": 1,
+              "left": {
+                "id": "node-9321a273-cbce-47cb-8c36-b88413b397ee",
+                "op": "rule",
+                "version": 1,
+                "ruleId": "rule-d27a63a5-9019-48a8-a8a1-d275044cbb90",
+                "mode": "automatic"
+              },
+              "right": {
+                "id": "node-ef4445c7-3724-41ed-9333-0de19db0ad91",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-fda174e9-e30b-44bb-8e8b-afed3d4b94c3",
+                  "op": "equal",
+                  "version": 1,
+                  "left": {
+                    "id": "node-749b6ea8-4b14-4adb-8110-40fdff933f01",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-0ac234cd-ccec-431d-9d49-134585540314",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-094907d9-00b8-4e7f-9b12-28f8cc279b13",
+                    "op": "option",
+                    "version": 1,
+                    "dataId": "data-0ac234cd-ccec-431d-9d49-134585540314",
+                    "optionId": "option-3753d037-d434-4214-9361-0032b11b8fd2"
+                  }
+                },
+                "then": {
+                  "id": "node-28d61518-920f-41b7-8da1-3d806f15075d",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 2
+                },
+                "else": {
+                  "id": "node-92a502b4-4d8d-480e-81bf-022505e709c8",
+                  "op": "if",
+                  "version": 1,
+                  "condition": {
+                    "id": "node-4079b94c-0b69-4e63-a870-a912b2a1859b",
+                    "op": "equal",
+                    "version": 1,
+                    "left": {
+                      "id": "node-dc3ed8f8-d5f2-4182-85fc-34070bd89a05",
+                      "op": "read",
+                      "version": 1,
+                      "dataId": "data-0ac234cd-ccec-431d-9d49-134585540314",
+                      "mode": "base"
+                    },
+                    "right": {
+                      "id": "node-97e40253-7c2a-4d98-b202-1877997c55d6",
+                      "op": "option",
+                      "version": 1,
+                      "dataId": "data-0ac234cd-ccec-431d-9d49-134585540314",
+                      "optionId": "option-e3477f73-2dc1-4858-af1c-37106c12a666"
+                    }
+                  },
+                  "then": {
+                    "id": "node-fd2ba2ec-e32c-4d9b-9898-b7587ca4a84e",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 1
+                  },
+                  "else": {
+                    "id": "node-1125954a-759d-4940-81dc-6d410f03971b",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 0
+                  }
+                }
+              }
+            }
+          },
+          "right": {
+            "id": "node-9f1ead23-8f64-4cc0-897c-7a98440f61f8",
+            "op": "read",
+            "version": 1,
+            "dataId": "data-90bdcade-8fb6-40be-95d8-f612b8d949b1",
+            "mode": "base"
+          }
+        },
+        "context": {
+          "dataId": "data-b4c64c9f-08fc-4d5d-a3f7-3e738a7f9ee3"
+        }
+      },
+      {
+        "id": "rule-0d66d63c-725a-43e9-99fc-15cdaa8fa987",
+        "label": "Modificador de conjuração",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "floor",
+          "version": 1,
+          "value": {
+            "id": "node-ea1bd7b6-4b09-49aa-81f7-d60d54927fbb",
+            "op": "divide",
+            "version": 1,
+            "left": {
+              "id": "node-86f0255a-884c-4727-93a9-5c928dd08045",
+              "op": "subtract",
+              "version": 1,
+              "left": {
+                "id": "node-451324e4-2ca7-4120-ab55-e2402464321a",
+                "op": "property",
+                "version": 1,
+                "fieldId": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+                "value": {
+                  "id": "node-4bc3f390-8e20-4937-8e6a-62f9971962bf",
+                  "op": "lookup",
+                  "version": 1,
+                  "source": {
+                    "id": "node-dc3f3835-d8f8-41c6-8cb5-8b9d9e3c7532",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2",
+                    "mode": "base"
+                  },
+                  "key": {
+                    "id": "node-18dea955-3462-42cc-937d-0b9fc2ccfbe2",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-bf2f1bc9-f484-4c87-8fc5-ac513b084fb9",
+                    "mode": "base"
+                  }
+                }
+              },
+              "right": {
+                "id": "node-cc9439b8-34ce-4cd6-bc0a-98a5782b2c07",
+                "op": "literal",
+                "version": 1,
+                "value": 10
+              }
+            },
+            "right": {
+              "id": "node-a476b518-c377-451f-b359-b17b76964f04",
+              "op": "literal",
+              "version": 1,
+              "value": 2
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-32569604-8a98-4955-8272-117511ce48b2",
+        "label": "Ataque de conjuração",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "add",
+          "version": 1,
+          "left": {
+            "id": "node-abdcd8f3-b353-452a-a71d-1b59d93a3ebf",
+            "op": "rule",
+            "version": 1,
+            "ruleId": "rule-0d66d63c-725a-43e9-99fc-15cdaa8fa987",
+            "mode": "automatic"
+          },
+          "right": {
+            "id": "node-4417b88b-4547-46d3-b87d-138071c5c288",
+            "op": "rule",
+            "version": 1,
+            "ruleId": "rule-d27a63a5-9019-48a8-a8a1-d275044cbb90",
+            "mode": "automatic"
+          }
+        }
+      },
+      {
+        "id": "rule-0be4120e-870d-47c6-b67e-f146dd39e2e2",
+        "label": "CD de conjuração",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "add",
+          "version": 1,
+          "left": {
+            "id": "node-abdcd8f3-b353-452a-a71d-1b59d93a3ebf",
+            "op": "literal",
+            "version": 1,
+            "value": 8
+          },
+          "right": {
+            "id": "node-4417b88b-4547-46d3-b87d-138071c5c288",
+            "op": "rule",
+            "version": 1,
+            "ruleId": "rule-32569604-8a98-4955-8272-117511ce48b2",
+            "mode": "automatic"
+          }
+        }
+      },
+      {
+        "id": "rule-2cfdd514-ce98-4945-a816-bcb6fe1bdb26",
+        "label": "Capacidade de carga",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "multiply",
+          "version": 1,
+          "left": {
+            "id": "node-abdcd8f3-b353-452a-a71d-1b59d93a3ebf",
+            "op": "property",
+            "version": 1,
+            "fieldId": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+            "value": {
+              "id": "node-a61a0663-514f-461c-9866-f2b448878eac",
+              "op": "lookup",
+              "version": 1,
+              "source": {
+                "id": "node-9c0aaa98-820f-42ac-99ef-86aa4f48388e",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2",
+                "mode": "base"
+              },
+              "key": {
+                "id": "node-5bd22c3c-be78-4751-8e93-80c87f6034ef",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-3faecf2f-34e7-49f2-a008-e64724a808ec",
+                "mode": "base"
+              }
+            }
+          },
+          "right": {
+            "id": "node-4417b88b-4547-46d3-b87d-138071c5c288",
+            "op": "literal",
+            "version": 1,
+            "value": 7.5
+          }
+        }
+      },
+      {
+        "id": "rule-1330aada-e393-4a5d-8a91-5e1ef9371479",
+        "label": "Iniciativa",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "floor",
+          "version": 1,
+          "value": {
+            "id": "node-80e4d2b5-1388-4160-a162-6a4ae0e0da0a",
+            "op": "divide",
+            "version": 1,
+            "left": {
+              "id": "node-83013f94-d55b-403c-841c-370b9c1db53c",
+              "op": "subtract",
+              "version": 1,
+              "left": {
+                "id": "node-ebb32c58-7bd8-436d-af50-3a8c7955309b",
+                "op": "property",
+                "version": 1,
+                "fieldId": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+                "value": {
+                  "id": "node-6dfff1bd-147c-4953-adc2-42d46aad7059",
+                  "op": "lookup",
+                  "version": 1,
+                  "source": {
+                    "id": "node-d34ddd2d-65bc-40bc-bdbc-34655bd44655",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2",
+                    "mode": "base"
+                  },
+                  "key": {
+                    "id": "node-ed8416f0-00b2-455f-b177-cfb3ab1bf706",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-dfc92135-7bd6-4d79-996e-a8d07d54356b",
+                    "mode": "base"
+                  }
+                }
+              },
+              "right": {
+                "id": "node-d0ed7528-0117-4ad6-a3dc-77127268246f",
+                "op": "literal",
+                "version": 1,
+                "value": 10
+              }
+            },
+            "right": {
+              "id": "node-1f11bc6f-a943-478b-a8a7-fff3b0c361fb",
+              "op": "literal",
+              "version": 1,
+              "value": 2
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-0e24cc4c-e3b6-492b-a258-2086d18ad664",
+        "label": "Carga",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "sum",
+          "version": 1,
+          "source": {
+            "id": "node-70d27d80-42d4-4868-a9b0-e4a1bc656760",
+            "op": "map",
+            "version": 1,
+            "source": {
+              "id": "node-42d6896d-eb38-42e0-ad72-bc82cb35dc12",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-2f6ea341-9c97-4f66-9367-fe1d006c2b95",
+              "mode": "base"
+            },
+            "value": {
+              "id": "node-52e8b7f4-4a13-4d36-b6dd-6571bdcc02b6",
+              "op": "multiply",
+              "version": 1,
+              "left": {
+                "id": "node-88266424-ad23-439f-b159-0dbd3bee6aee",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-96f297ec-fcd9-403d-983b-bd2134fa86dc",
+                "mode": "base"
+              },
+              "right": {
+                "id": "node-685c184d-01ba-4c04-a56f-5c86a0426dc9",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-f39e2c8f-0076-4a15-9c86-583f0edcf2b6",
+                "mode": "base"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-aae885ea-4f4a-4b0c-884a-47d640ab520c",
+        "label": "Total em ouro",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "sum",
+          "version": 1,
+          "source": {
+            "id": "node-70d27d80-42d4-4868-a9b0-e4a1bc656760",
+            "op": "map",
+            "version": 1,
+            "source": {
+              "id": "node-42d6896d-eb38-42e0-ad72-bc82cb35dc12",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-241131e9-b167-47fe-a207-19567f087c6f",
+              "mode": "base"
+            },
+            "value": {
+              "id": "node-52e8b7f4-4a13-4d36-b6dd-6571bdcc02b6",
+              "op": "multiply",
+              "version": 1,
+              "left": {
+                "id": "node-88266424-ad23-439f-b159-0dbd3bee6aee",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-95948f5d-ce38-4cb2-852d-5ec5e069fa5b",
+                "mode": "base"
+              },
+              "right": {
+                "id": "node-685c184d-01ba-4c04-a56f-5c86a0426dc9",
+                "op": "property",
+                "version": 1,
+                "fieldId": "data-b23fa7aa-103d-4c2e-ab04-33c9e2177e46",
+                "value": {
+                  "id": "node-0b077713-406b-4aba-a171-c4d7b87db9ab",
+                  "op": "lookup",
+                  "version": 1,
+                  "source": {
+                    "id": "node-80238a92-8aa4-4c27-a90b-d1b44c115517",
+                    "op": "catalog",
+                    "version": 1,
+                    "catalogId": "catalog-fbb9ca0e-671f-4dbb-8378-21ca57f00329"
+                  },
+                  "key": {
+                    "id": "node-f791796c-8042-4eeb-9648-597d614efe69",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-6f6a9ebc-d22f-4203-9f2b-9b7bd5470b9d",
+                    "mode": "base"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-b4cfce7a-448e-419d-99ad-9ac7319d31b9",
+        "label": "Valor passivo",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "add",
+          "version": 1,
+          "left": {
+            "id": "node-9aedc662-9c29-49ef-85b0-aa15d0f9d1cf",
+            "op": "literal",
+            "version": 1,
+            "value": 10
+          },
+          "right": {
+            "id": "node-6494bd24-9cfc-49e1-bdd9-5ae349452cc0",
+            "op": "add",
+            "version": 1,
+            "left": {
+              "id": "node-765d7c23-aa71-4c04-8ef3-d78e4e06ae56",
+              "op": "add",
+              "version": 1,
+              "left": {
+                "id": "node-16e23d8d-4c92-4dfd-8487-b8ced5e74d5a",
+                "op": "floor",
+                "version": 1,
+                "value": {
+                  "id": "node-37fbfe9f-25c7-46f7-9802-9c3e2afb48f1",
+                  "op": "divide",
+                  "version": 1,
+                  "left": {
+                    "id": "node-7eda4cef-557a-4c8a-885b-5e34fb6f4fae",
+                    "op": "subtract",
+                    "version": 1,
+                    "left": {
+                      "id": "node-2b2ff2f2-a43d-4ac6-9178-81677f47af51",
+                      "op": "property",
+                      "version": 1,
+                      "fieldId": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+                      "value": {
+                        "id": "node-e3bd8e3e-7210-49cd-b0ad-f5f2af0232ff",
+                        "op": "lookup",
+                        "version": 1,
+                        "source": {
+                          "id": "node-d83b0d87-9142-46fa-a62b-4c477ee08b86",
+                          "op": "read",
+                          "version": 1,
+                          "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2",
+                          "mode": "base"
+                        },
+                        "key": {
+                          "id": "node-83586048-4131-41b4-9a5f-93bd4d19e9f8",
+                          "op": "property",
+                          "version": 1,
+                          "fieldId": "data-eb2b00e1-1b52-4560-ac11-1f0db68d1848",
+                          "value": {
+                            "id": "node-f6d0c63f-2801-4b1a-b7b8-beb63a06db2d",
+                            "op": "lookup",
+                            "version": 1,
+                            "source": {
+                              "id": "node-3a3c8766-1d95-4f42-8e5b-ddbe21c22f85",
+                              "op": "read",
+                              "version": 1,
+                              "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a",
+                              "mode": "base"
+                            },
+                            "key": {
+                              "id": "node-261e2dfc-ff76-4c9b-9f84-d681ecb79d6f",
+                              "op": "read",
+                              "version": 1,
+                              "dataId": "data-a1cc12b6-21de-4b0c-b5e3-eb8fa3f88315",
+                              "mode": "base"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "right": {
+                      "id": "node-e02f1096-a929-4ad2-9cd2-4415d8a3d4f5",
+                      "op": "literal",
+                      "version": 1,
+                      "value": 10
+                    }
+                  },
+                  "right": {
+                    "id": "node-5a0cf24f-085e-46d3-bf9d-adcc41ae730a",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 2
+                  }
+                }
+              },
+              "right": {
+                "id": "node-1d267381-b3b4-44bb-9e01-c1092a4f6166",
+                "op": "multiply",
+                "version": 1,
+                "left": {
+                  "id": "node-546b1128-3a14-4b18-a5fb-ee17d068ea62",
+                  "op": "rule",
+                  "version": 1,
+                  "ruleId": "rule-d27a63a5-9019-48a8-a8a1-d275044cbb90",
+                  "mode": "automatic"
+                },
+                "right": {
+                  "id": "node-82d999f5-29f9-436b-aba3-71cd41ffe85c",
+                  "op": "if",
+                  "version": 1,
+                  "condition": {
+                    "id": "node-132531d7-5098-448a-9c46-c14ddb257e3c",
+                    "op": "equal",
+                    "version": 1,
+                    "left": {
+                      "id": "node-936ee4da-ec54-439f-b68d-c385e2fc66ef",
+                      "op": "property",
+                      "version": 1,
+                      "fieldId": "data-e75db2d0-a556-4084-9f07-526582fec842",
+                      "value": {
+                        "id": "node-638c07ee-15ce-44f6-a99f-571159cb676c",
+                        "op": "lookup",
+                        "version": 1,
+                        "source": {
+                          "id": "node-71c018e2-e325-4287-b74b-416ae4baadfb",
+                          "op": "read",
+                          "version": 1,
+                          "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a",
+                          "mode": "base"
+                        },
+                        "key": {
+                          "id": "node-67206920-1cfc-4e9f-a210-43063611bfde",
+                          "op": "read",
+                          "version": 1,
+                          "dataId": "data-a1cc12b6-21de-4b0c-b5e3-eb8fa3f88315",
+                          "mode": "base"
+                        }
+                      }
+                    },
+                    "right": {
+                      "id": "node-c821cdcf-f520-41c7-ac8a-fd3042f8a5a9",
+                      "op": "option",
+                      "version": 1,
+                      "dataId": "data-e75db2d0-a556-4084-9f07-526582fec842",
+                      "optionId": "option-9ebfd9f6-970d-4ee3-a422-fe446bc62155"
+                    }
+                  },
+                  "then": {
+                    "id": "node-f8bdadb8-d7bd-4905-9eee-5f0e5b421c1d",
+                    "op": "literal",
+                    "version": 1,
+                    "value": 2
+                  },
+                  "else": {
+                    "id": "node-55cdc14b-37eb-45db-a3b7-b44e9e7e087b",
+                    "op": "if",
+                    "version": 1,
+                    "condition": {
+                      "id": "node-fe0cb4c7-7347-45ed-ac31-3221ef818176",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-beb2d23d-e074-4f31-b51a-9a842bc28089",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-e75db2d0-a556-4084-9f07-526582fec842",
+                        "value": {
+                          "id": "node-6c195321-b04a-4d3e-a463-204c33740d0a",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-ea94a69c-03eb-4cff-8a72-0740fc2c85aa",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-8a2a7608-0fd6-44d0-a761-b8e71cf1e7aa",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-a1cc12b6-21de-4b0c-b5e3-eb8fa3f88315",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-8a9ff2bf-0781-48a3-899d-df811fcf4b2c",
+                        "op": "option",
+                        "version": 1,
+                        "dataId": "data-e75db2d0-a556-4084-9f07-526582fec842",
+                        "optionId": "option-1041daf7-a8d0-4cee-9ec9-74b78fc1b7e5"
+                      }
+                    },
+                    "then": {
+                      "id": "node-34f025e0-f3f9-4e44-924d-8ed6e06f9919",
+                      "op": "literal",
+                      "version": 1,
+                      "value": 1
+                    },
+                    "else": {
+                      "id": "node-bdbb0b3d-65fe-4dc4-810e-64f91286eaad",
+                      "op": "literal",
+                      "version": 1,
+                      "value": 0
+                    }
+                  }
+                }
+              }
+            },
+            "right": {
+              "id": "node-fe838cc3-f525-4cce-a169-2e4189d7aeb1",
+              "op": "property",
+              "version": 1,
+              "fieldId": "data-3e8439a3-c314-4b20-a366-17fb6466b5ad",
+              "value": {
+                "id": "node-7182634b-bb3a-4779-83e2-33f1ad85eedb",
+                "op": "lookup",
+                "version": 1,
+                "source": {
+                  "id": "node-c1042451-4fae-4fea-a5cf-698df3868ef7",
+                  "op": "read",
+                  "version": 1,
+                  "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a",
+                  "mode": "base"
+                },
+                "key": {
+                  "id": "node-5400f3e7-b0c4-4212-9142-470735ea834c",
+                  "op": "read",
+                  "version": 1,
+                  "dataId": "data-a1cc12b6-21de-4b0c-b5e3-eb8fa3f88315",
+                  "mode": "base"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-cf3ec0db-260b-4cae-9f63-65740afd4d7c",
+        "label": "Disponíveis do primeiro nível",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "subtract",
+          "version": 1,
+          "left": {
+            "id": "node-9aedc662-9c29-49ef-85b0-aa15d0f9d1cf",
+            "op": "read",
+            "version": 1,
+            "dataId": "data-b67ed2d5-76b7-4780-bf57-1566ef40a6b4",
+            "mode": "base"
+          },
+          "right": {
+            "id": "node-6494bd24-9cfc-49e1-bdd9-5ae349452cc0",
+            "op": "read",
+            "version": 1,
+            "dataId": "data-08b4a1f5-7f0f-452b-adee-e7fecaabe81b",
+            "mode": "base"
+          }
+        }
+      },
+      {
+        "id": "rule-a1f6f56f-3596-402a-b20c-218c2a7c39ff",
+        "label": "Ataque resolvido",
+        "revision": 1,
+        "kind": "predicate",
+        "resultType": "boolean",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "resolved",
+          "version": 1,
+          "value": {
+            "id": "node-c0205278-7354-44dc-8fc0-0cda52dcc5c0",
+            "op": "read",
+            "version": 1,
+            "dataId": "data-f6316429-10db-465f-b8b9-80961759f88e",
+            "mode": "base"
+          }
+        }
+      },
+      {
+        "id": "rule-c216e06e-8ac7-4da2-8a6b-894313323b68",
+        "label": "Magia e espaço compatíveis",
+        "revision": 1,
+        "kind": "predicate",
+        "resultType": "boolean",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "and",
+          "version": 1,
+          "left": {
+            "id": "node-9ded9d9b-b520-45e3-9702-8414560387c8",
+            "op": "resolved",
+            "version": 1,
+            "value": {
+              "id": "node-fcfe06ce-5134-4979-a9ab-b9b517f5dc15",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+              "mode": "base"
+            }
+          },
+          "right": {
+            "id": "node-0d6a1efc-adfe-4806-9618-f552c9e9d07b",
+            "op": "or",
+            "version": 1,
+            "left": {
+              "id": "node-6401ab17-ee3a-490a-a82b-732050064265",
+              "op": "equal",
+              "version": 1,
+              "left": {
+                "id": "node-aa2722e3-9309-4e6d-994c-7aaef7dcba0c",
+                "op": "property",
+                "version": 1,
+                "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                "value": {
+                  "id": "node-695829d7-bfcb-4a82-b826-4d7dbbfb74a1",
+                  "op": "lookup",
+                  "version": 1,
+                  "source": {
+                    "id": "node-9a99ed55-35df-4043-9d19-1d329f994571",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                    "mode": "base"
+                  },
+                  "key": {
+                    "id": "node-a638ff62-53e4-4a02-b43c-79330be3fea5",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                    "mode": "base"
+                  }
+                }
+              },
+              "right": {
+                "id": "node-b7efd549-adbb-42af-b247-55fe60ca81a1",
+                "op": "literal",
+                "version": 1,
+                "value": 0
+              }
+            },
+            "right": {
+              "id": "node-b1d174dd-6c76-498c-94b4-e691934644ff",
+              "op": "greaterEqual",
+              "version": 1,
+              "left": {
+                "id": "node-fbfcef75-da0d-4eff-b4f8-cd248de21649",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                "mode": "base"
+              },
+              "right": {
+                "id": "node-6472f6fb-c0ce-4992-afa8-195518df722e",
+                "op": "property",
+                "version": 1,
+                "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                "value": {
+                  "id": "node-23d86994-076b-49ae-84a0-e7a1cda070d4",
+                  "op": "lookup",
+                  "version": 1,
+                  "source": {
+                    "id": "node-ec6ddfef-1f92-4bb0-9561-ae016ae8e376",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                    "mode": "base"
+                  },
+                  "key": {
+                    "id": "node-24439130-44e4-4d84-b079-05de8ffb3d55",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                    "mode": "base"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-6a3d8196-50a2-4aac-9742-3ea6983178b2",
+        "label": "Modificador para a cura",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-7f1e8ed1-5410-4c42-a3ad-8e94ad30e57a",
+          "op": "floor",
+          "version": 1,
+          "value": {
+            "id": "node-aa989fbb-6a29-48af-92e0-af1bf7e75251",
+            "op": "divide",
+            "version": 1,
+            "left": {
+              "id": "node-f2572398-e287-443d-9b3e-bbbfbf7cbdc7",
+              "op": "subtract",
+              "version": 1,
+              "left": {
+                "id": "node-b31d92f7-969b-47a3-bd38-d5b446445cf6",
+                "op": "property",
+                "version": 1,
+                "fieldId": "data-9a0f5a91-cf34-4a0c-9af1-28d782571c41",
+                "value": {
+                  "id": "node-94fcb238-1c7b-4660-ae91-b377509f0645",
+                  "op": "lookup",
+                  "version": 1,
+                  "source": {
+                    "id": "node-ac9b55b0-4c19-45c9-aa0b-009301d1548c",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2",
+                    "mode": "base"
+                  },
+                  "key": {
+                    "id": "node-3d67f509-b40c-4e0b-9bdf-3bbd0bb784ad",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-5cb2bc97-23dc-4dc3-b38c-f713e872a05b",
+                    "mode": "base"
+                  }
+                }
+              },
+              "right": {
+                "id": "node-dd660a57-5456-49ca-851c-5fd5b8106523",
+                "op": "literal",
+                "version": 1,
+                "value": 10
+              }
+            },
+            "right": {
+              "id": "node-fa3d7ebf-d953-45d4-9fd7-641af5a5519b",
+              "op": "literal",
+              "version": 1,
+              "value": 2
+            }
+          }
+        }
+      }
+    ],
+    "catalogs": [
+      {
+        "id": "catalog-fbb9ca0e-671f-4dbb-8378-21ca57f00329",
+        "label": "Conversão para ouro",
+        "fields": [
+          {
+            "id": "data-e8008748-7341-4c4b-8d0b-740289ce4e5a",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": true,
+            "nullable": false
+          },
+          {
+            "id": "data-b23fa7aa-103d-4c2e-ab04-33c9e2177e46",
+            "label": "Taxa",
+            "type": "number",
+            "binding": "taxa",
+            "required": true,
+            "nullable": false
+          }
+        ],
+        "entries": [
+          {
+            "nome": "Platina",
+            "taxa": 10,
+            "id": "entry-3697766f-9e4a-4ad7-b6d5-7d163486bc44"
+          },
+          {
+            "nome": "Electro",
+            "taxa": 0.5,
+            "id": "entry-51ff17db-460e-46c3-85a5-5afd456c2bc1"
+          },
+          {
+            "nome": "Ouro",
+            "taxa": 1,
+            "id": "entry-40d8364e-0e85-4c1d-b4be-b89155a5ab7d"
+          }
+        ]
+      }
+    ],
+    "sheetActions": [
+      {
+        "id": "action-1da1f99b-f302-428d-a56f-4daa8bfb5d16",
+        "label": "Rolar ataque",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [
+            {
+              "id": "step-4dd86fe8-1aad-4d89-97c8-faea4e888a0f",
+              "label": "Teste de ataque",
+              "type": "resolve",
+              "groups": [
+                {
+                  "id": "group-fc2c4955-6e12-4bfb-8099-5d37d07f48f1",
+                  "label": "D20",
+                  "type": "dice",
+                  "dice": [
+                    {
+                      "resultType": "number",
+                      "expression": {
+                        "id": "node-8566c91c-e942-45c0-8fc2-e326cae9866b",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 20
+                      },
+                      "count": {
+                        "id": "node-d1556666-0515-4e08-85b0-2bb42e5df862",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ],
+              "modifier": {
+                "id": "node-6dd472d6-3a46-4275-a86b-d371f6080aac",
+                "op": "add",
+                "version": 1,
+                "left": {
+                  "id": "node-76dc3cf0-ef5a-405a-8583-86b86210e30e",
+                  "op": "property",
+                  "version": 1,
+                  "fieldId": "data-8c448128-9e95-462a-93a7-96de275eec09",
+                  "value": {
+                    "id": "node-78f416d5-7c04-4aaf-adc7-62fc7265c00b",
+                    "op": "lookup",
+                    "version": 1,
+                    "source": {
+                      "id": "node-bfa35473-44d4-4a0f-a059-98e83f143723",
+                      "op": "read",
+                      "version": 1,
+                      "dataId": "data-962fbe41-b0a8-4977-a300-067d76dc0555",
+                      "mode": "base"
+                    },
+                    "key": {
+                      "id": "node-35a7735c-5f40-46de-824f-688cb2766668",
+                      "op": "read",
+                      "version": 1,
+                      "dataId": "data-f6316429-10db-465f-b8b9-80961759f88e",
+                      "mode": "base"
+                    }
+                  }
+                },
+                "right": {
+                  "id": "node-49dfcb7b-1dfc-4b64-9d60-001f37ca9848",
+                  "op": "rule",
+                  "version": 1,
+                  "ruleId": "rule-d27a63a5-9019-48a8-a8a1-d275044cbb90",
+                  "mode": "automatic"
+                }
+              },
+              "ranges": []
+            },
+            {
+              "id": "step-99650d6e-1b79-4337-950f-86a09db33e65",
+              "label": "Registrar ataque",
+              "type": "set",
+              "dataId": "data-2765ab84-dc2f-48b5-b54b-1e29c8fbd5d9",
+              "expression": {
+                "id": "node-f22bb8bc-a437-472c-bf8f-d9424e3225e6",
+                "op": "property",
+                "version": 1,
+                "fieldId": "step-4dd86fe8-1aad-4d89-97c8-faea4e888a0f_total",
+                "value": {
+                  "id": "node-1d19d569-2523-4415-9b33-cb6492872fe7",
+                  "op": "local",
+                  "version": 1,
+                  "localId": "step-4dd86fe8-1aad-4d89-97c8-faea4e888a0f"
+                }
+              }
+            }
+          ],
+          "costs": []
+        },
+        "allowWhen": {
+          "ruleId": "rule-a1f6f56f-3596-402a-b20c-218c2a7c39ff"
+        }
+      },
+      {
+        "id": "action-664e23ec-db55-4309-aa08-ff18f219ee2b",
+        "label": "Rolar dano separado",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [
+            {
+              "id": "step-e057ccae-cf67-4e2d-aa57-61ddfdcb967b",
+              "label": "Dano",
+              "type": "resolve",
+              "groups": [
+                {
+                  "id": "group-3d12f032-62dc-43ff-b819-6767e87e127e",
+                  "label": "Dados da entrada",
+                  "type": "dice",
+                  "dice": [
+                    {
+                      "resultType": "trait",
+                      "expression": {
+                        "id": "node-16296b96-7870-4d01-8923-3c88a415a03a",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-dbb306f5-08a2-43fb-8207-a4b0b1291177",
+                        "value": {
+                          "id": "node-32ca8109-8890-4615-8ba8-e0206a4c5b13",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-b9560999-b9b1-4f5e-8db0-17763b756399",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-962fbe41-b0a8-4977-a300-067d76dc0555",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-6178df82-3fbf-407e-9daf-50f1090f5206",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-f6316429-10db-465f-b8b9-80961759f88e",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "count": {
+                        "id": "node-099dca93-b5be-48f9-ac58-c65ab46278d7",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ],
+              "modifier": {
+                "id": "node-1fd517ec-451c-409d-a9d4-40769e9a0764",
+                "op": "literal",
+                "version": 1,
+                "value": 0
+              },
+              "ranges": []
+            },
+            {
+              "id": "step-ff8b11c9-248d-4697-a11f-039789d55928",
+              "label": "Registrar dano",
+              "type": "set",
+              "dataId": "data-93cc6fc8-bca8-4a0c-ab2d-e6f5f488454b",
+              "expression": {
+                "id": "node-3813d4e4-a893-4d56-ab3d-014ff3533fd1",
+                "op": "property",
+                "version": 1,
+                "fieldId": "step-e057ccae-cf67-4e2d-aa57-61ddfdcb967b_total",
+                "value": {
+                  "id": "node-5bae3cbc-41a2-475a-a317-524b3bdaac6f",
+                  "op": "local",
+                  "version": 1,
+                  "localId": "step-e057ccae-cf67-4e2d-aa57-61ddfdcb967b"
+                }
+              }
+            }
+          ],
+          "costs": []
+        },
+        "allowWhen": {
+          "ruleId": "rule-a1f6f56f-3596-402a-b20c-218c2a7c39ff"
+        }
+      },
+      {
+        "id": "action-b4927ac7-24ab-4146-a81b-efd3b5ef864f",
+        "label": "Lançar magia",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [
+            {
+              "id": "step-4181268d-7b2f-45ae-8f4d-9d60f9f42ada",
+              "label": "Efeito da magia",
+              "type": "resolve",
+              "groups": [
+                {
+                  "id": "group-ae443df4-e3ad-4d15-ae0e-8f0653e598d9",
+                  "label": "Efeito declarado",
+                  "type": "dice",
+                  "dice": [
+                    {
+                      "resultType": "trait",
+                      "expression": {
+                        "id": "node-081a3fd1-b5f3-4c30-b5cc-86d973bc1788",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-0792c00c-08ce-44ef-a7cc-3192d2970d87",
+                        "value": {
+                          "id": "node-c5cd188b-1ccd-452c-8cd8-253d0a73caa9",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-e032011f-8fa3-45ee-bfd1-fcaae1b5998b",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-cb801f1e-e6db-4efe-b025-f0242530ff2e",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "count": {
+                        "id": "node-927e6608-1bdb-4f3e-a9c8-9223d7705a6d",
+                        "op": "if",
+                        "version": 1,
+                        "condition": {
+                          "id": "node-b94015ff-b9bb-41b2-8a37-4809387e67e5",
+                          "op": "property",
+                          "version": 1,
+                          "fieldId": "data-990f17ab-744a-4f56-a0e1-87ac90a1f3e8",
+                          "value": {
+                            "id": "node-2512d618-1c62-4f52-824f-4ccd30d36fab",
+                            "op": "lookup",
+                            "version": 1,
+                            "source": {
+                              "id": "node-7fdd7291-d77a-4211-96f4-fb5ff198d647",
+                              "op": "read",
+                              "version": 1,
+                              "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                              "mode": "base"
+                            },
+                            "key": {
+                              "id": "node-a1349ad7-bded-497c-8f41-2184a01094ae",
+                              "op": "read",
+                              "version": 1,
+                              "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                              "mode": "base"
+                            }
+                          }
+                        },
+                        "then": {
+                          "id": "node-e6849413-d8c8-4df0-9962-2ae31e11ad7c",
+                          "op": "literal",
+                          "version": 1,
+                          "value": 1
+                        },
+                        "else": {
+                          "id": "node-9b2398e8-6b90-42aa-83c9-82f010fc7959",
+                          "op": "literal",
+                          "version": 1,
+                          "value": 0
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "group-8539b09c-32ee-4df4-9680-b295ce321490",
+                  "label": "Incremento declarado",
+                  "type": "dice",
+                  "dice": [
+                    {
+                      "resultType": "number",
+                      "expression": {
+                        "id": "node-7d10df1d-2e54-49dd-9b67-8ed4db638f93",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 6
+                      },
+                      "count": {
+                        "id": "node-40fb0b60-735c-4985-9ed9-df04638865ce",
+                        "op": "if",
+                        "version": 1,
+                        "condition": {
+                          "id": "node-cc211bc5-8e2d-472a-b608-97c509d8dc13",
+                          "op": "property",
+                          "version": 1,
+                          "fieldId": "data-990f17ab-744a-4f56-a0e1-87ac90a1f3e8",
+                          "value": {
+                            "id": "node-75f2d73a-9e89-49d1-b320-528ea1228bd6",
+                            "op": "lookup",
+                            "version": 1,
+                            "source": {
+                              "id": "node-77815981-3795-47fc-9bbd-c6d4744251aa",
+                              "op": "read",
+                              "version": 1,
+                              "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                              "mode": "base"
+                            },
+                            "key": {
+                              "id": "node-e810a184-bd38-4ed0-91d6-56049ce9e65c",
+                              "op": "read",
+                              "version": 1,
+                              "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                              "mode": "base"
+                            }
+                          }
+                        },
+                        "then": {
+                          "id": "node-df4b85a6-6468-4fe7-85f3-aa165f8d7b21",
+                          "op": "add",
+                          "version": 1,
+                          "left": {
+                            "id": "node-6ccaa785-cd14-4d72-b767-3bab4c9dd538",
+                            "op": "if",
+                            "version": 1,
+                            "condition": {
+                              "id": "node-80ad306a-590e-471f-9672-009bd7134cfb",
+                              "op": "greater",
+                              "version": 1,
+                              "left": {
+                                "id": "node-ff1872dc-f453-45cb-af40-831aae27c64c",
+                                "op": "property",
+                                "version": 1,
+                                "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                                "value": {
+                                  "id": "node-647ce375-09da-4694-8e48-54b3cbeee208",
+                                  "op": "lookup",
+                                  "version": 1,
+                                  "source": {
+                                    "id": "node-c0d8e0c0-e88b-4bc5-a443-26845179164e",
+                                    "op": "read",
+                                    "version": 1,
+                                    "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                                    "mode": "base"
+                                  },
+                                  "key": {
+                                    "id": "node-30037f72-562b-4026-b6af-e30134159e7d",
+                                    "op": "read",
+                                    "version": 1,
+                                    "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                                    "mode": "base"
+                                  }
+                                }
+                              },
+                              "right": {
+                                "id": "node-35f270ee-6502-4958-a74a-170048fd9bc2",
+                                "op": "literal",
+                                "version": 1,
+                                "value": 0
+                              }
+                            },
+                            "then": {
+                              "id": "node-191cf144-65b3-4fe0-8943-66a1ff2b1659",
+                              "op": "subtract",
+                              "version": 1,
+                              "left": {
+                                "id": "node-5d86f286-1e59-4794-8e79-a926a8792307",
+                                "op": "read",
+                                "version": 1,
+                                "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                                "mode": "base"
+                              },
+                              "right": {
+                                "id": "node-b76c1575-d466-469b-8ce1-63c15f314f58",
+                                "op": "property",
+                                "version": 1,
+                                "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                                "value": {
+                                  "id": "node-664b2d52-53ed-46ad-b49d-8530d11b823c",
+                                  "op": "lookup",
+                                  "version": 1,
+                                  "source": {
+                                    "id": "node-b61b141f-e5cb-4699-9618-fabb5e05a343",
+                                    "op": "read",
+                                    "version": 1,
+                                    "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                                    "mode": "base"
+                                  },
+                                  "key": {
+                                    "id": "node-61eeb303-5b44-414a-a87c-89fad24f49cc",
+                                    "op": "read",
+                                    "version": 1,
+                                    "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                                    "mode": "base"
+                                  }
+                                }
+                              }
+                            },
+                            "else": {
+                              "id": "node-955f8873-ab64-48a7-b2dc-023adff7464a",
+                              "op": "if",
+                              "version": 1,
+                              "condition": {
+                                "id": "node-e7f4abfd-4330-4627-af9c-1e21682e69cc",
+                                "op": "greaterEqual",
+                                "version": 1,
+                                "left": {
+                                  "id": "node-5bbf652e-e8a5-442a-acc6-ace157afc4f4",
+                                  "op": "read",
+                                  "version": 1,
+                                  "dataId": "data-d46060e2-4677-447f-8fb2-3b52e7d58228",
+                                  "mode": "base"
+                                },
+                                "right": {
+                                  "id": "node-44279adc-2709-42e8-9d6f-ca79651d3712",
+                                  "op": "literal",
+                                  "version": 1,
+                                  "value": 17
+                                }
+                              },
+                              "then": {
+                                "id": "node-94c59596-6a01-401d-80b0-4b9e8bed223e",
+                                "op": "literal",
+                                "version": 1,
+                                "value": 3
+                              },
+                              "else": {
+                                "id": "node-3c9af11a-fc8f-4824-8ce7-611e5c38cea3",
+                                "op": "if",
+                                "version": 1,
+                                "condition": {
+                                  "id": "node-f7eceb66-c838-476c-9fd8-0661bf6eb059",
+                                  "op": "greaterEqual",
+                                  "version": 1,
+                                  "left": {
+                                    "id": "node-35592882-6c81-4852-b3b1-3180c598b939",
+                                    "op": "read",
+                                    "version": 1,
+                                    "dataId": "data-d46060e2-4677-447f-8fb2-3b52e7d58228",
+                                    "mode": "base"
+                                  },
+                                  "right": {
+                                    "id": "node-ccf5022f-fb1d-43a1-8401-1364b587a2c2",
+                                    "op": "literal",
+                                    "version": 1,
+                                    "value": 11
+                                  }
+                                },
+                                "then": {
+                                  "id": "node-f604da80-a835-49bc-b71c-8927d93f1a34",
+                                  "op": "literal",
+                                  "version": 1,
+                                  "value": 2
+                                },
+                                "else": {
+                                  "id": "node-29cdb1ac-aecc-47ac-b6d3-c9f9ddd98fa7",
+                                  "op": "if",
+                                  "version": 1,
+                                  "condition": {
+                                    "id": "node-56e4cb66-9d65-4ccd-b74e-49b87d4d69d7",
+                                    "op": "greaterEqual",
+                                    "version": 1,
+                                    "left": {
+                                      "id": "node-a7f117e1-4d30-4a81-8051-aec4dcd2ebb7",
+                                      "op": "read",
+                                      "version": 1,
+                                      "dataId": "data-d46060e2-4677-447f-8fb2-3b52e7d58228",
+                                      "mode": "base"
+                                    },
+                                    "right": {
+                                      "id": "node-40c8651c-b80d-4339-867e-0251e43cca12",
+                                      "op": "literal",
+                                      "version": 1,
+                                      "value": 5
+                                    }
+                                  },
+                                  "then": {
+                                    "id": "node-94e103ca-03bc-424d-a218-2cac6e51f69e",
+                                    "op": "literal",
+                                    "version": 1,
+                                    "value": 1
+                                  },
+                                  "else": {
+                                    "id": "node-c613972d-5bc4-4a23-aa36-5000812bd9cb",
+                                    "op": "literal",
+                                    "version": 1,
+                                    "value": 0
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right": {
+                            "id": "node-ee25eec5-8a9a-405f-bd3d-ed4979d0c223",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-a4ba5907-9eb5-456f-a2c4-8af7a4694a1e",
+                            "mode": "base"
+                          }
+                        },
+                        "else": {
+                          "id": "node-c6289dce-295d-4e53-a2f1-f101877b9f48",
+                          "op": "literal",
+                          "version": 1,
+                          "value": 0
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "modifier": {
+                "id": "node-c4d34336-bbff-4d77-93c1-cd458bc56c4b",
+                "op": "literal",
+                "version": 1,
+                "value": 0
+              },
+              "ranges": []
+            },
+            {
+              "id": "step-e5f63f7c-b1d1-43d1-9702-364b2d8a388b",
+              "label": "Registrar efeito",
+              "type": "set",
+              "dataId": "data-93cc6fc8-bca8-4a0c-ab2d-e6f5f488454b",
+              "expression": {
+                "id": "node-fb2641c6-cca5-4bda-bc98-8142e8ef0eb5",
+                "op": "property",
+                "version": 1,
+                "fieldId": "step-4181268d-7b2f-45ae-8f4d-9d60f9f42ada_total",
+                "value": {
+                  "id": "node-c4997049-d008-4269-964d-6ee723deb80e",
+                  "op": "local",
+                  "version": 1,
+                  "localId": "step-4181268d-7b2f-45ae-8f4d-9d60f9f42ada"
+                }
+              }
+            }
+          ],
+          "costs": [
+            {
+              "id": "cost-121e299e-1b40-4e48-b143-117f7008d50c",
+              "label": "Espaço nível 1",
+              "dataId": "data-08b4a1f5-7f0f-452b-adee-e7fecaabe81b",
+              "amount": {
+                "id": "node-6b52ad66-88e8-4c8e-91fd-3ccad50bca55",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-a3636c4f-6717-48c5-8946-2ec191eca2f0",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-0e4b1e39-f994-45c9-aeff-a63da3347bd1",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-e330d5dd-d366-4fb0-b2c1-aa4ebc69e319",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-928eb3a9-1b56-4f0a-8d82-20f943cb9a7f",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-9a60a0b5-5e13-4009-ac16-d32615efee22",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-290a76ba-632a-4e38-9f4a-7f19d8f06fce",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-86798d61-6a66-4794-af53-48eb5ef93b07",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-44020c5a-aa16-4bbe-8793-13dbc77640db",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-9465bb58-dcc9-4059-aae9-62389229147a",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-fa00e75f-ba82-4415-bff7-3a04abee6429",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-a052a4c1-d88c-4a29-99f7-d192da6c31d7",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-186632eb-4c4c-4964-af8d-f570307657d8",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 1
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-a9fe5053-4235-4e84-a445-76a4336384cb",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-81c06d22-b19e-4e5f-9036-94fbecaa0225",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-b67ed2d5-76b7-4780-bf57-1566ef40a6b4"
+            },
+            {
+              "id": "cost-dd02dc40-7ff0-4caa-b644-2ef7d81b8984",
+              "label": "Espaço nível 2",
+              "dataId": "data-7436b75b-9d42-4882-9f5c-6cc567980f57",
+              "amount": {
+                "id": "node-d0b2defb-a6aa-480c-8237-c65dea15af44",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-17b9e8d0-8714-4fa5-8475-86e0b7ac462f",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-0976cd3d-1aa7-4723-a874-b361ecc470d2",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-ef00f602-9c3a-4079-b455-56107f30ab2f",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-a9089d21-c66d-4a29-8e73-e90b85b4d541",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-6b9063d3-f75e-46fb-b8c8-94a347e2eed1",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-c6743745-1913-480c-9bb2-0954b7a76f36",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-8799f648-e040-4ff2-8f62-9b3055952245",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-45f73067-0c80-4c77-bdb9-1213635e4101",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-a1a6daf7-d5b4-4775-b991-3ff553bf11b9",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-d5197520-2e87-4428-8850-abc6d3665fd4",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-dbc5f76b-1dc1-4f39-b857-448b07f5e987",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-5906db5e-e7e9-4f86-bf40-5419ba5d278a",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 2
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-b071f7b1-9aba-4c6a-8952-4ea7d7d81b9c",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-d9d10b1b-ac5a-4c0c-933c-31f04af3490a",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-3e131018-3e69-4590-833f-00159eee6f1f"
+            },
+            {
+              "id": "cost-34ae3e16-f030-4de3-bb12-3256ac6b701c",
+              "label": "Espaço nível 3",
+              "dataId": "data-2365aeb0-8eff-4e3c-81de-0051d6c0812c",
+              "amount": {
+                "id": "node-28bf6dca-ff87-42d1-bb11-138cf6f8a2c5",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-dba4ec91-dc4c-4eb9-85fb-f2f8dfcdb3ac",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-cdd78c3c-b0f4-4ac1-a39e-6d60bb87514a",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-58483b3f-6f2c-4121-b9de-1e0fdad4453d",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-4808cc8e-52ab-4b35-b9cd-ba330028650c",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-9211857b-79e8-4e0d-b2ea-c41fe3dbd2a9",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-d0e7f491-023e-4584-9c26-65151940a42c",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-54620c95-2671-4890-b94a-c2a2d831b6b4",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-0fdbfa45-e618-4ff3-9c05-5a303a5a9b72",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-79df7365-bcfd-4f7c-ae56-8018e8dec25c",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-f855a964-5920-499e-b662-2717baf1ab11",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-254dc933-9a22-4d74-9b8b-ec37185410c9",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-b4fd72f1-a4da-46b4-8f49-f62ada42f057",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 3
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-0865f453-8fec-4d86-83ff-ccc198987683",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-c72de62d-48e0-4fdf-b1e6-83bb689914e5",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-c27d0352-18b2-435e-bc28-b027224ae3c3"
+            },
+            {
+              "id": "cost-121ac79a-73e2-41ac-a0d3-177f8c5979d5",
+              "label": "Espaço nível 4",
+              "dataId": "data-13824455-729d-403c-8508-33a92f3a3a25",
+              "amount": {
+                "id": "node-51329661-7d6a-4931-91c3-95f88738c269",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-d340d9a0-43ae-468c-940d-ba2d6ba82188",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-0719eed2-22f9-4dde-aa68-98989e7a109b",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-ec6fd7ac-b9ac-4586-94f9-40098df8e75b",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-adcf375e-5ab4-4174-aa97-066fa845ec8f",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-d7304160-d916-4ed0-9932-58b606840b41",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-53b2ffee-65e2-4062-98ec-5106818825b8",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-9530ee25-9a55-4cda-8fbc-20668499b59f",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-190b2daf-76f2-43af-aa50-c665a67f0950",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-2ae11332-ffc0-4caf-a83d-08dc2da69198",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-d6980265-7331-4ab5-bbc1-374bad4bd95d",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-913ab439-7a44-42c5-b8a3-38a7f75bd69c",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-c1e107f2-fe2d-461d-8e62-a6aaa0fac7a9",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 4
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-1b5bfc91-d130-4402-9665-8b69932d1b66",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-ffcef810-2fea-4245-bcdb-25619a39a55e",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-832c0b79-4654-4599-b36e-24bf51e2ee6d"
+            },
+            {
+              "id": "cost-fcd24659-c655-4ffb-8504-624bc502b3bf",
+              "label": "Espaço nível 5",
+              "dataId": "data-592cf13d-c881-47cd-ada7-2b49f8c04f46",
+              "amount": {
+                "id": "node-c1352ecb-663d-42dc-bbc1-9f06460040f8",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-3657c634-9f51-491c-9deb-572689dac7a2",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-ee3ef62f-9231-4531-bc0d-a2711ba530d8",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-3d1eb22d-a128-4769-8674-8ca19f87b0ae",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-09642cca-efdb-4957-9c1f-aeb841587f16",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-5ccafa6d-e4a5-49ea-82ff-d5fbf2f54194",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-2cd8387c-5083-4c6e-b80e-f0f536c2bb15",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-db1da61d-dcb4-4b32-9a82-f8061915a8b1",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-f57eea97-ad37-4d72-9214-0e9ec6b4eac5",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-01632261-e8b8-4d09-b69e-57b22bbf0bc9",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-378885bf-813f-48b9-8d87-37314b64a098",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-94f63cf0-da3f-4751-a86e-e8e379fbdb2a",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-b6dae3e6-53e1-4f3e-aa1a-f26f78e8e559",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 5
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-fea63de0-7ce9-4122-91a4-c4e1f188b1d4",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-192ba4ce-0990-4577-bc72-db670a12629d",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-4743c5bb-243d-4995-9608-275d0290d6d4"
+            },
+            {
+              "id": "cost-97b22dc7-7a96-4928-b2ed-36d4e0d37274",
+              "label": "Espaço nível 6",
+              "dataId": "data-c884b510-6a60-4b77-a855-282118f4cd24",
+              "amount": {
+                "id": "node-aeedf32e-9592-4fd8-963d-9f69a2d39e5b",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-9b9cbbf4-1156-4438-aee0-0ef821741e0c",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-ca772759-f749-4503-bf58-7eba85629425",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-ee0eb007-143c-48f4-91e3-808320a4dd3e",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-1c7aa603-e6a5-4e12-afbe-3c18109c83a5",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-0da352b3-0a0d-456a-92b7-66bf8fe2c330",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-a87df9a7-def3-4223-abb9-51093ec0fb1f",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-9ef436d6-6825-4a81-8b42-fc4264af0976",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-7b569f03-5237-4ba6-9c1e-48474a78d2b3",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-a4321708-22e6-451e-95e3-253dcd55008a",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-645115e4-3763-4827-9a44-a3e89c5dd3bf",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-eb8902ce-ddd1-43e3-ba85-0d32e39b3ab3",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-b9b65524-e7db-421d-82e9-2dc331ffb628",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 6
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-efdc01b8-9e72-4470-a42c-fd07f106c901",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-a28d2546-7ca0-4637-8020-f1a510ec8268",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-d2188530-10df-4055-8b5f-af1521077697"
+            },
+            {
+              "id": "cost-89357b64-e7e2-46af-83b1-f40851bbab1c",
+              "label": "Espaço nível 7",
+              "dataId": "data-0943830e-1239-49d4-9163-1ccb027d2ac9",
+              "amount": {
+                "id": "node-928d9c69-0cb8-4148-841c-b987e11d4e1d",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-a511ca85-6e9b-4738-b32c-de9521139c6f",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-f10cdfd1-2d64-4a00-909c-42e587813985",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-9cf74f02-89f6-4abd-a596-dd9d0d5bd5d9",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-86f09396-1d73-4449-a6e2-aa045668dba7",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-c32a503a-39af-431e-b0b8-f196ea633353",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-17cfee23-e50d-4028-9036-87e9f43b3cf1",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-6703a343-aba7-4414-8805-81a1b280ff67",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-22911ca2-fd51-4118-8c05-b46cf92ef1e1",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-421cf812-5d6c-45e1-bf5d-cbd8ec3437c6",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-f534f6ce-f076-4686-8a13-2f84ebee5911",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-a75af5a7-d645-4808-964f-cda27587f066",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-973f8646-f562-4bd0-9234-9a74c282f14c",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 7
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-40c1ebc7-8596-4a1b-b6f9-c2484b434635",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-72023390-bd93-4063-aa65-11205dd196b1",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-a8c43c53-ce5f-41eb-960e-e98554d501c7"
+            },
+            {
+              "id": "cost-ade58fac-fa14-4c38-8c30-c5f921fe4269",
+              "label": "Espaço nível 8",
+              "dataId": "data-aa73868a-0d2f-4dad-b283-d1bb0881c3e0",
+              "amount": {
+                "id": "node-999ce5bf-5c2b-4198-9861-f880712b0499",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-8bdbe8df-ded3-47dc-9cc0-431947886cd0",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-a42275dc-fc08-4572-93c6-70172584cf43",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-0fcc8087-6ec5-4dc4-b104-05a124d78ffe",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-7399d0cc-a3cf-44ae-b642-3b142a16fafe",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-c33aacbc-7a07-4af8-94a6-da86fd89c3e5",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-8092f645-023b-44dd-bd72-0741c85b1b20",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-c108863f-705f-47dc-baff-2f7425294021",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-4e1800ff-21fa-4296-89d4-eccdd8727e99",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-2f32180a-951b-41e8-9479-da05e4ea2e19",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-ada4b125-7ee2-4366-bfeb-797214806a8d",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-53aec8b5-b196-476a-951a-c7b03a5d0e4e",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-7a263eb4-d109-420e-b766-640ef1cd5121",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 8
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-5c9bde07-4e45-454d-bd0c-99d5689be5de",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-1e0f015b-4280-4224-b781-8f7d3911f391",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-47ec9cf3-8810-453f-91d5-0b4e57b8275e"
+            },
+            {
+              "id": "cost-1aba8cd8-68d2-477e-928a-5ff3e549c426",
+              "label": "Espaço nível 9",
+              "dataId": "data-f5da2af0-4ace-44b1-94be-98e01ed9debf",
+              "amount": {
+                "id": "node-045d706c-0ae0-4477-9db9-b05b1b625b23",
+                "op": "if",
+                "version": 1,
+                "condition": {
+                  "id": "node-092707ca-1bfe-424d-a8cf-d1a8190184ec",
+                  "op": "and",
+                  "version": 1,
+                  "left": {
+                    "id": "node-45b51ca3-97f7-4e71-a937-4d6f17f5fa78",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92",
+                    "mode": "base"
+                  },
+                  "right": {
+                    "id": "node-004b21d1-f23e-40dd-858c-7aebaa6cff2b",
+                    "op": "and",
+                    "version": 1,
+                    "left": {
+                      "id": "node-1d8666d7-184f-4adc-83a1-48b05dde7ca6",
+                      "op": "greater",
+                      "version": 1,
+                      "left": {
+                        "id": "node-db805e82-a20b-4251-850c-166f087a7184",
+                        "op": "property",
+                        "version": 1,
+                        "fieldId": "data-59d9ea35-0988-4412-922d-b26e1ab817b7",
+                        "value": {
+                          "id": "node-4329cfe3-8030-4e96-88a2-3d33b5da7284",
+                          "op": "lookup",
+                          "version": 1,
+                          "source": {
+                            "id": "node-9da44654-e2c6-48b5-af4c-4e400e52954b",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8",
+                            "mode": "base"
+                          },
+                          "key": {
+                            "id": "node-4e4faa19-9ca5-484f-9f31-f1c759fc1e28",
+                            "op": "read",
+                            "version": 1,
+                            "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb",
+                            "mode": "base"
+                          }
+                        }
+                      },
+                      "right": {
+                        "id": "node-06f6f1e6-b90e-49ec-9325-69819338bce6",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 0
+                      }
+                    },
+                    "right": {
+                      "id": "node-5c709de1-7ffe-4a9e-a0d2-528ca988c412",
+                      "op": "equal",
+                      "version": 1,
+                      "left": {
+                        "id": "node-91358412-475a-4ec7-8d17-de9267a83793",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea",
+                        "mode": "base"
+                      },
+                      "right": {
+                        "id": "node-022dea4a-a902-4f17-a4e6-36a6e831a893",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 9
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "id": "node-f2830887-140e-415f-891a-4784c46a8ec1",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 1
+                },
+                "else": {
+                  "id": "node-0bf2ef93-24da-4a83-a60d-8e380a53cb58",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 0
+                }
+              },
+              "mode": "used",
+              "stage": "result",
+              "when": "always",
+              "maxDataId": "data-d0e7fbec-fe57-4584-b153-1a09af886ae2"
+            }
+          ]
+        },
+        "allowWhen": {
+          "ruleId": "rule-c216e06e-8ac7-4da2-8a6b-894313323b68"
+        }
+      }
+    ],
+    "recoveryActions": [
+      {
+        "operations": [
+          {
+            "type": "restoreCollection",
+            "field": "habilidades",
+            "valueField": "usos_atuais",
+            "maxField": "usos_maximos",
+            "filterField": "recuperar_no_descanso",
+            "filterValues": [
+              true
+            ]
+          }
+        ],
+        "help": "A mesa confirma duração e ausência de interrupções.",
+        "healing": {
+          "field": "pv",
+          "maxField": "pv_maximo",
+          "totalField": "total_de_dados_de_vida",
+          "usedField": "dados_de_vida_usados",
+          "dieField": "dado_de_vida",
+          "modifier": {
+            "ruleId": "rule-6a3d8196-50a2-4aac-9742-3ea6983178b2"
+          },
+          "minimum": 1,
+          "requireCurrentMin": 1
+        },
+        "id": "descanso_curto_configurado",
+        "label": "Descanso curto configurado"
+      },
+      {
+        "operations": [
+          {
+            "type": "restoreValue",
+            "field": "pv",
+            "maxField": "pv_maximo",
+            "requireCurrentMin": 1
+          },
+          {
+            "type": "set",
+            "field": "dados_de_vida_usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "pv_temporarios",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_1.usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_2.usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_3.usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_4.usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_5.usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_6.usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_7.usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_8.usados",
+            "value": 0
+          },
+          {
+            "type": "set",
+            "field": "espacos.nivel_9.usados",
+            "value": 0
+          },
+          {
+            "type": "restoreCollection",
+            "field": "habilidades",
+            "valueField": "usos_atuais",
+            "maxField": "usos_maximos",
+            "filterField": "recuperar_no_descanso",
+            "filterValues": [
+              true
+            ]
+          }
+        ],
+        "help": "A mesa confirma duração e ausência de interrupções.",
+        "id": "descanso_longo_configurado",
+        "label": "Descanso longo configurado"
+      }
+    ]
+  },
+  "layouts": [
+    {
+      "schemaVersion": 3,
+      "id": "default",
+      "system": "pacote-80af7f32",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "basic",
+              "title": "Personagem",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "dataField",
+                      "label": "Atributos",
+                      "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+                    },
+                    {
+                      "type": "group",
+                      "label": "Atributos repetidos",
+                      "components": [
+                        {
+                          "type": "computed",
+                          "label": "Modificador por atributo",
+                          "ruleId": "rule-666e2233-63fa-4737-9fab-013c8a58610a"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+                      }
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Perícias",
+                      "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a"
+                    },
+                    {
+                      "type": "group",
+                      "label": "Perícias repetidas",
+                      "components": [
+                        {
+                          "type": "computed",
+                          "label": "Total por entrada de Perícias",
+                          "ruleId": "rule-7cae7c5d-a509-45a7-a08e-b451e39cadd4"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a"
+                      }
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Resistências",
+                      "dataId": "data-b4c64c9f-08fc-4d5d-a3f7-3e738a7f9ee3"
+                    },
+                    {
+                      "type": "group",
+                      "label": "Resistências repetidas",
+                      "components": [
+                        {
+                          "type": "computed",
+                          "label": "Total por entrada de Resistências",
+                          "ruleId": "rule-155b0f66-67c1-4121-b15f-cc19fa82f84e"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-b4c64c9f-08fc-4d5d-a3f7-3e738a7f9ee3"
+                      }
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Nível",
+                      "dataId": "data-d46060e2-4677-447f-8fb2-3b52e7d58228"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Fonte da capacidade",
+                      "dataId": "data-3faecf2f-34e7-49f2-a008-e64724a808ec"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Fonte da iniciativa",
+                      "dataId": "data-dfc92135-7bd6-4d79-996e-a8d07d54356b"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Fonte da cura",
+                      "dataId": "data-5cb2bc97-23dc-4dc3-b38c-f713e872a05b"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Fonte da conjuração",
+                      "dataId": "data-bf2f1bc9-f484-4c87-8fc5-ac513b084fb9"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Proficiência",
+                      "ruleId": "rule-d27a63a5-9019-48a8-a8a1-d275044cbb90"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Ataque de conjuração",
+                      "ruleId": "rule-32569604-8a98-4955-8272-117511ce48b2"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "CD de conjuração",
+                      "ruleId": "rule-0be4120e-870d-47c6-b67e-f146dd39e2e2"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Capacidade de carga",
+                      "ruleId": "rule-2cfdd514-ce98-4945-a816-bcb6fe1bdb26"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Iniciativa",
+                      "ruleId": "rule-1330aada-e393-4a5d-8a91-5e1ef9371479"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Inventário",
+                      "dataId": "data-2f6ea341-9c97-4f66-9367-fe1d006c2b95"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Carga",
+                      "ruleId": "rule-0e24cc4c-e3b6-492b-a258-2086d18ad664"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Moedas",
+                      "dataId": "data-241131e9-b167-47fe-a207-19567f087c6f"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Total em ouro",
+                      "ruleId": "rule-aae885ea-4f4a-4b0c-884a-47d640ab520c"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Perícia passiva escolhida",
+                      "dataId": "data-a1cc12b6-21de-4b0c-b5e3-eb8fa3f88315"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Valor passivo",
+                      "ruleId": "rule-b4cfce7a-448e-419d-99ad-9ac7319d31b9"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PV",
+                      "dataId": "data-b30bcfbd-1987-42e9-8ac7-87670a8a8e5f"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PV máximo",
+                      "dataId": "data-4143cb52-fcdf-4ded-9f06-44114779db30"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PV temporários",
+                      "dataId": "data-e3c423a9-d405-49c1-8b17-23aabce69525"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Dados de Vida usados",
+                      "dataId": "data-a8d1e07e-2575-4b7d-a8b3-f8f9147c0395"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Total de Dados de Vida",
+                      "dataId": "data-a7dafd95-8e3c-4fc5-80d6-b867a7f9f4ba"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Dado de Vida",
+                      "dataId": "data-a9f28cfd-5c58-4daf-b533-c033c3f22a43"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Nível de espaço escolhido",
+                      "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Consumir espaço",
+                      "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Dados extras manuais",
+                      "dataId": "data-a4ba5907-9eb5-456f-a2c4-8af7a4694a1e"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Último ataque",
+                      "dataId": "data-2765ab84-dc2f-48b5-b54b-1e29c8fbd5d9"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Último efeito",
+                      "dataId": "data-93cc6fc8-bca8-4a0c-ab2d-e6f5f488454b"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Espaços",
+                      "dataId": "data-8eab8215-d5e0-4c36-873e-f0f4a9de848a"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Disponíveis do primeiro nível",
+                      "ruleId": "rule-cf3ec0db-260b-4cae-9f63-65740afd4d7c"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Ataques",
+                      "dataId": "data-962fbe41-b0a8-4977-a300-067d76dc0555"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Ataque escolhido",
+                      "dataId": "data-f6316429-10db-465f-b8b9-80961759f88e"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Magias",
+                      "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Magia escolhida",
+                      "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb"
+                    },
+                    {
+                      "type": "actionGroup",
+                      "label": "Rolar ataque",
+                      "actionsFrom": "sheetActions"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Habilidades",
+                      "dataId": "data-9793ce88-2a1d-4802-89d7-8e14391f1a6e"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Condições e notas manuais",
+                      "dataId": "data-3ce27077-9404-4f38-9df5-7525dff137b7"
+                    },
+                    {
+                      "type": "recoveryGroup",
+                      "label": "Descanso curto configurado",
+                      "actionsFrom": "recoveryActions",
+                      "historyField": "descanso_curto_configurado_registro"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schemaVersion": 3,
+      "id": "mesa",
+      "system": "pacote-80af7f32",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "basic",
+              "title": "Personagem",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "dataField",
+                      "label": "Atributos",
+                      "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+                    },
+                    {
+                      "type": "group",
+                      "label": "Atributos repetidos",
+                      "components": [
+                        {
+                          "type": "computed",
+                          "label": "Modificador por atributo",
+                          "ruleId": "rule-666e2233-63fa-4737-9fab-013c8a58610a"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-ad3e512e-1844-4729-9812-798252cd69e2"
+                      }
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Perícias",
+                      "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a"
+                    },
+                    {
+                      "type": "group",
+                      "label": "Perícias repetidas",
+                      "components": [
+                        {
+                          "type": "computed",
+                          "label": "Total por entrada de Perícias",
+                          "ruleId": "rule-7cae7c5d-a509-45a7-a08e-b451e39cadd4"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-3e8a3178-0274-4c04-817e-6603a3656a2a"
+                      }
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Resistências",
+                      "dataId": "data-b4c64c9f-08fc-4d5d-a3f7-3e738a7f9ee3"
+                    },
+                    {
+                      "type": "group",
+                      "label": "Resistências repetidas",
+                      "components": [
+                        {
+                          "type": "computed",
+                          "label": "Total por entrada de Resistências",
+                          "ruleId": "rule-155b0f66-67c1-4121-b15f-cc19fa82f84e"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-b4c64c9f-08fc-4d5d-a3f7-3e738a7f9ee3"
+                      }
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Nível",
+                      "dataId": "data-d46060e2-4677-447f-8fb2-3b52e7d58228"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Fonte da capacidade",
+                      "dataId": "data-3faecf2f-34e7-49f2-a008-e64724a808ec"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Fonte da iniciativa",
+                      "dataId": "data-dfc92135-7bd6-4d79-996e-a8d07d54356b"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Fonte da cura",
+                      "dataId": "data-5cb2bc97-23dc-4dc3-b38c-f713e872a05b"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Fonte da conjuração",
+                      "dataId": "data-bf2f1bc9-f484-4c87-8fc5-ac513b084fb9"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Proficiência",
+                      "ruleId": "rule-d27a63a5-9019-48a8-a8a1-d275044cbb90"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Ataque de conjuração",
+                      "ruleId": "rule-32569604-8a98-4955-8272-117511ce48b2"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "CD de conjuração",
+                      "ruleId": "rule-0be4120e-870d-47c6-b67e-f146dd39e2e2"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Capacidade de carga",
+                      "ruleId": "rule-2cfdd514-ce98-4945-a816-bcb6fe1bdb26"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Iniciativa",
+                      "ruleId": "rule-1330aada-e393-4a5d-8a91-5e1ef9371479"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Inventário",
+                      "dataId": "data-2f6ea341-9c97-4f66-9367-fe1d006c2b95"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Carga",
+                      "ruleId": "rule-0e24cc4c-e3b6-492b-a258-2086d18ad664"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Moedas",
+                      "dataId": "data-241131e9-b167-47fe-a207-19567f087c6f"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Total em ouro",
+                      "ruleId": "rule-aae885ea-4f4a-4b0c-884a-47d640ab520c"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Perícia passiva escolhida",
+                      "dataId": "data-a1cc12b6-21de-4b0c-b5e3-eb8fa3f88315"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Valor passivo",
+                      "ruleId": "rule-b4cfce7a-448e-419d-99ad-9ac7319d31b9"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PV",
+                      "dataId": "data-b30bcfbd-1987-42e9-8ac7-87670a8a8e5f"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PV máximo",
+                      "dataId": "data-4143cb52-fcdf-4ded-9f06-44114779db30"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "PV temporários",
+                      "dataId": "data-e3c423a9-d405-49c1-8b17-23aabce69525"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Dados de Vida usados",
+                      "dataId": "data-a8d1e07e-2575-4b7d-a8b3-f8f9147c0395"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Total de Dados de Vida",
+                      "dataId": "data-a7dafd95-8e3c-4fc5-80d6-b867a7f9f4ba"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Dado de Vida",
+                      "dataId": "data-a9f28cfd-5c58-4daf-b533-c033c3f22a43"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Nível de espaço escolhido",
+                      "dataId": "data-559c75dc-5001-4c9e-85df-0c9e26ba7cea"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Consumir espaço",
+                      "dataId": "data-23ea0fdd-b024-4a55-b7d5-e40bd113da92"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Dados extras manuais",
+                      "dataId": "data-a4ba5907-9eb5-456f-a2c4-8af7a4694a1e"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Último ataque",
+                      "dataId": "data-2765ab84-dc2f-48b5-b54b-1e29c8fbd5d9"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Último efeito",
+                      "dataId": "data-93cc6fc8-bca8-4a0c-ab2d-e6f5f488454b"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Espaços",
+                      "dataId": "data-8eab8215-d5e0-4c36-873e-f0f4a9de848a"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Disponíveis do primeiro nível",
+                      "ruleId": "rule-cf3ec0db-260b-4cae-9f63-65740afd4d7c"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Ataques",
+                      "dataId": "data-962fbe41-b0a8-4977-a300-067d76dc0555"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Ataque escolhido",
+                      "dataId": "data-f6316429-10db-465f-b8b9-80961759f88e"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Magias",
+                      "dataId": "data-56ba3746-5edd-44b0-9011-5eae5dad7ac8"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Magia escolhida",
+                      "dataId": "data-149bda0a-a9fc-4fa7-8bc9-69af80b569bb"
+                    },
+                    {
+                      "type": "actionGroup",
+                      "label": "Rolar ataque",
+                      "actionsFrom": "sheetActions"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Habilidades",
+                      "dataId": "data-9793ce88-2a1d-4802-89d7-8e14391f1a6e"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Condições e notas manuais",
+                      "dataId": "data-3ce27077-9404-4f38-9df5-7525dff137b7"
+                    },
+                    {
+                      "type": "recoveryGroup",
+                      "label": "Descanso curto configurado",
+                      "actionsFrom": "recoveryActions",
+                      "historyField": "descanso_curto_configurado_registro"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "name": "Mesa",
+      "mode": "table"
+    }
+  ]
+}

@@ -1,5 +1,13 @@
 # Autoria visual de pacotes
 
+[Traços da Jornada](traits.md) combina criação, evolução, Pool, técnicas, repouso, carga e estados vinculados em um [pacote fictício importável](traits.package.json). Os dados e as condições são compartilhados pelos controles e ações.
+
+Os exemplos fictícios [Caderno de aventuras](adventurers.md) e [Caderno de investigação](investigator.md) mostram cálculos, recursos e resoluções construídos desde vazio pelos controles gerais. Consulte cada guia para preparar os dados e conhecer seu recorte de assistência.
+
+O exemplo fictício [Cartógrafos da Bruma](cartographers.md) mostra como combinar consultas, equipamentos aninhados, resoluções, efeitos, propostas pagas e compostos no mesmo pacote. Suas regras permanecem editáveis pelos controles gerais.
+
+Depois de [preparar o app para uso offline](offline.md), é possível importar esses arquivos locais no editor, aplicar o pacote, executar suas ações e reabrir os personagens sem rede. Guarde os arquivos antes de desconectar; os guias descrevem quais dados preencher e quais decisões ficam com a mesa.
+
 Em **Compor**, [fontes, vínculos e grafo de regras](rule-connections.md) oferecem edição por menus e cabos sobre o mesmo documento. Receitas de inclusão, nomes, entradas de catálogo e vínculos não confirmados preservam suas pendências no rascunho; trocar de receita não as descarta.
 
 Em **Sistemas**, crie ou abra um pacote e escolha **Compor**. O editor usa o mesmo documento, rascunho, histórico, validação, recuperação e fluxo de aplicação dos [formulários](editor-forms.md) e do [editor JSON](editor-json.md). Esta página registra a autoria visual implementada dos mecanismos atuais da engine. A ambição de configurar qualquer sistema continua aberta.

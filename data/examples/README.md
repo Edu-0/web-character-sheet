@@ -1,5 +1,11 @@
 # Rolagens de entradas configuradas por JSON
 
+[Traços da Jornada](traits.md) combina criação, evolução, Pool, técnicas, repouso, carga e estados vinculados em um [pacote fictício importável](traits.package.json). Os dados e as condições são compartilhados pelos controles e ações.
+
+Os exemplos fictícios [Caderno de aventuras](adventurers.md) e [Caderno de investigação](investigator.md) mostram cálculos, recursos e resoluções construídos desde vazio pelos controles gerais. Consulte cada guia para preparar os dados e conhecer seu recorte de assistência.
+
+[Cartógrafos da Bruma](cartographers.md) reúne consultas, coleções aninhadas, ações, efeitos e progressão em um sistema fictício [importável](cartographers.package.json), construído desde vazio pelos controles visuais.
+
 [Criação e evolução tipadas](progression-choices.md): opções com requisitos, custo, escolhas e concessões por origem.
 
 [Efeitos tipados](typed-effects.md): projeção sobre base/cálculo, consumo e eventos confirmados em v3.

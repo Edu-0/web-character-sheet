@@ -26,11 +26,12 @@ const activeGrants=ledger=>ledger.records.filter(record=>record.status==='active
 
 export function compileProgression(system){
  if(system.schemaVersion!==3)throw Error('Progressão tipada exige sistema v3.');const config=system.progressionChoices;
- keys(config,['version','revision','creationDataId','evolutionDataId','reopenCreation','revocation','options','extensions'],'Progressão');
+ keys(config,['version','revision','creationDataId','evolutionDataId','completeWhen','reopenCreation','revocation','options','extensions'],'Progressão');
  if(config.version!==1)throw Error('Versão de progressão indisponível.');integer(config.revision,1,1000000,'Revisão');
  if(typeof config.reopenCreation!=='boolean'||!['noRefund','originalCost'].includes(config.revocation))throw Error('Declare reabertura e política de revogação.');
  for(const id of [config.creationDataId,config.evolutionDataId])if(!['number','integer'].includes(globalDefinition(system,id).type))throw Error('Orçamento exige dado numérico global.');
  if(config.creationDataId===config.evolutionDataId)throw Error('Criação e evolução exigem orçamentos separados.');unique(config.options,PROGRESSION_LIMITS.options,'Opções');
+ if(config.completeWhen!==undefined){const issue=predicateBindingIssue(system,config.completeWhen,{collections:[]});if(issue)throw Error(issue);}
  const index=new Map(config.options.map(option=>[option.id,option])),compiled=new Map();let grantCount=0;
  const grant=(value)=>{
   keys(value,['id','label','type','dataId','expression','values','actionId','entryId','fieldId'],'Concessão');named(value,'Concessão');
@@ -134,7 +135,7 @@ export function prepareProgressionChoice(system,character,{optionId,mode,selecti
 export function prepareProgressionPhase(system,character,type,{id=crypto.randomUUID()}={}){
  const {config}=compileProgression(system);if(character.schemaVersion!==3)throw Error('Habilite personagem v3 explicitamente.');const draft=structuredClone(character),ledger=structuredClone(ledgerOf(character));
  if(type==='complete'){
-  if(ledger.phase!=='creation')throw Error('Criação já concluída.');const balance=readData(system,character,config.creationDataId);if(!balance.present||typeof balance.value!=='number'||balance.value<0)throw Error('Orçamento de criação inválido.');
+  if(ledger.phase!=='creation')throw Error('Criação já concluída.');requirePredicate(system,character,config.completeWhen);const balance=readData(system,character,config.creationDataId);if(!balance.present||typeof balance.value!=='number'||balance.value<0)throw Error('Orçamento de criação inválido.');
   ledger.phase='play';ledger.creationSnapshot={revision:config.revision,remaining:balance.value,spent:ledger.records.filter(record=>record.mode==='creation'&&record.status==='active').reduce((sum,record)=>sum+record.cost.amount,0),acquisitions:ledger.records.filter(record=>record.mode==='creation'&&record.status==='active').map(record=>record.id),allocations:Object.fromEntries(dataDefinitions(system).filter(row=>!row.ancestors.length).map(row=>[row.definition.id,readData(system,character,row.definition.id)]))};
  }else if(type==='reopen'){
   if(!config.reopenCreation||ledger.phase!=='play'||ledger.records.some(record=>record.mode!=='creation'))throw Error('Reabrir exige política explícita e ausência de histórico de evolução.');ledger.previousSnapshots??=[];ledger.previousSnapshots.push(ledger.creationSnapshot);delete ledger.creationSnapshot;ledger.phase='creation';

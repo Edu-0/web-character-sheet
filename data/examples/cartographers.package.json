@@ -1,0 +1,1517 @@
+{
+  "kind": "rpg-system-package",
+  "schemaVersion": 3,
+  "system": {
+    "schemaVersion": 3,
+    "id": "pacote-e500e934",
+    "name": "Cartógrafos da Bruma",
+    "characterTemplate": {
+      "schemaVersion": 3,
+      "meta": {
+        "system": "pacote-e500e934"
+      }
+    },
+    "dataDefinitions": [
+      {
+        "id": "data-c51c9d54-f66e-48f7-bff2-b0eb9660055d",
+        "label": "Tinta",
+        "type": "integer",
+        "binding": "tinta",
+        "required": false,
+        "nullable": false,
+        "initial": 5,
+        "minimum": 0
+      },
+      {
+        "id": "data-bbf4918e-2540-4166-80c5-6a457307f0b8",
+        "label": "Vínculos",
+        "type": "integer",
+        "binding": "vinculos",
+        "required": false,
+        "nullable": false,
+        "initial": 2,
+        "minimum": 0
+      },
+      {
+        "id": "data-b1a88ea7-fa95-4085-bab5-de919ea0760b",
+        "label": "Rastros",
+        "type": "integer",
+        "binding": "rastros",
+        "required": false,
+        "nullable": false,
+        "initial": 4,
+        "minimum": 0
+      },
+      {
+        "id": "data-36cb9ae3-af68-4cad-9bd4-86aa732ba306",
+        "label": "Sondagem",
+        "type": "trait",
+        "binding": "sondagem",
+        "required": false,
+        "nullable": false,
+        "initial": [
+          6
+        ],
+        "scale": [
+          4,
+          6,
+          8,
+          10,
+          12
+        ],
+        "composite": false
+      },
+      {
+        "id": "data-95c69c8d-041a-4585-8458-a52f6d855411",
+        "label": "Ofícios",
+        "type": "collection",
+        "binding": "oficios",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-c16e5363-a3a5-449a-a336-18a681ad1aff",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Ofício"
+          },
+          {
+            "id": "data-06368f2f-cff2-4145-8bf1-f2b1f1730385",
+            "label": "Habilitado",
+            "type": "boolean",
+            "binding": "habilitado",
+            "required": false,
+            "nullable": false,
+            "initial": false
+          }
+        ]
+      },
+      {
+        "id": "data-084e5bd7-6380-414c-b434-24ba1257d591",
+        "label": "Equipamentos",
+        "type": "collection",
+        "binding": "equipamentos",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-68fa86fd-515f-4410-928b-5519e24344eb",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": false,
+            "nullable": false,
+            "initial": "Equipamento"
+          },
+          {
+            "id": "data-b3e551de-381f-4238-a274-3513c3f94a9d",
+            "label": "Módulos",
+            "type": "collection",
+            "binding": "modulos",
+            "required": false,
+            "nullable": false,
+            "initial": [],
+            "fields": [
+              {
+                "id": "data-ecd79600-1103-4d65-ad9d-5a5b86f1a95b",
+                "label": "Nome",
+                "type": "string",
+                "binding": "nome",
+                "required": false,
+                "nullable": false,
+                "initial": "Módulo"
+              },
+              {
+                "id": "data-773c4fdb-313b-408e-bb4a-14d0f707c540",
+                "label": "Equipado",
+                "type": "boolean",
+                "binding": "equipado",
+                "required": false,
+                "nullable": false,
+                "initial": false
+              },
+              {
+                "id": "data-d97fd00c-9764-49fb-955d-6aa8e0fa0068",
+                "label": "Peso",
+                "type": "number",
+                "binding": "peso",
+                "required": false,
+                "nullable": false,
+                "initial": 0,
+                "minimum": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "data-65d346af-8406-4f2a-88ec-75df06fe1ecd",
+        "label": "Rota escolhida",
+        "type": "reference",
+        "binding": "rota_escolhida",
+        "required": false,
+        "nullable": true,
+        "initial": null,
+        "target": {
+          "scope": "system",
+          "catalogId": "catalog-d28bc43c-53f0-4213-acf2-8ba46ed05165"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-7e454fbf-d6fe-4937-b6fe-2160e1a46605",
+        "label": "Salvo-conduto",
+        "type": "reference",
+        "binding": "salvo_conduto",
+        "required": false,
+        "nullable": true,
+        "initial": null,
+        "target": {
+          "scope": "system",
+          "catalogId": "catalog-7536161f-d839-4a25-bc45-a386c99ae75c"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-df51e262-181b-4746-bbcb-3e5e40835061",
+        "label": "Descobertas",
+        "type": "collection",
+        "binding": "descobertas",
+        "required": false,
+        "nullable": false,
+        "initial": [],
+        "fields": [
+          {
+            "id": "data-f6ccf043-ae90-4737-9995-99b1defe001a",
+            "label": "Texto",
+            "type": "string",
+            "binding": "texto",
+            "required": false,
+            "nullable": false,
+            "initial": "Descoberta a descrever pela mesa"
+          }
+        ]
+      },
+      {
+        "id": "data-94060c1d-246e-4667-b973-c1f6f4b52f64",
+        "label": "Reserva de criação",
+        "type": "integer",
+        "binding": "reserva_de_criacao",
+        "required": false,
+        "nullable": false,
+        "initial": 0,
+        "minimum": 0
+      },
+      {
+        "id": "data-f7c415fd-6550-47df-ba54-08d85c556c2f",
+        "label": "Especialista adquirido",
+        "type": "boolean",
+        "binding": "especialista_adquirido",
+        "required": false,
+        "nullable": false,
+        "initial": false
+      },
+      {
+        "id": "data-7d768791-6452-400e-9da2-279edc5155c1",
+        "label": "Usos de especialista",
+        "type": "integer",
+        "binding": "usos_de_especialista",
+        "required": false,
+        "nullable": false,
+        "initial": 0,
+        "minimum": 0
+      },
+      {
+        "id": "data-ab0fce7a-387b-43ed-953d-5a49a3d12721",
+        "label": "Ofício principal",
+        "type": "reference",
+        "binding": "oficio_principal",
+        "required": false,
+        "nullable": true,
+        "initial": null,
+        "target": {
+          "scope": "character",
+          "dataId": "data-95c69c8d-041a-4585-8458-a52f6d855411"
+        },
+        "multiple": false
+      },
+      {
+        "id": "data-48b003b5-cbe9-42c3-8d58-bacb46e59b3f",
+        "label": "Ofício auxiliar",
+        "type": "reference",
+        "binding": "oficio_auxiliar",
+        "required": false,
+        "nullable": true,
+        "initial": null,
+        "target": {
+          "scope": "character",
+          "dataId": "data-95c69c8d-041a-4585-8458-a52f6d855411"
+        },
+        "multiple": false
+      }
+    ],
+    "rules": [
+      {
+        "id": "rule-b2f73ca6-7de8-4af9-87de-afa2c74af41e",
+        "label": "Custo auxiliar da rota",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-22035304-c867-45fb-b6b3-66da143be964",
+          "op": "property",
+          "version": 1,
+          "fieldId": "data-bdd40a7e-fed5-4fce-9c9a-987b0127d083",
+          "value": {
+            "id": "node-d313162b-b178-4d4f-b09e-4ee9ce9e28d0",
+            "op": "lookup",
+            "version": 1,
+            "source": {
+              "id": "node-c2850f46-ceec-4499-a24f-7a2b652d7e8a",
+              "op": "catalog",
+              "version": 1,
+              "catalogId": "catalog-d28bc43c-53f0-4213-acf2-8ba46ed05165"
+            },
+            "key": {
+              "id": "node-48735c09-398b-4b01-854c-beeeef43a33e",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-65d346af-8406-4f2a-88ec-75df06fe1ecd",
+              "mode": "base"
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-094696a9-415f-4e2d-9394-05a4d9d7f965",
+        "label": "Risco auxiliar da rota",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-22035304-c867-45fb-b6b3-66da143be964",
+          "op": "property",
+          "version": 1,
+          "fieldId": "data-3f4978f6-4c1f-4afe-8335-89b042f2e6eb",
+          "value": {
+            "id": "node-d313162b-b178-4d4f-b09e-4ee9ce9e28d0",
+            "op": "lookup",
+            "version": 1,
+            "source": {
+              "id": "node-c2850f46-ceec-4499-a24f-7a2b652d7e8a",
+              "op": "catalog",
+              "version": 1,
+              "catalogId": "catalog-d28bc43c-53f0-4213-acf2-8ba46ed05165"
+            },
+            "key": {
+              "id": "node-48735c09-398b-4b01-854c-beeeef43a33e",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-65d346af-8406-4f2a-88ec-75df06fe1ecd",
+              "mode": "base"
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-43a8c81b-5b9a-429e-9482-ce615b097d12",
+        "label": "Carga dos módulos equipados",
+        "revision": 1,
+        "kind": "calculation",
+        "resultType": "number",
+        "expression": {
+          "id": "node-22035304-c867-45fb-b6b3-66da143be964",
+          "op": "sum",
+          "version": 1,
+          "source": {
+            "id": "node-591c2f89-2f59-45e9-bb6b-17f0b69c791b",
+            "op": "map",
+            "version": 1,
+            "source": {
+              "id": "node-6d10d96c-74d7-4404-b75b-0495ef1ad8b8",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-084e5bd7-6380-414c-b434-24ba1257d591",
+              "mode": "base"
+            },
+            "value": {
+              "id": "node-3bb933ae-5005-4785-be69-0789654b523b",
+              "op": "sum",
+              "version": 1,
+              "source": {
+                "id": "node-0d018788-7920-41ed-8ba4-0be697f56875",
+                "op": "map",
+                "version": 1,
+                "source": {
+                  "id": "node-0d1cc0da-3d2a-409d-9ae7-471e6767a41a",
+                  "op": "filter",
+                  "version": 1,
+                  "source": {
+                    "id": "node-4a46dc0b-be06-4981-81c0-52b05c8b65ca",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-b3e551de-381f-4238-a274-3513c3f94a9d",
+                    "mode": "base"
+                  },
+                  "predicate": {
+                    "id": "node-47ce4ad8-cc54-411c-b81d-3e8870289a92",
+                    "op": "read",
+                    "version": 1,
+                    "dataId": "data-773c4fdb-313b-408e-bb4a-14d0f707c540",
+                    "mode": "base"
+                  }
+                },
+                "value": {
+                  "id": "node-bde6a631-cef8-45a4-966b-d6399b9505c0",
+                  "op": "read",
+                  "version": 1,
+                  "dataId": "data-d97fd00c-9764-49fb-955d-6aa8e0fa0068",
+                  "mode": "base"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-3a263603-8268-45bb-ba14-5236665577a5",
+        "label": "Expedição autorizada",
+        "revision": 1,
+        "kind": "predicate",
+        "resultType": "boolean",
+        "expression": {
+          "id": "node-22035304-c867-45fb-b6b3-66da143be964",
+          "op": "or",
+          "version": 1,
+          "left": {
+            "id": "node-7e11aeaf-fdfd-427d-90e6-4ddc889b4517",
+            "op": "and",
+            "version": 1,
+            "left": {
+              "id": "node-99a3a63c-71b6-4c67-b4de-c6294ecd3c08",
+              "op": "any",
+              "version": 1,
+              "source": {
+                "id": "node-de8aa179-ddaa-4d18-a7c6-a151dbdb5148",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-95c69c8d-041a-4585-8458-a52f6d855411",
+                "mode": "base"
+              },
+              "predicate": {
+                "id": "node-eb1cecd5-cc2f-4d76-9ce5-250940fe807d",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-06368f2f-cff2-4145-8bf1-f2b1f1730385",
+                "mode": "base"
+              }
+            },
+            "right": {
+              "id": "node-fff35b5e-e01f-4be8-bfeb-a5fe6b964f09",
+              "op": "greaterEqual",
+              "version": 1,
+              "left": {
+                "id": "node-6f8d7e7a-991b-48e0-b807-c082050154ed",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-c51c9d54-f66e-48f7-bff2-b0eb9660055d",
+                "mode": "base"
+              },
+              "right": {
+                "id": "node-3641ecb2-f8d6-4fd3-b62d-05836a7f0649",
+                "op": "rule",
+                "version": 1,
+                "ruleId": "rule-b2f73ca6-7de8-4af9-87de-afa2c74af41e",
+                "mode": "automatic"
+              }
+            }
+          },
+          "right": {
+            "id": "node-e47252bf-71bb-4c93-92de-50b7f30dbf26",
+            "op": "resolved",
+            "version": 1,
+            "value": {
+              "id": "node-f0b4f980-71d0-4fdc-b6b8-5b9f79972be0",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-7e454fbf-d6fe-4937-b6fe-2160e1a46605",
+              "mode": "base"
+            }
+          }
+        }
+      },
+      {
+        "id": "rule-8379b239-8f19-436b-bf40-11b1c8f6df40",
+        "label": "Dois ofícios habilitados",
+        "revision": 1,
+        "kind": "predicate",
+        "resultType": "boolean",
+        "expression": {
+          "id": "node-22035304-c867-45fb-b6b3-66da143be964",
+          "op": "greaterEqual",
+          "version": 1,
+          "left": {
+            "id": "node-7e11aeaf-fdfd-427d-90e6-4ddc889b4517",
+            "op": "count",
+            "version": 1,
+            "source": {
+              "id": "node-183e0693-d134-411d-9208-440c41fb3ec9",
+              "op": "filter",
+              "version": 1,
+              "source": {
+                "id": "node-94b7b19c-5872-424b-b975-a59e9e830d3c",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-95c69c8d-041a-4585-8458-a52f6d855411",
+                "mode": "base"
+              },
+              "predicate": {
+                "id": "node-e4ee4cbf-c13b-4769-99df-35b291ac123d",
+                "op": "read",
+                "version": 1,
+                "dataId": "data-06368f2f-cff2-4145-8bf1-f2b1f1730385",
+                "mode": "base"
+              }
+            }
+          },
+          "right": {
+            "id": "node-e47252bf-71bb-4c93-92de-50b7f30dbf26",
+            "op": "literal",
+            "version": 1,
+            "value": 2
+          }
+        }
+      },
+      {
+        "id": "rule-bebb1cda-a834-4b7f-92a2-cfe312f02d0d",
+        "label": "Especialista com uso disponível",
+        "revision": 1,
+        "kind": "predicate",
+        "resultType": "boolean",
+        "expression": {
+          "id": "node-22035304-c867-45fb-b6b3-66da143be964",
+          "op": "and",
+          "version": 1,
+          "left": {
+            "id": "node-7e11aeaf-fdfd-427d-90e6-4ddc889b4517",
+            "op": "read",
+            "version": 1,
+            "dataId": "data-f7c415fd-6550-47df-ba54-08d85c556c2f",
+            "mode": "base"
+          },
+          "right": {
+            "id": "node-e47252bf-71bb-4c93-92de-50b7f30dbf26",
+            "op": "greaterEqual",
+            "version": 1,
+            "left": {
+              "id": "node-81768753-ae38-4c5d-b041-00b5289b47f4",
+              "op": "read",
+              "version": 1,
+              "dataId": "data-7d768791-6452-400e-9da2-279edc5155c1",
+              "mode": "base"
+            },
+            "right": {
+              "id": "node-844cab99-1450-4efe-8c38-69d83ac4246f",
+              "op": "literal",
+              "version": 1,
+              "value": 1
+            }
+          }
+        }
+      }
+    ],
+    "catalogs": [
+      {
+        "id": "catalog-d28bc43c-53f0-4213-acf2-8ba46ed05165",
+        "label": "Rotas",
+        "fields": [
+          {
+            "id": "data-6c6f4a8a-9c8e-4430-acf4-255cf107fe34",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": true,
+            "nullable": false
+          },
+          {
+            "id": "data-bdd40a7e-fed5-4fce-9c9a-987b0127d083",
+            "label": "Custo",
+            "type": "integer",
+            "binding": "custo",
+            "required": true,
+            "nullable": false
+          },
+          {
+            "id": "data-3f4978f6-4c1f-4afe-8335-89b042f2e6eb",
+            "label": "Risco",
+            "type": "integer",
+            "binding": "risco",
+            "required": true,
+            "nullable": false
+          }
+        ],
+        "entries": [
+          {
+            "nome": "Curta",
+            "custo": 1,
+            "risco": 2,
+            "id": "entry-f4085db5-6b67-46fb-8fcc-c60b38db31ec"
+          },
+          {
+            "nome": "Profunda",
+            "custo": 3,
+            "risco": 4,
+            "id": "entry-ee463348-14a4-49ce-b3b4-48054c9dc8d6"
+          }
+        ]
+      },
+      {
+        "id": "catalog-7536161f-d839-4a25-bc45-a386c99ae75c",
+        "label": "Salvos-condutos",
+        "fields": [
+          {
+            "id": "data-fdf3c0d9-df45-4776-9962-c181b9a0afda",
+            "label": "Nome",
+            "type": "string",
+            "binding": "nome",
+            "required": true,
+            "nullable": false
+          }
+        ],
+        "entries": [
+          {
+            "nome": "Carta de passagem",
+            "id": "entry-af66a485-e18f-4286-b1cf-a1d8a59b08e5"
+          }
+        ]
+      }
+    ],
+    "sheetActions": [
+      {
+        "id": "action-9ce69bca-ae87-420d-b115-d7107e59c90f",
+        "label": "Explorar a Bruma",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [
+            {
+              "id": "step-f83f3c20-d111-42b5-bc5e-49181758134d",
+              "label": "Sondar a rota",
+              "type": "resolve",
+              "groups": [
+                {
+                  "id": "group-4084b0eb-3abc-482d-8c37-45377d06ff06",
+                  "label": "Sondagem",
+                  "type": "dice",
+                  "dice": [
+                    {
+                      "resultType": "trait",
+                      "expression": {
+                        "id": "node-af4ba15c-bd56-4adc-8d51-5a871056ba6f",
+                        "op": "read",
+                        "version": 1,
+                        "dataId": "data-36cb9ae3-af68-4cad-9bd4-86aa732ba306",
+                        "mode": "effective"
+                      },
+                      "count": {
+                        "id": "node-613208a6-2ab9-405d-b820-2b8551127f7f",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 4
+                      }
+                    }
+                  ],
+                  "select": {
+                    "mode": "keep",
+                    "order": "high",
+                    "count": 3
+                  },
+                  "reroll": {
+                    "when": {
+                      "comparison": "equal",
+                      "threshold": 1
+                    },
+                    "limit": 1,
+                    "mode": "replace",
+                    "optional": true
+                  },
+                  "score": {
+                    "mode": "successes",
+                    "weight": "result",
+                    "when": {
+                      "comparison": "greaterEqual",
+                      "threshold": 5
+                    }
+                  }
+                }
+              ],
+              "modifier": {
+                "id": "node-f1c0b595-b05d-4e4f-9894-e09f4339242f",
+                "op": "literal",
+                "version": 1,
+                "value": 0
+              },
+              "ranges": [
+                {
+                  "id": "range-cbd67553-291c-4e04-96c7-e846d558e62a",
+                  "label": "Falha",
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "id": "range-88579d7d-e4d3-451c-969f-ce2943bea9ec",
+                  "label": "Resultado parcial",
+                  "min": 1,
+                  "max": 1
+                },
+                {
+                  "id": "range-ace958df-65dc-4b80-a7b5-5d5ac67f3115",
+                  "label": "Sucesso",
+                  "min": 2,
+                  "max": 3
+                }
+              ],
+              "success": {
+                "comparison": "greaterEqual",
+                "threshold": {
+                  "id": "node-b2a22aca-c4b9-4d71-b5bc-0595d113c81f",
+                  "op": "literal",
+                  "version": 1,
+                  "value": 2
+                }
+              }
+            },
+            {
+              "id": "step-998afacf-29f8-468c-8f48-cc1f5c19c8cb",
+              "label": "Registrar avanço da expedição",
+              "type": "add",
+              "dataId": "data-b1a88ea7-fa95-4085-bab5-de919ea0760b",
+              "expression": {
+                "id": "node-075e40e9-d6df-4c8f-8ec2-66ccfad6be65",
+                "op": "literal",
+                "version": 1,
+                "value": 2
+              },
+              "when": {
+                "id": "node-02b48e23-409b-48e0-8b8b-d77803665559",
+                "op": "property",
+                "version": 1,
+                "fieldId": "step-f83f3c20-d111-42b5-bc5e-49181758134d_success",
+                "value": {
+                  "id": "node-f86d76f4-b72a-4366-a315-c89eddad1de7",
+                  "op": "local",
+                  "version": 1,
+                  "localId": "step-f83f3c20-d111-42b5-bc5e-49181758134d"
+                }
+              }
+            },
+            {
+              "id": "step-88ae2976-9ac5-4300-9f6a-6f49b9ebe924",
+              "label": "Registrar descoberta uma vez",
+              "type": "insert",
+              "dataId": "data-df51e262-181b-4746-bbcb-3e5e40835061",
+              "values": {},
+              "when": {
+                "id": "node-a04d051d-15a2-4d19-8eb5-21d65448f8b3",
+                "op": "property",
+                "version": 1,
+                "fieldId": "step-f83f3c20-d111-42b5-bc5e-49181758134d_success",
+                "value": {
+                  "id": "node-214257dc-c8dc-4391-9f39-4755439135b8",
+                  "op": "local",
+                  "version": 1,
+                  "localId": "step-f83f3c20-d111-42b5-bc5e-49181758134d"
+                }
+              }
+            }
+          ],
+          "costs": [
+            {
+              "id": "cost-ed56b658-e999-4a67-9c35-781f5478f3b9",
+              "label": "Tinta somente no sucesso",
+              "dataId": "data-c51c9d54-f66e-48f7-bff2-b0eb9660055d",
+              "amount": {
+                "id": "node-e66f0d75-0385-4d5b-9521-d2c55a712d48",
+                "op": "rule",
+                "version": 1,
+                "ruleId": "rule-b2f73ca6-7de8-4af9-87de-afa2c74af41e",
+                "mode": "automatic"
+              },
+              "mode": "remaining",
+              "stage": "result",
+              "when": "success"
+            },
+            {
+              "id": "cost-96eaeb17-0c71-4d11-9f82-2f5af51dfb01",
+              "label": "Vínculo no uso confirmado",
+              "dataId": "data-bbf4918e-2540-4166-80c5-6a457307f0b8",
+              "amount": {
+                "id": "node-12115659-9731-4f67-896f-eba35f38d691",
+                "op": "literal",
+                "version": 1,
+                "value": 1
+              },
+              "mode": "remaining",
+              "stage": "result",
+              "when": "always"
+            }
+          ],
+          "outcome": {
+            "id": "node-bf7f645d-4083-45be-8197-044b68ab1050",
+            "op": "property",
+            "version": 1,
+            "fieldId": "step-f83f3c20-d111-42b5-bc5e-49181758134d_success",
+            "value": {
+              "id": "node-007c9f72-5322-41f3-bb0d-e46637ab7750",
+              "op": "local",
+              "version": 1,
+              "localId": "step-f83f3c20-d111-42b5-bc5e-49181758134d"
+            }
+          }
+        },
+        "allowWhen": {
+          "ruleId": "rule-3a263603-8268-45bb-ba14-5236665577a5"
+        }
+      },
+      {
+        "id": "action-99b31e31-bb03-48a2-bf61-06cbd145c6fd",
+        "label": "Traçar mapa especializado",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [],
+          "costs": [
+            {
+              "id": "cost-faffef1f-59fc-4f38-a897-9844d28564e9",
+              "label": "Um uso declarado",
+              "dataId": "data-7d768791-6452-400e-9da2-279edc5155c1",
+              "amount": {
+                "id": "node-944f9b8e-a640-4fe7-a1c7-102f446674cd",
+                "op": "literal",
+                "version": 1,
+                "value": 1
+              },
+              "mode": "remaining",
+              "stage": "result",
+              "when": "always"
+            }
+          ]
+        },
+        "allowWhen": {
+          "ruleId": "rule-bebb1cda-a834-4b7f-92a2-cfe312f02d0d"
+        }
+      },
+      {
+        "id": "action-26609841-ec67-405a-be52-21f84359be99",
+        "label": "Escolher especialização",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [
+            {
+              "id": "step-21a2e91b-e861-491e-a1d4-77277a82f991",
+              "label": "Escolher Especialista",
+              "type": "acquire",
+              "optionId": "progression-ceadbc0d-f2b2-4d9e-9a04-ddd509bcf749",
+              "mode": "paid",
+              "selections": {}
+            }
+          ],
+          "costs": []
+        }
+      },
+      {
+        "id": "action-be835c7a-ebe3-47a4-8c81-f03283e3675b",
+        "label": "Sinal explosivo",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [
+            {
+              "id": "step-38fdefa6-2522-4e59-a1eb-6efe27546349",
+              "label": "Sinal explosivo · resolução",
+              "type": "resolve",
+              "groups": [
+                {
+                  "id": "group-fd1d5bad-5db2-44f8-b767-a677f8433a9f",
+                  "label": "Dado da variante",
+                  "type": "dice",
+                  "dice": [
+                    {
+                      "resultType": "number",
+                      "expression": {
+                        "id": "node-cb09cfdb-4bf9-415f-8536-03859d71068d",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 6
+                      },
+                      "count": {
+                        "id": "node-d33e5bae-e86a-4399-9708-3ded4d0717c7",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 1
+                      }
+                    }
+                  ],
+                  "explode": {
+                    "when": {
+                      "comparison": "equal",
+                      "threshold": 6
+                    },
+                    "limit": 2
+                  }
+                }
+              ],
+              "modifier": {
+                "id": "node-98fc2a25-6ea7-4b95-a426-9727eed7c9a0",
+                "op": "literal",
+                "version": 1,
+                "value": 0
+              },
+              "ranges": []
+            }
+          ],
+          "costs": []
+        }
+      },
+      {
+        "id": "action-f6247f05-d6ae-4484-9b0a-68de7d1725b8",
+        "label": "Ler presságio",
+        "flow": {
+          "version": 1,
+          "revision": 1,
+          "profile": "preview",
+          "inputs": [],
+          "steps": [
+            {
+              "id": "step-62e055df-9d6f-4a71-9aa9-9b6c3c550051",
+              "label": "Ler presságio · resolução",
+              "type": "resolve",
+              "groups": [
+                {
+                  "id": "group-f67d2a6b-3c21-4cc6-8fae-ddf7a2d505a9",
+                  "label": "Dado da variante",
+                  "type": "dice",
+                  "dice": [
+                    {
+                      "resultType": "number",
+                      "expression": {
+                        "id": "node-6e046cc5-aadc-490e-a635-08ef5afe05c7",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 6
+                      },
+                      "count": {
+                        "id": "node-aa29b897-2b40-4b95-bd97-8d2bfb9b8d44",
+                        "op": "literal",
+                        "version": 1,
+                        "value": 2
+                      }
+                    }
+                  ]
+                }
+              ],
+              "modifier": {
+                "id": "node-77181b7d-d75a-4b28-bc5e-1fdbfe40bf2a",
+                "op": "literal",
+                "version": 1,
+                "value": 0
+              },
+              "ranges": [
+                {
+                  "id": "range-d1ac6ae4-5314-4842-9559-70c2f4c9e59a",
+                  "label": "Presságio desfavorável",
+                  "min": 2,
+                  "max": 6
+                },
+                {
+                  "id": "range-858b1c34-21ae-4104-8f16-97bce375f775",
+                  "label": "Presságio incerto",
+                  "min": 7,
+                  "max": 9
+                },
+                {
+                  "id": "range-f8fba64e-f5fd-45c6-883d-4fd86bc5a14b",
+                  "label": "Presságio favorável",
+                  "min": 10,
+                  "max": 12
+                }
+              ]
+            }
+          ],
+          "costs": []
+        }
+      }
+    ],
+    "effectDefinitions": [
+      {
+        "profile": "typed",
+        "version": 1,
+        "id": "effect-a1d1bbc9-1c9b-4ea9-a59c-da92b96b2aaf",
+        "label": "Lente",
+        "revision": 1,
+        "priority": 0,
+        "stacking": {
+          "mode": "unique"
+        },
+        "duration": {
+          "type": "uses",
+          "count": 1,
+          "consume": "committedResolution"
+        },
+        "operations": [
+          {
+            "id": "effect-op-97b45218-cbd9-487c-8794-b067bbced4ee",
+            "type": "replace",
+            "target": {
+              "kind": "data",
+              "dataId": "data-36cb9ae3-af68-4cad-9bd4-86aa732ba306"
+            },
+            "expression": {
+              "id": "node-b67cc687-a260-4520-924c-051da1e9d2e1",
+              "op": "trait",
+              "version": 1,
+              "dataId": "data-36cb9ae3-af68-4cad-9bd4-86aa732ba306",
+              "dice": [
+                8
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "profile": "typed",
+        "version": 1,
+        "id": "effect-9a84c1af-bf1a-4fb9-bd14-d11760ddb8ff",
+        "label": "Outra lente",
+        "revision": 1,
+        "priority": 0,
+        "stacking": {
+          "mode": "unique"
+        },
+        "duration": {
+          "type": "uses",
+          "count": 1,
+          "consume": "committedResolution"
+        },
+        "operations": [
+          {
+            "id": "effect-op-61b5bb48-ce88-416e-a7ee-98aec1b32b9f",
+            "type": "replace",
+            "target": {
+              "kind": "data",
+              "dataId": "data-36cb9ae3-af68-4cad-9bd4-86aa732ba306"
+            },
+            "expression": {
+              "id": "node-06fed164-24f2-4a26-a7f3-5613b83b75b4",
+              "op": "trait",
+              "version": 1,
+              "dataId": "data-36cb9ae3-af68-4cad-9bd4-86aa732ba306",
+              "dice": [
+                10
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "progressionChoices": {
+      "version": 1,
+      "revision": 1,
+      "creationDataId": "data-94060c1d-246e-4667-b973-c1f6f4b52f64",
+      "evolutionDataId": "data-b1a88ea7-fa95-4085-bab5-de919ea0760b",
+      "reopenCreation": false,
+      "revocation": "noRefund",
+      "options": [
+        {
+          "id": "progression-ceadbc0d-f2b2-4d9e-9a04-ddd509bcf749",
+          "label": "Especialista",
+          "modes": [
+            "paid"
+          ],
+          "requires": [],
+          "maxAcquisitions": 1,
+          "cost": {
+            "creation": {
+              "id": "node-5b2acf54-b126-438d-80e8-3226f1fdaefe",
+              "op": "literal",
+              "version": 1,
+              "value": 0
+            },
+            "paid": {
+              "id": "node-525ca68c-2a9b-46a9-b464-6009778060c1",
+              "op": "literal",
+              "version": 1,
+              "value": 2
+            }
+          },
+          "grants": [
+            {
+              "id": "grant-52a40e1c-a218-43a2-88a8-1c6f879460e0",
+              "label": "Permissão de especialista",
+              "type": "set",
+              "dataId": "data-f7c415fd-6550-47df-ba54-08d85c556c2f",
+              "expression": {
+                "id": "node-1c8aa993-0f61-494c-b5d8-eb9669436cae",
+                "op": "literal",
+                "version": 1,
+                "value": true
+              },
+              "actionId": "action-99b31e31-bb03-48a2-bf61-06cbd145c6fd"
+            },
+            {
+              "id": "grant-4ff52837-aeae-499a-8ab5-583af6202aa3",
+              "label": "Uso adicional",
+              "type": "add",
+              "dataId": "data-7d768791-6452-400e-9da2-279edc5155c1",
+              "expression": {
+                "id": "node-4c823d85-c7fa-4383-99b8-919fcfaa27f3",
+                "op": "literal",
+                "version": 1,
+                "value": 1
+              },
+              "actionId": "action-99b31e31-bb03-48a2-bf61-06cbd145c6fd"
+            }
+          ],
+          "choices": [],
+          "allowWhen": {
+            "ruleId": "rule-8379b239-8f19-436b-bf40-11b1c8f6df40"
+          }
+        }
+      ]
+    },
+    "ruleTriggers": [
+      {
+        "version": 1,
+        "id": "trigger-73f4651c-b898-4e04-96cd-f215d4b1f569",
+        "label": "Convite a Especialista",
+        "enabled": true,
+        "origins": [
+          "action"
+        ],
+        "dataId": "data-b1a88ea7-fa95-4085-bab5-de919ea0760b",
+        "direction": "up",
+        "strict": false,
+        "thresholds": [
+          5
+        ],
+        "dispatch": "aggregate",
+        "frequency": "character",
+        "mode": "propose",
+        "actionId": "action-26609841-ec67-405a-be52-21f84359be99",
+        "priority": 0
+      }
+    ],
+    "componentDefinitions": [
+      {
+        "id": "component-67cef7ca-2d57-4197-806f-58e84cf716e7",
+        "label": "Ofício",
+        "revision": 1,
+        "parameters": [
+          {
+            "id": "parameter-a9c1bc7b-5a65-4008-a054-d4288d336f5b",
+            "label": "Ofício principal",
+            "type": "reference"
+          }
+        ],
+        "components": [
+          {
+            "type": "dataField",
+            "label": "Ofício selecionado",
+            "dataParameter": "parameter-a9c1bc7b-5a65-4008-a054-d4288d336f5b"
+          }
+        ],
+        "layout": {
+          "type": "stack"
+        }
+      },
+      {
+        "id": "component-b530e0fe-94ad-445b-92a3-aa4f24df60f0",
+        "label": "Ofício (cópia)",
+        "revision": 2,
+        "parameters": [
+          {
+            "id": "parameter-b3264141-191c-4702-9c9f-43ce81ccfe43",
+            "label": "Ofício principal",
+            "type": "reference"
+          }
+        ],
+        "components": [
+          {
+            "type": "dataField",
+            "label": "Seleção própria",
+            "dataParameter": "parameter-b3264141-191c-4702-9c9f-43ce81ccfe43"
+          }
+        ],
+        "layout": {
+          "type": "stack"
+        }
+      }
+    ]
+  },
+  "layouts": [
+    {
+      "schemaVersion": 3,
+      "id": "default",
+      "system": "pacote-e500e934",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "basic",
+              "title": "Personagem",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "dataField",
+                      "label": "Tinta",
+                      "dataId": "data-c51c9d54-f66e-48f7-bff2-b0eb9660055d"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Vínculos",
+                      "dataId": "data-bbf4918e-2540-4166-80c5-6a457307f0b8"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Rastros",
+                      "dataId": "data-b1a88ea7-fa95-4085-bab5-de919ea0760b"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Sondagem",
+                      "dataId": "data-36cb9ae3-af68-4cad-9bd4-86aa732ba306"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Ofícios",
+                      "dataId": "data-95c69c8d-041a-4585-8458-a52f6d855411"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Equipamentos",
+                      "dataId": "data-084e5bd7-6380-414c-b434-24ba1257d591"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Tinta compartilhada",
+                      "dataId": "data-c51c9d54-f66e-48f7-bff2-b0eb9660055d"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Rota escolhida",
+                      "dataId": "data-65d346af-8406-4f2a-88ec-75df06fe1ecd"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Salvo-conduto",
+                      "dataId": "data-7e454fbf-d6fe-4937-b6fe-2160e1a46605"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Custo auxiliar da rota",
+                      "ruleId": "rule-b2f73ca6-7de8-4af9-87de-afa2c74af41e"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Risco auxiliar da rota",
+                      "ruleId": "rule-094696a9-415f-4e2d-9394-05a4d9d7f965"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Carga dos módulos equipados",
+                      "ruleId": "rule-43a8c81b-5b9a-429e-9482-ce615b097d12"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Descobertas",
+                      "dataId": "data-df51e262-181b-4746-bbcb-3e5e40835061"
+                    },
+                    {
+                      "type": "information",
+                      "label": "Orientação da expedição",
+                      "text": "A mesa decide possibilidade, descoberta e significado da falha."
+                    },
+                    {
+                      "type": "actionGroup",
+                      "label": "Explorar a Bruma",
+                      "actionsFrom": "sheetActions"
+                    },
+                    {
+                      "type": "effectList",
+                      "label": "Efeitos"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Reserva de criação",
+                      "dataId": "data-94060c1d-246e-4667-b973-c1f6f4b52f64"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Especialista adquirido",
+                      "dataId": "data-f7c415fd-6550-47df-ba54-08d85c556c2f"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Usos de especialista",
+                      "dataId": "data-7d768791-6452-400e-9da2-279edc5155c1"
+                    },
+                    {
+                      "type": "progressionChoices",
+                      "label": "Criação e evolução"
+                    },
+                    {
+                      "label": "Ofício original",
+                      "type": "componentInstance",
+                      "definitionId": "component-67cef7ca-2d57-4197-806f-58e84cf716e7",
+                      "bindings": {
+                        "parameter-a9c1bc7b-5a65-4008-a054-d4288d336f5b": "data-ab0fce7a-387b-43ed-953d-5a49a3d12721"
+                      }
+                    },
+                    {
+                      "type": "componentInstance",
+                      "label": "Segundo ofício",
+                      "definitionId": "component-67cef7ca-2d57-4197-806f-58e84cf716e7",
+                      "bindings": {
+                        "parameter-a9c1bc7b-5a65-4008-a054-d4288d336f5b": "data-48b003b5-cbe9-42c3-8d58-bacb46e59b3f"
+                      }
+                    },
+                    {
+                      "type": "componentInstance",
+                      "label": "Consulta compartilhada",
+                      "definitionId": "component-67cef7ca-2d57-4197-806f-58e84cf716e7",
+                      "bindings": {
+                        "parameter-a9c1bc7b-5a65-4008-a054-d4288d336f5b": "data-ab0fce7a-387b-43ed-953d-5a49a3d12721"
+                      }
+                    },
+                    {
+                      "type": "componentInstance",
+                      "label": "Cópia independente",
+                      "definitionId": "component-b530e0fe-94ad-445b-92a3-aa4f24df60f0",
+                      "bindings": {
+                        "parameter-b3264141-191c-4702-9c9f-43ce81ccfe43": "data-ab0fce7a-387b-43ed-953d-5a49a3d12721"
+                      }
+                    },
+                    {
+                      "type": "group",
+                      "label": "Ofícios na mesa",
+                      "components": [
+                        {
+                          "type": "boolean",
+                          "label": "Habilitado repetido",
+                          "dataId": "data-06368f2f-cff2-4145-8bf1-f2b1f1730385"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-95c69c8d-041a-4585-8458-a52f6d855411"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schemaVersion": 3,
+      "id": "mesa",
+      "system": "pacote-e500e934",
+      "tabs": [
+        {
+          "id": "main",
+          "label": "Ficha",
+          "sections": [
+            {
+              "id": "basic",
+              "title": "Personagem",
+              "containers": [
+                {
+                  "layout": {
+                    "type": "stack"
+                  },
+                  "components": [
+                    {
+                      "type": "dataField",
+                      "label": "Tinta",
+                      "dataId": "data-c51c9d54-f66e-48f7-bff2-b0eb9660055d"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Vínculos",
+                      "dataId": "data-bbf4918e-2540-4166-80c5-6a457307f0b8"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Rastros",
+                      "dataId": "data-b1a88ea7-fa95-4085-bab5-de919ea0760b"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Sondagem",
+                      "dataId": "data-36cb9ae3-af68-4cad-9bd4-86aa732ba306"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Ofícios",
+                      "dataId": "data-95c69c8d-041a-4585-8458-a52f6d855411"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Equipamentos",
+                      "dataId": "data-084e5bd7-6380-414c-b434-24ba1257d591"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Tinta compartilhada",
+                      "dataId": "data-c51c9d54-f66e-48f7-bff2-b0eb9660055d"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Rota escolhida",
+                      "dataId": "data-65d346af-8406-4f2a-88ec-75df06fe1ecd"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Salvo-conduto",
+                      "dataId": "data-7e454fbf-d6fe-4937-b6fe-2160e1a46605"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Custo auxiliar da rota",
+                      "ruleId": "rule-b2f73ca6-7de8-4af9-87de-afa2c74af41e"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Risco auxiliar da rota",
+                      "ruleId": "rule-094696a9-415f-4e2d-9394-05a4d9d7f965"
+                    },
+                    {
+                      "type": "computed",
+                      "label": "Carga dos módulos equipados",
+                      "ruleId": "rule-43a8c81b-5b9a-429e-9482-ce615b097d12"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Descobertas",
+                      "dataId": "data-df51e262-181b-4746-bbcb-3e5e40835061"
+                    },
+                    {
+                      "type": "information",
+                      "label": "Orientação da expedição",
+                      "text": "A mesa decide possibilidade, descoberta e significado da falha."
+                    },
+                    {
+                      "type": "actionGroup",
+                      "label": "Explorar a Bruma",
+                      "actionsFrom": "sheetActions"
+                    },
+                    {
+                      "type": "effectList",
+                      "label": "Efeitos"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Reserva de criação",
+                      "dataId": "data-94060c1d-246e-4667-b973-c1f6f4b52f64"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Especialista adquirido",
+                      "dataId": "data-f7c415fd-6550-47df-ba54-08d85c556c2f"
+                    },
+                    {
+                      "type": "dataField",
+                      "label": "Usos de especialista",
+                      "dataId": "data-7d768791-6452-400e-9da2-279edc5155c1"
+                    },
+                    {
+                      "type": "progressionChoices",
+                      "label": "Criação e evolução"
+                    },
+                    {
+                      "label": "Ofício original",
+                      "type": "componentInstance",
+                      "definitionId": "component-67cef7ca-2d57-4197-806f-58e84cf716e7",
+                      "bindings": {
+                        "parameter-a9c1bc7b-5a65-4008-a054-d4288d336f5b": "data-ab0fce7a-387b-43ed-953d-5a49a3d12721"
+                      }
+                    },
+                    {
+                      "type": "componentInstance",
+                      "label": "Segundo ofício",
+                      "definitionId": "component-67cef7ca-2d57-4197-806f-58e84cf716e7",
+                      "bindings": {
+                        "parameter-a9c1bc7b-5a65-4008-a054-d4288d336f5b": "data-48b003b5-cbe9-42c3-8d58-bacb46e59b3f"
+                      }
+                    },
+                    {
+                      "type": "componentInstance",
+                      "label": "Consulta compartilhada",
+                      "definitionId": "component-67cef7ca-2d57-4197-806f-58e84cf716e7",
+                      "bindings": {
+                        "parameter-a9c1bc7b-5a65-4008-a054-d4288d336f5b": "data-ab0fce7a-387b-43ed-953d-5a49a3d12721"
+                      }
+                    },
+                    {
+                      "type": "componentInstance",
+                      "label": "Cópia independente",
+                      "definitionId": "component-b530e0fe-94ad-445b-92a3-aa4f24df60f0",
+                      "bindings": {
+                        "parameter-b3264141-191c-4702-9c9f-43ce81ccfe43": "data-ab0fce7a-387b-43ed-953d-5a49a3d12721"
+                      }
+                    },
+                    {
+                      "type": "group",
+                      "label": "Ofícios na mesa",
+                      "components": [
+                        {
+                          "type": "boolean",
+                          "label": "Habilitado repetido",
+                          "dataId": "data-06368f2f-cff2-4145-8bf1-f2b1f1730385"
+                        }
+                      ],
+                      "layout": {
+                        "type": "stack"
+                      },
+                      "repeat": {
+                        "scope": "character",
+                        "dataId": "data-95c69c8d-041a-4585-8458-a52f6d855411"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "name": "Mesa",
+      "mode": "table"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "3600acb60458e7c9793b";
+const VERSION = "e894b488db6909668fc0";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -291,7 +291,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/condition-builder.js",
-    "hash": "069faf93ff4fb1d52bc63d089ac081743d733ebced8214f2d12559047da371af"
+    "hash": "0b55d9e48c7beecdc843eeba0f967163627f5c881be5d69c0a7c36d896b9c537"
   },
   {
     "path": "js/editor/cost-table-editor.js",
@@ -311,7 +311,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/data-picker.js",
-    "hash": "8f01eb3193350b8ee1a1187743d9092c6857a4ac70eaad9cf0cbb75d0c7e4725"
+    "hash": "b7bcb0d76cccb0c254d59c40851f133ae6cd345bb78c2b25b7f460de00730660"
   },
   {
     "path": "js/editor/dice-expression-editor.js",
@@ -351,7 +351,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/form-metadata.js",
-    "hash": "d8fdfd74a7203a3863d65f7beb39d9758844562ca7a2cdbbfad82143b7c29476"
+    "hash": "8f8a9ae4390324510e77f5c02faf713b4604f68088341c16d5741e66eba2f4d1"
   },
   {
     "path": "js/editor/form-structure.js",
@@ -383,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "bd7e874984e016c21ce363650315722f8018904f510af8baf9fd65f4e928d148"
+    "hash": "76256d963def6230bec4229366d933327702afd2f01d12241cc825807d5bd69c"
   },
   {
     "path": "js/editor/history.js",
@@ -455,7 +455,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/progression-authoring.js",
-    "hash": "bfc15a80f650293d16d5aa332894ac4d28c197e1c9fa64a6cb4bf6f2a6396f8c"
+    "hash": "82dda21071cd8217a4f7e1f307282fdf22dce182690b9dbb2e3084c9f3dc176c"
   },
   {
     "path": "js/editor/progression-plans.js",
@@ -735,7 +735,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/progression-choices.js",
-    "hash": "6d1067fcb4cb9ee3c21216497c1a743439b315740809bd4ccdd5186751f04b15"
+    "hash": "e3f3cdb8a01e319d095de3f1f81dd87cb0add64ebeaa8a137d59a35111b8db1f"
   },
   {
     "path": "js/engine/progression-fields.js",

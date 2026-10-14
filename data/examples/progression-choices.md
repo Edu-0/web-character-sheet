@@ -4,6 +4,12 @@ Em **Compor → Criação, evolução e concessões**, escolha dois dados numér
 
 O pacote começa sem essa configuração. A receita confirma a inclusão dos controles nos layouts e de v3 nos novos personagens; não converte personagens existentes ao abrir. Habilitar registros v3 em personagem antigo preserva uma cópia com confirmação. O perfil autoral antigo de `pointBudget` continua funcionando separadamente.
 
+## Condição para concluir criação
+
+Selecione uma regra global Sim/Não em **Condição para concluir criação** e informe uma explicação opcional. Ela pode verificar confirmação do orçamento, atributos/perícias dentro do teto ou outras exigências declaradas pela campanha. O runtime confere a condição antes de preparar o snapshot. Se falhar, a criação continua aberta e conserva seus valores; cancelar uma conclusão permitida também conserva a ficha.
+
+A condição é opcional: pacotes existentes mantêm sua política. Nenhum teto de RPG é inferido pelo nome dos dados. A confirmação usa as guardas comuns da ficha e da revisão do sistema; alterar uma fonte depois da prévia exige preparar novamente. Depois de concluir, edição direta durante jogo continua sem pagamento e preserva o snapshot inicial.
+
 ## Origens e preços
 
 **Criação** usa o orçamento inicial. **Evolução paga** usa o orçamento evolutivo, depois da criação concluída. **Concessão narrativa** registra custo zero e preserva o orçamento, inclusive se o dado opcional estiver ausente. Requisitos continuam sendo verificados. Editar um nível, traço ou contador diretamente não compra uma opção nem lança despesa.
@@ -40,7 +46,7 @@ O editor usa a mesma sessão e os rascunhos existentes. Número inválido em cus
 
 ## Contrato e limites
 
-`system.progressionChoices` tem versão 1, revisão, identidades dos dois orçamentos, política de reabertura/revogação e opções. Cada opção tem identidade/rótulo, origens, pré-requisitos, predicado opcional, limite, custos por origem, concessões e escolhas subordinadas. O componente `progressionChoices` aponta para essa configuração. `character.progressionLedger` é opcional e reservado: fase, aquisições, snapshot inicial e snapshots anteriores.
+`system.progressionChoices` tem versão 1, revisão, identidades dos dois orçamentos, política de reabertura/revogação, `completeWhen` opcional com `ruleId`/mensagem e opções. Cada opção tem identidade/rótulo, origens, pré-requisitos, predicado opcional, limite, custos por origem, concessões e escolhas subordinadas. O componente `progressionChoices` aponta para essa configuração. `character.progressionLedger` é opcional e reservado: fase, aquisições, snapshot inicial e snapshots anteriores.
 
 Até 100 opções; 20 escolhas, alternativas e concessões por ramo; 500 definições de concessão no pacote; 100 concessões por aquisição; 100 registros e 256 KiB de ledger; 20 snapshots de reabertura. Não há expurgo automático. Budgets do interpretador e limites gerais dos documentos também se aplicam. Limite atingido produz diagnóstico, preservando dados.
 
