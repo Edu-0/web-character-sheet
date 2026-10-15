@@ -259,5 +259,5 @@ export class JsonEditor {
     this.dispose();this.onExit?.(view);return true;
   }
   async run(fn) {const session=this.session;try {await fn();}catch(error){if(!this.disposed && session===this.session)this.status.textContent=error.message;}}
-  dispose() {clearTimeout(this.compositionPreviewTimer);clearTimeout(this.validationTimer);clearTimeout(this.draftTimer);this.gestures?.destroy();this.preview?.dispose();this.lastRendered=null;this.runtimeError=null;this.disposed=true;}
+  dispose() {this.migration?.cancelReview();clearTimeout(this.compositionPreviewTimer);clearTimeout(this.validationTimer);clearTimeout(this.draftTimer);this.gestures?.destroy();this.preview?.dispose();this.lastRendered=null;this.runtimeError=null;this.disposed=true;}
 }

@@ -54,3 +54,8 @@ test('AV-11 restauração bloqueia edição posterior, personagem novo e cópia 
 test('AV-11 cópia incompatível fica disponível como bruto e não produz plano de restauração',async()=>{
  const f=fixture('migration-bad-recovery');await installSystemPackage(prepareSystemInstallation(f.candidate,{migration:f.migration}));const [entry]=migrationRecoveryEntries(),envelope=JSON.parse(localStorage.getItem(entry.key)),record=JSON.parse(envelope.raw);record.schemaVersion=99;envelope.raw=JSON.stringify(record);localStorage.setItem(entry.key,JSON.stringify(envelope));const before=new Map(store);assert.equal(migrationRecoveryEntries()[0].available,false);assert.throws(()=>prepareSystemDataRestoration(entry.key),/incompatível/);assert.deepEqual(new Map(store),before);
 });
+
+test('AV-12 prévia assíncrona compartilha preflight e recusa biblioteca alterada durante a revisão',async()=>{
+ const {previewSystemDataMigration}=await import('../../js/repositories/system-repository.js');const f=fixture('sliced-install');const plan=await previewSystemDataMigration(f.candidate,{migration:f.migration},{yieldTask:async()=>{}});assert.deepEqual(plan,prepareSystemInstallation(f.candidate,{migration:f.migration}));
+ const before=localStorage.getItem(systemsKey);await assert.rejects(previewSystemDataMigration(f.candidate,{migration:f.migration},{onProgress:({completed,total})=>{if(completed===total)localStorage.setItem(key('new-during-review'),JSON.stringify({...f.character,meta:{...f.character.meta,id:'new-during-review'}}));},yieldTask:async()=>{}}),/biblioteca mudou/);assert.equal(localStorage.getItem(systemsKey),before);assert.equal(records().length,0);
+});

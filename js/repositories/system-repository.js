@@ -1,6 +1,6 @@
 import { readJson, readRaw, preserveRaw, transactWithinWrite, migrationCopyChange,storageKeys } from '../persistence.js';
 import {withLibraryWrite,verifyWriterClients,coordinatedWritesAvailable} from '../write-coordinator.js';
-import {installationPlan} from './package-installation.js';
+import {installationPlan,installationPreview} from './package-installation.js';
 import * as characters from './character-repository.js';
 import {resetSettingsCache} from '../storage.js';
 import { LIMITS, readJsonFile } from '../validation/limits.js';
@@ -57,13 +57,21 @@ export function installedPackageBase(id){return clone(currentImported(id));}
 function librarySnapshot() {
   return JSON.stringify(storageKeys().filter(key=>key===IMPORTED_SYSTEMS_KEY || key===CATALOG_KEY || key==='ficha-rpg:settings' || key.startsWith('ficha-rpg:v2:characters:')).sort().map(key=>[key,readRaw(key)]));
 }
-export function prepareSystemInstallation(candidate,{expectedBase,currentCharacter,migration,restoration,allowBlockedMigration=false}={}) {
+function installationInput(candidate,{expectedBase,currentCharacter,migration,restoration,allowBlockedMigration=false}={}) {
   const current=currentImported(candidate.system?.id), base=expectedBase===undefined?current:expectedBase;
   const summaries=characters.listCharacters(),linked=characters.allCharacters().filter(character=>character.meta.system===candidate.system.id);
   if(currentCharacter?.meta?.system===candidate.system.id){const index=linked.findIndex(character=>character.meta.id===currentCharacter.meta.id);if(index<0)linked.push(clone(currentCharacter));else linked[index]=clone(currentCharacter);}
   const reserved=manifestSystems.filter(entry=>!(entry.id===current?.system?.id && catalogInstallationIds().includes(entry.id))).map(entry=>entry.id);
-  const plan=installationPlan({candidate,base,currentPackage:current,builtinIds:reserved,characters:linked,migration,restoration,allowBlockedMigration,unavailableLinked:summaries.some(character=>character.system===candidate.system.id && character.unavailable),unavailableUnidentified:summaries.some(character=>character.system==='indisponível' && character.unavailable)});
-  return {...plan,librarySnapshot:librarySnapshot(),activeSnapshot:JSON.stringify(currentCharacter ?? null),candidateSnapshot:JSON.stringify(plan.package),migrationSpecSnapshot:JSON.stringify(plan.migration?.spec ?? null),restorationSnapshot:JSON.stringify(plan.restoration?.record??null)};
+  return {input:{candidate,base,currentPackage:current,builtinIds:reserved,characters:linked,migration,restoration,allowBlockedMigration,unavailableLinked:summaries.some(character=>character.system===candidate.system.id && character.unavailable),unavailableUnidentified:summaries.some(character=>character.system==='indisponível' && character.unavailable)},snapshot:librarySnapshot(),activeSnapshot:JSON.stringify(currentCharacter??null)};
+}
+function reviewedInstallation(plan,{snapshot,activeSnapshot}){
+  return {...plan,librarySnapshot:snapshot,activeSnapshot,candidateSnapshot:JSON.stringify(plan.package),migrationSpecSnapshot:JSON.stringify(plan.migration?.spec ?? null),restorationSnapshot:JSON.stringify(plan.restoration?.record??null)};
+}
+export function prepareSystemInstallation(candidate,options){const collected=installationInput(candidate,options);return reviewedInstallation(installationPlan(collected.input),collected);}
+export async function previewSystemDataMigration(candidate,options,progress){
+  const collected=installationInput(candidate,options),plan=await installationPreview(collected.input,progress);
+  if(librarySnapshot()!==collected.snapshot)throw new Error('A biblioteca mudou durante a revisão. Revise novamente.');
+  return reviewedInstallation(plan,collected);
 }
 function recoveryRecord(key){
   if(typeof key!=='string'||!key.startsWith('ficha-rpg:recovery:'))throw new Error('Chave de recuperação inválida.');

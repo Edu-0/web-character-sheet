@@ -23,6 +23,7 @@ import {
   initSystemRepository,
   listSystems,
   prepareSystemInstallation,
+  previewSystemDataMigration,
   installSystemPackage,
   reloadImportedSystems,
   listCatalogSystems,
@@ -97,11 +98,11 @@ async function openJsonEditor(options = {}) {
 function assertActiveCharacterUnchanged() {
   if(activeCharacterId && characters.rawCharacter(activeCharacterId)!==activeCharacterRaw)throw new Error('O personagem ativo mudou em outra aba. Exporte a edição em memória e reabra a ficha antes de aplicar.');
 }
-async function prepareEditorMigration(editor,migration) {
+async function prepareEditorMigration(editor,migration,progress) {
   await flushCharacterSave();assertActiveCharacterUnchanged();
   const result=editor.session.validate();
   if(result.status!=='ready'||!editor.lastRenderedCurrent)throw new Error('Valide e atualize o ensaio antes de revisar a migração.');
-  return prepareSystemInstallation(result.document,{expectedBase:editor.session.source.base,currentCharacter:currentCharacter(),migration,allowBlockedMigration:true});
+  return previewSystemDataMigration(result.document,{expectedBase:editor.session.source.base,currentCharacter:currentCharacter(),migration,allowBlockedMigration:true},progress);
 }
 async function prepareEditorRestoration(editor,key) {
   await flushCharacterSave();assertActiveCharacterUnchanged();

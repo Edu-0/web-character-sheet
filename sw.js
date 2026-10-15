@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "99b2f6238c9d262d57b5";
+const VERSION = "ed9b63e62479b02274e6";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -191,7 +191,7 @@ const ASSETS = [
   },
   {
     "path": "js/app.js",
-    "hash": "ab0caf24eec5e96b4a89bc817f58672f2aa45e5a2b8a83e6bcbaba06cdc564fb"
+    "hash": "cd3552181a84e1789c515382e672cc8cb2f3017538600804030908d2572d3390"
   },
   {
     "path": "js/appearance.js",
@@ -331,7 +331,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/editor-ui.js",
-    "hash": "aa58270ee921ae574fc3f0e35fba6d7e296b1173d527167e09cf5e33a78f1d76"
+    "hash": "6f40fe8c71fcbad91c79a45a12ba9eaeb752894bb3ace1c624da02da9879e850"
   },
   {
     "path": "js/editor/effect-recipe.js",
@@ -411,7 +411,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/migration-panel.js",
-    "hash": "b703197be1a5e0dd36381dc1451e1609ff3dc664e64c2b3d0bdbb87679215831"
+    "hash": "03cc6e7eb090dbec904fcfd0adbc7061c633785d77e481e2e11e7b295e1cb93f"
   },
   {
     "path": "js/editor/minimal-package.js",
@@ -883,7 +883,7 @@ const ASSETS = [
   },
   {
     "path": "js/migrations/data-migration-plan.js",
-    "hash": "110c2e00e04b21608754ac80596e077fb5bf4c5b0b953f029dff4d060d5c5252"
+    "hash": "97e80063cdd16996211596dfde44daa1e3702f5f389612d68587e3dc64412d04"
   },
   {
     "path": "js/migrations/data-migration-recovery.js",
@@ -923,7 +923,7 @@ const ASSETS = [
   },
   {
     "path": "js/repositories/package-installation.js",
-    "hash": "2dca18cd637013e10e68030d4e1d9d60a09d16bf6c3a78188944a805d0b91ed1"
+    "hash": "7800697da669f7c75d68ef03270566e0f62e82186c2eee073f518185a1078ed5"
   },
   {
     "path": "js/repositories/system-removal.js",
@@ -931,7 +931,7 @@ const ASSETS = [
   },
   {
     "path": "js/repositories/system-repository.js",
-    "hash": "d8ff75f68759139a30a3b272d4332ab58dc21ea7074d3dac7686a01f65272d83"
+    "hash": "5221ee21edc267a0361df77cc7445039b944f6ab382dfa6796deb7d3858cbd39"
   },
   {
     "path": "js/sheet-layouts.js",

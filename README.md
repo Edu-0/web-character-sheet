@@ -163,3 +163,5 @@ O código original da aplicação e da engine tem [licença própria de uso não
 
 Conteúdos de RPG, artes, marcas e materiais de terceiros têm direitos separados. O projeto é independente e não oficial, sem afiliação à Wizards of the Coast. A licença do código não libera livros, traduções ou desenhos. Consulte os [avisos de terceiros](THIRD_PARTY_NOTICES.md) e o [registro de direitos das artes](assets/artwork/README.md).
 - **Escolha seus sistemas.** O Catálogo permite instalar offline as implementações disponíveis. Em Sistemas, edite o pacote instalado mantendo a base do catálogo intacta, ou exclua o sistema com seus personagens após revisar a confirmação. Reinstalar traz o pacote original, sem recuperar personagens apagados.
+
+As verificações de autoria geral, medições reproduzíveis e limites de avaliação estão em [verificação da autoria](data/examples/authoring-validation.md).

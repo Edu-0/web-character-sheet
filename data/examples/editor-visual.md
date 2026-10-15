@@ -32,16 +32,30 @@ Mover oferece destinos e posições nomeados, com revisão. Arrasto da árvore, 
 
 O [inventário por propriedade, contexto e consumidor](editor-capabilities.json) é uma projeção gerada dos contratos, metadados e exemplos públicos. Não é outro formato de pacote nem comprova execução de todas as combinações possíveis.
 
-## Famílias implementadas
+## Regras gerais v3
+
+| Capacidade | Autoria e uso | Limite |
+| --- | --- | --- |
+| Dados, composição e reuso | [Registros, coleções, referências, grupos, repeat e compostos](structured-data.md), com identidades e bindings explícitos | Tipos e escopos são validados; campos opcionais não ganham inicial ao abrir. |
+| Consultas e cálculos | [Operações tipadas](rule-queries.md): somar, filtrar, transformar e consultar referências; [condições declarativas](predicates.md) | Operações permitidas, presença explícita e orçamentos agregados; não executa código do pacote. |
+| Resoluções e ações | [Fluxos declarativos](action-flows.md) com grupos de dados, manter/rerrolar, contagem, resultados e custos condicionais | Escolhas, custo e perfil de confirmação precisam ser declarados. |
+| Efeitos | [Projeções tipadas](typed-effects.md), duração, prioridades e empilhamento declarados | Preserva valor-base; efeito de revisão incompatível exige resolução explícita. |
+| Eventos e progressão | [Gatilhos](rule-events.md) e [criação, evolução e concessões](progression-choices.md), com condições, orçamento e origens | Carregar não dispara; edição direta não cobra evolução. |
+| Vínculos | [Menus, fontes e grafo](rule-connections.md) sobre as mesmas operações do documento | Vista derivada e paginada; não cria outro formato de regra. |
+| Dados instalados | [Migração explícita e restauração](data-migration.md), com prévia e recuperação | Pacote e todos os vinculados juntos; não converte ao abrir. |
+
+Verificações reproduzíveis e pendências de avaliação estão em [verificação da autoria](authoring-validation.md).
+
+## Famílias especializadas e fórmulas v1/v2
 
 | Família | Autoria guiada | Limite da engine atual |
 | --- | --- | --- |
 | Campos e coleções | Texto, número, booleano, opções, imagem, recurso, contador, dado, lista e tabela; sete tipos de campos de entrada pelo inspector | Componentes têm contratos próprios; um recurso usa current/max. Imagens externas permanecem preservadas sem carregamento automático. |
-| Cálculos e condições | Operações do parser, funções atuais, fontes e variáveis; igualdade e requisito mínimo conforme contexto | `if` avalia os ramos antes da escolha. Não há função `sum` ou linguagem universal de regras. |
+| Cálculos e condições | Operações do parser, funções atuais, fontes e variáveis; igualdade e requisito mínimo conforme contexto | `if` avalia os ramos antes da escolha. O parser legado não tem função `sum`; somas de coleções usam as operações tipadas v3 acima. |
 | Testes | Oito algoritmos atuais, fontes de campo, entrada ou cálculo, nota de decisões manuais e botão compatível | Testes não descontam recursos nem resolvem consequências narrativas automaticamente. |
 | Rolagens por entrada | Teste e efeito separados, grupos de dados, fontes, escala, informação e consumo opcional de recurso compartilhado | Fontes e consumo seguem o [contrato existente](README.md). Não representam qualquer economia de ações ou nova mecânica. |
 | Ações e recuperação | Oito operações de ação, requisitos; quatro operações de recuperação, filtros e cura por dados/manual | Ações executam ao acionar seu botão. Recuperação oferece prévia e confirmação. Custos e condições precisam ser declarados. |
-| Efeitos | Contribuições numéricas, alvos existentes, unidade, duração, habilitação v2 explícita e revisão semântica | Somente efeitos numéricos e empilhamento único atuais; [cobertura dos efeitos](effects.md). Não migra personagens instalados. |
+| Efeitos | Contribuições numéricas, alvos existentes, unidade, duração, habilitação v2 explícita e revisão semântica | Este perfil legado tem contribuições numéricas e empilhamento único; [cobertura dos efeitos](effects.md). Projeções tipadas v3 e migração têm os fluxos próprios acima. |
 | Usos | Níveis, usos, máximos, apresentação gasto/disponível e preferência de consumo | Uso automático exige vincular a rolagem ao mesmo recurso. |
 | Perícias e traços | Categorias, perícias, dado base, escala, traços e conjuntos de distribuição | A escala é compartilhada. Aplicar conjunto substitui somente os valores dos traços correspondentes. |
 | Estados graduados | Grau por dado, cura/redução, estado vinculado no limite e valores declarados nas transições | Usa o mecanismo e mensagens atuais de Desgaste/Trauma; não é uma máquina universal de condições. |

@@ -1,5 +1,10 @@
 # Histórico de versões
 
+## Alterações locais — robustez da autoria, 15 de outubro de 2026
+
+- Revisão de migração com progresso e cancelamento, usando o mesmo plano puro do instalador. Texto inválido e correspondências preservam identidades durante outras alterações; opções incompatíveis de rascunho exigem descarte explícito.
+- Medições reproduzíveis de consultas, cache, grafo e migração, com tetos documentais e verificações offline em subpasta. [Verificação e limites](data/examples/authoring-validation.md).
+
 ## Alterações locais — migração instalada, 15 de outubro de 2026
 
 - Revisão visual de dados por personagem, conversões limitadas, conflitos e restauração com guardas sobre pacote e biblioteca. Gravação conjunta pelo coordenador/journal existentes; abertura não converte e o catálogo original é preservado. [Uso, contratos e limites](data/examples/data-migration.md).

@@ -10,7 +10,7 @@ Na primeira atualização para esta funcionalidade, os sistemas que antes aparec
 
 Em **Sistemas → Editar pacote**, abra o [editor JSON com prévia](editor-json.md). A instalação do catálogo é uma cópia local editável, com o mesmo ID do sistema. Para os sistemas já existentes, essa cópia é materializada ao abrir a edição. O original do catálogo permanece nos arquivos do aplicativo e não é alterado.
 
-Alterar o texto do editor não muda a instalação imediatamente. Valide, atualize o ensaio e use **Aplicar pacote**, revisando a confirmação. O preflight protege a base que foi aberta, verifica todos os personagens vinculados e bloqueia substituições incompatíveis ou mudanças concorrentes. Não existe migração automática dos personagens. Extras e valores explícitos continuam sujeitos aos mesmos contratos do editor.
+Alterar o texto do editor não muda a instalação imediatamente. Valide, atualize o ensaio e use **Aplicar pacote**, revisando a confirmação. O preflight protege a base que foi aberta, verifica todos os personagens vinculados e bloqueia substituições incompatíveis ou mudanças concorrentes. A abertura não migra personagens. Para alterar dados instalados, use [migração explícita com revisão e recuperação](data-migration.md). Extras e valores explícitos continuam sujeitos aos mesmos contratos do editor.
 
 **Editar cópia** continua disponível para criar uma variante com outro ID. Em D&D, a ficha estática permanece como referência; a apresentação modular usa os layouts e regras declarativas do pacote instalado.
 

@@ -52,7 +52,7 @@ function validateSpec(spec,before,after,ids){
 
 // A reviewable plan only. Canonical character writes remain in the existing
 // installation transaction and use the common character patch application.
-export function planDataMigration({base,candidate,characters,spec={version:1,steps:[],retired:[]}}){
+function* migrationSteps({base,candidate,characters,spec={version:1,steps:[],retired:[]}}){
  const original=ready(base,'package'),next=ready(candidate,'package');if(original.system.id!==next.system.id)throw Error('Migração deve preservar a identidade do sistema.');
  if(!Array.isArray(characters)||characters.length>MIGRATION_LIMITS.characters)throw Error('Biblioteca de personagens inválida ou acima do limite.');
  spec=clone(spec);const source=clone(characters),ids=new Set();for(const character of source){if(character?.meta?.id){if(ids.has(character.meta.id))throw Error('Identidade de personagem duplicada.');ids.add(character.meta.id);}}
@@ -97,7 +97,18 @@ export function planDataMigration({base,candidate,characters,spec={version:1,ste
    const validation=prepareDocument(draft,{kind:'character',pkg:next});if(validation.status!=='ready')conflicts.push(...validation.diagnostics.filter(issue=>issue.severity==='error').map(issue=>({path:issue.path,message:issue.message})));
   }
   const patches=changesBetween(character,draft);if(patches.length>10000)report(null,'Personagem excede o limite de dez mil patches do aplicador comum.');if(patches.length||!equal(character?.meta,draft?.meta))result.summary.changed++;
-  result.summary.conflicts+=conflicts.length;result.characters.push({id,before:clone(character),after:draft,patches,samples,conflicts});
+  result.summary.conflicts+=conflicts.length;result.characters.push({id,before:clone(character),after:draft,patches,samples,conflicts});yield {completed:result.characters.length,total:source.length};
  }
  if(result.summary.conflicts||result.diagnostics.length)result.status='blocked';return result;
+}
+
+// Preview may yield between characters; the writer consumes these exact same
+// steps synchronously under the existing lock. Neither path writes anything.
+export function planDataMigration(input){const steps=migrationSteps(input);let next;do{next=steps.next();}while(!next.done);return next.value;}
+export async function planDataMigrationPreview(input,{signal,onProgress=()=>{},yieldTask=()=>new Promise(resolve=>setTimeout(resolve,0))}={}){
+ const steps=migrationSteps(input);let next,count=0;
+ const check=()=>{if(signal?.aborted)throw Error('Revisão da migração cancelada.');};
+ check();onProgress({completed:0,total:input.characters.length});await yieldTask();
+ do{check();next=steps.next();if(!next.done&&++count%25===0){onProgress(next.value);await yieldTask();}}while(!next.done);
+ check();onProgress({completed:input.characters.length,total:input.characters.length});return next.value;
 }

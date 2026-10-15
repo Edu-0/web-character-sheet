@@ -1,10 +1,10 @@
 import {prepareDocument} from '../validation/documents.js';
 import {validateCharacterForPackage,assertValid} from '../validation/schemas.js';
 import {validateEffectRevisionChange} from '../validation/effects.js';
-import {dataMigrationImpact,planDataMigration} from '../migrations/data-migration-plan.js';
+import {dataMigrationImpact,planDataMigration,planDataMigrationPreview} from '../migrations/data-migration-plan.js';
 import {systemDataRevision} from '../engine/data-revision.js';
 import {planDataRestoration} from '../migrations/data-migration-recovery.js';
-export function installationPlan({candidate,base,currentPackage,builtinIds=[],characters=[],unavailableLinked=false,unavailableUnidentified=false,migration,restoration,allowBlockedMigration=false}) {
+function* installationSteps({candidate,base,currentPackage,builtinIds=[],characters=[],unavailableLinked=false,unavailableUnidentified=false,migration,restoration,allowBlockedMigration=false}) {
   const prepared=prepareDocument(candidate,{kind:'package'});assertValid(candidate,()=>prepared.diagnostics,'pacote');
   if(prepared.status!=='ready')throw new Error('Normalização precisa ser confirmada antes de instalar.');
   const pkg=prepared.document;
@@ -22,10 +22,13 @@ export function installationPlan({candidate,base,currentPackage,builtinIds=[],ch
   if(migration!==undefined && !currentPackage)throw new Error('Migração exige um pacote anterior instalado.');
   if(migration!==undefined && (pkg.system.schemaVersion!==3 || pkg.system.dataRevision!==systemDataRevision(currentPackage.system)+1))throw new Error('Migração instalada exige revisão de dados v3 explicitamente incrementada em uma unidade.');
   if(migration===undefined && !dataRestoration && currentPackage && characters.length && (systemDataRevision(currentPackage.system)!==systemDataRevision(pkg.system)||currentPackage.system.schemaVersion===3&&currentPackage.system.dataRevision!==undefined&&pkg.system.dataRevision===undefined))throw new Error('Mudança de revisão dos dados exige migração explícita.');
-  const dataMigration=migration===undefined?null:planDataMigration({base:currentPackage,candidate:pkg,characters,spec:migration});
+  const dataMigration=migration===undefined?null:yield {base:currentPackage,candidate:pkg,characters,spec:migration};
   const transformation=dataMigration||dataRestoration;
   if(transformation?.status==='blocked' && !allowBlockedMigration)throw Object.assign(new Error((dataMigration?'Migração':'Restauração')+' bloqueada: '+[...transformation.diagnostics,...transformation.characters.flatMap(row=>row.conflicts)].map(issue=>issue.message).join('; ')),{migrationPlan:transformation});
   const warnings=[];
   for(const character of transformation?transformation.characters.map(row=>row.after):characters){const issues=validateCharacterForPackage(character,pkg);if(!transformation || transformation.status==='ready')assertValid(character,()=>issues,`personagem ${character.meta.id}`);warnings.push(...issues.filter(issue=>issue.severity==='warning'));}
   return {package:pkg,base:structuredClone(base ?? null),replace:Boolean(currentPackage),linkedIds:characters.map(character=>character.meta.id),warnings,...(dataMigration?{migration:dataMigration}:{}),...(dataRestoration?{restoration:dataRestoration}:{}),removedLayouts:(currentPackage?.layouts || []).filter(layout=>!pkg.layouts.some(next=>next.id===layout.id)).map(layout=>layout.id)};
 }
+
+export function installationPlan(input){const steps=installationSteps(input),next=steps.next();return next.done?next.value:steps.next(planDataMigration(next.value)).value;}
+export async function installationPreview(input,options){const steps=installationSteps(input),next=steps.next();return next.done?next.value:steps.next(await planDataMigrationPreview(next.value,options)).value;}
