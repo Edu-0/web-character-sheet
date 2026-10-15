@@ -109,12 +109,12 @@ self.addEventListener('message', event => {
     event.waitUntil((async()=>{
       const clients=(await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client=>client.url.startsWith(SCOPE));
       const checks=await Promise.all(clients.map(client=>new Promise(resolve=>{
-        const channel=new MessageChannel(),timer=setTimeout(()=>finish(false),1500);
+        const channel=new MessageChannel(),timer=setTimeout(()=>finish('incompatible'),1500);
         const finish=safe=>{clearTimeout(timer);channel.port1.close();resolve(safe);};
-        channel.port1.onmessage=({data})=>finish(data?.protocol===2 && data.locks===true);
+        channel.port1.onmessage=({data})=>finish(data?.protocol!==3||data.locks!==true||typeof data.dirty!=='boolean'?'incompatible':data.dirty?'dirty':'ready');
         client.postMessage({type:'LIBRARY_WRITE_PROBE'},[channel.port2]);
       })));
-      event.ports[0].postMessage({protocol:2,safe:checks.every(Boolean),clients:clients.length});
+      event.ports[0].postMessage({protocol:3,safe:checks.every(check=>check==='ready'),reason:checks.includes('incompatible')?'incompatible':checks.includes('dirty')?'dirty':null,clients:clients.length});
     })());return;
   }
   if (!['OFFLINE_STATUS', 'OFFLINE_PREPARE'].includes(event.data?.type) || !event.ports[0]) return;

@@ -2602,7 +2602,7 @@
     "js/engine/checks.js": "5d00b70016076cb3e309a86ae310375d84589fdb12ed120cb3a87313569764c5",
     "js/engine/composition.js": "8e1f48dbdfdada7ff414dcc3e4e48a99b817eed84f0c18f39cf665a7e1fd0085",
     "js/engine/computed-values.js": "dec554abf84f89bd22de2dc54162542a11e22a0a7f73aaf746b747940805cd9c",
-    "js/engine/data-definitions.js": "b22785e5e5d3871716770a556f7ac8534f46632df4db72e4627852bb5ef25274",
+    "js/engine/data-definitions.js": "9170011991e676586614e91c4bfb749ebcf8e76c9804d1f57fdca75848926c55",
     "js/engine/data-references.js": "17c21973b702810c2f7dea62254722c8e481454268c4c7c45f329c83f1090d6d",
     "js/engine/data-types.js": "4913c175d14cb2c43501210cc92dacf14728eec650b4a3d6638cc3b0c9f8362c",
     "js/engine/dice-resolver.js": "6e9e7d08602adeaa8db246a830610236dff749bddc8c720cdd4f3130194993ae",
@@ -2652,7 +2652,7 @@
     "js/validation/recovery.js": "5e25239416131e97fdd5964e5a52645242039d9641ba414213b576a679e41f1b",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
     "js/validation/roll-references.js": "bfe1051d6425682fe5043d16ce865091ae408fadf811ea0c9338891653721bcb",
-    "js/validation/schemas.js": "1da8e2cbe3b300733b5eeabb20d36351fd2f40b702d0a5e129e61ffaf29befe1",
+    "js/validation/schemas.js": "f95f25839f9e1572331ced975e5af6ee215eaf2aa2ed41b68b1716c08941dc7e",
     "js/validation/versions.js": "c9b2fd271721e72b489044f900e2cffc2ecd5da7d6bd4497e30571f850c7b172"
   },
   "supportedVersions": {

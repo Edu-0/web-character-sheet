@@ -19,6 +19,7 @@ import {predicateBindingIssue} from '../engine/predicates.js';
 import {validateActionRecords} from '../engine/action-records.js';
 import {compileTriggers,validateEventState} from '../engine/rule-events.js';
 import {compileProgression,progressionLedgerIssues} from '../engine/progression-choices.js';
+import {systemDataRevision,dataRevisionIssues} from '../engine/data-revision.js';
 
 export const KNOWN_COMPONENT_TYPES = new Set(Object.keys(COMPONENT_CONTRACTS));
 
@@ -109,6 +110,7 @@ export function validateSystem(system) {
   if (issues.length) return issues;
   if (!requireObject(system, 'system', issues)) return issues;
   validateVersion(system, 'system', issues);
+  try{systemDataRevision(system);}catch(error){add(issues,'system.dataRevision',error.message,'data.revision');}
   if (system.effectDefinitions !== undefined) {
     if (system.schemaVersion < 2) add(issues, 'system.schemaVersion', 'effectDefinitions exige versão 2');
     issues.push(...validateEffects(system.effectDefinitions, {system, definitions:true}));
@@ -503,6 +505,7 @@ function validateFieldValue(value, definition, path, issues) {
 export function validateCharacterForPackage(character, pkg, {allowMissingId = false, template = false} = {}) {
   const issues = validateCharacter(character, {expectedSystem: pkg.system.id,allowMissingId,root:template?'system.characterTemplate':'character'});
   if (issues.length) return issues;
+  issues.push(...dataRevisionIssues(pkg.system,character,{template}));
   issues.push(...validateDataDefinitions(pkg.system,character,template?'system.characterTemplate':'character'));
   validateCheckData(character, pkg.system.checks, issues);
   issues.push(...validateEffects(character.activeEffects, {system:pkg.system,characterVersion:character.schemaVersion}));

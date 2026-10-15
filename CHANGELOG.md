@@ -1,5 +1,10 @@
 # Histórico de versões
 
+## Alterações locais — migração instalada, 15 de outubro de 2026
+
+- Revisão visual de dados por personagem, conversões limitadas, conflitos e restauração com guardas sobre pacote e biblioteca. Gravação conjunta pelo coordenador/journal existentes; abertura não converte e o catálogo original é preservado. [Uso, contratos e limites](data/examples/data-migration.md).
+- Revisão opcional dos dados em v3 protege importações de outra versão de bindings; clientes antigos e fichas não salvas em outras janelas impedem a substituição. Sem conversão universal de históricos de jogo.
+
 ## Alterações locais — item 14, 10 de outubro de 2026
 
 - Autoria visual dos mecanismos atuais em Compor, reutilizando documento, operações, histórico, recuperação, sandbox e aplicação do editor existente. Toolbox por finalidade, inclusão guiada, seleção da definição original, movimento por nomes e arrasto direto para o canvas, com indicador de encaixe e atualização automática de stack/grid/flex.

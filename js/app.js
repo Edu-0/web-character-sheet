@@ -2,7 +2,7 @@ import { initCalculationSettings, applyCalculationPreferences } from './calculat
 import { initBackupControls } from './backup-controls.js';
 import { captureFocus } from './focus.js';
 import { recoverTransactions, reportStorageError, migrationCopyChange } from './persistence.js';
-import {hasPendingLibraryWrites,flushLibraryWrites} from './write-coordinator.js';
+import {hasPendingLibraryWrites,flushLibraryWrites,registerWriterState} from './write-coordinator.js';
 import { assertValid, validateCharacterForPackage } from './validation/schemas.js';
 import {initializeData} from './engine/data-definitions.js';
 import {executeSheetAction} from './engine/assistance.js';
@@ -29,6 +29,7 @@ import {
   installCatalogSystem,
   editableCatalogPackage,
   installedPackageBase,
+  migrationRecoveryEntries, migrationRecoveryOriginal, prepareSystemDataRestoration,
 } from './repositories/system-repository.js';
 import {CATALOG_KEY} from './repositories/catalog-installations.js';
 import {prepareSystemRemoval,removeSystem} from './repositories/system-removal.js';
@@ -78,6 +79,7 @@ let activeCharacterRaw;
 let appInitialized=false;
 let activeContextRemoved=false;
 const currentCharacter = () => activeCharacterId ? state.get() : null;
+registerWriterState(()=>({dirty:!appInitialized||unsavedCharacter||activeContextRemoved||Boolean(activeCharacterId&&(!activeCharacterRaw||changesBetween(JSON.parse(activeCharacterRaw),currentCharacter()).length))}));
 
 async function openJsonEditor(options = {}) {
   await flushCharacterSave();
@@ -87,41 +89,81 @@ async function openJsonEditor(options = {}) {
     const parsed=validateText(options.text);
     if(parsed.value?.system?.id)options.source={...options.source,systemId:parsed.value.system.id,base:installedPackageBase(parsed.value.system.id)};
   }
-  jsonEditor ||= new JsonEditor($('view-editor'),{onExit:view=>{setAppState('currentView',view);document.querySelector(`[data-app-view-target="${view}"]`)?.focus();},onApply:applyEditorPackage});
+  jsonEditor ||= new JsonEditor($('view-editor'),{onExit:view=>{setAppState('currentView',view);document.querySelector(`[data-app-view-target="${view}"]`)?.focus();},onApply:applyEditorPackage,onPrepareMigration:prepareEditorMigration,onMigrationCopies:()=>migrationRecoveryEntries().filter(entry=>!entry.systemId||entry.systemId===jsonEditor.session.source.systemId),onMigrationOriginal:migrationRecoveryOriginal,onPrepareRestoration:prepareEditorRestoration,onRestoreMigration:restoreEditorMigration});
   setAppState('currentView','editor');
   await jsonEditor.open(options);
 }
 
-async function applyEditorPackage(editor) {
-  await flushCharacterSave();
+function assertActiveCharacterUnchanged() {
   if(activeCharacterId && characters.rawCharacter(activeCharacterId)!==activeCharacterRaw)throw new Error('O personagem ativo mudou em outra aba. Exporte a edição em memória e reabra a ficha antes de aplicar.');
+}
+async function prepareEditorMigration(editor,migration) {
+  await flushCharacterSave();assertActiveCharacterUnchanged();
+  const result=editor.session.validate();
+  if(result.status!=='ready'||!editor.lastRenderedCurrent)throw new Error('Valide e atualize o ensaio antes de revisar a migração.');
+  return prepareSystemInstallation(result.document,{expectedBase:editor.session.source.base,currentCharacter:currentCharacter(),migration,allowBlockedMigration:true});
+}
+async function prepareEditorRestoration(editor,key) {
+  await flushCharacterSave();assertActiveCharacterUnchanged();
+  return prepareSystemDataRestoration(key,{currentCharacter:currentCharacter(),allowBlockedMigration:true});
+}
+function editorConfirmationGuard(editor,session,revision,layoutId,{preview=true}={}) {
+  return ()=>{
+    if(editor.disposed||editor.session!==session||session.revision!==revision||editor.layout.value!==layoutId||preview&&(!editor.lastRenderedCurrent||session.validate().status!=='ready'))throw new Error('A revisão/ensaio mudou durante a confirmação. Revise e confirme novamente.');
+    assertActiveCharacterUnchanged();
+  };
+}
+async function applyEditorPackage(editor) {
+  await flushCharacterSave();assertActiveCharacterUnchanged();
   const session=editor.session,revision=session.revision,layoutId=editor.layout.value,result=session.validate();
   if(result.status!=='ready' || !editor.lastRenderedCurrent)throw new Error('Valide e atualize o ensaio da revisão atual antes de aplicar.');
   const expectedBase=session.source.systemId===result.document.system.id?session.source.base:null;
-  const plan=prepareSystemInstallation(result.document,{expectedBase,currentCharacter:currentCharacter()});
-  const summary=`${plan.replace?'Substituir':'Instalar'} ${plan.package.system.name} (${plan.package.system.id}), revisão JSON ${revision}. ${plan.linkedIds.length} personagem(ns) vinculado(s); nenhum será migrado. Layouts removidos: ${plan.removedLayouts.join(', ') || 'nenhum'}; se necessário, a seleção usará ${plan.package.layouts[0].id}. ${plan.replace?'O pacote anterior terá cópia recuperável.':''} Avisos: ${plan.warnings.map(issue=>`${issue.path}: ${issue.message}`).join('; ') || 'nenhum'}.`;
+  if(editor.migration.enabled&&!editor.migration.currentReady)throw new Error('Revise a migração e resolva os conflitos antes de aplicar.');
+  const plan=editor.migration.enabled?editor.migration.review:prepareSystemInstallation(result.document,{expectedBase,currentCharacter:currentCharacter()});
+  if(JSON.stringify(result.document)!==plan.candidateSnapshot)throw new Error('O candidato mudou após a revisão. Revise novamente.');
+  const transformation=plan.migration;
+  const migrationSummary=transformation?`${transformation.summary.characters} personagem(ns) conferido(s); ${transformation.summary.changed} alterado(s). Os originais e as escolhas terão cópia recuperável. Confira as amostras e remoções na revisão de migração.`:`${plan.linkedIds.length} personagem(ns) vinculado(s); nenhum será migrado.`;
+  const summary=`${plan.replace?'Substituir':'Instalar'} ${plan.package.system.name} (${plan.package.system.id}), revisão JSON ${revision}. ${migrationSummary} Layouts removidos: ${plan.removedLayouts.join(', ') || 'nenhum'}; se necessário, a seleção usará ${plan.package.layouts[0].id}. ${plan.replace?'O pacote anterior terá cópia recuperável.':''} Avisos: ${plan.warnings.map(issue=>`${issue.path}: ${issue.message}`).join('; ') || 'nenhum'}.`;
   if(!await confirmDialog(summary,{title:'Aplicar pacote local',confirmLabel:'Confirmar aplicação'}))return;
-  const assertCurrent=()=>{if(editor.disposed || editor.session!==session || session.revision!==revision || editor.layout.value!==layoutId || !editor.lastRenderedCurrent || session.validate().status!=='ready')throw new Error('A revisão/ensaio mudou durante a confirmação. Revise e confirme novamente.');if(activeCharacterId && characters.rawCharacter(activeCharacterId)!==activeCharacterRaw)throw new Error('O personagem ativo mudou em outra aba. Preserve sua edição e reabra a ficha.');};
+  const guard=editorConfirmationGuard(editor,session,revision,layoutId),spec=JSON.stringify(plan.migration?.spec??null);
+  const assertCurrent=()=>{guard();if(JSON.stringify(currentCharacter())!==plan.activeSnapshot)throw new Error('O personagem ativo mudou após a revisão. Revise novamente.');if(transformation&&(!editor.migration.currentReady||JSON.stringify(editor.migration.state.spec)!==spec))throw new Error('As escolhas de migração mudaram. Revise novamente.');};
   assertCurrent();
   if(JSON.stringify(currentCharacter())!==plan.activeSnapshot)throw new Error('O personagem ativo mudou durante a confirmação. Preserve a edição e tente novamente.');
   await flushCharacterSave();assertCurrent();
   const copies=session.recoveryOriginalText?[migrationCopyChange(`editor:${session.draftId}`,JSON.parse(session.recoveryOriginalText))]:[];
   const pkg=await installSystemPackage(plan,{currentCharacter:currentCharacter(),assertCurrent,copies});
   session.source={kind:'imported',systemId:pkg.system.id,base:structuredClone(pkg)};session.lastApplied={revision,systemId:pkg.system.id,appliedAt:new Date().toISOString()};
-  try {refreshInstalledPackage(pkg);editor.applicationStatus.textContent=`Pacote aplicado localmente · revisão ${revision}. Rascunho preservado; abrir a ficha é uma ação separada.`;}
+  editor.migration.markApplied();
+  try {refreshInstalledPackage(pkg,{reloadCharacter:Boolean(transformation)});editor.applicationStatus.textContent=`Pacote aplicado localmente · revisão ${revision}.${transformation?' Migração confirmada e originais disponíveis na recuperação.':''} Rascunho preservado; abrir a ficha é uma ação separada.`;}
   catch(error){editor.applicationStatus.textContent=`Pacote salvo, ficha não remontada: ${error.message}. Exporte o rascunho e reabra a ficha pela biblioteca. O pacote anterior está na recuperação.`;}
   session.lastSavedRevision=-1;
   try{await editor.saveDraft();}catch(error){editor.applicationStatus.textContent+=` Rascunho não salvo: ${error.message}`;}
 }
-
-function refreshInstalledPackage(pkg) {
+async function restoreEditorMigration(editor,plan) {
+  if(plan.restoration?.status!=='ready')throw new Error('A restauração tem conflitos; baixe os originais para comparar.');
+  await flushCharacterSave();assertActiveCharacterUnchanged();
+  const session=editor.session,revision=session.revision,layoutId=editor.layout.value;
+  if(!await confirmDialog(`Restaurar ${plan.package.system.name} e ${plan.restoration.summary.characters} personagem(ns) ao estado anterior? Uma cópia inversa será guardada. Edições posteriores bloqueiam a operação. O rascunho atual será preservado.`,{title:'Restaurar migração local',confirmLabel:'Confirmar restauração'}))return;
+  const guard=editorConfirmationGuard(editor,session,revision,layoutId,{preview:false});const assertCurrent=()=>{guard();if(JSON.stringify(currentCharacter())!==plan.activeSnapshot)throw new Error('O personagem ativo mudou após a revisão da restauração. Revise novamente.');};assertCurrent();
+  const pkg=await installSystemPackage(plan,{currentCharacter:currentCharacter(),assertCurrent});
+  session.source={kind:'imported',systemId:pkg.system.id,base:structuredClone(pkg)};session.lastApplied=null;editor.migration.markApplied();
+  try{refreshInstalledPackage(pkg,{reloadCharacter:true});editor.applicationStatus.textContent='Migração restaurada. Rascunho atual preservado; originais e cópia inversa disponíveis na recuperação.';}
+  catch(error){editor.applicationStatus.textContent=`Restauração salva; reabra a ficha pela biblioteca: ${error.message}`;}
+  session.lastSavedRevision=-1;await editor.saveDraft();editor.refresh();
+}
+function refreshInstalledPackage(pkg,{reloadCharacter=false}={}) {
   refreshLibraries();if(activePackage?.system.id!==pkg.system.id)return;
   const previousLayout=activeLayout.id;
   genericSheetController?.destroy();genericSheetController=null;
   activePackage=pkg;activeLayout=pkg.layouts.find(layout=>layout.id===previousLayout)||preferredLayout(pkg);preserveMountData=true;
   setSystem(pkg.system);setLayout(activeLayout);renderLayoutControls();
-  state.clearHistory();
-  state.history.activate(state.get());
+  if(reloadCharacter&&activeCharacterId){
+    const stored=characters.getCharacter(activeCharacterId);if(!stored)throw new Error('Personagem salvo indisponível.');
+    activeCharacterRaw=characters.rawCharacter(activeCharacterId);
+    suppressCharacterEffects=true;try{state.load(stored);}finally{suppressCharacterEffects=false;}
+    unsavedCharacter=false;$('save-indicator').textContent='Salvo';
+  }
+  state.clearHistory();state.history.activate(state.get());
   renderGenericSheet(state.get());state.syncHistoryBaseline();sheetSearch?.refresh();
   updateAppState({currentSystem:systemSummary(pkg.system)});
 }

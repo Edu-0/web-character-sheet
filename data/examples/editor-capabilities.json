@@ -15338,6 +15338,22 @@
     },
     {
       "context": "system",
+      "property": "dataRevision",
+      "consumer": "js/engine/data-revision.js",
+      "validation": "js/validation/schemas.js",
+      "type": "integer",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-rule-authoring.spec.js"
+      ]
+    },
+    {
+      "context": "system",
       "property": "characterTemplate",
       "consumer": "js/repositories/character-repository.js",
       "validation": "js/validation/schemas.js",

@@ -1,5 +1,6 @@
 import {getByPath, pathKeys, setByPath} from './paths.js';
 import {DATA_TYPES, typedValueIssue, initializeStructuredValue} from './data-types.js';
+import {initializeDataRevision} from './data-revision.js';
 export {DATA_TYPES} from './data-types.js';
 
 export const BOUND_COMPONENT_TYPES = Object.freeze({text:['string'], textarea:['string'], number:['number','integer'], boolean:['boolean'],dataField:DATA_TYPES});
@@ -66,5 +67,5 @@ export function initializeData(system, character) {
     if(current===undefined && Object.hasOwn(definition,'initial'))writeData(system,character,definition.id,{present:true,value:initializeStructuredValue(definition,structuredClone(definition.initial))});
     else if(current!==undefined){const initialized=initializeStructuredValue(definition,structuredClone(current));const issue=valueIssue(definition,initialized);if(issue)throw new Error(issue);setByPath(character,definition.binding,initialized);}
   }
-  return character;
+  return initializeDataRevision(system,character);
 }

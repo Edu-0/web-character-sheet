@@ -1,15 +1,18 @@
 // Every library read-modify-write runs synchronously inside one origin-wide lock.
 // No user confirmation, fetch or arbitrary await is allowed in the critical section.
-// Version 2 clients understand removable catalogue installations. A version 1
-// client can still create characters for a removed builtin, so it cannot approve
-// destructive writes even though it already shares the origin-wide lock.
-export const WRITE_PROTOCOL=2;
+// Version 3 clients understand explicit installed-data migration. Earlier
+// clients can create a character from an obsolete system without a package
+// baseline guard. They cannot approve a migration or share its write handoff.
+export const WRITE_PROTOCOL=3;
 export const LIBRARY_LOCK='ficha-rpg:library-write:v1';
 let writing=false, queue=Promise.resolve(),pendingWrites=0;
+let writerStateProvider;
+export function registerWriterState(provider){if(typeof provider!=='function')throw Error('Leitura de estado do escritor inválida.');writerStateProvider=provider;}
 export const hasPendingLibraryWrites=()=>pendingWrites>0;
 export const flushLibraryWrites=()=>withLibraryWrite(()=>{});
 const PRESENCE='ficha-rpg:writer-presence:v1:';
 const actor=globalThis.document ? crypto.randomUUID() : null;
+function writerDirty(){try{return writerStateProvider?writerStateProvider().dirty!==false:Boolean(actor);}catch{return true;}}
 let sharedState={sequence:0,values:[]},storageAdapter, releasePresence;
 export function registerLibraryStorage(adapter){storageAdapter=adapter;}
 let channel;
@@ -18,7 +21,7 @@ function connectChannel(){
   channel=actor && globalThis.BroadcastChannel ? new BroadcastChannel('ficha-rpg:library-handoff:v1') : null;
   channel?.addEventListener('message',({data})=>{
   if(data?.protocol!==WRITE_PROTOCOL)return;
-  if(data.type==='probe' && data.targets?.includes(actor))channel.postMessage({type:'reply',protocol:WRITE_PROTOCOL,requestId:data.requestId,actor,state:sharedState});
+  if(data.type==='probe' && data.targets?.includes(actor))channel.postMessage({type:'reply',protocol:WRITE_PROTOCOL,requestId:data.requestId,actor,state:sharedState,dirty:writerDirty()});
   if(data.type==='reply')probes.get(data.requestId)?.(data);
   });
 }
@@ -29,7 +32,7 @@ function claimPresence(){return actor && coordinatedWritesAvailable() ? new Prom
 let presenceReady=claimPresence();
 globalThis.addEventListener?.('pagehide',()=>{releasePresence?.();releasePresence=null;channel?.close();channel=null;});
 globalThis.addEventListener?.('pageshow',event=>{if(event.persisted){connectChannel();presenceReady=claimPresence();}});
-async function handoff() {
+async function handoff({requireCleanClients=false}={}) {
   if(!channel || !storageAdapter)return;
   const query=await navigator.locks.query(),peers=query.held.filter(lock=>lock.name.startsWith(PRESENCE) && lock.name!==PRESENCE+actor).map(lock=>lock.name.slice(PRESENCE.length));
   let freshest=sharedState;
@@ -41,7 +44,7 @@ async function handoff() {
       finish(pending.size?new Error('Uma janela de escrita não respondeu. Preserve a edição e tente novamente após reabrir essa janela.'):null);
     },3000);
     const finish=error=>{clearTimeout(timer);probes.delete(requestId);error?reject(error):resolve();};
-    probes.set(requestId,data=>{if(!pending.has(data.actor) || !Number.isSafeInteger(data.state?.sequence) || !Array.isArray(data.state.values))return;pending.delete(data.actor);if(data.state.sequence>freshest.sequence)freshest=data.state;if(!pending.size)finish();});
+    probes.set(requestId,data=>{if(!pending.has(data.actor) || !Number.isSafeInteger(data.state?.sequence) || !Array.isArray(data.state.values))return;if(requireCleanClients&&data.dirty!==false){finish(new Error('Há ficha não salva ou cliente antigo em outra janela. Preserve a edição e revise a migração após sincronizar as janelas.'));return;}pending.delete(data.actor);if(data.state.sequence>freshest.sequence)freshest=data.state;if(!pending.size)finish();});
     channel.postMessage({type:'probe',protocol:WRITE_PROTOCOL,requestId,targets:peers});
   });
   // Storage events can lag a lock acquisition in Chromium. Hand off the last
@@ -51,7 +54,7 @@ async function handoff() {
 }
 export const inLibraryWrite=()=>writing;
 export function coordinatedWritesAvailable(){return Boolean(globalThis.navigator?.locks?.request && (!actor || globalThis.BroadcastChannel));}
-export function withLibraryWrite(operation) {
+export function withLibraryWrite(operation,{requireCleanClients=false}={}) {
   pendingWrites++;
   const finish=task=>task.finally(()=>pendingWrites--);
   const execute=()=>{
@@ -60,11 +63,11 @@ export function withLibraryWrite(operation) {
     try {const result=operation();if(result?.then)throw new Error('A seção de escrita deve ser síncrona.');return result;}
     finally{writing=false;}
   };
-  if(coordinatedWritesAvailable())return finish(presenceReady.then(()=>navigator.locks.request(LIBRARY_LOCK,async()=>{await handoff();try{return execute();}finally{if(storageAdapter)sharedState={sequence:sharedState.sequence+1,values:storageAdapter.snapshot()};}})));
+  if(coordinatedWritesAvailable())return finish(presenceReady.then(()=>navigator.locks.request(LIBRARY_LOCK,async()=>{await handoff({requireCleanClients});try{return execute();}finally{if(storageAdapter)sharedState={sequence:sharedState.sequence+1,values:storageAdapter.snapshot()};}})));
   const task=queue.catch(()=>{}).then(execute);queue=task;return finish(task);
 }
 globalThis.navigator?.serviceWorker?.addEventListener('message',event=>{
-  if(event.data?.type==='LIBRARY_WRITE_PROBE' && event.ports[0])event.ports[0].postMessage({protocol:WRITE_PROTOCOL,locks:coordinatedWritesAvailable()});
+  if(event.data?.type==='LIBRARY_WRITE_PROBE' && event.ports[0])event.ports[0].postMessage({protocol:WRITE_PROTOCOL,locks:coordinatedWritesAvailable(),dirty:writerDirty()});
 });
 export async function verifyWriterClients() {
   if(!coordinatedWritesAvailable())throw new Error('Web Locks indisponível: alteração da biblioteca bloqueada. Você pode editar e exportar.');
@@ -75,7 +78,7 @@ export async function verifyWriterClients() {
   await new Promise((resolve,reject)=>{
     const timer=setTimeout(()=>finish(new Error('Versão antiga do aplicativo: feche e reabra suas janelas antes de alterar a biblioteca.')),4000);
     const finish=error=>{clearTimeout(timer);channel.port1.close();error?reject(error):resolve();};
-    channel.port1.onmessage=({data})=>finish(data?.protocol===WRITE_PROTOCOL && data?.safe?null:new Error('Há janela antiga ou sem coordenação. Feche e reabra as janelas do aplicativo antes de alterar a biblioteca.'));
+    channel.port1.onmessage=({data})=>finish(data?.protocol===WRITE_PROTOCOL && data?.safe?null:new Error(data?.reason==='dirty'?'Há ficha não salva em outra janela. Salve ou exporte a edição antes de alterar a biblioteca.':'Há janela antiga ou sem coordenação. Feche e reabra as janelas do aplicativo antes de alterar a biblioteca.'));
     registration.active.postMessage({type:'VERIFY_LIBRARY_WRITERS',protocol:WRITE_PROTOCOL},[channel.port2]);
   });
 }

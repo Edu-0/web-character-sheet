@@ -48,8 +48,10 @@ Ausente, null, 0, false e texto vazio são distintos. Nos componentes vinculados
 
 O texto do documento continua autoritativo na sessão existente. Construtores, seleção e raw numérico pendente ficam nos sidecars do rascunho. Edição pendente de uma regra existente bloqueia exportação/aplicação até aplicar ou descartar; cancelar a confirmação mantém a pendência. Uma receita nova ainda não incluída não entra no pacote exportado. Histórico, rascunhos, validação, sandbox e aplicação são compartilhados com os editores anteriores.
 
-Com personagens vinculados, trocar/remover uma definição existente ou alterar binding/tipo/presença/nulabilidade exige migração e fica bloqueado em AV-01. Alterar seu rótulo, cálculo ou inicial não migra valores já salvos. Os originais do catálogo permanecem intactos.
+Com personagens vinculados, trocar/remover uma definição existente ou alterar binding/tipo/presença/nulabilidade exige [migração explícita](data-migration.md). No primeiro vínculo essa alteração ficava bloqueada; o fluxo instalado agora permite revisar e confirmar o conjunto. Alterar seu rótulo, cálculo ou inicial não migra valores já salvos. Os originais do catálogo permanecem intactos.
 
 v3 permite composição vazia. A extensão de [registros e composição](structured-data.md) acrescenta informação independente, grupos, compostos e repeat do personagem; caixas/seções v3 também começam vazias. Consultas, dependências entre cálculos, ações/gatilhos/efeitos novos e migração instalada não pertencem ao primeiro vínculo. Fórmulas e componentes v1/v2 mantêm seus próprios defaults, coerções e avaliação de ramos; não herdam a semântica tipada nova.
 
 O cabeçalho e a biblioteca continuam usando `identity.name`/`name` para nome de personagem. Criar um dado com outro nome não configura esse papel automaticamente. Autoria universal e compreensão/acessibilidade em aparelhos e tecnologias assistivas não estão comprovadas por esta fatia.
+
+A revisão opcional `system.dataRevision` e o carimbo `character.meta.systemDataRevision` distinguem os dados instalados após migração explícita; [contrato e recuperação](data-migration.md).

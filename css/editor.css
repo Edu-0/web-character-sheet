@@ -105,3 +105,9 @@
 .editor-rule-diagram__port{cursor:crosshair;touch-action:none}.editor-rule-diagram__port>rect{fill:transparent;stroke:none}.editor-rule-diagram__port circle{fill:var(--color-accent);stroke:var(--color-text)}.editor-rule-diagram__port:focus circle{stroke-width:3}.editor-rule-diagram__wire{fill:none;stroke:var(--color-accent);stroke-width:3;pointer-events:none}
 
 .editor-rule-diagram svg .editor-rule-diagram__port>rect{fill:transparent;stroke:none}
+
+.editor-migration{grid-column:1/-1;min-width:0;padding:12px;border:1px solid var(--color-border);border-radius:8px;overflow-wrap:anywhere}
+.editor-migration label{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.editor-migration input,.editor-migration select{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:8px;background:var(--color-panel);color:var(--color-text);border:1px solid var(--color-border)}
+.editor-migration button,.editor-migration summary{min-height:44px;white-space:normal;scroll-margin-top:calc(var(--shell-height,64px) + 16px)}
+.editor-migration fieldset,.editor-migration details{min-width:0;margin:8px 0;padding:8px;border:1px solid var(--color-border)}

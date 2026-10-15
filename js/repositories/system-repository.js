@@ -8,6 +8,9 @@ import { assertValid, validateManifest, validateSystemPackage, validateCharacter
 import { prepareDocument } from '../validation/documents.js';
 import { validateEffectRevisionChange } from '../validation/effects.js';
 import {CATALOG_KEY, catalogInstallationIds, catalogInstallationsChange, initializeCatalogInstallations} from './catalog-installations.js';
+import {applyCharacterChanges} from '../engine/character-history.js';
+import {initializeDataRevision} from '../engine/data-revision.js';
+import {validateMigrationRecovery} from '../migrations/data-migration-recovery.js';
 
 const MANIFEST_URL = './data/systems/index.json';
 const IMPORTED_SYSTEMS_KEY = 'ficha-rpg:v2:systems';
@@ -54,23 +57,52 @@ export function installedPackageBase(id){return clone(currentImported(id));}
 function librarySnapshot() {
   return JSON.stringify(storageKeys().filter(key=>key===IMPORTED_SYSTEMS_KEY || key===CATALOG_KEY || key==='ficha-rpg:settings' || key.startsWith('ficha-rpg:v2:characters:')).sort().map(key=>[key,readRaw(key)]));
 }
-export function prepareSystemInstallation(candidate,{expectedBase,currentCharacter}={}) {
+export function prepareSystemInstallation(candidate,{expectedBase,currentCharacter,migration,restoration,allowBlockedMigration=false}={}) {
   const current=currentImported(candidate.system?.id), base=expectedBase===undefined?current:expectedBase;
   const summaries=characters.listCharacters(),linked=characters.allCharacters().filter(character=>character.meta.system===candidate.system.id);
   if(currentCharacter?.meta?.system===candidate.system.id){const index=linked.findIndex(character=>character.meta.id===currentCharacter.meta.id);if(index<0)linked.push(clone(currentCharacter));else linked[index]=clone(currentCharacter);}
   const reserved=manifestSystems.filter(entry=>!(entry.id===current?.system?.id && catalogInstallationIds().includes(entry.id))).map(entry=>entry.id);
-  const plan=installationPlan({candidate,base,currentPackage:current,builtinIds:reserved,characters:linked,unavailableLinked:summaries.some(character=>character.system===candidate.system.id && character.unavailable),unavailableUnidentified:summaries.some(character=>character.system==='indisponível' && character.unavailable)});
-  return {...plan,librarySnapshot:librarySnapshot(),activeSnapshot:JSON.stringify(currentCharacter ?? null)};
+  const plan=installationPlan({candidate,base,currentPackage:current,builtinIds:reserved,characters:linked,migration,restoration,allowBlockedMigration,unavailableLinked:summaries.some(character=>character.system===candidate.system.id && character.unavailable),unavailableUnidentified:summaries.some(character=>character.system==='indisponível' && character.unavailable)});
+  return {...plan,librarySnapshot:librarySnapshot(),activeSnapshot:JSON.stringify(currentCharacter ?? null),candidateSnapshot:JSON.stringify(plan.package),migrationSpecSnapshot:JSON.stringify(plan.migration?.spec ?? null),restorationSnapshot:JSON.stringify(plan.restoration?.record??null)};
+}
+function recoveryRecord(key){
+  if(typeof key!=='string'||!key.startsWith('ficha-rpg:recovery:'))throw new Error('Chave de recuperação inválida.');
+  const raw=readRaw(key);let envelope,record;try{envelope=JSON.parse(raw);record=validateMigrationRecovery(JSON.parse(envelope.raw));}catch(error){throw new Error('Cópia de migração indisponível: '+error.message);}return {raw,envelope,record};
+}
+export function migrationRecoveryEntries(){
+  return storageKeys().filter(key=>key.startsWith('ficha-rpg:recovery:')).flatMap(key=>{
+    try{const envelope=JSON.parse(readRaw(key));if(!envelope.key?.startsWith('migration:'))return [];try{const found=recoveryRecord(key);return [{key,systemId:found.record.systemId,id:found.record.id,name:found.record.beforePackage.system.name,available:true,recoveredAt:envelope.recoveredAt}];}catch(error){return [{key,available:false,name:'Cópia de migração indisponível',error:error.message}];}}catch{return [];}
+  });
+}
+export function migrationRecoveryOriginal(key){return recoveryRecord(key).record;}
+export function prepareSystemDataRestoration(key,{currentCharacter,allowBlockedMigration=false}={}){
+  const {raw,record}=recoveryRecord(key),plan=prepareSystemInstallation(record.beforePackage,{expectedBase:record.afterPackage,currentCharacter,restoration:record,allowBlockedMigration});return {...plan,recoveryKey:key,recoveryRaw:raw};
 }
 export async function installSystemPackage(plan,{currentCharacter,copies=[],assertCurrent=()=>{}}={}) {
+  if((plan.migration||plan.restoration)?.status==='blocked')throw new Error('Resolva os conflitos e revise a migração/restauração antes de aplicar.');
   if(plan.replace)await verifyWriterClients();
   return withLibraryWrite(()=>{
     assertCurrent();
+    if(JSON.stringify(plan.package)!==plan.candidateSnapshot || JSON.stringify(plan.migration?.spec ?? null)!==plan.migrationSpecSnapshot || JSON.stringify(plan.restoration?.record??null)!==plan.restorationSnapshot)throw new Error('O candidato ou as escolhas de migração mudaram após a prévia. Revise novamente.');
     if(librarySnapshot()!==plan.librarySnapshot || JSON.stringify(currentCharacter ?? null)!==plan.activeSnapshot)throw new Error('A biblioteca ou o personagem ativo mudou durante a confirmação. Revise e tente novamente.');
-    const fresh=prepareSystemInstallation(plan.package,{expectedBase:plan.base,currentCharacter});
+    if(plan.restoration&&(!plan.recoveryKey||readRaw(plan.recoveryKey)!==plan.recoveryRaw))throw new Error('A cópia de recuperação mudou ou foi removida. Preserve o original e revise novamente.');
+    const restoration=plan.restoration?recoveryRecord(plan.recoveryKey).record:undefined;
+    const fresh=prepareSystemInstallation(plan.package,{expectedBase:plan.base,currentCharacter,migration:plan.migration?.spec,restoration});
     const all=writableImportedCollection(),baseline=readRaw(IMPORTED_SYSTEMS_KEY);
     const next=[...all.filter(pkg=>pkg?.system?.id!==fresh.package.system.id),clone(fresh.package)];
     const changes=[[IMPORTED_SYSTEMS_KEY,JSON.stringify(next)],...copies];
+    const transformation=fresh.migration||fresh.restoration;
+    if(transformation){
+      const migrated=transformation.characters.map(row=>{
+        const character=clone(row.before);if(fresh.restoration)character.meta=clone(row.after.meta);else initializeDataRevision(fresh.package.system,character);
+        applyCharacterChanges(character,row.patches,{validate:value=>assertValid(value,next=>validateCharacterForPackage(next,fresh.package),'personagem migrado')});
+        if(row.patches.length||JSON.stringify(character.meta)!==JSON.stringify(row.before.meta))character.meta.updatedAt=new Date().toISOString();return character;
+      });
+      changes.push(...characters.characterChanges(migrated,{preserveIndex:true}));
+      const record={kind:'rpg-data-migration',schemaVersion:1,id:crypto.randomUUID(),systemId:fresh.package.system.id,spec:clone(fresh.migration?.spec??{version:1,steps:[],retired:[]}),beforePackage:clone(fresh.base),beforeCharacters:transformation.characters.map(row=>clone(row.before)),beforeRawCharacters:transformation.characters.map(row=>({id:row.id,raw:characters.rawCharacter(row.id)})),afterPackage:clone(fresh.package),afterCharacters:migrated.map(character=>({id:character.meta.id,raw:JSON.stringify(character)})),...(fresh.restoration?{restorationOf:fresh.restoration.record.id}:{})};
+      validateMigrationRecovery(record);
+      changes.push(migrationCopyChange('migration:'+record.id,record));
+    }
     const preferences=readJson('ficha-rpg:settings',{},value=>value && typeof value==='object' && !Array.isArray(value));
     const selection=preferences.layoutSelections?.find(entry=>entry.systemId===fresh.package.system.id);
     if(selection && !fresh.package.layouts.some(layout=>layout.id===selection.layoutId)){
@@ -78,7 +110,7 @@ export async function installSystemPackage(plan,{currentCharacter,copies=[],asse
     }
     if(fresh.replace && baseline)changes.push(migrationCopyChange(IMPORTED_SYSTEMS_KEY,JSON.parse(baseline)));
     transactWithinWrite(changes);reloadImportedSystems();resetSettingsCache();return clone(fresh.package);
-  });
+  },{requireCleanClients:Boolean(plan.migration||plan.restoration)});
 }
 
 export async function initSystemRepository() {

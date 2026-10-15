@@ -56,11 +56,13 @@ export function allCharacters() {
   return storageKeys().filter(key => key.startsWith(CHARACTER_PREFIX) && key !== INDEX_KEY).map(key => getCharacter(key.slice(CHARACTER_PREFIX.length))).filter(Boolean);
 }
 
-export function characterChanges(characters, { replace = false } = {}) {
+export function characterChanges(characters, { replace = false, preserveIndex = false } = {}) {
+  if(replace && preserveIndex)throw new Error('Substituição integral não pode conservar o índice anterior.');
   const changes = [];
   if (replace) for (const key of storageKeys().filter(key => key.startsWith(CHARACTER_PREFIX) && key !== INDEX_KEY)) changes.push([key, null]);
   for (const character of characters) changes.push([`${CHARACTER_PREFIX}${character.meta.id}`, JSON.stringify(character)]);
-  changes.push([INDEX_KEY, JSON.stringify(characters.map(toSummary))]);
+  const ids=new Set(characters.map(character=>character.meta.id)),summaries=characters.map(toSummary);
+  changes.push([INDEX_KEY, JSON.stringify(preserveIndex?[...readIndex().filter(entry=>!ids.has(entry.id)),...summaries]:summaries)]);
   return [...new Map(changes)];
 }
 

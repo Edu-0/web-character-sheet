@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "e894b488db6909668fc0";
+const VERSION = "99b2f6238c9d262d57b5";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -51,7 +51,7 @@ const ASSETS = [
   },
   {
     "path": "css/editor.css",
-    "hash": "242cfbadc01b0ca63dc95864cafb2c4ead2816bb3165e6c020dd103423bff3c6"
+    "hash": "ee513c0aab7f7aec602d8614c40ae9ee7f60ddc0b5e83b851ab847a18fbd59c5"
   },
   {
     "path": "css/engine-shell.css",
@@ -191,7 +191,7 @@ const ASSETS = [
   },
   {
     "path": "js/app.js",
-    "hash": "278486c3518072a1a43bb44798606adeacffd7f9e8e39c4a37cb31466702ecb5"
+    "hash": "ab0caf24eec5e96b4a89bc817f58672f2aa45e5a2b8a83e6bcbaba06cdc564fb"
   },
   {
     "path": "js/appearance.js",
@@ -267,7 +267,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/capability-catalog.js",
-    "hash": "658f3b19ab6bda301bf3df48e2bac3094fb13d8985ed9bc5ca0a3179bc0f2ac7"
+    "hash": "d7f6838e1d8dd75a04ca65f64a5e80a1ebae0718915da301f7fb1ca6356aa74c"
   },
   {
     "path": "js/editor/check-recipe.js",
@@ -331,7 +331,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/editor-ui.js",
-    "hash": "b245697e2d7bdbcfc5a7f4201301aac115a8554c3c3d8bf80dd283def501d302"
+    "hash": "aa58270ee921ae574fc3f0e35fba6d7e296b1173d527167e09cf5e33a78f1d76"
   },
   {
     "path": "js/editor/effect-recipe.js",
@@ -351,7 +351,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/form-metadata.js",
-    "hash": "8f8a9ae4390324510e77f5c02faf713b4604f68088341c16d5741e66eba2f4d1"
+    "hash": "972cb0d3b13f1c4cf1db3be22a11d826bbbcf6c8dbd6e36417d19474596b754a"
   },
   {
     "path": "js/editor/form-structure.js",
@@ -383,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "76256d963def6230bec4229366d933327702afd2f01d12241cc825807d5bd69c"
+    "hash": "03b8ff306642d2544608878699aa7f8acf391c7aa6c2cf59eb82a3c00ab3f604"
   },
   {
     "path": "js/editor/history.js",
@@ -408,6 +408,10 @@ const ASSETS = [
   {
     "path": "js/editor/local-image-input.js",
     "hash": "b7a4de782f35d24aef36836bd9771e44424ffb5f7b0148d1679d7e28601968ab"
+  },
+  {
+    "path": "js/editor/migration-panel.js",
+    "hash": "b703197be1a5e0dd36381dc1451e1609ff3dc664e64c2b3d0bdbb87679215831"
   },
   {
     "path": "js/editor/minimal-package.js",
@@ -623,11 +627,15 @@ const ASSETS = [
   },
   {
     "path": "js/engine/data-definitions.js",
-    "hash": "b22785e5e5d3871716770a556f7ac8534f46632df4db72e4627852bb5ef25274"
+    "hash": "9170011991e676586614e91c4bfb749ebcf8e76c9804d1f57fdca75848926c55"
   },
   {
     "path": "js/engine/data-references.js",
     "hash": "17c21973b702810c2f7dea62254722c8e481454268c4c7c45f329c83f1090d6d"
+  },
+  {
+    "path": "js/engine/data-revision.js",
+    "hash": "cef64b52093155db379b02cfd105b115398a51e6f8a90fc0e7fae218650ed93c"
   },
   {
     "path": "js/engine/data-types.js",
@@ -870,6 +878,18 @@ const ASSETS = [
     "hash": "b8bb018a94d933d9edab7892160c9138f7e91189f3ae7caddaf9d3ad549bb8ca"
   },
   {
+    "path": "js/migrations/data-conversions.js",
+    "hash": "d4d503306512eabbf7e69569ba3e0307504ad99fa3de02f6fed9f31042724747"
+  },
+  {
+    "path": "js/migrations/data-migration-plan.js",
+    "hash": "110c2e00e04b21608754ac80596e077fb5bf4c5b0b953f029dff4d060d5c5252"
+  },
+  {
+    "path": "js/migrations/data-migration-recovery.js",
+    "hash": "90b44590e6b7f4fa3a4d9fa70fd65efa0f8c93cd466b7349027805e365ac8d31"
+  },
+  {
     "path": "js/migrations/index.js",
     "hash": "0b21a3313674f2afb8db693982f051818f7fbf31e081fb0848afd5dfe0a8268a"
   },
@@ -899,11 +919,11 @@ const ASSETS = [
   },
   {
     "path": "js/repositories/character-repository.js",
-    "hash": "1f73b78feb9260338fb5bca750c1c4be117564ec4210dbe4232c423a0191432d"
+    "hash": "616ece71281fa5e6f58b3b888fab9cc2f9735be9901816ed59011cf606e6cbbc"
   },
   {
     "path": "js/repositories/package-installation.js",
-    "hash": "161524c1ba6f6ed1b080cee0c31faddd8e3b9ecd59ec49962ac8a640ddcb06dd"
+    "hash": "2dca18cd637013e10e68030d4e1d9d60a09d16bf6c3a78188944a805d0b91ed1"
   },
   {
     "path": "js/repositories/system-removal.js",
@@ -911,7 +931,7 @@ const ASSETS = [
   },
   {
     "path": "js/repositories/system-repository.js",
-    "hash": "122d5630ad38d249889559690e988084fcf0922569d4837d3f14938e0464239d"
+    "hash": "d8ff75f68759139a30a3b272d4332ab58dc21ea7074d3dac7686a01f65272d83"
   },
   {
     "path": "js/sheet-layouts.js",
@@ -1015,7 +1035,7 @@ const ASSETS = [
   },
   {
     "path": "js/validation/schemas.js",
-    "hash": "1da8e2cbe3b300733b5eeabb20d36351fd2f40b702d0a5e129e61ffaf29befe1"
+    "hash": "f95f25839f9e1572331ced975e5af6ee215eaf2aa2ed41b68b1716c08941dc7e"
   },
   {
     "path": "js/validation/versions.js",
@@ -1023,7 +1043,7 @@ const ASSETS = [
   },
   {
     "path": "js/write-coordinator.js",
-    "hash": "984491f56f0807c4e052199f38981e8e51e90ef5e0fe6bb026bdd3cc02b4efb1"
+    "hash": "88a03c425d69c46f5d34ef97abc088541d2cd86117a2428569b40f3d5b590426"
   },
   {
     "path": "manifest.webmanifest",
@@ -1138,12 +1158,12 @@ self.addEventListener('message', event => {
     event.waitUntil((async()=>{
       const clients=(await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client=>client.url.startsWith(SCOPE));
       const checks=await Promise.all(clients.map(client=>new Promise(resolve=>{
-        const channel=new MessageChannel(),timer=setTimeout(()=>finish(false),1500);
+        const channel=new MessageChannel(),timer=setTimeout(()=>finish('incompatible'),1500);
         const finish=safe=>{clearTimeout(timer);channel.port1.close();resolve(safe);};
-        channel.port1.onmessage=({data})=>finish(data?.protocol===2 && data.locks===true);
+        channel.port1.onmessage=({data})=>finish(data?.protocol!==3||data.locks!==true||typeof data.dirty!=='boolean'?'incompatible':data.dirty?'dirty':'ready');
         client.postMessage({type:'LIBRARY_WRITE_PROBE'},[channel.port2]);
       })));
-      event.ports[0].postMessage({protocol:2,safe:checks.every(Boolean),clients:clients.length});
+      event.ports[0].postMessage({protocol:3,safe:checks.every(check=>check==='ready'),reason:checks.includes('incompatible')?'incompatible':checks.includes('dirty')?'dirty':null,clients:clients.length});
     })());return;
   }
   if (!['OFFLINE_STATUS', 'OFFLINE_PREPARE'].includes(event.data?.type) || !event.ports[0]) return;
