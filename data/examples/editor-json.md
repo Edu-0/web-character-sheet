@@ -28,6 +28,8 @@ A navegação exige a prévia da revisão e do layout atuais. Depois de editar, 
 
 ## Recuperar e exportar
 
+O salvamento automático continua após um erro de ação e conserva esse aviso até a próxima ação ou edição. Salvar um rascunho não aplica o pacote nem resolve conflitos de migração.
+
 Rascunhos são salvos automaticamente nesta origem do navegador; **Salvar rascunho** confirma uma gravação manual. Eles ficam listados em Sistemas. Reabrir recupera texto, última válida e apresentação do editor, com histórico reiniciado. Rascunhos corrompidos ou futuros conservam seu bruto baixável. Conflitos entre abas e falhas de armazenamento preservam o texto em memória; use **Salvar rascunho como cópia** ou **Baixar rascunho**.
 
 **Exportar tudo não inclui rascunhos.** Baixe-os separadamente. **Abrir JSON** também abre um envelope de rascunho baixado como nova cópia local, sem instalar o sistema. Limpar os dados do site ou mudar de navegador/endereço pode apagar o acesso aos rascunhos. Ao sair com texto não salvo, escolha salvar, baixar, descartar desde o último salvamento ou continuar editando. Fechar a janela não garante uma gravação pendente.

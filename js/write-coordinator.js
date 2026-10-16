@@ -69,7 +69,7 @@ export function withLibraryWrite(operation,{requireCleanClients=false}={}) {
 globalThis.navigator?.serviceWorker?.addEventListener('message',event=>{
   if(event.data?.type==='LIBRARY_WRITE_PROBE' && event.ports[0])event.ports[0].postMessage({protocol:WRITE_PROTOCOL,locks:coordinatedWritesAvailable(),dirty:writerDirty()});
 });
-export async function verifyWriterClients() {
+export async function verifyWriterClients({requireCleanClients=false}={}) {
   if(!coordinatedWritesAvailable())throw new Error('Web Locks indisponível: alteração da biblioteca bloqueada. Você pode editar e exportar.');
   if(!navigator.serviceWorker)throw new Error('Não foi possível verificar as janelas antigas. Reabra o aplicativo antes de alterar a biblioteca.');
   const registration=await Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Prepare o uso offline e reabra o aplicativo para verificar as janelas antigas.')),4000))]);
@@ -79,6 +79,6 @@ export async function verifyWriterClients() {
     const timer=setTimeout(()=>finish(new Error('Versão antiga do aplicativo: feche e reabra suas janelas antes de alterar a biblioteca.')),4000);
     const finish=error=>{clearTimeout(timer);channel.port1.close();error?reject(error):resolve();};
     channel.port1.onmessage=({data})=>finish(data?.protocol===WRITE_PROTOCOL && data?.safe?null:new Error(data?.reason==='dirty'?'Há ficha não salva em outra janela. Salve ou exporte a edição antes de alterar a biblioteca.':'Há janela antiga ou sem coordenação. Feche e reabra as janelas do aplicativo antes de alterar a biblioteca.'));
-    registration.active.postMessage({type:'VERIFY_LIBRARY_WRITERS',protocol:WRITE_PROTOCOL},[channel.port2]);
+    registration.active.postMessage({type:'VERIFY_LIBRARY_WRITERS',protocol:WRITE_PROTOCOL,requireCleanClients},[channel.port2]);
   });
 }

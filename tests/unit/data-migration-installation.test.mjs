@@ -4,13 +4,13 @@ import {minimalPackage} from '../../js/editor/minimal-package.js';
 import {prepareSystemInstallation,installSystemPackage,migrationRecoveryEntries,prepareSystemDataRestoration,migrationRecoveryOriginal} from '../../js/repositories/system-repository.js';
 import {getCharacter,listCharacters} from '../../js/repositories/character-repository.js';
 import {WRITE_PROTOCOL,flushLibraryWrites} from '../../js/write-coordinator.js';
-const store=new Map();let fault,clientProtocol=WRITE_PROTOCOL;
+const store=new Map();let fault,clientProtocol=WRITE_PROTOCOL,clientDirty=false,lastVerification;
 globalThis.localStorage={getItem:key=>store.get(key)??null,setItem:(key,value)=>{if(fault?.(key,value))throw new DOMException('Quota fictícia','QuotaExceededError');store.set(key,value);Object.defineProperty(localStorage,key,{value,enumerable:true,configurable:true});},removeItem:key=>{store.delete(key);delete localStorage[key];}};
 Object.defineProperty(navigator,'locks',{value:{request:async(name,operation)=>operation({name})},configurable:true});
-Object.defineProperty(navigator,'serviceWorker',{value:{ready:Promise.resolve({active:{postMessage:(message,ports)=>ports[0].postMessage({protocol:clientProtocol,safe:true})}})},configurable:true});
+Object.defineProperty(navigator,'serviceWorker',{value:{ready:Promise.resolve({active:{postMessage:(message,ports)=>{lastVerification=message;ports[0].postMessage({protocol:clientProtocol,safe:!message.requireCleanClients||!clientDirty,reason:message.requireCleanClients&&clientDirty?'dirty':null});}}})},configurable:true});
 const systemsKey='ficha-rpg:v2:systems',indexKey='ficha-rpg:v2:characters:index',key=id=>'ficha-rpg:v2:characters:'+id;
 function fixture(id){
- for(const name of [...store.keys()])localStorage.removeItem(name);fault=null;clientProtocol=WRITE_PROTOCOL;
+ for(const name of [...store.keys()])localStorage.removeItem(name);fault=null;clientProtocol=WRITE_PROTOCOL;clientDirty=false;lastVerification=null;
  const base=minimalPackage(id);base.system.dataDefinitions=[{id:'balance',label:'Saldo',binding:'balance',type:'integer',required:false,nullable:false}];const candidate=structuredClone(base);candidate.system.dataRevision=2;candidate.system.dataDefinitions[0].binding='wallet';
  const character={schemaVersion:1,meta:{id:'hero-'+id,system:id,updatedAt:'2026-10-14T00:00:00.000Z'},balance:0,extra:{null:null,flag:false,empty:''}};
  localStorage.setItem(systemsKey,JSON.stringify([base]));localStorage.setItem(key(character.meta.id),JSON.stringify(character));localStorage.setItem(indexKey,JSON.stringify([{id:character.meta.id,system:id,name:'Sem nome',updatedAt:character.meta.updatedAt}]));
@@ -58,4 +58,10 @@ test('AV-11 cópia incompatível fica disponível como bruto e não produz plano
 test('AV-12 prévia assíncrona compartilha preflight e recusa biblioteca alterada durante a revisão',async()=>{
  const {previewSystemDataMigration}=await import('../../js/repositories/system-repository.js');const f=fixture('sliced-install');const plan=await previewSystemDataMigration(f.candidate,{migration:f.migration},{yieldTask:async()=>{}});assert.deepEqual(plan,prepareSystemInstallation(f.candidate,{migration:f.migration}));
  const before=localStorage.getItem(systemsKey);await assert.rejects(previewSystemDataMigration(f.candidate,{migration:f.migration},{onProgress:({completed,total})=>{if(completed===total)localStorage.setItem(key('new-during-review'),JSON.stringify({...f.character,meta:{...f.character.meta,id:'new-during-review'}}));},yieldTask:async()=>{}}),/biblioteca mudou/);assert.equal(localStorage.getItem(systemsKey),before);assert.equal(records().length,0);
+});
+
+test('AV-13 cliente dirty bloqueia transformação, sem ampliar a exigência à aplicação habitual',async()=>{
+ let f=fixture('dirty-migration');clientDirty=true;const before=new Map(store);await assert.rejects(installSystemPackage(prepareSystemInstallation(f.candidate,{migration:f.migration})),/ficha não salva/);assert.equal(lastVerification.requireCleanClients,true);assert.deepEqual(new Map(store),before);
+ clientDirty=false;await installSystemPackage(prepareSystemInstallation(f.candidate,{migration:f.migration}));clientDirty=true;const recovery=migrationRecoveryEntries()[0];await assert.rejects(installSystemPackage(prepareSystemDataRestoration(recovery.key)),/ficha não salva/);assert.equal(lastVerification.requireCleanClients,true);
+ f=fixture('dirty-presentation');clientDirty=true;const candidate=structuredClone(f.base);candidate.system.name='Só apresentação';await installSystemPackage(prepareSystemInstallation(candidate));assert.equal(lastVerification.requireCleanClients,false);assert.equal(getCharacter(f.character.meta.id).balance,0);assert.equal(records().length,0);
 });

@@ -111,7 +111,7 @@ self.addEventListener('message', event => {
       const checks=await Promise.all(clients.map(client=>new Promise(resolve=>{
         const channel=new MessageChannel(),timer=setTimeout(()=>finish('incompatible'),1500);
         const finish=safe=>{clearTimeout(timer);channel.port1.close();resolve(safe);};
-        channel.port1.onmessage=({data})=>finish(data?.protocol!==3||data.locks!==true||typeof data.dirty!=='boolean'?'incompatible':data.dirty?'dirty':'ready');
+        channel.port1.onmessage=({data})=>finish(data?.protocol!==3||data.locks!==true||typeof data.dirty!=='boolean'?'incompatible':event.data.requireCleanClients===true&&data.dirty?'dirty':'ready');
         client.postMessage({type:'LIBRARY_WRITE_PROBE'},[channel.port2]);
       })));
       event.ports[0].postMessage({protocol:3,safe:checks.every(check=>check==='ready'),reason:checks.includes('incompatible')?'incompatible':checks.includes('dirty')?'dirty':null,clients:clients.length});

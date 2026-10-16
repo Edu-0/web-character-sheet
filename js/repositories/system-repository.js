@@ -88,7 +88,7 @@ export function prepareSystemDataRestoration(key,{currentCharacter,allowBlockedM
 }
 export async function installSystemPackage(plan,{currentCharacter,copies=[],assertCurrent=()=>{}}={}) {
   if((plan.migration||plan.restoration)?.status==='blocked')throw new Error('Resolva os conflitos e revise a migração/restauração antes de aplicar.');
-  if(plan.replace)await verifyWriterClients();
+  if(plan.replace)await verifyWriterClients({requireCleanClients:Boolean(plan.migration||plan.restoration)});
   return withLibraryWrite(()=>{
     assertCurrent();
     if(JSON.stringify(plan.package)!==plan.candidateSnapshot || JSON.stringify(plan.migration?.spec ?? null)!==plan.migrationSpecSnapshot || JSON.stringify(plan.restoration?.record??null)!==plan.restorationSnapshot)throw new Error('O candidato ou as escolhas de migração mudaram após a prévia. Revise novamente.');

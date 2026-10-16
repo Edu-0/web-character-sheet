@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "ed9b63e62479b02274e6";
+const VERSION = "6ccabc63d6772ab3f2d4";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -331,7 +331,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/editor-ui.js",
-    "hash": "6f40fe8c71fcbad91c79a45a12ba9eaeb752894bb3ace1c624da02da9879e850"
+    "hash": "062ba18c6d3315aa8949f8581311bd063b7672538b05fe0ec22a5eafe9ae70af"
   },
   {
     "path": "js/editor/effect-recipe.js",
@@ -931,7 +931,7 @@ const ASSETS = [
   },
   {
     "path": "js/repositories/system-repository.js",
-    "hash": "5221ee21edc267a0361df77cc7445039b944f6ab382dfa6796deb7d3858cbd39"
+    "hash": "362f9c61805ff073dfffe4547eb9375b18a2e126fad66fabaeb7e107e0787630"
   },
   {
     "path": "js/sheet-layouts.js",
@@ -1043,7 +1043,7 @@ const ASSETS = [
   },
   {
     "path": "js/write-coordinator.js",
-    "hash": "88a03c425d69c46f5d34ef97abc088541d2cd86117a2428569b40f3d5b590426"
+    "hash": "5584f40fd2a90142de42ac22cf758a75eaa80dfb994c576447010d704b54c69b"
   },
   {
     "path": "manifest.webmanifest",
@@ -1160,7 +1160,7 @@ self.addEventListener('message', event => {
       const checks=await Promise.all(clients.map(client=>new Promise(resolve=>{
         const channel=new MessageChannel(),timer=setTimeout(()=>finish('incompatible'),1500);
         const finish=safe=>{clearTimeout(timer);channel.port1.close();resolve(safe);};
-        channel.port1.onmessage=({data})=>finish(data?.protocol!==3||data.locks!==true||typeof data.dirty!=='boolean'?'incompatible':data.dirty?'dirty':'ready');
+        channel.port1.onmessage=({data})=>finish(data?.protocol!==3||data.locks!==true||typeof data.dirty!=='boolean'?'incompatible':event.data.requireCleanClients===true&&data.dirty?'dirty':'ready');
         client.postMessage({type:'LIBRARY_WRITE_PROBE'},[channel.port2]);
       })));
       event.ports[0].postMessage({protocol:3,safe:checks.every(check=>check==='ready'),reason:checks.includes('incompatible')?'incompatible':checks.includes('dirty')?'dirty':null,clients:clients.length});

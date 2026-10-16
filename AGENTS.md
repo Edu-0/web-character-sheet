@@ -22,3 +22,16 @@ A memória, os planos e os relatórios são privados e ignorados pelo Git em `do
 - Catálogo local e instalações são separados: os originais em `data/systems/` permanecem intactos; pacotes instalados podem ter cópias locais editáveis com o mesmo ID. A exclusão de sistema e personagens exige preflight e transação comum. Consulte `docs/private/checkpoints-catalogo.md` e o guia público `data/examples/catalog.md`; preserve seleção do catálogo e cópias editadas nos backups.
 
 Atualize a documentação quando contratos, escopo ou decisões mudarem. Relate verificações realizadas e diferencie testes atuais de resultados históricos.
+
+## Critérios obrigatórios de conclusão
+
+Após qualquer alteração no código:
+
+1. Identifique os testes afetados e atualize-os quando necessário.
+2. Execute os testes e verificações relevantes.
+3. Atualize a documentação afetada, incluindo arquitetura, funcionalidades e decisões.
+4. Registre mudanças relevantes no histórico de desenvolvimento.
+5. Confira se a cobertura dos componentes modificados regrediu.
+6. Relate falhas, limitações e verificações não executadas.
+
+Não considere uma tarefa concluída sem verificar esses itens. Preserve alterações não relacionadas e nunca faça commits automaticamente.

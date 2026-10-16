@@ -1,14 +1,21 @@
 # Histórico de versões
 
+## Alterações locais — fechamento técnico da autoria geral, 15 de outubro de 2026
+
+- Autoria desde pacote vazio com dados tipados compartilhados, consultas, ações, gatilhos, efeitos e criação/evolução. Os exemplos fictícios Aventuras, Investigação, Cartógrafos e Traços exercitam execução e exportação/reimportação. [Verificações e limites](data/examples/authoring-validation.md).
+- 373 testes Node aprovados. Os 486 casos Playwright foram conferidos sob os mesmos hashes em duas execuções: 296 antes de uma pausa solicitada e 190 na retomada, sem falhas. Referência, inventário, links, prévia e offline conferidos.
+- Avaliações humanas, dispositivos físicos e tecnologias assistivas continuam pendentes. Casos extremos medidos podem ultrapassar 500 ms; não há SLA geral.
+
 ## Alterações locais — robustez da autoria, 15 de outubro de 2026
 
+- Proteção de fichas não salvas limitada à migração/restauração; exclusão comum entre abas preserva a edição em memória. O salvamento automático do rascunho conserva avisos de erro até a próxima ação ou edição.
 - Revisão de migração com progresso e cancelamento, usando o mesmo plano puro do instalador. Texto inválido e correspondências preservam identidades durante outras alterações; opções incompatíveis de rascunho exigem descarte explícito.
 - Medições reproduzíveis de consultas, cache, grafo e migração, com tetos documentais e verificações offline em subpasta. [Verificação e limites](data/examples/authoring-validation.md).
 
 ## Alterações locais — migração instalada, 15 de outubro de 2026
 
 - Revisão visual de dados por personagem, conversões limitadas, conflitos e restauração com guardas sobre pacote e biblioteca. Gravação conjunta pelo coordenador/journal existentes; abertura não converte e o catálogo original é preservado. [Uso, contratos e limites](data/examples/data-migration.md).
-- Revisão opcional dos dados em v3 protege importações de outra versão de bindings; clientes antigos e fichas não salvas em outras janelas impedem a substituição. Sem conversão universal de históricos de jogo.
+- Revisão opcional dos dados em v3 protege importações de outra versão de bindings; clientes antigos impedem a substituição; fichas não salvas em outras janelas impedem migração/restauração conjunta. Sem conversão universal de históricos de jogo.
 
 ## Alterações locais — item 14, 10 de outubro de 2026
 

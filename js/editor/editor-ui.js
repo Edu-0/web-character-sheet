@@ -171,7 +171,7 @@ export class JsonEditor {
     this.navigationStatus.textContent=`Localizado na prévia: ${pointer} · ${result.count} ocorrência(s) destacada(s).`;this.scheduleDraft();
   }
   changed(sync=false) {
-    this.gestures?.cancel();
+    delete this.status.dataset.error;this.gestures?.cancel();
     clearTimeout(this.validationTimer);this.lastRenderedCurrent=false;
     this.status.textContent=this.draftConflict?`Revisão ${this.session.revision} em memória; conflito com outra aba. Salve como cópia ou baixe o rascunho.`:`Revisão ${this.session.revision} em memória; salvamento do rascunho pendente.`;
     if(sync){this.area.value=this.session.text;this.session.validate();this.refresh();}
@@ -227,16 +227,16 @@ export class JsonEditor {
     downloadJson(snapshot.package,`${snapshot.package.system.id}.system.json`);this.status.textContent=`Pacote exportado da revisão ${snapshot.revision}; amostra de ensaio excluída.`;
   }
   async applyPackage() {this.assertNoPending();if(!this.lastRenderedCurrent)throw new Error('Atualize o ensaio da revisão atual antes de aplicar.');if(!this.onApply)throw new Error('Aplicação ainda indisponível.');await this.onApply(this);this.refresh();}
-  scheduleDraft() {clearTimeout(this.draftTimer);if(!this.draftConflict && !this.exiting)this.draftTimer=setTimeout(()=>this.run(()=>this.saveDraft()),650);}
+  scheduleDraft() {clearTimeout(this.draftTimer);if(!this.draftConflict && !this.exiting)this.draftTimer=setTimeout(()=>this.run(()=>this.saveDraft(false,{automatic:true}),{background:true}),650);}
   currentUi(){return {...this.session.ui,theme:this.theme.value,width:this.width.value,split:Number(this.split.value),cursorStart:this.area.selectionStart,cursorEnd:this.area.selectionEnd,scrollTop:this.area.scrollTop};}
-  saveDraft(copy=false) {
+  saveDraft(copy=false,{automatic=false}={}) {
     clearTimeout(this.draftTimer);const session=this.session;
     this.savePromise=this.savePromise.catch(()=>{}).then(async()=>{
       if(this.disposed || session!==this.session)return;
       session.validate();Object.assign(session.ui,this.currentUi());
       if(copy){session.draftId=crypto.randomUUID();this.savedRaw=null;this.draftConflict=false;}
       const envelope=session.envelope();
-      try {const raw=await saveDraft(envelope,this.savedRaw);if(this.disposed || session!==this.session)return;this.savedRaw=raw;this.savedUi=JSON.stringify(envelope.ui);session.lastSavedRevision=envelope.revision;this.status.textContent=`Rascunho salvo nesta origem · revisão ${envelope.revision}. Fora de Exportar tudo.`;}
+      try {const raw=await saveDraft(envelope,this.savedRaw);if(this.disposed || session!==this.session)return;this.savedRaw=raw;this.savedUi=JSON.stringify(envelope.ui);session.lastSavedRevision=envelope.revision;if(!automatic||!this.status.dataset.error)this.status.textContent=`Rascunho salvo nesta origem · revisão ${envelope.revision}. Fora de Exportar tudo.`;}
       catch(error){if(this.disposed || session!==this.session)return;this.draftConflict=error.code==='draft-conflict';throw new Error(`${error.message} Texto preservado em memória; use Baixar rascunho.`,{cause:error});}
     });return this.savePromise;
   }
@@ -258,6 +258,6 @@ export class JsonEditor {
     }
     this.dispose();this.onExit?.(view);return true;
   }
-  async run(fn) {const session=this.session;try {await fn();}catch(error){if(!this.disposed && session===this.session)this.status.textContent=error.message;}}
+  async run(fn,{background=false}={}) {const session=this.session;if(!background)delete this.status.dataset.error;try {await fn();}catch(error){if(!this.disposed && session===this.session){this.status.dataset.error='true';this.status.textContent=error.message;}}}
   dispose() {this.migration?.cancelReview();clearTimeout(this.compositionPreviewTimer);clearTimeout(this.validationTimer);clearTimeout(this.draftTimer);this.gestures?.destroy();this.preview?.dispose();this.lastRendered=null;this.runtimeError=null;this.disposed=true;}
 }

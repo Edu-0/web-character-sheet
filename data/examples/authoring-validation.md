@@ -10,6 +10,12 @@ Use uma única suíte Playwright na porta4173. `npx playwright test --workers=1`
 
 As jornadas automatizadas desde vazio ficam em `tests/e2e/editor-general-authoring*.spec.js`. Integração dos exports, operações canceladas, rollback, histórico, consultas e execução offline têm casos próprios. `editor-data-migration.spec.js` cobre migração conjunta, recuperação, aba não salva, edição posterior, quota/journal, revisão cancelável e rascunho. `editor-general-subpath.spec.mjs` verifica execução v3 sem rede em subpasta. Testes automatizados não substituem avaliação humana.
 
+## Resultado registrado em 15 de outubro de 2026
+
+373 testes Node aprovados. A conferência Playwright alcançou os 486 casos únicos da coleta sob a mesma fonte congelada: 296 aprovados antes de uma pausa solicitada e 190 aprovados na retomada, com um worker e sem falhas. A primeira execução foi interrompida sem resumo ou exit final; a retomada terminou com exit 0 em 19,6 minutos. Esses resultados são duas execuções distintas. Referência, inventário, links, prévia e assets offline foram conferidos.
+
+Rodadas anteriores encontraram bloqueio indevido da exclusão entre abas com edição não salva e um aviso de erro encoberto pelo salvamento automático do rascunho. Ambos foram corrigidos antes da fonte congelada acima. A instrumentação Node conferiu linhas, ramos e funções; os módulos de interface e o service worker são verificados pelo navegador. Porcentagens de cobertura não comprovam todos os significados ou combinações de regras.
+
 ## Desempenho e limites
 
 `node scripts/measure-authoring.mjs` mede o plano puro de migração para100/1000/10000 personagens e compilação/avaliação/cache/invalidação de regras. O resultado fica em `tmp/authoring-measurements.json`, com CPU, memória, sistema operacional, Node, amostras, mediana, p95 e pior caso. O arquivo é local e não faz parte da biblioteca ou dos pacotes. Cinco ou dez amostras são medições exploratórias; não demonstram um SLA nem representam todos os documentos.
