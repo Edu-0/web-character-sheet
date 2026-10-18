@@ -1,5 +1,10 @@
 # Histórico de versões
 
+## Revisão documental local — 18 de outubro de 2026
+
+- Guias de autoria, validação, versões, migração, offline e testes alinhados ao fechamento técnico da autoria geral. Navegação dos exemplos reorganizada e estados históricos identificados.
+- Revisão apenas documental: preserva runtime, testes, versão do pacote e cache offline. Os resultados funcionais de 15/10 abaixo continuam históricos; não houve nova release ou publicação.
+
 ## Alterações locais — fechamento técnico da autoria geral, 15 de outubro de 2026
 
 - Autoria desde pacote vazio com dados tipados compartilhados, consultas, ações, gatilhos, efeitos e criação/evolução. Os exemplos fictícios Aventuras, Investigação, Cartógrafos e Traços exercitam execução e exportação/reimportação. [Verificações e limites](data/examples/authoring-validation.md).

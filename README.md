@@ -1,8 +1,6 @@
 # Ficha RPG
 
-Configure [criação, evolução e concessões](data/examples/progression-choices.md) com requisitos, orçamento, escolhas e benefícios registrados por origem. Edição direta continua separada de compras.
-
-**Versão 0.5.0 — pré-lançamento.** Novidades e limites em [Histórico de versões](CHANGELOG.md).
+**Versão 0.5.0 — pré-lançamento publicado.** Este checkout também contém avanços locais de autoria posteriores à versão publicada; não representam uma nova release. Novidades e limites em [Histórico de versões](CHANGELOG.md).
 
 **Fichas bonitas, organizadas e prontas para a sessão.**
 
@@ -16,7 +14,8 @@ O **catálogo local reúne oito sistemas**, cada um com os layouts **Padrão** e
 
 ## Mais tempo jogando
 
-- **Edite seus pacotes com prévia e formulários.** Em Sistemas, crie um pacote, abra JSON ou edite uma cópia. Experimente campos e ações com personagem fictício isolado, corrija diagnósticos, recupere rascunhos e exporte ou aplique com confirmação. Rascunhos têm download próprio e ficam fora de Exportar tudo. Alterne entre JSON e árvore/propriedades no mesmo rascunho. Consulte o [editor JSON](data/examples/editor-json.md) e a [cobertura dos formulários](data/examples/editor-forms.md).
+- **Escolha seus sistemas.** O Catálogo permite instalar offline as implementações disponíveis. Em Sistemas, edite o pacote instalado mantendo a base do catálogo intacta, ou exclua o sistema com seus personagens após revisar a confirmação. Reinstalar traz o pacote original, sem recuperar personagens apagados.
+- **Edite seus pacotes em Compor, formulários ou JSON.** Em Sistemas, crie um pacote, abra JSON ou edite uma cópia. Experimente campos e ações com personagem fictício isolado, corrija diagnósticos, recupere rascunhos e exporte ou aplique com confirmação. Rascunhos têm download próprio e ficam fora de Exportar tudo. Alterne entre JSON e árvore/propriedades no mesmo rascunho. Consulte [Compor](data/examples/editor-visual.md), o [editor JSON](data/examples/editor-json.md) e a [cobertura dos formulários](data/examples/editor-forms.md).
 - **Migre dados com revisão.** Em uma cópia instalada v3, escolha conversões, confira conflitos de todos os personagens e confirme a mudança conjunta com originais recuperáveis. Consulte [migração e restauração](data/examples/data-migration.md).
 - **Seus personagens em um só lugar.** Crie, duplique e organize fichas na biblioteca local. Importe e exporte personagens e pacotes de sistemas em JSON. Em Configurações, **Exportar tudo** salva a biblioteca e **Importar tudo** permite mesclar ou substituir com confirmação.
 - **Encontre sem percorrer todas as abas.** A busca consulta a ficha inteira, mostra os valores atuais e leva você até o campo, com tolerância a erros de digitação.
@@ -93,6 +92,8 @@ Acrescente [eventos e gatilhos locais](data/examples/rule-events.md) com origens
 
 Projete valores temporários com [efeitos tipados](data/examples/typed-effects.md): substituição, multiplicadores, passos de traço e duração por uso ou evento confirmado, preservando a base.
 
+Configure [criação, evolução e concessões](data/examples/progression-choices.md) com requisitos, orçamento, escolhas e benefícios registrados por origem. Edição direta continua separada de compras.
+
 ## Seus dados
 
 A biblioteca e as preferências ficam no navegador, sem conta ou backend. Não há sincronização entre dispositivos ou backup em nuvem. **Use Exportar tudo regularmente**: limpar os dados do site ou trocar de navegador/endereço pode tornar a biblioteca anterior indisponível. O backup inclui personagens, sistemas importados e preferências; sistemas embutidos acompanham o app. Se uma gravação falhar, a ficha continua em memória e pode ser exportada. Os arquivos exportados podem conter nomes, notas, imagens e dados de recuperação; revise-os antes de compartilhar.
@@ -119,6 +120,8 @@ Instalação e uso offline exigem HTTPS ou um endereço local confiável, além 
 O servidor é para desenvolvimento e serve o repositório inteiro. Não o exponha à internet nem hospede a pasta inteira: memória interna, referências e dados privados não devem integrar uma distribuição.
 
 ## Para quem desenvolve
+
+As verificações de autoria geral, medições reproduzíveis e limites de avaliação estão em [verificação da autoria](data/examples/authoring-validation.md).
 
 HTML, CSS e JavaScript com módulos ES, sem framework de interface. A engine declarativa separa **sistema** (dados e regras), **layout** (apresentação) e **personagem** (valores e escolhas). Sistemas usam JSONs distintos de layout e configuração, reunidos em pacotes `rpg-system-package` na importação/exportação, com `schemaVersion`.
 
@@ -162,6 +165,3 @@ A documentação de trabalho, os planos e os relatórios ficam privados e não a
 O código original da aplicação e da engine tem [licença própria de uso não comercial com atribuição](LICENSE). Uso, modificações e compartilhamento gratuito não comercial são permitidos nos termos da licença; exploração comercial exige autorização escrita. Não é uma licença MIT ou Apache-2.0.
 
 Conteúdos de RPG, artes, marcas e materiais de terceiros têm direitos separados. O projeto é independente e não oficial, sem afiliação à Wizards of the Coast. A licença do código não libera livros, traduções ou desenhos. Consulte os [avisos de terceiros](THIRD_PARTY_NOTICES.md) e o [registro de direitos das artes](assets/artwork/README.md).
-- **Escolha seus sistemas.** O Catálogo permite instalar offline as implementações disponíveis. Em Sistemas, edite o pacote instalado mantendo a base do catálogo intacta, ou exclua o sistema com seus personagens após revisar a confirmação. Reinstalar traz o pacote original, sem recuperar personagens apagados.
-
-As verificações de autoria geral, medições reproduzíveis e limites de avaliação estão em [verificação da autoria](data/examples/authoring-validation.md).

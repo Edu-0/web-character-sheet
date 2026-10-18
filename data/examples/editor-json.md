@@ -14,7 +14,7 @@ O texto JSON é a fonte da edição. **Editar por formulários** oferece árvore
 
 Escolha layout, tema e largura para experimentar a apresentação. No celular, alterne **JSON / Diagnósticos / Prévia**. Após editar o texto, a prévia anterior fica sinalizada como desatualizada até o próximo comando de atualização. Uma falha de montagem conserva o último ensaio bem-sucedido. A prévia aceita imagens embutidas em Data URL e uploads locais; imagens por URL e acesso à rede ficam bloqueados. Ela não executa scripts do pacote.
 
-Os oito sistemas embutidos e seus layouts podem ser ensaiados. Uma cópia D&D recebe um novo ID e oferece os componentes modulares; estática e comparação continuam associadas ao D&D original. Mecânicas novas exigem suporte da engine. O editor também oferece [formulários](editor-forms.md); toolbox, arrasto e impressão da prévia continuam fora do escopo.
+Os oito sistemas embutidos e seus layouts podem ser ensaiados. Uma cópia D&D recebe um novo ID e oferece os componentes modulares; estática e comparação continuam associadas ao D&D original. Mecânicas novas exigem suporte da engine. O editor também oferece [formulários](editor-forms.md) e [Compor](editor-visual.md), com toolbox e arrasto sobre o mesmo documento. A impressão da prévia do editor permanece fora deste fluxo; a ficha aplicada usa Imprimir / PDF.
 
 ## Navegar entre JSON e prévia
 

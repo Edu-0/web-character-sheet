@@ -12,7 +12,7 @@ O histórico é **desta sessão da página**. Recarregar ou fechar a página o a
 - Uma nova edição após desfazer descarta o caminho de refazer. As opções de desfazer específicas de recuperação, ação e evolução continuam funcionando e também são edições registradas pelo histórico geral.
 - São mantidas até **50 operações** e **2 MiB de patches por personagem**, para os **10 personagens usados mais recentemente**. Ao exceder os limites, operações antigas são descartadas. Uma alteração isolada maior que 2 MiB encerra o histórico anterior e não pode ser desfeita pelo histórico geral; o personagem continua editável e salvável.
 
-O histórico cobre mudanças nos dados notificadas ao aplicativo, incluindo ajustes de cálculo, retratos e **Limpar ficha**. Metadados de identidade e datas não são revertidos. Preferências, navegação, layouts, importação/exclusão na biblioteca e resultados transitórios de dados não são operações de personagem. Os patches não entram no JSON, backup ou impressão. Registros próprios de evolução e recuperação continuam salvos no personagem conforme seus contratos.
+O histórico cobre mudanças nos dados notificadas ao aplicativo, incluindo ajustes de cálculo, retratos e **Limpar ficha**. Metadados de identidade e datas não são revertidos. Preferências, navegação, layouts, importação/exclusão na biblioteca e resultados transitórios de dados não são operações de personagem. Os patches não entram no JSON, backup ou impressão. Registros próprios de evolução, recuperação e [ações tipadas v3](action-flows.md) continuam salvos no personagem conforme seus contratos; são distintos dos patches transitórios de desfazer/refazer. Resultados do ensaio do editor permanecem isolados do personagem da biblioteca.
 
 ## Integração com componentes
 

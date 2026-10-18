@@ -1,4 +1,16 @@
-# Rolagens de entradas configuradas por JSON
+# Pacotes, autoria e exemplos
+
+Escolha o guia conforme o que deseja criar. Todos os modos editam o mesmo pacote; não há regras ocultas ao criar um pacote vazio.
+
+| Objetivo | Guias |
+| --- | --- |
+| Criar, compor e ensaiar um pacote | [Compor](editor-visual.md), [formulários](editor-forms.md), [JSON e rascunhos](editor-json.md) |
+| Definir dados e cálculos v3 | [Primeiro vínculo](typed-data.md), [estruturas](structured-data.md), [consultas](rule-queries.md), [condições](predicates.md), [conexões](rule-connections.md) |
+| Configurar ações e progressão | [Resoluções](action-flows.md), [eventos](rule-events.md), [efeitos](typed-effects.md), [criação e evolução](progression-choices.md) |
+| Aplicar e preservar dados | [Catálogo](catalog.md), [validação](validation.md), [migração e restauração](data-migration.md), [offline](offline.md) |
+| Conferir contratos e verificações | [Referência gerada](components-reference.md), [testes](testing.md), [fechamento da autoria](authoring-validation.md) |
+
+## Exemplos importáveis e capacidades atuais
 
 [Traços da Jornada](traits.md) combina criação, evolução, Pool, técnicas, repouso, carga e estados vinculados em um [pacote fictício importável](traits.package.json). Os dados e as condições são compartilhados pelos controles e ações.
 
@@ -19,6 +31,8 @@ Para registros, coleções, escolhas, traços, referências, grupos e compostos 
 Para entradas temporárias, resoluções numéricas, custos condicionados, marcos recuperáveis e consequências, consulte [ações tipadas e resoluções](action-flows.md).
 
 Para criar essas configurações por fontes e construtores, consulte a [autoria visual em Compor](editor-visual.md). O [editor JSON com prévia](editor-json.md) continua disponível como acesso avançado e usa o mesmo pacote.
+
+## Rolagens de entradas — contrato legado compatível
 
 Uma lista de técnicas, poderes, armas ou outras ações pode oferecer um painel de rolagem sem código específico para o sistema. A configuração das regras fica em `system.entryRolls`; o layout escolhe uma configuração:
 

@@ -1,6 +1,6 @@
 # Efeitos numéricos
 
-Este guia descreve o perfil numérico legado v2, também preservado em documentos v3. O [perfil tipado v3](typed-effects.md) oferece substituição, passos de traço e multiplicação, com contratos próprios. Backups v2 podem encapsular pacotes/personagens v3. Manifesto continua em 1. Documentos sem mecanismos novos conservam versão 1; versão 2 nunca é rebaixada automaticamente. `effectDefinitions`, `activeEffects` e `effectList` exigem versão 2. O envelope acompanha a maior versão de seu conteúdo.
+Este guia descreve o perfil numérico legado v2, também preservado em documentos v3. O [perfil tipado v3](typed-effects.md) oferece substituição, passos de traço e multiplicação, com contratos próprios. Backups v2 podem encapsular pacotes/personagens v3. Manifesto continua em 1. Documentos sem mecanismos novos conservam versão 1; versão 2 nunca é rebaixada automaticamente. `effectDefinitions`, `activeEffects` e `effectList` exigem pelo menos versão 2. O envelope do pacote acompanha a maior versão exigida por seu conteúdo; o envelope de backup tem suas próprias versões 1/2.
 
 Veja a definição executável do [Coringa SWADE](../systems/swade.system.json), baseada no [Test Drive oficial, p. 4](https://peg-swade.s3-us-west-2.amazonaws.com/SW_Test_Drive_2020.pdf). Carta, iniciativa, Benes e penalidades continuam manuais. Somente +2 nos testes de traço/dano recebe assistência; a mesa confirma ativação e fim da rodada.
 

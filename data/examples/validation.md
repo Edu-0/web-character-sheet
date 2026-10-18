@@ -1,6 +1,6 @@
 # Validação e preservação de documentos
 
-Versões aceitas: manifesto 1; pacote/sistema/layout 1, 2 e 3; personagem/backup 1 e 2. O [contrato v3 de dados tipados e cálculos](typed-data.md) exige envelope v3, com habilitação explícita; abrir v1/v2 não converte fórmulas ou versões. Valores escalares não exigem nova versão de personagem. Backup com pacote v3 usa envelope 2.
+Versões aceitas: manifesto 1; pacote/sistema/layout 1, 2 e 3; personagem 1, 2 e 3; backup 1 e 2. O [contrato v3 de dados tipados e cálculos](typed-data.md) exige envelope v3, com habilitação explícita; abrir v1/v2 não converte fórmulas ou versões. Valores escalares não exigem nova versão de personagem; registros persistidos de [ações tipadas](action-flows.md) usam personagem v3 com habilitação explícita. Backup com pacote v3 usa envelope 2.
 
 Sistema, layout, personagem e pacote são documentos distintos. `schemaVersion` identifica seu formato; a versão do aplicativo e o namespace do armazenamento não são versões desses documentos.
 
@@ -18,6 +18,6 @@ Um pacote local indisponível não oculta os demais. Documentos locais de versõ
 
 O characterTemplate é validado contra os mesmos consumidores do personagem, incluindo definições/revisões, duplicidade e grupos de efeitos. O ID do personagem pode estar ausente no template e é atribuído ao criar a ficha. Valores padrão declarados, como configFrom = pointBudget, são resolvidos pelo mesmo descritor usado na referência e no runtime.
 
-As cópias e o journal exigem espaço adicional. Falha de gravação mantém dados em memória; o journal permite rollback, mas não fornece isolamento entre abas. Feche outras sessões de edição antes de substituir um pacote. Backup, exportação individual e recuperação continuam sendo os caminhos para conservar seus dados. Não há migração inversa automática.
+As cópias e o journal exigem espaço adicional. Falha de gravação mantém dados em memória. O journal permite rollback; a coordenação de escrita entre abas usa locks e verificação dos clientes, com releitura antes da substituição. Migração e restauração exigem também fichas sem edições pendentes nas outras janelas. Isso não oferece edição colaborativa ou mesclagem automática. A [migração explícita de dados](data-migration.md) permite revisar conversões e restaurar a cópia original somente enquanto as guardas do estado posterior forem satisfeitas; não há reversão automática ao abrir. Backup, exportação individual e recuperação conservam seus papéis próprios.
 
-Os testes Node verificam contratos e transformações; Playwright verifica importação, confirmação, substituição, quota e exportação. A documentação de [backup/histórico](history.md) e [offline](offline.md) descreve ciclos independentes.
+Os testes Node verificam contratos e transformações; Playwright verifica importação, confirmação, substituição, quota e exportação. Os guias de [histórico de edições](history.md), [biblioteca e backup](catalog.md) e [offline](offline.md) descrevem ciclos independentes.

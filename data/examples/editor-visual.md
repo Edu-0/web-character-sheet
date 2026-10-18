@@ -1,5 +1,7 @@
 # Autoria visual de pacotes
 
+O marco visual P1 e a autoria geral v3 estão implementados no escopo descrito abaixo. Dados, regras e vínculos têm identidades explícitas e são independentes da apresentação. Registros, coleções, ações, eventos, efeitos e progressão usam operações permitidas pela engine, sem JavaScript fornecido pelo pacote. A substituição estrutural de dados instalados usa [migração com revisão](data-migration.md). Consulte o [fechamento técnico e suas limitações](authoring-validation.md).
+
 [Traços da Jornada](traits.md) combina criação, evolução, Pool, técnicas, repouso, carga e estados vinculados em um [pacote fictício importável](traits.package.json). Os dados e as condições são compartilhados pelos controles e ações.
 
 Os exemplos fictícios [Caderno de aventuras](adventurers.md) e [Caderno de investigação](investigator.md) mostram cálculos, recursos e resoluções construídos desde vazio pelos controles gerais. Consulte cada guia para preparar os dados e conhecer seu recorte de assistência.
