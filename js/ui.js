@@ -1,4 +1,4 @@
-import { createOptionCheckboxes } from './engine/option-checkboxes.js';
+import {createOptionRadios} from './engine/option-radios.js';
 import { renderRecoveryGroup } from './engine/recovery-fields.js';
 import { getSystem } from './engine/system.js';
 import { createDndRollButton } from './systems/dnd-item-rolls.js';
@@ -238,7 +238,7 @@ export function buildFeatures(character) {
       node.querySelector('[data-el="meta-display"]').textContent = [feature.source, usesText].filter(Boolean).join(' · ');
     };
     bindCardFields(node, feature, 'features', updateSummary);
-    const recovery = createOptionCheckboxes({ label: 'Recuperar usos em', options: [{ value: 'shortRest', label: 'Descanso curto ou longo' }, { value: 'longRest', label: 'Somente descanso longo' }], value: feature.recoverOn, onChange: value => state.updateItemField('features', feature.id, 'recoverOn', value) });
+    const recovery = createOptionRadios({ label: 'Recuperar usos em', options: [{ value: 'shortRest', label: 'Descanso curto ou longo' }, { value: 'longRest', label: 'Somente descanso longo' }], value: feature.recoverOn, onChange: value => state.updateItemField('features', feature.id, 'recoverOn', value) });
     node.querySelector('[data-feature-recovery]').append(recovery.element);
     updateSummary();
     node.querySelector('[data-action="remove"]').innerHTML = icons.trash;

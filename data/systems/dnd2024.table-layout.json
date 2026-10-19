@@ -212,7 +212,9 @@
                       "type": "textarea",
                       "label": "Notas"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 }
               ]
             }
@@ -350,7 +352,7 @@
                     },
                     "recoverOn": {
                       "type": "select",
-                      "presentation": "checkboxes",
+                      "presentation": "radios",
                       "label": "Recuperar usos em",
                       "options": [
                         {
@@ -375,7 +377,9 @@
                       "type": "textarea",
                       "label": "Notas"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": ["usesCurrent"]
                 }
               ]
             }
@@ -577,7 +581,9 @@
                       "type": "textarea",
                       "label": "Descrição"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": ["prepared"]
                 }
               ]
             }

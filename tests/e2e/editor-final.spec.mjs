@@ -1,3 +1,4 @@
+import {editorMode,editorCommand,editorArea,editorTool,editorFamily} from '../helpers/editor-workspace-nav.js';
 import {test,expect} from '@playwright/test';
 import {readFile,writeFile} from 'node:fs/promises';
 import {minimalPackage} from '../legacy-editor-package.js';
@@ -15,33 +16,33 @@ test('os oito sistemas e seus layouts renderizam; falha conserva ensaio anterior
 
 test('toque, IME, atalhos e seis combinações de largura/tema preservam foco e texto',async({browser},testInfo)=>{
   const context=await browser.newContext({hasTouch:true,viewport:{width:360,height:900}});const page=await context.newPage();try{
-    await open(page);const area=page.locator('#editor-json'),original=await area.inputValue();
+    await open(page);await editorMode(page,'json');const area=page.locator('#editor-json'),original=await area.inputValue();
     await area.evaluate(node=>{node.dispatchEvent(new CompositionEvent('compositionstart',{bubbles:true}));node.value='{ composição';node.dispatchEvent(new InputEvent('input',{bubbles:true,isComposing:true,inputType:'insertCompositionText'}));});await page.waitForTimeout(400);await expect(area).toHaveValue('{ composição');
     await area.evaluate(node=>node.dispatchEvent(new CompositionEvent('compositionend',{bubbles:true})));await expect(page.locator('#editor-validation-summary')).toContainText('JSON inválido');await area.press('Control+z');await expect(area).toHaveValue(original);await area.press('Control+k');await expect(page.locator('#view-editor')).toBeVisible();await expect(area).toBeFocused();
     for(const width of [360,768,1280])for(const theme of ['light','dark']){
-      await page.setViewportSize({width,height:900});await page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);if(width<900)await page.locator('.editor-mobile-tabs').getByRole('button',{name:'Prévia',exact:true}).tap();await page.getByLabel('Tema do ensaio').selectOption(theme);
+      await page.setViewportSize({width,height:900});await page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);if(width<900)await page.locator('.editor-mobile-tabs').getByRole('button',{name:'Prévia',exact:true}).tap();await page.locator('.workspace-display>summary').click();await page.getByRole('combobox',{name:'Tema do ensaio',exact:true}).selectOption(theme);await page.keyboard.press('Escape');
       if(width<900){await page.locator('.editor-mobile-tabs').getByRole('button',{name:'Prévia',exact:true}).tap();await expect(page.locator('.editor-preview')).toBeVisible();await page.locator('.editor-mobile-tabs').getByRole('button',{name:'JSON',exact:true}).tap();}
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);await page.evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:testInfo.outputPath(`touch-${width}-${theme}.png`),fullPage:true});
     }
     await page.evaluate(()=>document.documentElement.style.zoom='2');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-    await area.press('Control+s');await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');await page.getByRole('button',{name:'Sair do editor'}).tap();await expect(page.locator('#view-systems')).toBeVisible();
+    await area.press('Control+s');await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');await editorCommand(page,'Sair do editor');await expect(page.locator('#view-systems')).toBeVisible();
   }finally{await context.close();}
 });
 
 test('sair antes do autosave descarta só edição pendente; Escape conserva texto',async({page})=>{
   await open(page);await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');const original=await page.locator('#editor-json').inputValue();
-  await page.locator('#editor-json').fill('{ pending');await page.getByRole('button',{name:'Sair do editor'}).click();await page.getByRole('dialog').press('Escape');await expect(page.locator('#editor-json')).toHaveValue('{ pending');
-  await page.locator('#editor-json').fill('{ discard');await page.getByRole('button',{name:'Sair do editor'}).click();await page.getByRole('button',{name:'Descartar e sair'}).click();await page.waitForTimeout(800);await page.getByRole('button',{name:'Recuperar rascunho'}).click();await expect(page.locator('#editor-json')).toHaveValue(original);
+  await editorMode(page,'json');await page.locator('#editor-json').fill('{ pending');await editorCommand(page,'Sair do editor');await page.getByRole('dialog').press('Escape');await expect(page.locator('#editor-json')).toHaveValue('{ pending');
+  await editorMode(page,'json');await page.locator('#editor-json').fill('{ discard');await editorCommand(page,'Sair do editor');await page.getByRole('button',{name:'Descartar e sair'}).click();await page.waitForTimeout(800);await page.getByRole('button',{name:'Recuperar rascunho'}).click();await expect(page.locator('#editor-json')).toHaveValue(original);
 });
 
 test('subpasta offline: criar/erro/recuperar/corrigir/exportar/reimportar/aplicar/sair',async({page,context})=>{
   const server=await startPwaServer();try{
     await page.goto(server.url);await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await expect.poll(()=>page.evaluate(()=>Boolean(navigator.serviceWorker.controller))).toBe(true);await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await context.setOffline(true);
     await page.getByRole('button',{name:'Sistemas',exact:true}).click();await page.getByRole('button',{name:'Criar pacote',exact:true}).click();await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0');const pkg=JSON.parse(await page.locator('#editor-json').inputValue());pkg.extra={nil:null,zero:0,off:false,empty:''};
-    await page.locator('#editor-json').fill('{ offline');await expect(page.locator('#editor-status')).toContainText('revisão 1');await page.reload();await page.getByRole('button',{name:'Recuperar rascunho'}).click();await expect(page.locator('#editor-json')).toHaveValue('{ offline');
-    await page.locator('#editor-json').fill(JSON.stringify(pkg,null,2));await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();await expect(page.getByRole('button',{name:'Aplicar pacote',exact:true})).toBeEnabled();
-    const downloading=page.waitForEvent('download');await page.getByRole('button',{name:'Exportar pacote',exact:true}).click();const exported=JSON.parse(await readFile(await(await downloading).path(),'utf8'));expect(exported).toEqual(pkg);
-    await page.getByRole('button',{name:'Aplicar pacote',exact:true}).click();await page.getByRole('button',{name:'Confirmar aplicação'}).click();await expect(page.locator('#editor-application-status')).toContainText('Pacote aplicado');await page.getByRole('button',{name:'Sair do editor'}).click();await expect(page.locator('#systems-list')).toContainText(pkg.system.name);
+    await editorMode(page,'json');await page.locator('#editor-json').fill('{ offline');await expect(page.locator('#editor-status')).toContainText('revisão 1');await page.reload();await page.getByRole('button',{name:'Recuperar rascunho'}).click();await expect(page.locator('#editor-json')).toHaveValue('{ offline');
+    await editorMode(page,'json');await page.locator('#editor-json').fill(JSON.stringify(pkg,null,2));await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();await editorArea(page,'review');await expect(page.locator('.workspace-header-actions .button--primary')).toBeEnabled();
+    const downloading=page.waitForEvent('download');await editorCommand(page,'Exportar pacote');const exported=JSON.parse(await readFile(await(await downloading).path(),'utf8'));expect(exported).toEqual(pkg);
+    await editorCommand(page,'Aplicar pacote');await page.getByRole('button',{name:'Confirmar aplicação'}).click();await expect(page.locator('#editor-application-status')).toContainText('Pacote aplicado');await editorCommand(page,'Sair do editor');await expect(page.locator('#systems-list')).toContainText(pkg.system.name);
     await page.locator('#input-import-system').setInputFiles({name:'offline.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(exported))});await page.getByRole('button',{name:'Substituir sistema',exact:true}).click();await expect(page.locator('#systems-list')).toContainText(pkg.system.name);await page.reload();await expect(page.getByRole('button',{name:'Recuperar rascunho'})).toBeVisible();await page.getByRole('button',{name:'Recuperar rascunho'}).click();expect(JSON.parse(await page.locator('#editor-json').inputValue()).extra).toEqual(pkg.extra);await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão');
   }finally{await context.setOffline(false);await server.close();}
 });
@@ -59,16 +60,16 @@ test('limite de 4 MiB e repeat de 10000 medidos sem truncar texto',async({page},
 
 test('erro tardio do ensaio anterior não invalida montagem nova bem-sucedida',async({page})=>{
   await open(page);await page.evaluate(async()=>{const {PreviewHost}=await import('/js/editor/preview-host.js'),mount=PreviewHost.prototype.mount;window.previewGate=new Promise(resolve=>{window.releasePreview=resolve;});PreviewHost.prototype.mount=async function(...args){await window.previewGate;return mount.apply(this,args);};});
-  const area=page.locator('#editor-json'),pkg=JSON.parse(await area.inputValue());pkg.system.name='Ensaio novo';await area.fill(JSON.stringify(pkg));await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();await expect(page.locator('#editor-preview-status')).toHaveText('Montando ensaio…');
+  await editorMode(page,'json');const area=page.locator('#editor-json'),pkg=JSON.parse(await area.inputValue());pkg.system.name='Ensaio novo';await area.fill(JSON.stringify(pkg));await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();await expect(page.locator('#editor-preview-status')).toHaveText('Montando ensaio…');
   await page.frameLocator('.editor-preview-frame:not([hidden])').locator('body').evaluate(()=>{setTimeout(()=>{throw new Error('falha tardia do ensaio anterior');},0);});await expect(page.locator('#editor-preview-status')).toContainText('falha tardia do ensaio anterior');await page.evaluate(()=>window.releasePreview());
-  await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 1');await expect(page.getByRole('button',{name:'Aplicar pacote',exact:true})).toBeEnabled();
+  await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 1');await editorArea(page,'review');await expect(page.locator('.workspace-header-actions .button--primary')).toBeEnabled();
 });
 
 test('fechar imagem async/modal e mensagens tardias não altera dados reais',async({page})=>{
   await open(page);await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');const before=await page.evaluate(async()=>({character:structuredClone((await import('/js/state.js')).state.get()),keys:Object.fromEntries(Object.entries(localStorage).filter(([key])=>!key.startsWith('ficha-rpg:editor:')))}));
-  const pkg=minimalPackage('image-test');pkg.layouts[0].tabs[0].sections[0].containers[0].components.push({type:'image',field:'portrait',label:'Retrato'});await page.locator('#editor-json').fill(JSON.stringify(pkg));await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão');const frame=page.frameLocator('.editor-preview-frame:not([hidden])');
+  const pkg=minimalPackage('image-test');pkg.layouts[0].tabs[0].sections[0].containers[0].components.push({type:'image',field:'portrait',label:'Retrato'});await editorMode(page,'json');await page.locator('#editor-json').fill(JSON.stringify(pkg));await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão');const frame=page.frameLocator('.editor-preview-frame:not([hidden])');
   await frame.locator('body').evaluate(()=>{Image.prototype.decode=()=>new Promise(resolve=>setTimeout(resolve,2000));setTimeout(()=>parent.postMessage({type:'rendered',protocol:1,revision:999},'*'),1500);});
   await frame.locator('input[type=file]').setInputFiles({name:'portrait.svg',mimeType:'image/svg+xml',buffer:Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10" fill="red"/></svg>')});
-  await page.getByRole('button',{name:'Salvar rascunho',exact:true}).click();await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');await page.getByRole('button',{name:'Sair do editor'}).click();await expect(page.locator('.editor-preview-frame')).toHaveCount(0);await page.waitForTimeout(2300);
+  await editorCommand(page,'Salvar rascunho');await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');await editorCommand(page,'Sair do editor');await expect(page.locator('.editor-preview-frame')).toHaveCount(0);await page.waitForTimeout(2300);
   expect(await page.evaluate(async()=>({character:structuredClone((await import('/js/state.js')).state.get()),keys:Object.fromEntries(Object.entries(localStorage).filter(([key])=>!key.startsWith('ficha-rpg:editor:')))}))).toEqual(before);
 });

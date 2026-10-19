@@ -2,6 +2,8 @@
 
 **Sistemas** mostra sua biblioteca instalada. **Catálogo** reúne as implementações disponíveis nesta versão do aplicativo, com busca por nome ou ID. Use **Instalar** para acrescentar um sistema à biblioteca; isso não cria personagens. **Ver em Sistemas** leva às ações do pacote instalado. Você também pode importar seus próprios pacotes JSON pelo catálogo ou pela biblioteca.
 
+Abra o catálogo pelo ícone de loja à direita da navegação superior (identificado como **Catálogo**) ou por **Sistemas → Explorar catálogo**. No celular, Configurações também aparece como ícone. As ações da ficha ficam em **Mais** nas telas com menos de 1280 px de largura.
+
 O catálogo é local e gratuito. Depois da preparação do uso offline, todos os sistemas disponibilizados com o aplicativo podem ser instalados sem conexão. Novos sistemas aparecem no catálogo nas atualizações do app, sem entrar automaticamente na sua biblioteca. Não há servidor, conta, pagamento ou busca de pacotes externos.
 
 Na primeira atualização para esta funcionalidade, os sistemas que antes apareciam sempre na biblioteca são mantidos. A seleção passa a ser salva: excluir um deles não o reinstala ao recarregar ou atualizar o app.

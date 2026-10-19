@@ -8,10 +8,12 @@ async function runtimeAssets() {
   })).catch(error=>{assets=null;throw error;});
   return assets;
 }
-const attrs = () => Object.fromEntries(['theme','palette','diceDisplay'].map(key=>[key,document.documentElement.dataset[key] || '']));
+const materialAttrs = () => Object.fromEntries(['background','materialEffects'].map(key=>[key,document.documentElement.dataset[key] || '']));
+const attrs = () => ({...Object.fromEntries(['theme','palette','diceDisplay'].map(key=>[key,document.documentElement.dataset[key] || ''])),...materialAttrs()});
 export class PreviewHost {
-  constructor(host,{sessionId=crypto.randomUUID(),onDiagnostic=()=>{},onSource=()=>{},onInspectionEnd=()=>{},onCompositionDrop=()=>{}}={}) {this.host=host;this.sessionId=sessionId;this.generation=0;this.onDiagnostic=onDiagnostic;this.onSource=onSource;this.onInspectionEnd=onInspectionEnd;this.onCompositionDrop=onCompositionDrop;this.pending=new Set();}
+  constructor(host,{sessionId=crypto.randomUUID(),onDiagnostic=()=>{},onSource=()=>{},onInspectionEnd=()=>{},onCompositionDrop=()=>{},onAuthoring=()=>{}}={}) {this.host=host;this.sessionId=sessionId;this.generation=0;this.onDiagnostic=onDiagnostic;this.onSource=onSource;this.onInspectionEnd=onInspectionEnd;this.onCompositionDrop=onCompositionDrop;this.onAuthoring=onAuthoring;this.pending=new Set();this.materialListener=()=>this.appearance({});document.addEventListener('materials:change',this.materialListener);}
   async mount(pkg,{revision,layoutId,appearance=attrs()}={}) {
+    appearance={...attrs(),...appearance};
     for(const record of this.pending)this.destroyRecord(record);
     const generation=++this.generation, context={sessionId:this.sessionId,generation,revision,layoutId};
     const [script,css]=await runtimeAssets(); if (generation!==this.generation) throw new Error('Prévia superada.');
@@ -25,7 +27,7 @@ export class PreviewHost {
       const finish=error=>{clearTimeout(timer);record.cancel=null;if(error) reject(error);else resolve(record);};
       record.cancel=()=>finish(new Error('Prévia descartada.'));
       channel.port1.onmessage=({data})=>{
-        if (generation!==this.generation && record!==this.current || !matchesPreview(data,context,['ready','rendered','runtime-diagnostic','snapshot','source-picked','source-revealed','composition-geometry','composition-drop','inspection-ended'])) return;
+        if (generation!==this.generation && record!==this.current || !matchesPreview(data,context,['ready','rendered','runtime-diagnostic','snapshot','source-picked','source-revealed','composition-geometry','composition-drop','inspection-ended','authoring-context','authoring-shortcut'])) return;
         if (data.type==='ready') channel.port1.postMessage(previewMessage('mount',context,{package:pkg,appearance}));
         if (data.type==='rendered') finish();
         if (data.type==='runtime-diagnostic') {this.onDiagnostic(data.message);finish(new Error(data.message));}
@@ -34,6 +36,7 @@ export class PreviewHost {
         if (data.type==='source-revealed') record.requests?.get(data.requestId)?.(data);
         if (data.type==='source-picked' && record===this.current && record.sources.has(data.pointer)) this.onSource({pointer:data.pointer,...context});
         if(data.type==='composition-drop'&&record===this.current&&data.token===record.compositionToken&&record.sources.has(data.source)&&record.sources.has(data.target))this.onCompositionDrop({...data,...context});
+        if(['authoring-context','authoring-shortcut'].includes(data.type)&&record===this.current&&record.compositionToken&&data.token===record.compositionToken&&(!data.pointer||record.sources.has(data.pointer))&&(data.type!=='authoring-context'||Number.isFinite(data.x)&&Number.isFinite(data.y)&&record.sources.has(data.pointer)))this.onAuthoring({...data,...context});
         if (data.type==='inspection-ended' && record===this.current) this.onInspectionEnd();
       };
       channel.port1.start();
@@ -61,7 +64,7 @@ export class PreviewHost {
   }
   inspect(enabled) {if(this.current)this.current.port.postMessage(previewMessage('inspect',this.current.context,{enabled:enabled===true}));}
   compose(enabled){if(this.current){this.current.compositionToken=enabled?crypto.randomUUID():null;this.current.port.postMessage(previewMessage('compose',this.current.context,{enabled:enabled===true,token:this.current.compositionToken}));}}
-  appearance(appearance) {if(this.current)this.current.port.postMessage(previewMessage('appearance',this.current.context,{appearance}));}
+  appearance(appearance) {if(this.current)this.current.port.postMessage(previewMessage('appearance',this.current.context,{appearance:{...materialAttrs(),...appearance}}));}
   destroyRecord(record) {if (!record)return;record.cancel?.();for(const request of record.requests?.values() || [])request.cancel();record.port.postMessage(previewMessage('dispose',record.context));record.port.close();record.frame.remove();this.pending.delete(record);}
-  dispose() {this.generation++;for(const record of this.pending)this.destroyRecord(record);this.destroyRecord(this.current);this.current=null;}
+  dispose() {document.removeEventListener('materials:change',this.materialListener);this.generation++;for(const record of this.pending)this.destroyRecord(record);this.destroyRecord(this.current);this.current=null;}
 }

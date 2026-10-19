@@ -1,5 +1,7 @@
 # Migração dos dados instalados
 
+**Onde encontrar:** no editor, abra **Revisar → Migração dos dados instalados**. Os planos, conflitos, cópias e confirmações descritos neste guia mantêm o mesmo fluxo. [Navegação do editor](editor-workspace.md).
+
 O editor permite alterar explicitamente os dados de um pacote instalado junto com **todos os seus personagens vinculados**. O catálogo original permanece separado da cópia editada. Abrir um arquivo ou mudar um rótulo não converte personagens.
 
 ## Revisar e confirmar

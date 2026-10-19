@@ -69,14 +69,15 @@ self.addEventListener('install', event => {
       }
     } catch (error) { await reportFailure(error); throw error; }
   })());
-  // Sem skipWaiting: janelas antigas continuam usando a versão antiga inteira.
+  // Updates stay waiting until all open app windows preserve their work.
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     for (const key of await caches.keys()) if (key.startsWith(PREFIX) && key !== CACHE) await caches.delete(key);
+    await self.clients.claim();
   })());
-  // Sem clients.claim: uma página já aberta não troca de versão durante a sessão.
+  // Prepared windows reload on controllerchange; initial installation does not reload.
 });
 
 async function serve(url, asset) {
@@ -104,7 +105,36 @@ self.addEventListener('fetch', event => {
   if (asset) event.respondWith(serve(requested.href, asset));
 });
 
+let updatingApp = false;
+async function activateUpdate(event) {
+  const reply = message => event.ports[0].postMessage(message);
+  if (updatingApp) { reply({ok:false,message:'Outra atualização já está em andamento.'}); return; }
+  updatingApp = true;
+  let windows = []; const transaction = crypto.randomUUID();
+  try {
+    const cache = await caches.open(CACHE);
+    if (!(await Promise.all([...urls.keys()].map(url => cache.match(url)))).every(Boolean)) throw Error('A nova versão ainda não está completa. Verifique a conexão e tente novamente.');
+    windows = (await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client => client.url.startsWith(SCOPE));
+    const results = await Promise.all(windows.map(client => new Promise(resolve => {
+      const channel = new MessageChannel();
+      const finish = result => { clearTimeout(timer); channel.port1.close(); resolve(result); };
+      const timer = setTimeout(() => finish({ready:false,message:'Uma aba está desatualizada ou não respondeu. Feche as outras abas do aplicativo e tente novamente.'}), 8000);
+      channel.port1.onmessage = ({data}) => finish(data?.protocol === 1 ? data : {ready:false,message:'Feche as abas antigas do aplicativo e tente novamente.'});
+      try { client.postMessage({type:'APP_UPDATE_PREPARE',transaction},[channel.port2]); } catch { finish({ready:false,message:'Não foi possível preparar uma das abas. Tente novamente.'}); }
+    })));
+    const failed = results.find(result => !result.ready);
+    if (failed) throw Error(failed.message || 'Uma aba não conseguiu salvar suas alterações. A versão atual foi mantida.');
+    const current = (await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client => client.url.startsWith(SCOPE));
+    if (current.some(client => !windows.some(known => known.id === client.id))) throw Error('Outra aba foi aberta durante a atualização. Tente novamente.');
+    reply({ok:true}); await self.skipWaiting();
+  } catch (error) {
+    for (const client of windows) client.postMessage({type:'APP_UPDATE_ABORT',transaction});
+    reply({ok:false,message:error.message});
+  } finally { updatingApp = false; }
+}
+
 self.addEventListener('message', event => {
+  if(event.data?.type==='APP_UPDATE_ACTIVATE' && event.ports[0] && event.source?.url?.startsWith(SCOPE)){event.waitUntil(activateUpdate(event));return;}
   if(event.data?.type==='VERIFY_LIBRARY_WRITERS' && event.ports[0]){
     event.waitUntil((async()=>{
       const clients=(await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client=>client.url.startsWith(SCOPE));

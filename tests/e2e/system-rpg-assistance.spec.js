@@ -305,7 +305,7 @@ test('itens e artefatos recuperam apenas usos marcados, com editor recolhido e d
   const row = active(page).locator('.engine-table__details-row').first();
   await expect(row.getByLabel('Usos atuais', { exact: true })).not.toBeVisible();
   await row.locator('summary').click();
-  await row.getByRole('checkbox', { name: 'Descanso curto ou longo', exact: true }).check();
+  await row.getByRole('radio', { name: 'Descanso curto ou longo', exact: true }).check();
   await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   for (const mode of ['light', 'dark']) {
     await page.evaluate(mode => document.documentElement.dataset.theme = mode, mode);

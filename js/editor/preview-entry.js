@@ -16,12 +16,17 @@ import {setByPath} from '../engine/paths.js';
 import {CharacterHistory,changesBetween,applyCharacterChanges} from '../engine/character-history.js';
 import {assertEventBasis} from '../engine/rule-events.js';
 import {archiveCompletedRecords} from '../engine/action-records.js';
+import {previewMaterialAttributes} from '../material-preferences.js';
 
 let port, context, character, controller, original, navigation;
 const characterHistory=new CharacterHistory();
 const send = (type,payload={}) => port?.postMessage(previewMessage(type,context,payload));
 function appearance(value) {
   for (const key of ['theme','palette','diceDisplay']) if (typeof value?.[key]==='string' && /^[a-z-]+$/.test(value[key])) document.documentElement.dataset[key]=value[key];
+  if(value && (Object.hasOwn(value,'background') || Object.hasOwn(value,'materialEffects'))){
+    const attributes=previewMaterialAttributes({background:document.documentElement.dataset.background,materialEffects:document.documentElement.dataset.materialEffects,...value});
+    Object.assign(document.documentElement.dataset,attributes);
+  }
   document.documentElement.dataset.calculationControls='visible';
 }
 function bootstrap(event) {
@@ -50,7 +55,9 @@ function bootstrap(event) {
       setSystem(pkg.system);setLayout(layout);appearance(data.appearance);
       const layoutIndex=pkg.layouts.indexOf(layout);
       navigation=previewNavigation({sources:previewSources(pkg,context.layoutId),controller:()=>controller,send});
-      controller=renderSheet(document.getElementById('preview-sheet'),layout,character,{system:pkg.system,
+      const sheetHost=document.getElementById('preview-sheet');
+      sheetHost.dataset.sheetMode=layout.mode || 'sheet';
+      controller=renderSheet(sheetHost,layout,character,{system:pkg.system,
         onRenderSource:(node,path)=>navigation.register(node,pointerFor(['layouts',layoutIndex,...path])),
         preview:true,getCharacter:()=>character,
         commitPreparedAction:async(action,plan,{historyField}={})=>{

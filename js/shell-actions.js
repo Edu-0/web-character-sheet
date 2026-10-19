@@ -1,7 +1,7 @@
 export function initShellActions() {
   const trigger = document.getElementById('btn-more');
   const commands = document.getElementById('secondary-actions');
-  const compact = matchMedia('(max-width: 900px)');
+  const compact = matchMedia('(max-width: 1279px)');
   function close({ restore = false } = {}) {
     commands.classList.remove('is-open');
     trigger.setAttribute('aria-expanded', 'false');

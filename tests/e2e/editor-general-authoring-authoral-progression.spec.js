@@ -1,3 +1,4 @@
+import {editorMode,editorCommand,editorArea,editorTool,editorFamily} from '../helpers/editor-workspace-nav.js';
 // Author costs and grants through the common UI; no JSON logic injection.
 import {test,expect} from '@playwright/test';
 import {open,panel,confirm,datum,component,read,n,bin,catalog,catalogEntry,calculation,expr,current,frame,layoutCopy,roundtrip} from '../helpers/general-authoring.mjs';
@@ -41,7 +42,7 @@ async function exercise(runtime,d,{narrative=false}={}){
  await runtime.getByRole('button',{name:'Reabrir criação tipada',exact:true}).click();await expect(runtime.locator('.engine-progression')).toContainText('ausência de histórico de evolução');
 }
 test('AV-10 B: escala e tabelas visuais separam criação, melhoria paga e narrativa com proveniência',async({page,browser},info)=>{
- test.setTimeout(420000);const d=await author(page);await page.getByRole('button',{name:'Experimentar',exact:true}).click();await exercise(frame(page),d);expect(await current(page)).toEqual(d.pkg);await roundtrip(page,browser,info,d.pkg,runtime=>exercise(runtime,d,{narrative:true}));
+ test.setTimeout(420000);const d=await author(page);await editorMode(page,'experiment');await exercise(frame(page),d);expect(await current(page)).toEqual(d.pkg);await roundtrip(page,browser,info,d.pkg,runtime=>exercise(runtime,d,{narrative:true}));
  await apply(page,d.pkg);await exercise(page,d);const character=await values(page);expect(character.progressionLedger.records.map(r=>[r.mode,r.cost.amount])).toEqual([['creation',1],['creation',3],['paid',2]]);expect(character.progressionLedger.creationSnapshot.spent).toBe(4);expect(character.progressionLedger.creationSnapshot.remaining).toBe(10);const identities=character.progressionLedger.records.map(r=>r.id);
  await page.locator('#btn-undo-edit').click();await page.locator('#btn-redo-edit').click();expect((await values(page)).progressionLedger.records.map(r=>r.id)).toEqual(identities);
 });

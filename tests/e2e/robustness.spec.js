@@ -22,6 +22,7 @@ test('importação rejeita caminhos perigosos e catálogo interpolado sem poluir
 });
 
 test('personagem com chave reservada ou tipo inválido não deixa documento órfão', async ({page}) => {
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('ficha-rpg:v2:app-session'))).not.toBeNull();
   const before = await page.evaluate(() => Object.keys(localStorage).sort());
   await page.locator('#input-import-file').setInputFiles(upload('danger.json', '{"schemaVersion":1,"meta":{"system":"external"},"__proto__":{"polluted":true}}'));
   await expect(page.locator('.toast').last()).toContainText('chave vazia ou reservada');
@@ -135,13 +136,13 @@ test('foco e cursor sobrevivem a atualização externa e mudança em lista', asy
   await page.evaluate(async()=>{document.activeElement.setSelectionRange(2,4); (await import('/js/state.js')).state.setPath('identity.player','Jogador');});
   await expect(name).toBeFocused(); expect(await name.evaluate(input=>[input.selectionStart,input.selectionEnd])).toEqual([2,4]);
   await page.keyboard.insertText('XX'); await expect(name).toHaveValue('AuXXra');
-  await page.evaluate(async()=>{(await import('/js/state.js')).state.setPath('features',[{id:'focus-entry',name:'Habilidade',description:'Descrição'}]);});
-  await page.getByRole('tab',{name:'Habilidades',exact:true}).click();
-  await page.locator('[data-entry-id="focus-entry"] summary').click();
-  const entryName = page.locator('[data-entry-id="focus-entry"]').getByLabel('Nome',{exact:true});
+  await page.evaluate(async()=>{(await import('/js/state.js')).state.setPath('inventory.items',[{id:'focus-entry',name:'Corda',notes:'Descrição',qty:1}]);});
+  await page.getByRole('tab',{name:'Inventário',exact:true}).click();
+  const entryName = page.locator('#generic-sheet-host [data-field="inventory.items"] [data-item-field="name"] input');
   await entryName.focus();
-  await page.evaluate(async()=>{document.activeElement.setSelectionRange(1,3); (await import('/js/state.js')).state.setPath('features.0.description','Outro texto');});
+  await page.evaluate(async()=>{document.activeElement.setSelectionRange(1,3); (await import('/js/state.js')).state.setPath('inventory.items.0.notes','Outro texto');});
   await expect(entryName).toBeFocused(); expect(await entryName.evaluate(input=>[input.selectionStart,input.selectionEnd])).toEqual([1,3]);
+  expect(await page.evaluate(async () => (await import('/js/state.js')).state.get().inventory.items[0])).toMatchObject({name:'Corda',notes:'Outro texto'});
 });
 
 test('upload comprime proporção/peso, rejeita SVG ativo e não busca retrato externo', async ({page}) => {

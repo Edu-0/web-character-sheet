@@ -1,5 +1,11 @@
 # Layouts múltiplos e modo mesa
 
+Componentes `list` podem escolher edição direta ou em janela pelo lápis, com campos rápidos na ficha. A opção fica no layout e pode variar entre apresentações do mesmo personagem. Consulte [leitura e edição de entradas](entry-editing.md).
+
+Na apresentação modular, seções compartilham a superfície da ficha: títulos e espaçamento organizam os grupos, enquanto campos, tabelas e avisos conservam seus controles. O Modo mesa usa títulos e distâncias mais compactos. Essa composição também acompanha a prévia do editor; ela respeita o `mode` do layout escolhido.
+
+Os estilos comuns não reescrevem a ordem ou os componentes de layouts personalizados. A ficha estática D&D e a comparação sincronizada continuam disponíveis. A apresentação para impressão tem estilos próprios.
+
 Um pacote de sistema pode incluir vários documentos em `layouts`. O seletor **Layout da ficha** fica no cabeçalho do personagem, identificado por um ícone de layout e pelo nome da apresentação atual. Sua largura acompanha os nomes das opções, com limite responsivo. Mostra todos os layouts do pacote. Alternar layouts mantém o mesmo personagem, suas entradas e seus recursos; não cria cópias nem lança evolução. A preferência fica salva por sistema neste navegador e acompanha **Exportar tudo**.
 
 Cada layout tem `id` único dentro do pacote, `system` igual ao ID do sistema e suas próprias `tabs`. Os campos dos componentes continuam apontando para o mesmo documento de personagem.

@@ -174,7 +174,7 @@
   border: 1px solid var(--color-border); border-radius: 6px; overflow-wrap: anywhere;
 }
 .engine-structured-field legend, .engine-typed-input legend { max-width: 100%; font-weight: 600; }
-.engine-structured-field input:not([type="checkbox"]), .engine-structured-field select,
+.engine-structured-field input:not([type="checkbox"]):not([type="radio"]), .engine-structured-field select,
 .engine-typed-input input, .engine-typed-input select {
   display: block; width: 100%; min-width: 0; max-width: 100%; min-height: 44px;
   padding: var(--space-2); color: var(--color-text); background: var(--color-panel);
@@ -1508,7 +1508,7 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .engine-action-flow fieldset { min-width: 0; }
 .engine-action-flow label { display: flex; gap: 8px; margin: 8px 0; }
 .engine-action-flow button, .engine-action-flow input, .engine-action-flow select { min-height: 44px; max-width: 100%; }
-.engine-action-flow input:not([type=checkbox]), .engine-action-flow select { width: 100%; min-width: 0; box-sizing: border-box; }
+.engine-action-flow input:not([type=checkbox]):not([type=radio]), .engine-action-flow select { width: 100%; min-width: 0; box-sizing: border-box; }
 .source-roll-panel { display: grid; gap: var(--space-3); min-width: 0; }
 .source-roll-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-3); }
 .source-roll-preview, .source-roll-result { overflow-wrap: anywhere; padding: var(--space-3); background: var(--color-panel-alt); border-radius: var(--radius-sm); }
@@ -1535,7 +1535,7 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .engine-check { min-width: 0; }
 .engine-container > .engine-component:has(.engine-check) { grid-column: 1 / -1; }
 .engine-check__controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; margin-bottom: 12px; }
-.engine-check__controls select, .engine-check__controls input:not([type="checkbox"]) { width: 100%; min-width: 0; }
+.engine-check__controls select, .engine-check__controls input:not([type="checkbox"]):not([type="radio"]) { width: 100%; min-width: 0; }
 .engine-check__result { overflow-wrap: anywhere; }
 
 /* Conditional presentation remains editable in composition mode. */

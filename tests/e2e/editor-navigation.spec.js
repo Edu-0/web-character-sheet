@@ -1,3 +1,4 @@
+import {editorMode,editorCommand,editorArea,editorTool,editorFamily} from '../helpers/editor-workspace-nav.js';
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 import {minimalPackage} from '../legacy-editor-package.js';
@@ -11,10 +12,10 @@ async function open(page){
     PreviewHost.prototype.mount=function(...args){window.navigationHost=this;return mount.apply(this,args);};
   });
   await page.getByRole('button',{name:'Sistemas',exact:true}).click();await page.locator('#input-editor-file').setInputFiles({name:'legacy-example.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(minimalPackage('legacy-regression'),null,2))});
-  await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0');
+  await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0');await editorMode(page,'json');
 }
 async function load(page,pkg){
-  await page.locator('#editor-json').fill(JSON.stringify(pkg,null,2));
+  await editorMode(page,'json');await page.locator('#editor-json').fill(JSON.stringify(pkg,null,2));
   await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();
   await expect(page.getByRole('button',{name:'Localizar no JSON',exact:true})).toBeEnabled();
 }
@@ -33,13 +34,13 @@ const real=page=>page.evaluate(async()=>({
 test('localizar texto, campo, botão e controle desabilitado seleciona bloco sem executar ações',async({page})=>{
   await open(page);const pkg=minimalPackage('navigation'),components=pkg.layouts[0].tabs[0].sections[0].containers[0].components;
   components.push({type:'counter',field:'score',label:'Contagem'},{type:'counter',field:'score',label:'Bloqueado',disabledWhen:{field:'score',equals:2}});
-  await load(page,pkg);await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');const before=await real(page),text=await page.locator('#editor-json').inputValue();
+  await load(page,pkg);const split=await page.getByLabel('Largura do painel JSON',{exact:true}).boundingBox(),preview=await page.locator('.editor-preview-frame:not([hidden])').boundingBox();expect(split.y+split.height).toBeLessThanOrEqual(preview.y);await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');const before=await real(page),text=await page.locator('#editor-json').inputValue();
   await page.getByRole('button',{name:'Localizar no JSON',exact:true}).click();
   for(const [target,index]of [[frame(page).getByText('Nome',{exact:true}),0],[frame(page).getByLabel('Base',{exact:true}),1],[frame(page).locator('.engine-computed__value'),3],[frame(page).getByRole('button',{name:'Aumentar Contagem',exact:true}),4],[frame(page).getByRole('button',{name:'Aumentar Bloqueado',exact:true}),5]]){
     await target.click({force:index===5});await expect(page.locator('#editor-json')).toBeFocused();
     expect(JSON.parse(await selected(page))).toEqual(components[index]);await expect(frame(page).locator('.engine-counter .computed').first()).toHaveText('2');
   }
-  await expect(page.locator('#editor-json')).toHaveValue(text);await expect(page.getByRole('button',{name:'Desfazer JSON',exact:true})).toBeEnabled();
+  await expect(page.locator('#editor-json')).toHaveValue(text);await expect(page.getByRole('button',{name:'Desfazer no editor',exact:true})).toBeEnabled();
   await page.getByRole('button',{name:'Localizar no JSON',exact:true}).click();
   await frame(page).getByRole('button',{name:'Aumentar Contagem',exact:true}).click();await expect(frame(page).locator('.engine-counter .computed').first()).toHaveText('3');
   await frame(page).getByRole('button',{name:'Aumentar Contagem',exact:true}).dblclick();await expect(frame(page).locator('.engine-counter .computed').first()).toHaveText('5');
@@ -106,9 +107,9 @@ test('toque em claro/escuro alterna painéis nos dois sentidos sem ações nem o
     for(const [width,theme]of [[360,'light'],[768,'dark'],[1280,'light']]){
       await page.setViewportSize({width,height:900});await page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);
       if(width<900)await page.locator('.editor-mobile-tabs').getByRole('button',{name:'Prévia',exact:true}).tap();
-      await page.getByLabel('Tema do ensaio').selectOption(theme);await page.getByRole('button',{name:'Localizar no JSON',exact:true}).tap();await frame(page).getByLabel('Base',{exact:true}).tap();
+      if(!await page.locator('.workspace-display').evaluate(n=>n.open))await page.locator('.workspace-display>summary').click();await page.getByLabel('Tema do ensaio').selectOption(theme);await page.locator('.workspace-display>summary').click();await page.getByRole('button',{name:'Localizar no JSON',exact:true}).tap();await frame(page).getByLabel('Base',{exact:true}).tap();
       await expect(area).toBeVisible();expect(JSON.parse(await selected(page)).field).toBe('score');
-      await page.getByRole('button',{name:'Mostrar na prévia',exact:true}).tap();await expect(page.locator('.editor-preview')).toBeVisible();await expect(frame(page).locator('[data-editor-source-highlight]')).toHaveCount(1);
+      if(width<900)await page.locator('.editor-mobile-tabs').getByRole('button',{name:'Prévia',exact:true}).tap();await page.getByRole('button',{name:'Mostrar na prévia',exact:true}).tap();await expect(page.locator('.editor-preview')).toBeVisible();await expect(frame(page).locator('[data-editor-source-highlight]')).toHaveCount(1);
       await expect(page.locator('#editor-navigation-status')).toContainText('1 ocorrência(s)');
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
       await page.evaluate(()=>window.scrollTo(0,0));
@@ -124,10 +125,10 @@ test('toque em claro/escuro alterna painéis nos dois sentidos sem ações nem o
 test('navegação funciona offline e não modifica pacote, histórico JSON ou personagem',async({page,context})=>{
   await page.goto('/');await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await expect.poll(()=>page.evaluate(()=>Boolean(navigator.serviceWorker.controller))).toBe(true);await context.setOffline(true);
   await open(page);await expect(page.locator('#editor-status')).toContainText('Rascunho salvo');const before=await real(page),text=await page.locator('#editor-json').inputValue();
-  await expect(page.getByRole('button',{name:'Desfazer JSON',exact:true})).toBeDisabled();
+  await expect(page.getByRole('button',{name:'Desfazer no editor',exact:true})).toBeDisabled();
   await page.getByRole('button',{name:'Localizar no JSON',exact:true}).click();await frame(page).getByText('Personagem',{exact:true}).click();
   expect(JSON.parse(await selected(page)).title).toBe('Personagem');await page.getByRole('button',{name:'Mostrar na prévia',exact:true}).click();await expect(frame(page).locator('[data-editor-source-highlight]')).toHaveCount(1);
-  await expect(page.locator('#editor-json')).toHaveValue(text);await expect(page.getByRole('button',{name:'Desfazer JSON',exact:true})).toBeDisabled();await page.waitForTimeout(700);expect(await real(page)).toEqual(before);
+  await expect(page.locator('#editor-json')).toHaveValue(text);await expect(page.getByRole('button',{name:'Desfazer no editor',exact:true})).toBeDisabled();await page.waitForTimeout(700);expect(await real(page)).toEqual(before);
 });
 
 test('ajuda fora do componente mantém origem no fallback sem popover nativo',async({page})=>{
@@ -155,13 +156,13 @@ test('seleção rola o JSON sem formatá-lo e definição sem instâncias inform
 test('JSON Windows preserva CRLF autoritativo ao navegar e selecionar diagnóstico',async({page})=>{
   await open(page);const pkg=minimalPackage('navigation-windows'),raw=JSON.stringify(pkg,null,2).replaceAll('\n','\r\n'),area=page.locator('#editor-json');
   await page.locator('#input-editor-file').setInputFiles({name:'windows.json',mimeType:'application/json',buffer:Buffer.from(raw)});
-  await expect(area).toHaveValue(raw.replaceAll('\r\n','\n'));await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0');
+  await expect(area).toHaveValue(raw.replaceAll('\r\n','\n'));await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0');await editorMode(page,'json');
   await expect(page.getByRole('button',{name:'Localizar no JSON',exact:true})).toBeEnabled();await page.getByRole('button',{name:'Localizar no JSON',exact:true}).click();await frame(page).getByText('Base',{exact:true}).click();
   expect(JSON.parse(await selected(page))).toEqual(pkg.layouts[0].tabs[0].sections[0].containers[0].components[1]);
   await cursor(page,'"label": "Total"');await area.press('Alt+Enter');await expect(frame(page).locator('[data-editor-source-highlight]')).toHaveAttribute('data-editor-source',base+'3');
-  await page.getByRole('button',{name:'Salvar rascunho',exact:true}).click();
+  await editorCommand(page,'Salvar rascunho');
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem(`ficha-rpg:editor:v1:draft:${window.navigationHost.sessionId}`)).text)).toBe(raw);
   pkg.system.name='';const invalid=JSON.stringify(pkg,null,2).replaceAll('\n','\r\n');
   await page.locator('#input-editor-file').setInputFiles({name:'invalid-windows.json',mimeType:'application/json',buffer:Buffer.from(invalid)});
-  await expect(area).toHaveValue(invalid.replaceAll('\r\n','\n'));await page.locator('.editor-diagnostics button').filter({hasText:'/system/name'}).click();expect(await selected(page)).toBe('""');
+  await expect(area).toHaveValue(invalid.replaceAll('\r\n','\n'));await editorMode(page,'json');await editorArea(page,'review');await page.locator('.editor-diagnostics button').filter({hasText:'/system/name'}).click();const name=page.locator('[data-property="/system/name"]').getByLabel('Nome',{exact:true});await expect(name).toBeFocused();await expect(name).toHaveValue('');await editorCommand(page,'Salvar rascunho');await expect.poll(()=>page.evaluate(()=>Object.keys(localStorage).filter(k=>k.startsWith('ficha-rpg:editor:v1:draft:')).map(k=>JSON.parse(localStorage[k])).find(d=>d.source.name==='invalid-windows.json')?.text)).toBe(invalid);
 });

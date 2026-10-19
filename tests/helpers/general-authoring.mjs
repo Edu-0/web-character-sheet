@@ -1,3 +1,4 @@
+import {editorMode,editorCommand,editorArea,editorTool,editorFamily} from './editor-workspace-nav.js';
 // UI orchestration only: descriptors select controls; they are never injected into the document.
 import {expect} from '@playwright/test';
 import {open,panel,current,confirm,frame} from './typed-authoring.mjs';
@@ -26,9 +27,9 @@ export async function datum(page,{name,type='number',parent,initial,required=fal
  await host.getByRole('button',{name:'Revisar definição estruturada',exact:true}).click();await confirm(page);return definitions(await current(page)).find(d=>!previous.has(d.id));
 }
 export async function calculation(page,name,node,{type='number',kind='calculation',context}={}){
- const host=await panel(page,'.editor-typed-data');await host.getByLabel('Cálculo tipado para editar',{exact:true}).selectOption('');await host.getByLabel('Nome do cálculo tipado',{exact:true}).fill(name);await host.getByLabel('Função da regra tipada',{exact:true}).selectOption(kind);if(kind!=='predicate')await host.getByLabel('Tipo do resultado tipado',{exact:true}).selectOption(type);await host.getByLabel('Contexto do cálculo tipado',{exact:true}).selectOption(context?.id||'');await editExpression(host,node);await host.getByRole('button',{name:'Aplicar cálculo tipado',exact:true}).click();await confirm(page);return(await current(page)).system.rules.find(rule=>rule.label===name);
+ const host=await panel(page,'.editor-typed-rules');await host.getByLabel('Cálculo tipado para editar',{exact:true}).selectOption('');await host.getByLabel('Nome do cálculo tipado',{exact:true}).fill(name);await host.getByLabel('Função da regra tipada',{exact:true}).selectOption(kind);if(kind!=='predicate')await host.getByLabel('Tipo do resultado tipado',{exact:true}).selectOption(type);await host.getByLabel('Contexto do cálculo tipado',{exact:true}).selectOption(context?.id||'');await editExpression(host,node);await host.getByRole('button',{name:'Aplicar cálculo tipado',exact:true}).click();await confirm(page);return(await current(page)).system.rules.find(rule=>rule.label===name);
 }
-export async function component(page,name,{data,rule,type=data?'dataField':'computed'}){
+export async function component(page,name,{data,rule,type=data?'dataField':'computed'}){await editorMode(page,'visual');await editorTool(page,'add');
  const box=page.locator('.editor-toolbox');await box.getByLabel('O que adicionar',{exact:true}).selectOption(type);await box.getByLabel('Nome mostrado na ficha',{exact:true}).fill(name);if(type==='dataField')await box.getByLabel('Valor tipado para mostrar',{exact:true}).selectOption(data.id);else if(rule)await box.getByLabel('Cálculo tipado compartilhado',{exact:true}).selectOption(rule.id);else await box.getByLabel('Dado do personagem',{exact:true}).selectOption(data.id);await box.getByRole('button',{name:'Revisar inclusão',exact:true}).click();await confirm(page);
 }
 export async function expr(host,label,node){const box=host.getByText(label,{exact:true}).locator('xpath=parent::details');if(await box.getAttribute('open')===null)await box.locator(':scope > summary').click();await editExpression(box,node);await box.locator(':scope > summary').click();}
@@ -46,6 +47,6 @@ export async function catalogEntry(page,cat,values){const host=await panel(page,
 export async function layoutCopy(page,name='Mesa'){const host=await panel(page,'.editor-layout-manager');await host.getByLabel('Nome do novo layout',{exact:true}).fill(name);await host.getByLabel('Apresentação do novo layout',{exact:true}).selectOption('table');await host.getByRole('button',{name:'Criar cópia nomeada do layout',exact:true}).click();await confirm(page);return(await current(page)).layouts.at(-1);}
 
 export async function roundtrip(page,browser,info,pkg,execute){
- const download=page.waitForEvent('download');await page.getByRole('button',{name:'Exportar pacote',exact:true}).click();const file=info.outputPath('general.package.json');await(await download).saveAs(file);
- const context=await browser.newContext();try{const other=await context.newPage();await other.goto('/');await expect(other.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await other.getByRole('button',{name:'Sistemas',exact:true}).click();await other.locator('#input-editor-file').setInputFiles(file);expect(await current(other)).toEqual(pkg);await other.getByRole('button',{name:'Experimentar',exact:true}).click();await execute(frame(other));}finally{await context.close();}
+ const download=page.waitForEvent('download');await editorCommand(page,'Exportar pacote');const file=info.outputPath('general.package.json');await(await download).saveAs(file);
+ const context=await browser.newContext();try{const other=await context.newPage();await other.goto('/');await expect(other.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');await other.getByRole('button',{name:'Sistemas',exact:true}).click();await other.locator('#input-editor-file').setInputFiles(file);expect(await current(other)).toEqual(pkg);await editorMode(other,'experiment');await execute(frame(other));}finally{await context.close();}
 }

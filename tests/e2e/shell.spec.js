@@ -113,20 +113,17 @@ test('espaços de magia mantêm controles dentro dos cards em todos os breakpoin
 test('controles nativos acompanham o tema claro', async ({ page }, testInfo) => {
   if (await page.locator('html').getAttribute('data-theme') !== 'light') await page.locator('#btn-theme-toggle').click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-  const styles = await page.evaluate(() => {
-    const numberInput = document.querySelector('.ability-card__score');
-    const select = document.querySelector('[data-bind="combat.hitDice.die"]');
-    const root = getComputedStyle(document.documentElement);
-    return {
-      colorScheme: root.colorScheme,
-      numberBackground: getComputedStyle(numberInput).backgroundColor,
-      numberColor: getComputedStyle(numberInput).color,
-      selectBackground: getComputedStyle(select).backgroundColor,
-    };
+  const expected = await page.evaluate(() => {
+    const probe=document.createElement('span');
+    probe.style.cssText='background:var(--color-bg-elevated);color:var(--color-text)';
+    document.body.append(probe);
+    const style=getComputedStyle(probe),result={background:style.backgroundColor,text:style.color,colorScheme:getComputedStyle(document.documentElement).colorScheme};
+    probe.style.background='var(--color-input)';result.inputBackground=getComputedStyle(probe).backgroundColor;
+    probe.remove();return result;
   });
-  expect(styles.colorScheme).toBe('light');
-  expect(styles.numberBackground).toBe('rgb(255, 255, 255)');
-  expect(styles.selectBackground).toBe('rgb(255, 255, 255)');
-  expect(styles.numberColor).toBe('rgb(38, 35, 32)');
+  expect(expected.colorScheme).toBe('light');
+  await expect(page.locator('.ability-card__score').first()).toHaveCSS('background-color',expected.background);
+  await expect(page.locator('[data-bind="combat.hitDice.die"]').first()).toHaveCSS('background-color',expected.inputBackground);
+  await expect(page.locator('.ability-card__score').first()).toHaveCSS('color',expected.text);
   await page.screenshot({ path: testInfo.outputPath('controls-light-1280.png'), fullPage: false });
 });

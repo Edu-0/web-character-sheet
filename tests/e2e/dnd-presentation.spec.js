@@ -92,11 +92,11 @@ test('habilidades podem ser reordenadas e inventário filtrado', async ({ page }
   await page.locator('#generic-sheet-host').getByRole('tab', { name: 'Habilidades' }).click();
   const features = page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden]) .engine-entry');
   await page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])').getByRole('button', { name: 'Adicionar Habilidade' }).click();
-  await features.first().locator('summary').click();
-  await features.first().getByRole('textbox', { name: 'Nome' }).fill('Primeira');
+  await page.locator('dialog.engine-entry-editor').getByRole('textbox', { name: 'Nome' }).fill('Primeira');
+  await page.locator('dialog.engine-entry-editor').getByRole('button', { name: 'Salvar', exact: true }).click();
   await page.locator('#generic-sheet-host [role="tabpanel"]:not([hidden])').getByRole('button', { name: 'Adicionar Habilidade' }).click();
-  await features.nth(1).locator('summary').click();
-  await features.nth(1).getByRole('textbox', { name: 'Nome' }).fill('Segunda');
+  await page.locator('dialog.engine-entry-editor').getByRole('textbox', { name: 'Nome' }).fill('Segunda');
+  await page.locator('dialog.engine-entry-editor').getByRole('button', { name: 'Salvar', exact: true }).click();
   await features.first().getByRole('button', { name: 'Mover para baixo: Primeira' }).click();
   await expect(features.first().locator('.engine-entry__title')).toHaveText('Segunda');
 

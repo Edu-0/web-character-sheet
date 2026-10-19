@@ -259,7 +259,9 @@
                     "range": { "type": "text", "label": "Alcance" },
                     "properties": { "type": "text", "label": "Propriedades" },
                     "notes": { "type": "textarea", "label": "Notas" }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 }
               ]
             }
@@ -322,10 +324,12 @@
                     "source": { "type": "select", "label": "Origem", "options": ["Classe", "Espécie", "Talento", "Antecedente", "Recurso", "Outro"], "default": "Classe" },
                     "usesCurrent": { "type": "number", "label": "Usos Atuais" },
                     "usesMax": { "type": "number", "label": "Usos Máximos" },
-                    "recoverOn": { "type": "select", "presentation": "checkboxes", "label": "Recuperar usos em", "options": [{ "value": "", "label": "Ajuste manual" }, { "value": "shortRest", "label": "Descanso curto ou longo" }, { "value": "longRest", "label": "Somente descanso longo" }] },
+                    "recoverOn": { "type": "select", "presentation": "radios", "label": "Recuperar usos em", "options": [{ "value": "", "label": "Ajuste manual" }, { "value": "shortRest", "label": "Descanso curto ou longo" }, { "value": "longRest", "label": "Somente descanso longo" }] },
                     "description": { "type": "textarea", "label": "Descrição" },
                     "notes": { "type": "textarea", "label": "Notas" }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": ["usesCurrent"]
                 }
               ]
             }
@@ -433,7 +437,9 @@
                     "duration": { "type": "text", "label": "Duração" },
                     "components": { "type": "text", "label": "Componentes" },
                     "description": { "type": "textarea", "label": "Descrição" }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": ["prepared"]
                 }
               ]
             }

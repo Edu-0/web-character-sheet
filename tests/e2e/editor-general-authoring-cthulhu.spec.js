@@ -1,3 +1,4 @@
+import {editorMode,editorCommand,editorArea,editorTool,editorFamily} from '../helpers/editor-workspace-nav.js';
 import {test,expect} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
 import {apply,values} from '../helpers/typed-authoring.mjs';
@@ -47,14 +48,14 @@ async function exercise(runtime,rng=runtime){
 }
 
 test('AV-10 C: perícias por referência e percentis configurados desde vazio, com candidatos compartilhados e roundtrip',async({page,browser},info)=>{
- test.setTimeout(300000);const {pkg,mesa}=await author(page);await page.getByRole('button',{name:'Experimentar',exact:true}).click();await exercise(frame(page));expect(await current(page)).toEqual(pkg);
+ test.setTimeout(300000);const {pkg,mesa}=await author(page);await editorMode(page,'experiment');await exercise(frame(page));expect(await current(page)).toEqual(pkg);
  await page.getByRole('combobox',{name:'Layout de ensaio',exact:true}).selectOption(mesa.id);await expect(frame(page).getByLabel('Último percentil',{exact:true})).toHaveValue('0');await page.getByRole('combobox',{name:'Layout de ensaio',exact:true}).selectOption(pkg.layouts[0].id);await expect(frame(page).getByLabel('Último percentil',{exact:true})).toHaveValue('0');
  await roundtrip(page,browser,info,pkg,exercise);
 });
 
 
 test('AV-10 C: instalação, layouts compartilhados, histórico e personagem exportado conservam identidades e escolhas manuais',async({page,browser},info)=>{
- test.setTimeout(300000);const {pkg,skills,selected,result}=await author(page);const downloading=page.waitForEvent('download');await page.getByRole('button',{name:'Exportar pacote',exact:true}).click();const packageFile=info.outputPath('investigator.package.json');await(await downloading).saveAs(packageFile);await page.getByRole('button',{name:'Aplicar pacote',exact:true}).click();await page.getByRole('button',{name:'Cancelar',exact:true}).click();expect(await current(page)).toEqual(pkg);await apply(page,pkg);await exercise(page.locator('#generic-sheet-host'),page);
+ test.setTimeout(300000);const {pkg,skills,selected,result}=await author(page);const downloading=page.waitForEvent('download');await editorCommand(page,'Exportar pacote');const packageFile=info.outputPath('investigator.package.json');await(await downloading).saveAs(packageFile);await editorCommand(page,'Aplicar pacote');await page.getByRole('button',{name:'Cancelar',exact:true}).click();expect(await current(page)).toEqual(pkg);await apply(page,pkg);await exercise(page.locator('#generic-sheet-host'),page);
  await page.locator('#btn-undo-edit').click();await expect(page.locator('#generic-sheet-host').getByLabel('Último percentil',{exact:true})).toHaveValue('95');await seed(page,[]);await page.locator('#btn-redo-edit').click();await expect(page.locator('#generic-sheet-host').getByLabel('Último percentil',{exact:true})).toHaveValue('100');
  const before=await values(page);await page.locator('#sheet-layout-select').selectOption(pkg.layouts[1].id);await expect(page.locator('#generic-sheet-host').getByLabel('Último percentil',{exact:true})).toHaveValue('100');expect((await values(page))[skills.binding]).toEqual(before[skills.binding]);await page.locator('#sheet-layout-select').selectOption(pkg.layouts[0].id);
  const runtime=page.locator('#generic-sheet-host');await runtime.getByLabel('Sanidade',{exact:true}).fill('7');await page.locator('#btn-undo-edit').click();await expect(runtime.getByLabel('Sanidade',{exact:true})).toHaveValue('10');await page.locator('#btn-redo-edit').click();await expect(runtime.getByLabel('Sanidade',{exact:true})).toHaveValue('7');await runtime.getByLabel('Perícias · Pesquisa · Marca de evolução',{exact:true}).check();const stored=await values(page);await expect.poll(()=>page.evaluate(async args=>{const raw=(await import('/js/repositories/character-repository.js')).rawCharacter(args.id),saved=raw?JSON.parse(raw):{};return saved[args.binding];},{id:stored.meta.id,binding:skills.binding})).toEqual(stored[skills.binding]);await page.reload();await expect(page.locator('#generic-sheet-host').getByLabel('Sanidade',{exact:true})).toHaveValue('7');expect((await values(page))[selected.binding]).toBe(stored[selected.binding]);

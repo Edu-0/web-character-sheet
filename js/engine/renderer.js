@@ -63,6 +63,10 @@ export function renderSheet(host, layout, character, options = {}) {
   const componentOptions = {
     ...options,
     ruleEvaluation,
+    registerCleanup(cleanup) {
+      cleanups.push(cleanup);
+      return () => { const index = cleanups.indexOf(cleanup); if (index >= 0) cleanups.splice(index, 1); };
+    },
     blockPresentedControl(control,blocked) {
       if(!blocked)return;
       if(!presentationBlocks.has(control))presentationBlocks.set(control,control.disabled);
@@ -269,6 +273,7 @@ function renderComponent(component, character, options) {
     system: options.system,
     ruleEvaluation:options.ruleEvaluation,
     registerRefresh: options.registerRefresh,
+    registerCleanup: options.registerCleanup,
     upgradeCharacter: options.upgradeCharacter,
     upgradeActionCharacter:options.upgradeActionCharacter,
     getCharacter:options.getCharacter || (()=>character),

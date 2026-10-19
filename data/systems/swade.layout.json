@@ -332,7 +332,9 @@
                       "type": "textarea",
                       "label": "Descrição"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 },
                 {
                   "type": "list",
@@ -347,7 +349,9 @@
                       "type": "textarea",
                       "label": "Descrição"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 },
                 {
                   "type": "list",
@@ -362,7 +366,9 @@
                       "type": "textarea",
                       "label": "Descrição"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 },
                 {
                   "type": "list",
@@ -377,7 +383,9 @@
                       "type": "textarea",
                       "label": "Descrição"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 },
                 {
                   "type": "list",

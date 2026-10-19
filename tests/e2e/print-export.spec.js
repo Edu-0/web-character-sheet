@@ -137,6 +137,7 @@ test('PDF importado: d30, seleção, tabela com continuação, texto maior que u
   await mkdir('output/pdf', { recursive: true });
   for (const [mode, backgrounds] of [['dark', true], ['light', false]]) {
     await page.evaluate(async mode => (await import('/js/theme.js')).applyTheme(mode), mode);
+    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('ficha-rpg:settings')).theme)).toBe(mode);
     const before = await snapshot(page);
     await page.pdf({ path: `output/pdf/imported-${mode}.pdf`, format: 'A4', preferCSSPageSize: true, printBackground: backgrounds, displayHeaderFooter: false });
     expect(await snapshot(page)).toEqual(before);

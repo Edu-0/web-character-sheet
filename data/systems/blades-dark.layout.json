@@ -452,7 +452,9 @@
                       "type": "textarea",
                       "label": "Descrição"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 }
               ]
             }

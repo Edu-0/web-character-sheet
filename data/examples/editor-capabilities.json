@@ -5996,6 +5996,54 @@
     },
     {
       "context": "component:list",
+      "property": "editMode",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "escolha enumerada",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
+      "property": "quickFields",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "array",
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
+      "property": "quickFields.[]",
+      "consumer": "js/engine/advanced-fields.js",
+      "validation": "js/validation/schemas.js",
+      "type": "string",
+      "inert": false,
+      "control": "valor tipado",
+      "verification": "projeção do contrato; jornadas de família não provam cada valor possível",
+      "tests": [
+        "tests/unit/editor-visual.test.mjs",
+        "tests/unit/editor-rule-authoring.test.mjs",
+        "tests/unit/editor-visual-audit.test.mjs",
+        "tests/e2e/editor-visual.spec.js"
+      ]
+    },
+    {
+      "context": "component:list",
       "property": "entryAction",
       "consumer": "js/engine/advanced-fields.js",
       "validation": "js/validation/schemas.js",
@@ -32777,6 +32825,26 @@
     {
       "system": "dnd2024",
       "layout": "dnd2024-layout",
+      "pointer": "/layouts/0/tabs/1/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-layout",
+      "pointer": "/layouts/0/tabs/1/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-layout",
       "pointer": "/layouts/0/tabs/1/sections/1/containers/0/components/0",
       "type": "tagList",
       "property": "type",
@@ -32920,6 +32988,26 @@
       "pointer": "/layouts/0/tabs/2/sections/0/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-layout",
+      "pointer": "/layouts/0/tabs/2/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-layout",
+      "pointer": "/layouts/0/tabs/2/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -33200,6 +33288,26 @@
       "pointer": "/layouts/0/tabs/3/sections/2/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-layout",
+      "pointer": "/layouts/0/tabs/3/sections/2/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-layout",
+      "pointer": "/layouts/0/tabs/3/sections/2/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -34647,6 +34755,26 @@
     {
       "system": "dnd2024",
       "layout": "dnd2024-table",
+      "pointer": "/layouts/1/tabs/0/sections/4/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-table",
+      "pointer": "/layouts/1/tabs/0/sections/4/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-table",
       "pointer": "/layouts/1/tabs/1/sections/0/containers/0/components/0",
       "type": "dndAbility",
       "property": "type",
@@ -34860,6 +34988,26 @@
       "pointer": "/layouts/1/tabs/2/sections/0/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-table",
+      "pointer": "/layouts/1/tabs/2/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-table",
+      "pointer": "/layouts/1/tabs/2/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -35140,6 +35288,26 @@
       "pointer": "/layouts/1/tabs/3/sections/2/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-table",
+      "pointer": "/layouts/1/tabs/3/sections/2/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "dnd2024",
+      "layout": "dnd2024-table",
+      "pointer": "/layouts/1/tabs/3/sections/2/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -36407,6 +36575,26 @@
     {
       "system": "sistema-rpg",
       "layout": "sistema-rpg-layout",
+      "pointer": "/layouts/0/tabs/5/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "sistema-rpg",
+      "layout": "sistema-rpg-layout",
+      "pointer": "/layouts/0/tabs/5/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "sistema-rpg",
+      "layout": "sistema-rpg-layout",
       "pointer": "/layouts/0/tabs/6/sections/0/containers/0/components/0",
       "type": "counter",
       "property": "type",
@@ -36620,6 +36808,26 @@
       "pointer": "/layouts/0/tabs/7/sections/0/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "sistema-rpg",
+      "layout": "sistema-rpg-layout",
+      "pointer": "/layouts/0/tabs/7/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "sistema-rpg",
+      "layout": "sistema-rpg-layout",
+      "pointer": "/layouts/0/tabs/7/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -38037,6 +38245,26 @@
     {
       "system": "sistema-rpg",
       "layout": "sistema-rpg-table",
+      "pointer": "/layouts/1/tabs/1/sections/4/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "sistema-rpg",
+      "layout": "sistema-rpg-table",
+      "pointer": "/layouts/1/tabs/1/sections/4/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "sistema-rpg",
+      "layout": "sistema-rpg-table",
       "pointer": "/layouts/1/tabs/2/sections/0/containers/0/components/0",
       "type": "techniqueUse",
       "property": "type",
@@ -38100,6 +38328,26 @@
       "pointer": "/layouts/1/tabs/2/sections/1/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "sistema-rpg",
+      "layout": "sistema-rpg-table",
+      "pointer": "/layouts/1/tabs/2/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "sistema-rpg",
+      "layout": "sistema-rpg-table",
+      "pointer": "/layouts/1/tabs/2/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -39387,6 +39635,26 @@
     {
       "system": "fate-accelerated",
       "layout": "fate-accelerated-layout",
+      "pointer": "/layouts/0/tabs/2/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "fate-accelerated",
+      "layout": "fate-accelerated-layout",
+      "pointer": "/layouts/0/tabs/2/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "fate-accelerated",
+      "layout": "fate-accelerated-layout",
       "pointer": "/layouts/0/tabs/2/sections/0/containers/0/components/1",
       "type": "list",
       "property": "type",
@@ -41100,6 +41368,26 @@
       "pointer": "/layouts/0/tabs/2/sections/1/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "cthulhu7",
+      "layout": "cthulhu7-layout",
+      "pointer": "/layouts/0/tabs/2/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "cthulhu7",
+      "layout": "cthulhu7-layout",
+      "pointer": "/layouts/0/tabs/2/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -43020,6 +43308,26 @@
       "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/4",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "blades-dark",
+      "layout": "blades-dark-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/4",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "blades-dark",
+      "layout": "blades-dark-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/4",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -44747,6 +45055,26 @@
     {
       "system": "swade",
       "layout": "swade-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "swade",
+      "layout": "swade-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "swade",
+      "layout": "swade-layout",
       "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/1",
       "type": "list",
       "property": "type",
@@ -44780,6 +45108,26 @@
       "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/1",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "swade",
+      "layout": "swade-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/1",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "swade",
+      "layout": "swade-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/1",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -44827,6 +45175,26 @@
     {
       "system": "swade",
       "layout": "swade-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/2",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "swade",
+      "layout": "swade-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/2",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "swade",
+      "layout": "swade-layout",
       "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/3",
       "type": "list",
       "property": "type",
@@ -44860,6 +45228,26 @@
       "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/3",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "swade",
+      "layout": "swade-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/3",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "swade",
+      "layout": "swade-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/3",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -46837,6 +47225,26 @@
     {
       "system": "ironsworn",
       "layout": "ironsworn-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/2",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "ironsworn",
+      "layout": "ironsworn-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/2",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "ironsworn",
+      "layout": "ironsworn-layout",
       "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/3",
       "type": "list",
       "property": "type",
@@ -48707,6 +49115,26 @@
     {
       "system": "ordem-paranormal",
       "layout": "ordem-paranormal-layout",
+      "pointer": "/layouts/0/tabs/1/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "ordem-paranormal",
+      "layout": "ordem-paranormal-layout",
+      "pointer": "/layouts/0/tabs/1/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "ordem-paranormal",
+      "layout": "ordem-paranormal-layout",
       "pointer": "/layouts/0/tabs/2/sections/0/containers/0/components/0",
       "type": "list",
       "property": "type",
@@ -48787,6 +49215,26 @@
     {
       "system": "ordem-paranormal",
       "layout": "ordem-paranormal-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "ordem-paranormal",
+      "layout": "ordem-paranormal-layout",
+      "pointer": "/layouts/0/tabs/3/sections/0/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "ordem-paranormal",
+      "layout": "ordem-paranormal-layout",
       "pointer": "/layouts/0/tabs/3/sections/1/containers/0/components/0",
       "type": "list",
       "property": "type",
@@ -48820,6 +49268,26 @@
       "pointer": "/layouts/0/tabs/3/sections/1/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "ordem-paranormal",
+      "layout": "ordem-paranormal-layout",
+      "pointer": "/layouts/0/tabs/3/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "ordem-paranormal",
+      "layout": "ordem-paranormal-layout",
+      "pointer": "/layouts/0/tabs/3/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"
@@ -49480,6 +49948,26 @@
       "pointer": "/layouts/1/tabs/0/sections/1/containers/0/components/0",
       "type": "list",
       "property": "itemSchema",
+      "contract": true,
+      "inert": false,
+      "control": "inspector por ramo/entradas nomeadas"
+    },
+    {
+      "system": "ordem-paranormal",
+      "layout": "ordem-paranormal-table",
+      "pointer": "/layouts/1/tabs/0/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "editMode",
+      "contract": true,
+      "inert": false,
+      "control": "escolha enumerada"
+    },
+    {
+      "system": "ordem-paranormal",
+      "layout": "ordem-paranormal-table",
+      "pointer": "/layouts/1/tabs/0/sections/1/containers/0/components/0",
+      "type": "list",
+      "property": "quickFields",
       "contract": true,
       "inert": false,
       "control": "inspector por ramo/entradas nomeadas"

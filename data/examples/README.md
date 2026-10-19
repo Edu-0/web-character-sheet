@@ -1,5 +1,7 @@
 # Pacotes, autoria e exemplos
 
+Comece pelo [guia de criação e edição de sistemas](editor-workspace.md), com a navegação nas seis áreas e os métodos técnicos.
+
 Escolha o guia conforme o que deseja criar. Todos os modos editam o mesmo pacote; não há regras ocultas ao criar um pacote vazio.
 
 | Objetivo | Guias |

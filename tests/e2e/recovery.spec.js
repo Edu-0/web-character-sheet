@@ -137,7 +137,7 @@ test('outro sistema configura recuperação com seus campos e sem resolvedor D&D
   const device = page.locator('.engine-entry').filter({ hasText: 'Lanterna de teste' });
   if (await device.getAttribute('open') === null) await device.locator('summary').first().click();
   await device.locator('.engine-item-details summary').click();
-  await device.getByRole('checkbox', { name: 'Recarregar na pausa', exact: true }).check();
+  await device.getByRole('radio', { name: 'Recarregar na pausa', exact: true }).check();
   await page.getByRole('button', { name: 'Pausa', exact: true }).click(); await apply(page.getByRole('dialog'));
   expect((await values(page)).energy).toBe(8);
   expect((await values(page)).devices[0].charges).toBe(3);
@@ -162,15 +162,24 @@ for (const host of ['#generic-sheet-host', '#legacy-dnd-sheet']) test(`caixas de
   await page.getByRole('button', { name: 'Comparar lado a lado' }).click();
   await page.locator(host).getByRole('tab', { name: 'Habilidades', exact: true }).click();
   const card = page.locator(host).locator('details').filter({ hasText: 'Recurso manual' }).first();
-  await card.locator('summary').first().click();
-  const short = card.getByRole('checkbox', { name: 'Descanso curto ou longo', exact: true });
-  const long = card.getByRole('checkbox', { name: 'Somente descanso longo', exact: true });
+  const modular = host === '#generic-sheet-host';
+  if (modular) await card.getByRole('button', { name: 'Editar Recurso manual', exact: true }).click();
+  else await card.locator('summary').first().click();
+  const controls = modular ? page.locator('dialog.engine-entry-editor') : card;
+  const commit = async (reopen = true) => {
+    if (!modular) return;
+    await controls.getByRole('button', { name: 'Salvar', exact: true }).click();
+    if (reopen) await card.getByRole('button', { name: 'Editar Recurso manual', exact: true }).click();
+  };
+  const short = controls.getByRole('radio', { name: 'Descanso curto ou longo', exact: true });
+  const long = controls.getByRole('radio', { name: 'Somente descanso longo', exact: true });
+  const manual = controls.getByRole('radio', { name: 'Ajuste manual', exact: true });
   await expect(short).not.toBeChecked(); await expect(long).not.toBeChecked();
-  await short.check(); expect((await values(page)).features[2].recoverOn).toBe('shortRest');
+  await short.check(); await commit(); expect((await values(page)).features[2].recoverOn).toBe('shortRest');
   await long.check(); await expect(short).not.toBeChecked();
-  expect((await values(page)).features[2].recoverOn).toBe('longRest');
-  await long.uncheck(); expect((await values(page)).features[2].recoverOn).toBe('');
-  await short.check(); await expect(page.locator('#save-indicator')).toHaveText('Salvo');
+  await commit(); expect((await values(page)).features[2].recoverOn).toBe('longRest');
+  await manual.check(); await commit(); expect((await values(page)).features[2].recoverOn).toBe('');
+  await short.check(); await commit(false); await expect(page.locator('#save-indicator')).toHaveText('Salvo');
   for (const theme of ['light', 'dark']) {
     await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
     for (const width of [360, 1280]) {

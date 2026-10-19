@@ -234,7 +234,9 @@
                       "type": "textarea",
                       "label": "Especial"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 }
               ]
             }
@@ -318,7 +320,9 @@
                       "type": "textarea",
                       "label": "Descrição"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 }
               ]
             }
@@ -388,7 +392,9 @@
                       "type": "textarea",
                       "label": "Descrição"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 }
               ]
             }

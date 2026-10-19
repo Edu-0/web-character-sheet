@@ -1,4 +1,5 @@
 import { applyPalette, applyTheme, getAvailablePalettes, getAvailableThemes } from './theme.js';
+import {initMaterialControls} from './materials.js';
 
 export function initAppearanceControls() {
   const tabs = [...document.querySelectorAll('.appearance-tabs [role="tab"]')];
@@ -48,4 +49,5 @@ export function initAppearanceControls() {
   }
   document.addEventListener('appearance:change', refresh);
   refresh();
+  initMaterialControls();
 }

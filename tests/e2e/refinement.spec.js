@@ -36,6 +36,8 @@ test('Configurações: abas pelo teclado, famílias recolhíveis, prévia e pref
   await expect(page.locator('#appearance-dice')).toBeVisible();
   await page.locator('#dice-display-mode').selectOption('illustrated');
   await page.getByRole('tab', { name: 'Dados', exact: true }).focus(); await page.keyboard.press('End');
+  await expect(page.locator('#appearance-background')).toBeVisible();
+  await page.keyboard.press('ArrowLeft');
   await expect(page.locator('#appearance-ornaments')).toBeVisible();
   await page.locator('#ornament-preset').selectOption('garden');
   const family = page.locator('[data-family="botanical"]');

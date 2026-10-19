@@ -1,5 +1,7 @@
 # Editor JSON com prévia
 
+**Navegação do editor:** abra **Código e propriedades → Editar JSON**. Arquivo reúne rascunhos, exportações e recuperação; Revisar reúne pendências, diagnóstico e aplicação. [Guia das seis áreas](editor-workspace.md).
+
 Sistemas instalados pelo [Catálogo](catalog.md) também oferecem **Editar pacote**, com o mesmo ID, em uma cópia local; o original do catálogo permanece intacto. **Editar cópia** cria uma variante com outro ID. Aplicar a edição verifica a base e os personagens vinculados antes de substituir a instalação.
 
 Em **Sistemas**, escolha **Criar pacote**, **Abrir JSON**, **Editar cópia** em um sistema embutido ou **Editar pacote** em um importado. Abrir apenas inicia a edição; **Aplicar pacote** instala as regras na biblioteca local depois de uma confirmação.

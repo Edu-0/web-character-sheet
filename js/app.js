@@ -260,7 +260,7 @@ async function init() {
   appInitialized=true;
   renderShell(getAppState());
   persistAppState(getAppState());
-  initPwa({ beforeReload: async () => {await flushCharacterSave({ force: true });await flushLibraryWrites();} });
+  initPwa({ beforeReload: async () => {await flushCharacterSave();await flushLibraryWrites();if(jsonEditor && !jsonEditor.disposed)await jsonEditor.saveDraft();} });
 }
 
 function initLegacyControls(initialTabId) {

@@ -1,0 +1,70 @@
+/* Screen controls: one focus boundary, quiet surfaces, standard choice shapes. */
+@media screen {
+  .field input:not([type='checkbox']):not([type='radio']), .field select, .field textarea, .input,
+  .editor-property :is(input:not([type='checkbox']):not([type='radio']), select, textarea),
+  .editor-toolbox :is(input:not([type='checkbox']):not([type='radio']), select, textarea),
+  .editor-structure-actions :is(input, select),
+  :is(.engine-structured-field, .engine-typed-input, .engine-calculation-control) :is(input:not([type='checkbox']):not([type='radio']), select, textarea),
+  .engine-progression select {
+    background: var(--color-input);
+    border-color: var(--color-input-border);
+    border-radius: var(--radius-sm);
+    padding-inline: var(--control-padding-inline);
+    transition: background-color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+  .field :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']), select), .input:not(textarea) { min-height: var(--control-height); }
+  :root .field > span:first-child, .engine-option-radios legend { color: var(--color-text-muted); }
+  :root :is(.field input, .field select, .field textarea, .input, .editor-property input, .editor-property select, .editor-property textarea):where(:hover:not(:focus):not(:disabled):not([readonly]):not([aria-invalid='true']):not(:user-invalid):not([type='checkbox']):not([type='radio'])) {
+    border-color: var(--color-choice-border);
+  }
+  .engine-item-field--compact :is(input, select, textarea), .field--name .input--title,
+  .engine-component--hero input { background: transparent; }
+  :root :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):not([type='color']), select, textarea):focus {
+    outline: 0;
+    outline-offset: 0;
+    border-color: var(--color-focus);
+    box-shadow: none;
+    box-shadow: 0 0 6px color-mix(in srgb, var(--color-focus) 16%, transparent);
+  }
+  :root :is(.field input, .field select, .field textarea, .input, .editor-property input, .editor-property select, .editor-property textarea):disabled {
+    background: var(--color-panel-alt); border-color: var(--color-border);
+    color: var(--color-text-faint); cursor: not-allowed; opacity: 1; box-shadow: none;
+  }
+  :root :is(input, select, textarea):is([aria-invalid='true'], :user-invalid):not([type='checkbox']):not([type='radio']) {
+    --color-focus: var(--color-danger-strong);
+    border-color: var(--color-danger-strong);
+    box-shadow: none;
+    box-shadow: 0 0 6px color-mix(in srgb, var(--color-danger-strong) 12%, transparent);
+  }
+  /* Choice semantics and arrow-key behavior stay native; only the radio drawing changes. */
+  :root input[type='radio'] {
+    appearance: none; box-sizing: border-box; flex: 0 0 18px;
+    width: 18px; height: 18px; min-width: 18px; min-height: 18px;
+    margin: 0; padding: 0; border: 1px solid var(--color-choice-border);
+    border-radius: 50%; background: var(--color-input); box-shadow: none;
+    vertical-align: middle; accent-color: var(--color-focus);
+    transition: border-color var(--transition-base), background-color var(--transition-base);
+  }
+  :root input[type='radio']:checked {
+    border-color: var(--color-focus); background: var(--color-focus);
+    box-shadow: inset 0 0 0 4px var(--color-input);
+  }
+  :root input[type='radio']:hover:not(:disabled) { border-color: var(--color-focus); }
+  :root input[type='radio']:disabled { opacity: .55; cursor: not-allowed; }
+  .engine-entry-editor, .modal, .print-options { border-radius: var(--radius-md); }
+  .engine-option-radios { border: 0; padding: 0; margin: 0; display: grid; gap: 4px; min-width: 0; }
+  .engine-option-radios legend { margin-bottom: 8px; color: var(--color-text-muted); font-size: .85rem; }
+  .engine-option-radios .field--radio { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; margin: 0; min-height: 44px; cursor: pointer; }
+  .engine-option-radios .field--radio > span { font-size: .875rem; text-transform: none; letter-spacing: 0; color: var(--color-text); }
+  .engine-option-radios small { color: var(--color-text-muted); }
+  :is(.tab, .engine-tab)[aria-selected='true'], .shell-nav__item--active { font-weight: 600; }
+  .tab[aria-selected='true'] { border-bottom-color: var(--color-accent-strong); }
+  @media (prefers-reduced-motion: reduce) {
+    :root :is(input, select, textarea, button, .button, .tab, .shell-nav__item) { transition: none !important; }
+  }
+  @media (forced-colors: active) {
+    :root input[type='radio'] { appearance: auto; border: 0; background: none; box-shadow: none; }
+    :root input[type='radio']:checked { background: none; box-shadow: none; }
+    :root :is(input:not([type='checkbox']):not([type='radio']), select, textarea):focus { outline: 2px solid Highlight !important; outline-offset: 2px; }
+  }
+}

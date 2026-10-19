@@ -30,13 +30,21 @@
 
   /* Bordas e raios */
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --color-input: var(--color-panel-alt);
+  --color-input-border: color-mix(in srgb, var(--color-text-muted) 60%, var(--color-border));
+  --color-focus: var(--color-accent-strong);
+  --control-height: 44px;
+  --control-padding-inline: 12px;
+  --color-choice-border: var(--color-text-muted);
+  --modal-overlay: rgb(10 11 14 / .58);
+  --modal-overlay-effects: rgb(10 11 14 / .44);
   --border-width: 1px;
 
   /* Transições */
   --transition-fast: 120ms ease;
-  --transition-base: 200ms ease;
+  --transition-base: 160ms ease;
   --transition-slow: 340ms cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Layout */
@@ -290,12 +298,53 @@
   --color-text: #3c2938;
   --color-text-muted: #695061;
   --color-text-faint: #755c6c;
-  --color-accent: #965279;
-  --color-accent-strong: #794064;
+  --color-accent: #9b5c86;
+  --color-accent-strong: #884c73;
+  --color-focus: #9b5c86;
   --color-accent-contrast: #ffffff;
   --color-secondary: #71629a;
   --color-computed-bg: rgba(150, 82, 121, 0.1);
   --scrollbar-color: #b99cb5 #f2e6ef;
+}
+
+/* Shared light reading surfaces: a quiet tint, distinct controls and fine dividers.
+   Control boundaries are stronger than decorative dividers for non-text contrast. */
+:root[data-theme='light'], [data-palette][data-theme='light'] {
+  --color-bg: #f7f5f8;
+  --color-bg-elevated: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel-alt: #f0edf2;
+  --color-input: #fcfbfd;
+  --color-input-border: #8e8195;
+  --color-border: #d8d2dc;
+  --color-border-strong: #8e8195;
+  --color-text: #2f2433;
+  --color-text-muted: #62596a;
+  --color-text-faint: #6b6170;
+  --color-computed-bg: #ece6f0;
+  --color-choice-border: #83748b;
+  --modal-overlay: rgb(24 17 28 / .46);
+  --modal-overlay-effects: rgb(24 17 28 / .30);
+  --shadow-sm: 0 1px 2px rgb(24 17 28 / .06);
+  --shadow-md: 0 4px 16px rgb(24 17 28 / .10);
+  --shadow-lg: 0 12px 32px rgb(24 17 28 / .14);
+  --scrollbar-color: #96899d #f0edf2;
+}
+
+/* Keep the monochrome palette neutral, including its reading surfaces. */
+[data-palette='monochrome'][data-theme='light'] {
+  --color-bg: #f6f6f6;
+  --color-panel-alt: #eeeeee;
+  --color-input: #fcfcfc;
+  --color-input-border: #868686;
+  --color-border: #d5d5d5;
+  --color-border-strong: #868686;
+  --color-text: #292929;
+  --color-text-muted: #5e5e5e;
+  --color-text-faint: #686868;
+  --color-choice-border: #767676;
+  --color-computed-bg: #e9e9e9;
+  --scrollbar-color: #8d8d8d #eeeeee;
 }
 
 /* base.css — reset e estilos de elementos fundamentais */
@@ -544,7 +593,7 @@ a {
   color: var(--color-text-faint);
 }
 
-.field input:not([type='checkbox']),
+.field input:not([type='checkbox']):not([type='radio']),
 .field select,
 .field textarea,
 .input {
@@ -828,7 +877,7 @@ a {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 11, 14, 0.6);
+  background: var(--modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -843,7 +892,13 @@ a {
   box-shadow: var(--shadow-lg);
   max-width: 480px;
   width: 100%;
+  max-height: calc(100dvh - 2 * var(--space-4));
   animation: modal-in var(--transition-slow);
+}
+
+.modal-overlay > .modal {
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes modal-in {
@@ -855,6 +910,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
   padding: var(--space-4) var(--space-5);
   border-bottom: var(--border-width) solid var(--color-border);
 }
@@ -866,10 +922,14 @@ a {
 
 .modal__body {
   padding: var(--space-5);
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .modal__footer {
   display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-2);
   padding: var(--space-4) var(--space-5);
@@ -908,6 +968,13 @@ a {
   border-color: var(--color-danger);
   color: var(--color-danger-strong);
 }
+
+/* A prepared release is visible on every screen; it never interrupts editing on its own. */
+.pwa-update-banner{position:fixed;z-index:900;inset:auto 16px calc(var(--dice-tray-height,0px) + 16px) auto;max-width:min(560px,calc(100vw - 32px));display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:16px;background:var(--color-panel);color:var(--color-text);border:1px solid var(--color-border-strong);border-radius:6px;box-shadow:var(--shadow-md)}
+.pwa-update-banner[hidden]{display:none}.pwa-update-banner>p{flex:1 1 100%;margin:0;font-size:14px;line-height:1.5}.pwa-update-banner .button{min-height:44px}
+.pwa-update-blocker{position:fixed;z-index:10000;inset:0;display:grid;place-content:center;padding:24px;text-align:center;background:var(--color-panel);color:var(--color-text);font-size:16px}
+
+@media print{.pwa-update-banner,.pwa-update-blocker{display:none!important}}
 
 /* Ficha declarativa — design language compartilhado por todos os sistemas. */
 
@@ -1085,7 +1152,7 @@ a {
   border: 1px solid var(--color-border); border-radius: 6px; overflow-wrap: anywhere;
 }
 .engine-structured-field legend, .engine-typed-input legend { max-width: 100%; font-weight: 600; }
-.engine-structured-field input:not([type="checkbox"]), .engine-structured-field select,
+.engine-structured-field input:not([type="checkbox"]):not([type="radio"]), .engine-structured-field select,
 .engine-typed-input input, .engine-typed-input select {
   display: block; width: 100%; min-width: 0; max-width: 100%; min-height: 44px;
   padding: var(--space-2); color: var(--color-text); background: var(--color-panel);
@@ -2419,7 +2486,7 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .engine-action-flow fieldset { min-width: 0; }
 .engine-action-flow label { display: flex; gap: 8px; margin: 8px 0; }
 .engine-action-flow button, .engine-action-flow input, .engine-action-flow select { min-height: 44px; max-width: 100%; }
-.engine-action-flow input:not([type=checkbox]), .engine-action-flow select { width: 100%; min-width: 0; box-sizing: border-box; }
+.engine-action-flow input:not([type=checkbox]):not([type=radio]), .engine-action-flow select { width: 100%; min-width: 0; box-sizing: border-box; }
 .source-roll-panel { display: grid; gap: var(--space-3); min-width: 0; }
 .source-roll-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-3); }
 .source-roll-preview, .source-roll-result { overflow-wrap: anywhere; padding: var(--space-3); background: var(--color-panel-alt); border-radius: var(--radius-sm); }
@@ -2446,7 +2513,7 @@ html:not([data-calculation-controls="visible"]) .engine-calculation-control { di
 .engine-check { min-width: 0; }
 .engine-container > .engine-component:has(.engine-check) { grid-column: 1 / -1; }
 .engine-check__controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; margin-bottom: 12px; }
-.engine-check__controls select, .engine-check__controls input:not([type="checkbox"]) { width: 100%; min-width: 0; }
+.engine-check__controls select, .engine-check__controls input:not([type="checkbox"]):not([type="radio"]) { width: 100%; min-width: 0; }
 .engine-check__result { overflow-wrap: anywhere; }
 
 /* Conditional presentation remains editable in composition mode. */
@@ -2974,7 +3041,7 @@ body[data-editor-composing] [data-condition-hidden] { display: block !important;
 .engine-entry__summary { min-height: 44px; }
 .engine-component .field > span:first-child { font-size: 13px; letter-spacing: 0; }
 .engine-component--hero input, .engine-sheet--editorial .engine-component--hero input { font-size: 1.3rem; padding-block: 8px; }
-.engine-component input:not([type='checkbox']), .engine-component select { min-height: 40px; }
+.engine-component input:not([type='checkbox']):not([type='radio']), .engine-component select { min-height: 40px; }
 .engine-computed__value, .engine-dnd-derived__value { font-weight: 700; }
 .engine-budget__metric { box-shadow: none; }
 .appearance-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--color-border); margin-block: 20px; }
@@ -3046,7 +3113,7 @@ body[data-editor-composing] [data-condition-hidden] { display: block !important;
 .ornament-composition-preview .sheet-heading__art { height: auto; padding: 0; }
 
 .print-options { padding: 0; margin: auto; width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; color: var(--color-text); }
-.print-options::backdrop { background: rgba(10, 11, 14, .65); }
+.print-options::backdrop { background: var(--modal-overlay); }
 .print-options__choices { border: 0; padding: 0; margin: 0; }
 .print-options__choices legend { font-weight: 600; margin-bottom: 12px; }
 .print-options__choices label { display: flex; gap: 12px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--color-border); border-radius: var(--radius-md); cursor: pointer; }
@@ -3065,5 +3132,313 @@ body[data-editor-inspecting],body[data-editor-inspecting] *{cursor:crosshair!imp
 body[data-editor-inspecting] .engine-container:empty{min-height:60px;border:2px dashed var(--color-border);border-radius:6px}body[data-editor-inspecting] .engine-section{min-height:72px}body[data-editor-inspecting] .engine-container:empty::after{content:'Arraste elementos para esta caixa';display:block;padding:16px;color:var(--color-text);font-size:14px}
 
 [data-composition-hover][data-composition-axis=vertical][data-composition-side=before]{box-shadow:inset 0 5px var(--color-accent)}[data-composition-hover][data-composition-axis=vertical][data-composition-side=after]{box-shadow:inset 0 -5px var(--color-accent)}[data-composition-hover][data-composition-axis=horizontal][data-composition-side=before]{box-shadow:inset 5px 0 var(--color-accent)}[data-composition-hover][data-composition-axis=horizontal][data-composition-side=after]{box-shadow:inset -5px 0 var(--color-accent)}
+
+/* Composição contínua para a ficha modular. IDs, controles e ordem do layout
+   continuam no renderer; esta camada é compartilhada com a prévia do editor. */
+@media screen {
+  .engine-sheet { --engine-card-depth: none; gap: 24px; }
+  .engine-sheet .engine-sheet__header {
+    padding: 24px 0; border: 0; border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-sheet__title { font-weight: 500; }
+  .engine-sheet .engine-tabs {
+    gap: 12px; padding: 0; border: 0; border-bottom: 1px solid var(--color-border);
+    border-radius: 0; background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-tab { padding: 12px 10px; border-radius: 0; font-weight: 500; }
+  .engine-sheet .engine-tab[aria-selected='true'] {
+    color: var(--color-accent-strong); background: transparent;
+    box-shadow: inset 0 -2px var(--color-accent-strong);
+  }
+  .engine-sheet .engine-panel { gap: 32px; align-items: start; }
+  .engine-sheet .engine-section {
+    overflow: visible; border: 0; border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-section__header {
+    margin: 0 0 16px; padding: 0; border: 0; background: transparent;
+    flex-wrap: wrap; gap: 8px 20px;
+  }
+  .engine-sheet .engine-section__title {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 500;
+  }
+  .engine-sheet .engine-section__body { padding: 0; gap: 20px; }
+  .engine-sheet .engine-section__note { font-size: 13px; }
+  .engine-sheet .engine-component--card {
+    padding: 12px 0; border: 0; border-radius: 0; background: transparent;
+  }
+  .engine-sheet .engine-component input:not([type='checkbox']):not([type='radio']),
+  .engine-sheet .engine-component select { min-height: 44px; }
+  .engine-sheet .engine-component--hero input { font-size: clamp(1.5rem, 3vw, 2rem); }
+  .engine-sheet .engine-dnd-ability {
+    padding: 12px 0; border: 0; border-bottom: 1px solid var(--color-border);
+    border-radius: 0; background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-dnd-derived {
+    border: 0; border-radius: 0; background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-dnd-derived__label { text-transform: none; letter-spacing: 0; }
+  .engine-sheet .engine-dnd-derived__value { font-size: 1.5rem; font-weight: 600; }
+  .engine-sheet .engine-container--stat-strip {
+    gap: 20px; padding-block: 16px; border-block: 1px solid var(--color-border);
+  }
+  :root[data-theme='light'] .engine-sheet .engine-container--stat-strip {
+    background: var(--color-panel-alt);
+  }
+  .engine-sheet .engine-container--stat-strip > .engine-component { padding-inline: 8px; }
+  :root[data-theme='light'] .engine-sheet .engine-container--stat-strip .engine-component > .field { background: transparent; }
+  .engine-sheet .engine-container--stat-strip > .engine-component:has(.field) {
+    border: 0; border-radius: 0; background: transparent;
+  }
+  .engine-sheet .engine-container--stat-strip .engine-dnd-derived { background: transparent; }
+  .engine-sheet .engine-dnd-skill { padding: 8px 0; min-height: 48px; }
+  .engine-sheet .engine-entry-list { gap: 0; border-top: 1px solid var(--color-border); }
+  .engine-sheet .engine-entry {
+    border: 0; border-bottom: 1px solid var(--color-border); border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-entry__summary { padding: 12px 0; min-height: 48px; }
+  .engine-sheet .engine-entry__body { padding-inline: 0; }
+  .engine-sheet .engine-entry[open] > .engine-entry__body {
+    border-left: 2px solid var(--color-border); padding-left: 16px;
+  }
+  .engine-sheet .engine-entry__title { white-space: normal; overflow-wrap: anywhere; }
+  .engine-sheet .engine-skill-catalog__group,
+  .engine-sheet .engine-slot,
+  .engine-sheet .engine-budget__metric {
+    border: 0; border-bottom: 1px solid var(--color-border); border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-skill-catalog__group { padding-inline: 0; }
+  .engine-sheet .engine-slots__grid { gap: 20px; }
+  /* Cálculos, ações e avisos conservam seus estados funcionais. */
+  .engine-sheet .engine-computed { box-shadow: none; }
+  :root[data-theme='light'] .engine-sheet .engine-computed {
+    border: 0; border-bottom: 1px solid var(--color-border);
+    border-radius: 0; background: transparent;
+  }
+  .engine-sheet .engine-computed__label { color: var(--color-text-muted); }
+  .engine-sheet [data-editor-source-highlight] { box-shadow: 0 0 0 6px var(--color-panel); }
+  #view-sheet:has(#generic-sheet-host:not([hidden])) #sheet-heading {
+    background: transparent; border-radius: 0; padding-block: 20px;
+  }
+  #view-sheet:has(#generic-sheet-host:not([hidden])) #sheet-heading h1 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 500;
+  }
+  .engine-sheet .engine-container--two-column .engine-component:has(.engine-tags) {
+    padding: 16px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none;
+  }
+  [data-sheet-mode='table'] .engine-sheet .engine-panel { gap: 24px 32px; }
+  [data-sheet-mode='table'] .engine-sheet .engine-section__title {
+    font-family: var(--font-body); font-size: 1rem; font-weight: 600;
+  }
+  [data-sheet-mode='table'] .engine-sheet .engine-section__header { margin-bottom: 12px; }
+  [data-sheet-mode='table'] .engine-sheet .engine-section__body { gap: 12px; }
+  [data-sheet-mode='table'] .engine-sheet .engine-entry__summary { padding-block: 10px; }
+  @media (max-width: 700px) {
+    .engine-sheet, .engine-sheet .engine-panel { gap: 28px; }
+    .engine-sheet .engine-section__title { font-size: 1.25rem; }
+    .engine-sheet .engine-tabs { gap: 4px; }
+    .engine-sheet .engine-tab { padding-inline: 8px; }
+    .engine-sheet .engine-section__body { gap: 16px; }
+    .engine-sheet .engine-section__header { margin-bottom: 12px; }
+  }
+}
+
+/* Materiais sutis: filtros em superfícies temporárias, leitura sem vidro por campo. */
+@media screen {
+  :root { --material-menu-blur: 10px; --material-modal-blur: 5px; }
+  .appearance-background-controls { display: grid; gap: 20px; max-width: 640px; }
+  .appearance-background-controls p { font-size: 13px; color: var(--color-text-muted); max-width: 65ch; }
+  .appearance-background-controls select { min-height: 44px; }
+  .appearance-background-controls .field--checkbox { min-height: 44px; }
+  :root[data-background='translucent'] body {
+    background-color: var(--color-bg);
+    background-image:
+      radial-gradient(ellipse at 12% 0%, color-mix(in srgb, var(--color-accent) 9%, transparent), transparent 48%),
+      radial-gradient(ellipse at 100% 65%, color-mix(in srgb, var(--color-secondary) 7%, transparent), transparent 55%);
+    background-attachment: fixed;
+  }
+  :root[data-theme='light'][data-background='translucent'] body {
+    background-image:
+      radial-gradient(ellipse at 12% 0%, color-mix(in srgb, var(--color-accent) 3%, transparent), transparent 48%),
+      radial-gradient(ellipse at 100% 65%, color-mix(in srgb, var(--color-secondary) 2%, transparent), transparent 55%);
+  }
+  :root[data-background='browser'], :root[data-background='browser'] body {
+    background: transparent;
+  }
+  /* Uma superfície comum protege o conteúdo; não acrescenta caixas a cada módulo. */
+  :root[data-background='browser'] .shell-content {
+    background: var(--color-bg);
+    background: color-mix(in srgb, var(--color-bg) 96%, transparent);
+  }
+  :root[data-background='browser'] .shell-header,
+  :root[data-background='browser'] .shell-nav { background: var(--color-bg-elevated); }
+  :root[data-background='browser'] #legacy-dnd-sheet { background: var(--color-bg); }
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :root[data-material-effects='on'] .modal-overlay,
+    :root[data-material-effects='on'] .print-options::backdrop {
+      background: var(--modal-overlay-effects);
+      backdrop-filter: blur(var(--material-modal-blur));
+      -webkit-backdrop-filter: blur(var(--material-modal-blur));
+    }
+    :root[data-material-effects='on'] :is(.modal, .print-options) {
+      background: color-mix(in srgb, var(--color-panel) 98%, transparent);
+    }
+    :root[data-material-effects='on'] :is(.secondary-actions.is-open, .engine-help__panel, .sheet-search__results) {
+      background: color-mix(in srgb, var(--color-panel) 96%, transparent);
+      backdrop-filter: blur(var(--material-menu-blur));
+      -webkit-backdrop-filter: blur(var(--material-menu-blur));
+      box-shadow: 0 8px 24px rgb(0 0 0 / .16);
+    }
+    :root[data-background='translucent'][data-material-effects='on'] :is(.shell-header, .shell-nav) {
+      background: color-mix(in srgb, var(--color-bg-elevated) 94%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  }
+  :root[data-material-effects='off'],
+  :root[data-material-effects='off'] body { background: var(--color-bg); }
+  :root[data-material-effects='off'] .shell-content { background: var(--color-bg); }
+  :root[data-material-effects='off'] :is(.shell-header, .shell-nav) { background: var(--color-bg-elevated); }
+  :root[data-material-effects='off'] :is(.secondary-actions.is-open, .engine-help__panel, .sheet-search__results, .modal, .print-options) {
+    background: var(--color-panel); backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  :root[data-material-effects='off'] .modal-overlay,
+  :root[data-material-effects='off'] .print-options::backdrop {
+    background: var(--modal-overlay); backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    :root, :root body, :root .shell-content { background: var(--color-bg) !important; }
+    :root :is(.shell-header, .shell-nav) { background: var(--color-bg-elevated) !important; }
+    :root :is(.secondary-actions.is-open, .engine-help__panel, .sheet-search__results, .modal, .print-options) {
+      background: var(--color-panel) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+    }
+    :root .modal-overlay, :root .print-options::backdrop {
+      background: var(--modal-overlay) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .modal, .print-options { animation: none; }
+  }
+  @media (max-width: 700px) {
+    :root { --material-menu-blur: 6px; --material-modal-blur: 3px; }
+    :root[data-background='translucent'] body { background-attachment: scroll; }
+  }
+}
+
+@media screen {
+  .engine-sheet .engine-entry--reading { overflow: visible; }
+  .engine-entry__edit { flex: 0 0 44px; min-width: 44px; min-height: 44px; margin-left: auto; color: var(--color-text-muted); }
+  .engine-entry__edit:hover { color: var(--color-accent); }
+  .engine-entry--reading .engine-entry__title { flex: 1; min-width: 0; }
+  .engine-entry--reading .engine-entry__edit { order: 3; margin-left: 0; }
+  .engine-entry--reading .engine-entry__move { order: 1; }
+  .engine-entry--reading .engine-entry__remove { order: 2; margin-left: 0; }
+  .engine-sheet .engine-entry--reading > .engine-entry__body { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 16px 28px; align-items: start; }
+  .engine-entry--reading .engine-entry__value { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .engine-entry--reading .engine-entry__value[hidden] { display: none; }
+  .engine-entry__value-label { color: var(--color-text-muted); font-size: .75rem; }
+  .engine-entry__value-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
+  .engine-entry__value--long { grid-column: 1 / -1; max-width: 76ch; }
+  .engine-entry--reading .engine-entry__body > :is(.engine-entry-action, .engine-entry__cost) { grid-column: 1 / -1; }
+  .engine-entry-editor { box-sizing: border-box; width: min(760px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: clamp(20px, 4vw, 36px); overflow: auto; color: var(--color-text); background: var(--color-panel); border: 1px solid var(--color-border); border-radius: 12px; box-shadow: 0 16px 64px rgb(0 0 0 / .24); }
+  .engine-entry-editor[open] { display: grid; grid-template-rows: auto auto minmax(0, 1fr); overflow: hidden; }
+  .engine-entry-editor__form { display: flex; flex-direction: column; min-height: 0; }
+  .engine-entry-editor::backdrop { background: var(--modal-overlay); }
+  .engine-entry-editor h2 { margin: 0 0 8px; overflow-wrap: anywhere; font-size: 1.5rem; }
+  .engine-entry-editor__note { color: var(--color-text-muted); margin: 0 0 28px; font-size: .875rem; }
+  .engine-entry-editor__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; overflow: auto; min-height: 0; padding: 4px; }
+  .engine-entry-editor__fields > :has(textarea), .engine-entry-editor__fields > :first-child { grid-column: 1 / -1; }
+  .engine-entry-editor .engine-item-field { min-width: 0; }
+  .engine-entry-editor :is(input:not([type='checkbox']):not([type='radio']), select, textarea) { box-sizing: border-box; width: 100%; min-height: 44px; }
+  .engine-entry-editor input[type='checkbox'] { min-width: 20px; min-height: 20px; }
+  .engine-entry-editor__feedback { color: var(--color-text); white-space: pre-wrap; flex-shrink: 0; }
+  .engine-entry-editor__feedback:empty { display: none; }
+  .engine-entry-editor footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; flex-shrink: 0; }
+  .engine-entry-editor footer button { min-height: 44px; }
+  @supports (backdrop-filter: blur(1px)) {
+    :root[data-material-effects='on'] .engine-entry-editor::backdrop { background: var(--modal-overlay-effects); backdrop-filter: blur(var(--material-modal-blur, 5px)); }
+  }
+  @media (prefers-reduced-transparency: reduce) { .engine-entry-editor::backdrop { backdrop-filter: none !important; } }
+  @media (max-width: 600px) {
+    .engine-entry-editor { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); padding: 20px; }
+    .engine-entry-editor__fields { grid-template-columns: minmax(0, 1fr); }
+    .engine-entry--reading .engine-entry__body { gap: 16px; }
+  }
+}
+@media print { .engine-entry-editor { display: none !important; } }
+
+/* Screen controls: one focus boundary, quiet surfaces, standard choice shapes. */
+@media screen {
+  .field input:not([type='checkbox']):not([type='radio']), .field select, .field textarea, .input,
+  .editor-property :is(input:not([type='checkbox']):not([type='radio']), select, textarea),
+  .editor-toolbox :is(input:not([type='checkbox']):not([type='radio']), select, textarea),
+  .editor-structure-actions :is(input, select),
+  :is(.engine-structured-field, .engine-typed-input, .engine-calculation-control) :is(input:not([type='checkbox']):not([type='radio']), select, textarea),
+  .engine-progression select {
+    background: var(--color-input);
+    border-color: var(--color-input-border);
+    border-radius: var(--radius-sm);
+    padding-inline: var(--control-padding-inline);
+    transition: background-color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+  .field :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']), select), .input:not(textarea) { min-height: var(--control-height); }
+  :root .field > span:first-child, .engine-option-radios legend { color: var(--color-text-muted); }
+  :root :is(.field input, .field select, .field textarea, .input, .editor-property input, .editor-property select, .editor-property textarea):where(:hover:not(:focus):not(:disabled):not([readonly]):not([aria-invalid='true']):not(:user-invalid):not([type='checkbox']):not([type='radio'])) {
+    border-color: var(--color-choice-border);
+  }
+  .engine-item-field--compact :is(input, select, textarea), .field--name .input--title,
+  .engine-component--hero input { background: transparent; }
+  :root :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):not([type='color']), select, textarea):focus {
+    outline: 0;
+    outline-offset: 0;
+    border-color: var(--color-focus);
+    box-shadow: none;
+    box-shadow: 0 0 6px color-mix(in srgb, var(--color-focus) 16%, transparent);
+  }
+  :root :is(.field input, .field select, .field textarea, .input, .editor-property input, .editor-property select, .editor-property textarea):disabled {
+    background: var(--color-panel-alt); border-color: var(--color-border);
+    color: var(--color-text-faint); cursor: not-allowed; opacity: 1; box-shadow: none;
+  }
+  :root :is(input, select, textarea):is([aria-invalid='true'], :user-invalid):not([type='checkbox']):not([type='radio']) {
+    --color-focus: var(--color-danger-strong);
+    border-color: var(--color-danger-strong);
+    box-shadow: none;
+    box-shadow: 0 0 6px color-mix(in srgb, var(--color-danger-strong) 12%, transparent);
+  }
+  /* Choice semantics and arrow-key behavior stay native; only the radio drawing changes. */
+  :root input[type='radio'] {
+    appearance: none; box-sizing: border-box; flex: 0 0 18px;
+    width: 18px; height: 18px; min-width: 18px; min-height: 18px;
+    margin: 0; padding: 0; border: 1px solid var(--color-choice-border);
+    border-radius: 50%; background: var(--color-input); box-shadow: none;
+    vertical-align: middle; accent-color: var(--color-focus);
+    transition: border-color var(--transition-base), background-color var(--transition-base);
+  }
+  :root input[type='radio']:checked {
+    border-color: var(--color-focus); background: var(--color-focus);
+    box-shadow: inset 0 0 0 4px var(--color-input);
+  }
+  :root input[type='radio']:hover:not(:disabled) { border-color: var(--color-focus); }
+  :root input[type='radio']:disabled { opacity: .55; cursor: not-allowed; }
+  .engine-entry-editor, .modal, .print-options { border-radius: var(--radius-md); }
+  .engine-option-radios { border: 0; padding: 0; margin: 0; display: grid; gap: 4px; min-width: 0; }
+  .engine-option-radios legend { margin-bottom: 8px; color: var(--color-text-muted); font-size: .85rem; }
+  .engine-option-radios .field--radio { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; margin: 0; min-height: 44px; cursor: pointer; }
+  .engine-option-radios .field--radio > span { font-size: .875rem; text-transform: none; letter-spacing: 0; color: var(--color-text); }
+  .engine-option-radios small { color: var(--color-text-muted); }
+  :is(.tab, .engine-tab)[aria-selected='true'], .shell-nav__item--active { font-weight: 600; }
+  .tab[aria-selected='true'] { border-bottom-color: var(--color-accent-strong); }
+  @media (prefers-reduced-motion: reduce) {
+    :root :is(input, select, textarea, button, .button, .tab, .shell-nav__item) { transition: none !important; }
+  }
+  @media (forced-colors: active) {
+    :root input[type='radio'] { appearance: auto; border: 0; background: none; box-shadow: none; }
+    :root input[type='radio']:checked { background: none; box-shadow: none; }
+    :root :is(input:not([type='checkbox']):not([type='radio']), select, textarea):focus { outline: 2px solid Highlight !important; outline-offset: 2px; }
+  }
+}
 
 body{padding:16px}#preview-sheet{min-width:0}.modal-overlay[hidden]{display:none}

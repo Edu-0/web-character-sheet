@@ -1,3 +1,4 @@
+import {editorMode,editorArea,editorCommand} from '../helpers/editor-workspace-nav.js';
 import {test,expect} from '@playwright/test';
 import {minimalPackage} from '../legacy-editor-package.js';
 import {readFile} from 'node:fs/promises';
@@ -91,12 +92,12 @@ test('editar pacote instalado mantém ID e personagens, backup conserva edição
   const before=await docs(page),original=await page.evaluate(async()=> (await import('/js/repositories/system-repository.js')).getCatalogPackage('fate-accelerated'));
   await systemCard(page,'fate-accelerated').getByRole('button',{name:'Editar pacote',exact:true}).click();await expect(page.locator('#editor-preview-status')).toContainText('Ensaio da revisão 0');
   const pkg=JSON.parse(await page.locator('#editor-json').inputValue());expect(pkg.system.id).toBe('fate-accelerated');pkg.system.name='Fate da minha mesa';pkg.extras={zero:0,empty:'',flag:false,nullable:null};
-  await page.locator('#editor-json').fill(JSON.stringify(pkg,null,2));await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();await expect(page.getByRole('button',{name:'Aplicar pacote',exact:true})).toBeEnabled();
-  await page.getByRole('button',{name:'Aplicar pacote',exact:true}).click();await page.getByRole('dialog').getByRole('button',{name:'Confirmar aplicação',exact:true}).click();await expect(page.locator('#editor-application-status')).toContainText('Pacote aplicado');
+  await editorMode(page,'json');await page.locator('#editor-json').fill(JSON.stringify(pkg,null,2));await page.getByRole('button',{name:'Atualizar / reiniciar ensaio'}).click();await editorArea(page,'review');await expect(page.locator('.workspace-header-actions .button--primary')).toBeEnabled();
+  await editorCommand(page,'Aplicar pacote');await page.getByRole('dialog').getByRole('button',{name:'Confirmar aplicação',exact:true}).click();await expect(page.locator('#editor-application-status')).toContainText('Pacote aplicado');
   expect(await docs(page)).toEqual(before);
   const result=await page.evaluate(async()=>{const systems=await import('/js/repositories/system-repository.js'),backup=await import('/js/library-backup.js');const exported=backup.exportLibrary();await backup.readLibraryBackup(new File([JSON.stringify(exported)],'backup.json'));await backup.restoreLibrary(exported,{mode:'replace',confirmed:true});return {local:await systems.getSystemPackage('fate-accelerated'),base:await systems.getCatalogPackage('fate-accelerated'),count:systems.listSystems().filter(system=>system.id==='fate-accelerated').length};});
   expect(result.local.system.name).toBe('Fate da minha mesa');expect(result.local.extras).toEqual(pkg.extras);expect(result.base).toEqual(original);expect(result.count).toBe(1);
-  await page.getByRole('button',{name:'Sair do editor',exact:true}).click();await deleteUI(page,'fate-accelerated');await installUI(page,'fate-accelerated');expect(await page.evaluate(async()=> (await import('/js/repositories/system-repository.js')).getSystemPackage('fate-accelerated'))).toEqual(original);
+  await editorCommand(page,'Sair do editor');await deleteUI(page,'fate-accelerated');await installUI(page,'fate-accelerated');expect(await page.evaluate(async()=> (await import('/js/repositories/system-repository.js')).getSystemPackage('fate-accelerated'))).toEqual(original);
 });
 
 test('sistemas já existentes ganham cópia editável sem alterar base, personagem ou dados fora da instalação',async({page})=>{

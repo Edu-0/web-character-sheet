@@ -4,7 +4,7 @@ export {computedKey,computedValue} from './computed-values.js';
 import {computedKey} from './computed-values.js';
 import {createRuleContext} from './rule-registry.js';
 import {createCheckButton} from './check-fields.js';
-import { createOptionCheckboxes } from './option-checkboxes.js';
+import {createOptionRadios} from './option-radios.js';
 import { createEntryAction } from './entry-actions.js';
 import './entry-rolls.js';
 import { createCalculationControl } from './calculation-overrides.js';
@@ -24,6 +24,9 @@ import { healState } from './assistance.js';
 import { stepCost } from './point-budget.js';
 import { appendFieldHelp } from './help.js';
 import { createDiceLabel, createRuleGlyph } from '../dice-display.js';
+import {openEntryEditor} from './entry-editor.js';
+import {prepareEntryEdit} from './entry-edit.js';
+import {componentPresentation} from './predicates.js';
 
 registerFieldType('tagList', {
   render(container, context) {
@@ -369,6 +372,25 @@ function renderList(container, context) {
   };
   const entryContext = {
     ...context,
+    editEntry(item, index) {
+      const original = structuredClone(item);
+      openEntryEditor({owner: wrap, title: `Editar ${entryTitle(item, index)}`, item, context, renderField: renderItemField,
+        returnFocus: () => [...entries.querySelectorAll('.engine-entry')].find(node => node.dataset.entryId === String(item.id || index))?.querySelector('.engine-entry__edit') || add,
+        onSave(draft) {
+          requireListEditable(context);
+          const currentValues = ensureArray(context.character, context.field);
+          const current = item.id ? currentValues.find(value => value.id === item.id) : currentValues.find(value => value === item);
+          const next = prepareEntryEdit(current, original, draft, Object.keys(context.itemSchema || {}));
+          const before = structuredClone(current);
+          const candidate = structuredClone(context.character);
+          getByPath(candidate, context.field)[currentValues.indexOf(current)] = next;
+          context.validateCharacter?.(candidate);
+          Object.assign(current, next);
+          try { refresh(); context.onChange?.(); }
+          catch (error) { for (const key of Object.keys(current)) delete current[key]; Object.assign(current, before); refresh(); throw error; }
+        },
+      });
+    },
     registerRefresh(refresh) {
       entryRefreshers.add(refresh);
       return () => entryRefreshers.delete(refresh);
@@ -396,6 +418,24 @@ function renderList(container, context) {
   };
   add.addEventListener('click', () => {
     if (Number.isInteger(context.fixedLength) && values.length >= context.fixedLength) return;
+    if (context.editMode === 'dialog') {
+      const item = {id: createId(), ...defaultsFromSchema(context.itemSchema, context)};
+      openEntryEditor({owner: wrap, title: context.addLabel || `Adicionar em ${context.label}`, item, context, renderField: renderItemField,
+        returnFocus: () => [...entries.querySelectorAll('.engine-entry')].find(node => node.dataset.entryId === String(item.id))?.querySelector('.engine-entry__edit') || add,
+        onSave(draft) {
+          requireListEditable(context);
+          values = ensureArray(context.character, context.field);
+          if (Number.isInteger(context.fixedLength) && values.length >= context.fixedLength) throw new Error('A lista já atingiu seu limite de entradas.');
+          const candidate = structuredClone(context.character);
+          getByPath(candidate, context.field).push(draft);
+          context.validateCharacter?.(candidate);
+          values.push(draft);
+          try { refresh(); context.onChange?.(); }
+          catch (error) { values.splice(values.indexOf(draft), 1); refresh(); throw error; }
+        },
+      });
+      return;
+    }
     values.push({ id: createId(), ...defaultsFromSchema(context.itemSchema, context) });
     refresh();
     context.onChange?.();
@@ -420,8 +460,19 @@ function renderEntry(item, index, values, context, refreshList) {
   const summary = document.createElement('summary');
   summary.className = 'engine-entry__summary';
   const title = element('strong', 'engine-entry__title', entryTitle(item, index));
+  const titleField = item.name?.trim() ? 'name' : item.label?.trim() ? 'label' : null;
   const meta = element('span', 'engine-entry__meta', entryMeta(item, context));
   summary.append(title, meta);
+  if (context.editMode === 'dialog') {
+    if (titleField) title.dataset.itemField = titleField;
+    entry.classList.add('engine-entry--reading');
+    const edit = buttonElement('', 'icon-button engine-entry__edit');
+    edit.setAttribute('aria-label', `Editar ${entryTitle(item, index)}`);
+    edit.title = `Editar ${entryTitle(item, index)}`;
+    edit.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15z"/></svg>';
+    edit.addEventListener('click', event => { event.preventDefault(); event.stopPropagation(); context.editEntry(item, index); });
+    summary.append(edit);
+  }
   if (context.reorderable) {
     for (const [direction, label] of [[-1, 'Mover para cima'], [1, 'Mover para baixo']]) {
       const move = buttonElement(direction < 0 ? '↑' : '↓', 'button button--ghost engine-entry__move');
@@ -463,14 +514,18 @@ function renderEntry(item, index, values, context, refreshList) {
     body.appendChild(output);
   }
   Object.entries(context.itemSchema || {}).forEach(([key, definition]) => {
-    if (context.itemDetails?.fields.includes(key)) return;
+    if (context.editMode === 'dialog' && !context.quickFields?.includes(key)) {
+      if (key !== titleField) body.append(renderItemReading(item, key, definition, context));
+      return;
+    }
+    if (context.editMode !== 'dialog' && context.itemDetails?.fields.includes(key)) return;
     body.appendChild(renderItemField(item, key, definition, context, () => {
       title.textContent = entryTitle(item, index);
       meta.textContent = entryMeta(item, context);
       context.onChange?.();
     }));
   });
-  if (context.itemDetails) body.appendChild(renderItemDetails(item, context, () => context.onChange?.()));
+  if (context.itemDetails && context.editMode !== 'dialog') body.appendChild(renderItemDetails(item, context, () => context.onChange?.()));
   if (context.type === 'stateList') body.appendChild(renderStateEffect(item, context, () => {
     const gradeField = context.gradeField || 'sides';
     const gradeControl = [...body.querySelectorAll('.engine-item-field')]
@@ -485,6 +540,29 @@ function renderEntry(item, index, values, context, refreshList) {
   }));
   entry.append(summary, body);
   return entry;
+}
+
+function requireListEditable(context) {
+  const status = componentPresentation(context, context.system, context.character);
+  if (!status.visible.allowed || !status.editable.allowed || context.disabledWhen && getByPath(context.character, context.disabledWhen.field) === context.disabledWhen.equals) {
+    throw new Error(status.editable.message || status.visible.message || 'Esta lista não está disponível para edição agora.');
+  }
+}
+
+function renderItemReading(item, key, definition, context) {
+  const config = normalizeDefinition(key, definition), value = item[key];
+  const row = element('div', `engine-entry__value${config.type === 'textarea' ? ' engine-entry__value--long' : ''}`);
+  row.dataset.itemField = key;
+  row.hidden = value == null || value === '' || Array.isArray(value) && !value.length;
+  let text = value;
+  if (config.type === 'boolean') text = value ? 'Sim' : 'Não';
+  else if (config.type === 'die') text = value == null ? '' : traitLabel(value);
+  else if (config.type === 'select' || config.type === 'reference' && config.optionsFrom) {
+    const options = resolveItemOptions(config, context);
+    text = (Array.isArray(value) ? value : [value]).map(part => options.find(option => String(option.value) === String(part))?.label ?? part).join(', ');
+  } else if (Array.isArray(value)) text = value.join(', ');
+  row.append(element('span', 'engine-entry__value-label', config.label), element('span', 'engine-entry__value-text', text == null ? '' : String(text)));
+  return row;
 }
 
 function renderStateEffect(item, context, onChange, onRemove) {
@@ -669,8 +747,8 @@ function renderItemDetails(item, context, onChange) {
 
 function renderItemField(item, key, definition, context, onChange, { hideLabel = false } = {}) {
   const config = normalizeDefinition(key, definition);
-  if (config.type === 'select' && config.presentation === 'checkboxes') {
-    const control = createOptionCheckboxes({ label: config.label, options: config.options, value: item[key], onChange: value => { item[key] = value; onChange(); } });
+  if (config.type === 'select' && ['radios', 'checkboxes'].includes(config.presentation)) {
+    const control = createOptionRadios({ label: config.label, options: config.options, value: item[key], onChange: value => { item[key] = value; onChange(); } });
     control.element.classList.add('engine-item-field'); control.element.dataset.itemField = key;
     context.registerRefresh?.(() => control.update(item[key]));
     return control.element;

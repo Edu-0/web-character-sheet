@@ -1,0 +1,40 @@
+/* Bibliotecas da aplicação: linhas legíveis, ações e estados preservados. */
+@media screen {
+  .manager-page { max-width: 1320px; padding-block: 32px 48px; }
+  .manager-page__header { margin-bottom: 28px; }
+  .manager-page__header h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 500; }
+  .manager-page__header p:not(.shell-stub__eyebrow) { max-width: 65ch; font-size: 14px; }
+  .library-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .library-card {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 32px; padding: 24px 0; border: 0;
+    border-bottom: 1px solid var(--color-border); border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .library-card--current { border-left: 2px solid var(--color-accent-strong); padding-left: 18px; box-shadow: none; }
+  .library-card__header { grid-column: 1; display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; gap: 8px 16px; }
+  .library-card__title { font-size: 1.4rem; font-weight: 500; }
+  .library-card__badge { padding: 0; border-radius: 0; background: transparent; white-space: normal; }
+  .library-card__meta, .library-card__warning { grid-column: 1; font-size: 13px; overflow-wrap: anywhere; }
+  .library-card__actions { grid-column: 2; grid-row: 1 / span 3; align-self: center; justify-content: flex-end; max-width: 580px; margin: 0; gap: 4px; }
+  .library-card__actions .button { min-height: 44px; }
+  .library-card__actions .button--primary {
+    background: transparent; color: var(--color-accent-strong); border-color: var(--color-border-strong);
+  }
+  .library-card__actions .button--primary:hover { background: var(--color-computed-bg); }
+  .library-card__actions .button--danger {
+    background: transparent; color: var(--color-danger-strong); border-color: transparent; font-weight: 500;
+  }
+  .library-card__actions .button--danger:hover { border-color: var(--color-danger-strong); }
+  .library-empty { padding: 40px 0; border: 0; border-radius: 0; background: transparent; text-align: left; max-width: 65ch; }
+  @media (max-width: 1100px) {
+    .library-card { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .library-card__actions { grid-column: 1; grid-row: auto; justify-content: flex-start; max-width: none; }
+  }
+  @media (max-width: 700px) {
+    .manager-page { padding-block: 20px 32px; }
+    .library-card { padding-block: 20px; }
+    .library-card__title { font-size: 1.25rem; }
+    .library-card--current { padding-left: 12px; }
+  }
+}

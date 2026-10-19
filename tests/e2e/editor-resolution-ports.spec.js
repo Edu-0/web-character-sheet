@@ -1,3 +1,4 @@
+import {editorMode,editorCommand,editorArea,editorTool,editorFamily} from '../helpers/editor-workspace-nav.js';
 import {test,expect} from '@playwright/test';
 import {open,data,component,panel,current,confirm,frame} from '../helpers/typed-authoring.mjs';
 import {resolutionPortId} from '../../js/engine/resolution-results.js';
@@ -20,7 +21,7 @@ const groups=id=>property(id,'groups',{op:'local',localId:id});
 const totals=id=>({op:'map',source:groups(id),value:property(id,'groups_total',{op:'item'})});
 async function outputs(page,names){const result=[];for(const name of names){const d=await data(page,name,0);await component(page,d);result.push(d);}return result;}
 async function execute(page,label,faces){
- await page.getByRole('button',{name:'Experimentar',exact:true}).click();const runtime=frame(page);await expect(runtime.getByRole('button',{name:label,exact:true})).toBeVisible();
+ await editorMode(page,'experiment');const runtime=frame(page);await expect(runtime.getByRole('button',{name:label,exact:true})).toBeVisible();
  // Deterministic test RNG only; the package and sandbox CSP are unchanged.
  await runtime.locator('html').evaluate((_,faces)=>{const native=crypto.getRandomValues.bind(crypto);crypto.getRandomValues=values=>{if(values instanceof Uint32Array){for(let i=0;i<values.length;i++){const draw=faces.shift();if(!draw)throw Error('Lançamento inesperado no teste');values[i]=Math.floor(0x100000000/draw[0])*(draw[1]-1);}return values;}return native(values);};},faces);
  await runtime.getByRole('button',{name:label,exact:true}).click();await runtime.getByRole('button',{name:'Resolver prévia',exact:true}).click();return runtime;

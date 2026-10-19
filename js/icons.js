@@ -4,6 +4,17 @@ const icon = (path, viewBox = '0 0 24 24') =>
   `<svg viewBox="${viewBox}" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
 
 export const icons = {
+  back: icon('<path d="m14 6-6 6 6 6"/>'),
+  undo: icon('<path d="m9 5-5 5 5 5M4 10h9a6 6 0 0 1 6 6"/>'),
+  redo: icon('<path d="m15 5 5 5-5 5M20 10h-9a6 6 0 0 0-6 6"/>'),
+  document: icon('<path d="M6 3h8l4 4v14H6zM14 3v5h4"/>'),
+  grid: icon('<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>'),
+  table: icon('<path d="M4 5h16v14H4zM4 10h16M10 5v14"/>'),
+  connections: icon('<path d="M5 6h4v4H5zM15 14h4v4h-4zM9 8h7v6"/>'),
+  play: icon('<path d="m8 4 12 8-12 8z"/>'),
+  checklist: icon('<path d="M10 5h11M10 12h11M10 19h11M3 5l2 2 3-4M3 12l2 2 3-4M3 19l2 2 3-4"/>'),
+  code: icon('<path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 3l-4 18"/>'),
+  settings: icon('<path d="M4 7h16M4 17h16M8 4v6M16 14v6"/>'),
   plus: icon('<path d="M12 5v14M5 12h14"/>'),
   trash: icon('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),
   chevron: icon('<path d="M6 9l6 6 6-6"/>'),

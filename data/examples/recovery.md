@@ -72,12 +72,12 @@ Esses presets seguem as regras de 2024 consultadas no [glossário oficial](https
 
 ## Marcação por entrada e campos opcionais
 
-Uma habilidade ou item pode armazenar a escolha em um campo textual, sem códigos do sistema na engine. Para exibir caixas de marcação, configure um campo `select` do `itemSchema` com `presentation: "checkboxes"`:
+Uma habilidade ou item pode armazenar a escolha em um campo textual, sem códigos do sistema na engine. Para apresentar opções exclusivas em círculos, configure um campo `select` do `itemSchema` com `presentation: "radios"`:
 
 ```json
 "recoverOn": {
   "type": "select",
-  "presentation": "checkboxes",
+  "presentation": "radios",
   "label": "Recuperar usos em",
   "options": [
     { "value": "", "label": "Ajuste manual" },
@@ -87,7 +87,9 @@ Uma habilidade ou item pode armazenar a escolha em um campo textual, sem código
 }
 ```
 
-As caixas representam uma única escolha opcional: marcar outra substitui a anterior, e desmarcar devolve o ajuste manual. O contrato exige 2–10 opções explícitas, valores textuais distintos e uma opção vazia. Os nomes `shortRest`/`longRest` são escolhas dos presets; outro sistema pode usar outros valores e rótulos. O valor salvo continua simples, compatível com `filterField`/`filterValues` de `restoreCollection`.
+Os círculos representam uma única escolha: selecionar outra substitui a anterior. **Ajuste manual** é uma opção explícita, exibida por último, cujo valor salvo continua sendo `""`. O contrato exige 2–10 opções explícitas, valores textuais distintos e uma opção vazia. Os nomes `shortRest`/`longRest` são escolhas dos presets; outro sistema pode usar outros valores e rótulos. O valor salvo continua simples, compatível com `filterField`/`filterValues` de `restoreCollection`.
+
+`presentation: "checkboxes"` é aceito como nome legado da mesma escolha única e também desenha radios. Abrir o componente não reescreve o pacote ou o personagem. Checkboxes quadrados continuam destinados a escolhas independentes e controles booleanos, como confirmar uma ação ou habilitar uma preferência. Os nomes dos grupos de radios são independentes em cada entrada e em cada renderização. Um valor salvo fora das opções é sinalizado e preservado até o usuário escolher outro.
 
 Em `list` ou `table`, `itemDetails` recolhe campos secundários sem criar mais colunas:
 

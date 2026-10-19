@@ -422,7 +422,9 @@
                       "type": "textarea",
                       "label": "Propriedades ativas"
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": []
                 }
               ]
             }
@@ -599,7 +601,9 @@
                       "label": "Alcance",
                       "help": "Distância, área e condições para alcançar o alvo: toque, metros, linha de visão ou outro critério definido pela técnica."
                     }
-                  }
+                  },
+                  "editMode": "dialog",
+                  "quickFields": ["currentDie"]
                 }
               ]
             }
@@ -895,7 +899,7 @@
                     },
                     "recoverOn": {
                       "type": "select",
-                      "presentation": "checkboxes",
+                      "presentation": "radios",
                       "label": "Recuperar usos em",
                       "options": [
                         {

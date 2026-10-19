@@ -1,5 +1,7 @@
 # Editor por formulários
 
+**Navegação do editor:** **Código e propriedades → Editar por formulários** mantém a árvore e as propriedades completas. Ficha oferece propriedades contextuais; Dados/Regras usam construtores amplos. [Guia das seis áreas](editor-workspace.md).
+
 Em **Compor**, [fontes, vínculos e grafo de regras](rule-connections.md) oferecem edição por menus e cabos sobre o mesmo documento. Receitas de inclusão, nomes, entradas de catálogo e vínculos não confirmados preservam suas pendências no rascunho; trocar de receita não as descarta.
 
 O painel **Criação, evolução e concessões** configura opções, custos e escolhas com a mesma sessão e o construtor de operações. [Contrato e cobertura](progression-choices.md).
@@ -38,7 +40,7 @@ A cobertura abaixo descreve formulários próprios para as propriedades consumid
 | resource, counter | Vínculos e defaults, current/max pelo template/default do recurso; min/max efetivos do counter | Mecânicas de gasto/recuperação dependem das definições próprias abaixo |
 | die, image, tagList | Vínculos, ajuda, composição/passos de dado, escala do sistema, alt/placeholder | Imagem embutida avançada pelo JSON ou upload no ensaio; não há editor de imagem |
 | list, table | Coleção, textos, apresentação/consulta compatível, campos dos itens, resumo, detalhes, defaults de entrada, custo de criação compatível, ação/preset de rolagem de lista | Extras e parâmetros sem descritor; renomear uma chave de itemSchema exige revisar JSON/dados, sem migrar personagens |
-| itemSchema: text, textarea, number, boolean, select, die, reference | Tipo, rótulo/ajuda/default, rows, escala/composição/passos, opções e fontes, valueField/labelField/valueType, multiple e checkboxes onde compatíveis; expansão explícita de tipo abreviado | Propriedades desconhecidas permanecem avançadas; validação exige os limites e opções apropriados para checkboxes |
+| itemSchema: text, textarea, number, boolean, select, die, reference | Tipo, rótulo/ajuda/default, rows, escala/composição/passos, opções e fontes, valueField/labelField/valueType, multiple e radios onde compatíveis; expansão explícita de tipo abreviado | Propriedades desconhecidas permanecem avançadas; validação exige os limites e opções apropriados para radios |
 | stateList | Coleção/itemSchema, gradeField, efeito, overflow com destino/dado/nome/onFirst/onLimit e nota de recuperação | Regras narrativas, exceções e metadados sem formulário permanecem no JSON/texto da mesa |
 | skillCatalog, slotTracker | Vínculos, catálogos/categorias/dado-base, composição/ajustes; slots used/remaining, preferência de consumo e rótulos | Slots usados/máximos configurados como dados tipados; nenhuma decisão automática de consumo |
 | computed | Fórmula nomeada, expressão limitada no system, fontes de variáveis field/system/traitMaxField/value/rollField, modo/format/ação e chaves de ajuste | Scripts, funções novas, grafo de blocos e refatoração de tokens de expressões não são suportados |
@@ -67,3 +69,7 @@ Remover mostra os usos conhecidos e deixa referências pendentes para correção
 Botões de teste exigem layout v2. Efeitos exigem sistema/template/layouts/envelope nas versões compatíveis e controle effectList em cada layout, conforme [efeitos](effects.md) e [validação](validation.md). O inspector permite editar as versões; não eleva todos os documentos automaticamente nem materializa novos recursos no template.
 
 Todos os limites de pacote, rascunho, histórico e coordenação do [editor JSON](editor-json.md) continuam valendo. No modo de formulários, ramos de profundidade superior a 16 remetem ao JSON. Compor oferece navegação progressiva até o orçamento atual de documentos, com paginação de entradas. O editor funciona [offline](offline.md) após preparação. Toolbox, arrasto, criação nomeada de dados, religação contextual e construtores estão em [Compor](editor-visual.md), sobre o mesmo núcleo.
+
+## Apresentação de listas: edição pelo lápis
+
+Componentes `list` oferecem **Modo de edição das entradas** (`inline` ou `dialog`) e **Campos rápidos na ficha** (`quickFields`) no grupo Apresentação. A configuração usa as mesmas operações e o histórico do pacote; valores e nomes dos campos são validados. Consulte [contrato, rascunhos e limites](entry-editing.md).

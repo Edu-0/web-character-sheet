@@ -10,6 +10,7 @@ test.beforeEach(async ({ page }) => {
 
 test('criação e evoluções pagas ou narrativas mantêm saldos independentes', async ({ page }, testInfo) => {
   const errors = [];
+  const entryEditor=page.locator('dialog.engine-entry-editor[open]');
   page.on('pageerror', (error) => errors.push(error.message));
   await page.getByRole('tab', { name: 'Perícias' }).click();
   await page.getByRole('button', { name: 'Editar perícias' }).click();
@@ -25,8 +26,9 @@ test('criação e evoluções pagas ou narrativas mantêm saldos independentes',
   await page.getByRole('tab', { name: 'Técnicas', exact: true }).click();
   const techniques = page.locator('.engine-panel:not([hidden])');
   await techniques.getByRole('button', { name: 'Adicionar', exact: true }).click();
-  await techniques.getByLabel('Nome', { exact: true }).fill('Flecha');
-  await techniques.getByLabel('Pontos pagos na criação', { exact: true }).fill('2');
+  await entryEditor.getByLabel('Nome', { exact: true }).fill('Flecha');
+  await entryEditor.getByLabel('Pontos pagos na criação', { exact: true }).fill('2');
+  await entryEditor.getByRole('button',{name:'Salvar',exact:true}).click();
 
   await page.getByRole('tab', { name: 'Progressão' }).click();
   const budget = page.locator('.engine-budget');
@@ -62,7 +64,9 @@ test('criação e evoluções pagas ou narrativas mantêm saldos independentes',
   await expect(budget.getByLabel('Saldo de evolução', { exact: true })).toHaveText('0');
 
   await page.getByRole('tab', { name: 'Técnicas', exact: true }).click();
-  await expect(techniques.getByLabel('Dado máximo', { exact: true })).toHaveValue('8');
+  await techniques.getByRole('button',{name:'Editar Flecha',exact:true}).click();
+  await expect(entryEditor.getByLabel('Dado máximo', { exact: true })).toHaveValue('8');
+  await entryEditor.getByRole('button',{name:'Cancelar',exact:true}).click();
   await page.getByRole('tab', { name: 'Perícias' }).click();
   await expect(page.getByLabel('Atletismo', { exact: true })).toHaveValue('8');
   await page.getByRole('tab', { name: 'Progressão' }).click();
@@ -75,7 +79,9 @@ test('criação e evoluções pagas ou narrativas mantêm saldos independentes',
   await expect(budget.locator('.engine-budget__event')).toHaveCount(2);
   await expect(budget.getByRole('button', { name: 'Reabrir criação' })).toBeDisabled();
   await page.getByRole('tab', { name: 'Técnicas', exact: true }).click();
-  await expect(page.getByLabel('Dado máximo', { exact: true })).toHaveValue('6');
+  await techniques.getByRole('button',{name:'Editar Flecha',exact:true}).click();
+  await expect(entryEditor.getByLabel('Dado máximo', { exact: true })).toHaveValue('6');
+  await entryEditor.getByRole('button',{name:'Cancelar',exact:true}).click();
   await page.getByRole('tab', { name: 'Progressão' }).click();
   for (const width of [1280, 360]) {
     await page.setViewportSize({ width, height: 1000 });

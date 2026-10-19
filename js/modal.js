@@ -49,6 +49,8 @@ export function openModal({ title, contentEl, actions = [], onClose }) {
   header.className = 'modal__header';
   const heading = document.createElement('h2');
   heading.className = 'modal__title';
+  heading.id = 'app-modal-title';
+  modalBox.setAttribute('aria-labelledby', heading.id);
   heading.textContent = title;
   const closeBtn = document.createElement('button');
   closeBtn.type = 'button';

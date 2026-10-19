@@ -112,7 +112,7 @@
   color: var(--color-text-faint);
 }
 
-.field input:not([type='checkbox']),
+.field input:not([type='checkbox']):not([type='radio']),
 .field select,
 .field textarea,
 .input {
@@ -396,7 +396,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 11, 14, 0.6);
+  background: var(--modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -411,7 +411,13 @@
   box-shadow: var(--shadow-lg);
   max-width: 480px;
   width: 100%;
+  max-height: calc(100dvh - 2 * var(--space-4));
   animation: modal-in var(--transition-slow);
+}
+
+.modal-overlay > .modal {
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes modal-in {
@@ -423,6 +429,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
   padding: var(--space-4) var(--space-5);
   border-bottom: var(--border-width) solid var(--color-border);
 }
@@ -434,10 +441,14 @@
 
 .modal__body {
   padding: var(--space-5);
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .modal__footer {
   display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-2);
   padding: var(--space-4) var(--space-5);
@@ -476,3 +487,10 @@
   border-color: var(--color-danger);
   color: var(--color-danger-strong);
 }
+
+/* A prepared release is visible on every screen; it never interrupts editing on its own. */
+.pwa-update-banner{position:fixed;z-index:900;inset:auto 16px calc(var(--dice-tray-height,0px) + 16px) auto;max-width:min(560px,calc(100vw - 32px));display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:16px;background:var(--color-panel);color:var(--color-text);border:1px solid var(--color-border-strong);border-radius:6px;box-shadow:var(--shadow-md)}
+.pwa-update-banner[hidden]{display:none}.pwa-update-banner>p{flex:1 1 100%;margin:0;font-size:14px;line-height:1.5}.pwa-update-banner .button{min-height:44px}
+.pwa-update-blocker{position:fixed;z-index:10000;inset:0;display:grid;place-content:center;padding:24px;text-align:center;background:var(--color-panel);color:var(--color-text);font-size:16px}
+
+@media print{.pwa-update-banner,.pwa-update-blocker{display:none!important}}

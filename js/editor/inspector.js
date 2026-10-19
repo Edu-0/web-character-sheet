@@ -1,7 +1,7 @@
 import {mountLocalImage} from './local-image-input.js';
 import {markAuthoringPending,commitAuthoringPending} from './authoring-pending.js';
 import {structuralNodes} from './form-structure.js';
-import {ENUM_LABELS} from './authoring-labels.js';
+import {ENUM_LABELS,CONTEXT_ENUM_LABELS} from './authoring-labels.js';
 import {inspectorPage} from './inspector-pagination.js';
 import {diceLiteralAt} from './dice-literals.js';
 import {valueAt,object,safeKey,blankNode} from './form-structure.js';
@@ -23,8 +23,10 @@ const el=(tag,text='',className='')=>{const node=document.createElement(tag);nod
 const button=(label,fn)=>{const node=el('button',label,'button button--ghost');node.type='button';node.addEventListener('click',fn);return node;};
 const choose=(label,options,value)=>{const input=el('select');input.setAttribute('aria-label',label);for(const [id,text]of options){const opt=el('option',text);opt.value=id;input.append(opt);}input.value=value;return input;};
 const valueType=value=>value===null?'null':Array.isArray(value)?'array':typeof value==='object'?'object':typeof value;
+// Presentation choices live for this editing session and never enter the package or draft.
+const propertyGroupStates=new WeakMap();
 export class Inspector {
-  constructor(host,{session,commit,onPending,onJson,referenceOptions=()=>[],rename,remove,visual=false}={}) {Object.assign(this,{host,session,onPending,onJson,referenceOptions,rename,remove,visual});this.commit=(...args)=>Promise.resolve().then(()=>commit(...args)).catch(error=>{this.onPending?.(false,error.message);return false;});}
+  constructor(host,{session,commit,onPending,onJson,referenceOptions=()=>[],rename,remove,visual=false,compact=false}={}) {Object.assign(this,{host,session,onPending,onJson,referenceOptions,rename,remove,visual,compact});this.groupStates=propertyGroupStates.get(session);if(!this.groupStates){this.groupStates=new Map();propertyGroupStates.set(session,this.groupStates);}this.commit=(...args)=>Promise.resolve().then(()=>commit(...args)).catch(error=>{this.onPending?.(false,error.message);return false;});}
   pending(path,value) {const key=pointerFor(path);this.session.ui.formPending??={};if(value===undefined)delete this.session.ui.formPending[key];else this.session.ui.formPending[key]=value;this.onPending?.();}
   inputPending(address,raw,addresses=[address]) {markAuthoringPending(this,'/draft/form-input/'+address,{raw,cleanupPaths:addresses.map(key=>['formInputs',key])});}
   commitInput(address,commands,label,path,commit=this.commit) {return commitAuthoringPending({session:this.session,onPending:this.onPending,commit},['/draft/form-input/'+address],commands,label,path);}
@@ -33,7 +35,9 @@ export class Inspector {
     const branch=this.session.ui.inspectorBranch;if(Array.isArray(branch)&&branch.length>node.path.length&&node.path.every((key,i)=>branch[i]===key)&&valueAt(pkg,branch)!==undefined){this.renderBranch(branch,this.descriptorAt(branch));return;}
     if(!object(node.value)){this.repairNode(this.host,node);return;}
     this.repairStructure(this.host,node);
-    for(const group of ['Apresentação','Dados','Lógica']){const section=el('details','','editor-property-group');section.open=true;section.append(el('summary',group));for(const [key,desc]of Object.entries(schema))if(propertyGroup(key)===group)this.field(section,[...node.path,key],desc,key,0);if(section.children.length>1)this.host.append(section);}
+    const common=this.compact?['label','title','name','dataId','field','ruleId'].filter(key=>schema[key]):[];
+    for(const key of common)this.field(this.host,[...node.path,key],schema[key],key,0);
+    for(const group of ['Apresentação','Dados','Lógica']){const section=el('details','','editor-property-group');const entries=Object.entries(schema).filter(([key])=>propertyGroup(key)===group&&!common.includes(key));const count=entries.filter(([key])=>Object.hasOwn(node.value,key)).length;const stateKey=String(this.compact)+'|'+pointerFor(node.path)+'|'+group,pending=entries.some(([key])=>Object.keys(this.session.ui.formPending||{}).some(p=>p===pointerFor([...node.path,key])||p.startsWith(pointerFor([...node.path,key])+'/')));section.open=pending||(this.groupStates.get(stateKey)??!this.compact);section.addEventListener('toggle',()=>this.groupStates.set(stateKey,section.open));section.append(el('summary',group+(this.compact&&count?' · '+count+' configurada(s)':'')));for(const [key,desc]of entries)this.field(section,[...node.path,key],desc,key,0);if(section.children.length>1)this.host.append(section);}
     const known=new Set([...Object.keys(schema),'type','tabs','sections','containers','components','system']);
     this.advanced(this.host,node.path,node.value,known);this.host.append(button('Abrir este bloco no JSON',()=>this.onJson(node.path)));
   }
@@ -56,7 +60,7 @@ export class Inspector {
     const sourceKey=typeof path.at(-1)==='number'&&['summaryFields','fields'].includes(path.at(-2))?'itemField':key;const sourceChoices=this.visual&&(desc.type==='path'||['attributeKey','skillKey'].includes(desc.editor)||['valueField','labelField','gradeField','textEntryField','costField','evolutionValueField','linkField','recoverableField','weightField','quantityField','carriedField','itemField'].includes(sourceKey))?dataChoices(this.pkg,path,sourceKey):null;
     const input=el(sourceChoices||desc.enum||type==='boolean'?'select':desc.multiline?'textarea':'input');input.setAttribute('aria-label',label);
     if(sourceChoices){const options=[['','Escolha uma fonte'],...sourceChoices];const current=stored?.raw??(exists?String(value):'');if(current&&!options.some(([id])=>id===current))options.push([current,'Fonte existente ou pendente: '+current]);for(const [id,text]of options){const opt=el('option',text);opt.value=id;input.append(opt);}}
-    if(desc.enum || type==='boolean')for(const entry of desc.enum || ['false','true']){const opt=el('option',ENUM_LABELS[entry]||String(entry));opt.value=String(entry);input.append(opt);}
+    if(desc.enum || type==='boolean')for(const entry of desc.enum || ['false','true']){const opt=el('option',CONTEXT_ENUM_LABELS[key]?.[entry]||ENUM_LABELS[entry]||String(entry));opt.value=String(entry);input.append(opt);}
     if(type==='boolean' && stored && !['false','true'].includes(stored.raw)){const opt=el('option',stored.raw+' (pendente)');opt.value=stored.raw;input.append(opt);}
     if(desc.enum && exists && !desc.enum.includes(value)){const opt=el('option',String(value)+' (existente)');opt.value=String(value);input.append(opt);}
     if(input.tagName==='INPUT'){input.type='text';if(['number','integer'].includes(type))input.inputMode='decimal';}
@@ -97,6 +101,7 @@ export class Inspector {
     }
     if(this.visual&&key==='variables'&&desc.values){const creator=el('div','','editor-variable-creator');row.append(creator);mountVariableCreator(creator,{pkg:this.pkg,path,desc,session:this.session,commit:this.commit,onPending:this.onPending});}
     if(path.at(-2)==='formulas')row.append(el('p','Expressão limitada da engine. Valide e atualize o ensaio para conferir o resultado.','editor-note'));
+    if(this.compact&&depth===0){const actions=el('div','','workspace-field-actions');for(const n of [...row.children])if(n.tagName==='BUTTON'&&['Aplicar campo','Descartar texto deste campo'].includes(n.textContent))actions.append(n);if(actions.children.length)row.append(actions);}
     parent.append(row);
   }
   children(parent,path,value,desc,depth) {

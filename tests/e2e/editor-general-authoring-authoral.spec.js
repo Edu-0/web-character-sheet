@@ -1,3 +1,4 @@
+import {editorMode,editorCommand,editorArea,editorTool,editorFamily} from '../helpers/editor-workspace-nav.js';
 // Generic authorship from an empty package; runtime RNG is the only execution seam.
 import {test,expect} from '@playwright/test';
 import {open,datum,component,read,n,ref,local,step,expr,bin,calcOp,catalog,catalogEntry,calculation,cost,actionStart,actionDone,group,consequence,current,frame,seed,roundtrip,layoutCopy} from '../helpers/general-authoring.mjs';
@@ -11,7 +12,7 @@ async function author(page){
 test('AV-10 B: composição é uma fonte; nomes distintos preservam cume, base e soma por grupo',async({page,browser},info)=>{
  test.setTimeout(240000);await author(page);await layoutCopy(page);const pkg=await current(page);
  const execute=async runtime=>{await runtime.getByLabel('Eco composto',{exact:true}).selectOption('6');await runtime.getByRole('button',{name:'Acrescentar dado em Eco composto',exact:true}).click();await runtime.getByLabel('Eco composto',{exact:true}).selectOption('8');await seed(runtime,[[8,4],[6,3],[4,2]]);await runtime.getByRole('button',{name:'Consultar ecos',exact:true}).click();await runtime.getByRole('button',{name:'Resolver prévia',exact:true}).click();await expect(runtime.getByLabel('Cume',{exact:true})).toHaveValue('0');await runtime.getByRole('button',{name:'Confirmar resultado',exact:true}).click();for(const [name,value]of [['Cume','7'],['Vão','2'],['Carga do teste','9']])await expect(runtime.getByLabel(name,{exact:true})).toHaveValue(value);};
- await page.getByRole('button',{name:'Experimentar',exact:true}).click();await execute(frame(page));expect(await current(page)).toEqual(pkg);await roundtrip(page,browser,info,pkg,execute);
+ await editorMode(page,'experiment');await execute(frame(page));expect(await current(page)).toEqual(pkg);await roundtrip(page,browser,info,pkg,execute);
 });
 
 
@@ -35,5 +36,5 @@ test('AV-10 B: preço declarado, ativação paga e d20 estrito não inferem crí
   await runtime.getByLabel(selected.label,{exact:true}).fill('8');await seed(runtime,[]);await action().click();await runtime.getByRole('button',{name:'Comprometer ativação',exact:true}).click();await expect(runtime.locator('.engine-action-flow')).toContainText('Exige exatamente uma entrada; encontrou 0');await expect(resource).toHaveValue('6');await runtime.getByRole('button',{name:'Fechar e retomar depois',exact:true}).click();
   await runtime.getByLabel(selected.label,{exact:true}).fill('6');await resource.fill('1');await action().click();await runtime.getByRole('button',{name:'Comprometer ativação',exact:true}).click();await expect(runtime.locator('.engine-action-flow')).toContainText('Recursos insuficientes para os custos potenciais desta ação');await expect(resource).toHaveValue('1');await runtime.getByRole('button',{name:'Fechar e retomar depois',exact:true}).click();
  };
- await page.getByRole('button',{name:'Experimentar',exact:true}).click();await execute(frame(page));expect(await current(page)).toEqual(pkg);await roundtrip(page,browser,info,pkg,execute);
+ await editorMode(page,'experiment');await execute(frame(page));expect(await current(page)).toEqual(pkg);await roundtrip(page,browser,info,pkg,execute);
 });

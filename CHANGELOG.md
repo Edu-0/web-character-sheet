@@ -1,5 +1,47 @@
 # Histórico de versões
 
+## Alterações locais — integração no principal, 19 de outubro de 2026
+
+- Interface geral, temas, materiais, edição pelo lápis e editor de sistemas reunidos no checkout principal, incluindo atalhos, menu contextual, JSON flutuante e inclusão orientada.
+- Fluxo de atualização do aplicativo integrado: aviso global, salvamento de ficha/rascunho e coordenação das abas antes de recarregar.
+- Arquivos de referência, capacidades, prévia e modo offline reconstruídos no destino. Integração local sem publicação ou nova versão lançada.
+- Aviso de atualização distingue uma versão nova da primeira instalação offline, evitando a oferta transitória de uma atualização inexistente.
+
+## Alterações locais — atualização do aplicativo, 19 de outubro de 2026
+
+- Nova versão anunciada na ficha e no editor com Atualizar agora/Depois, além de Configurações; verificações ao voltar ao app, reconectar e periodicamente enquanto visível.
+- Ativação coordenada entre abas, preservando alterações de ficha e rascunhos pendentes antes da recarga. Janela de edição aberta, falha de gravação ou aba antiga sem resposta bloqueia a troca e permite tentar novamente.
+- Preparação inicial completa ativa o modo offline sem exigir reabrir manualmente. Caches continuam isolados por aplicativo/escopo e versão; documentos do usuário não são apagados.
+
+## Alterações locais — auditoria de design, 19 de outubro de 2026
+
+- Cabeçalho móvel do editor mais compacto: ações e navegação permanecem em uma linha cada, com mensagem de pendência mais curta e acesso a Código.
+- Menu contextual mantém o painel de origem e a ficha visível; Escape devolve foco e Editar propriedades abre o inspector explicitamente.
+- Cálculos em pacotes antigos agora explicam o requisito de dados tipados e oferecem acesso à configuração, sem conversão ao navegar.
+
+## Alterações locais — integração de design, 19 de outubro de 2026
+
+- Modais comuns limitados à altura disponível, inclusive no ensaio do editor: conteúdo rola internamente e ações permanecem acessíveis.
+- Navegação dos testes atualizada para as seis áreas, mantendo as verificações de dados, cancelamento, recuperação e aplicação.
+
+## Alterações locais — atalhos e inclusão orientada, 18 de outubro de 2026
+
+- Primeiro elemento com formulário central aberto, instruções, revisão de inclusão também no cabeçalho, sem arrasto durante esse início; cancelamento preserva a configuração.
+- Delete, duplicar, renomear, incluir, propriedades e ajuda por teclado, com proteção de digitação, IME, pendências e modais. Menu de contexto na árvore e no canvas, também por Shift F10.
+- JSON flutuante somente para leitura, atualizado com o documento, movível e redimensionável, mantendo a autoria acessível.
+- Grupos de propriedades mantêm sua abertura durante a sessão. Atualizações de feedback preservam a rolagem e a seleção de sistema/pacote ao voltar de Testar, sem perder textos pendentes.
+- Divisor JSON/prévia em faixa própria, sem cobrir controles da amostra. Rótulos de impressão contextualizados, com os mesmos valores do pacote.
+- Erros de configuração continuam visíveis durante salvamento e atualização automáticos; uma nova edição inicia a próxima tentativa.
+- Nome acessível das janelas de confirmação associado ao título. Cabeçalho reorganizado sob ampliação, navegação global oculta durante autoria e limites do menu/JSON ajustados à escala da interface. Trabalho local de integração, sem nova release.
+
+
+## Alterações locais — espaço de autoria, 18 de outubro de 2026
+
+- Editor organizado em Visão geral, Ficha, Dados, Regras, Testar e Revisar. Cabeçalho contextual com Arquivo e acesso a Código e propriedades; construtores amplos e opções progressivas.
+- Ficha e ferramentas compartilham a altura da janela, com rolagens locais, destino de inclusão e painéis adaptados ao celular. Salvamento não desloca o canvas durante o arrasto.
+- Mantidos documento, histórico, confirmação por campo, recuperação, ensaio isolado, migração e aplicação pela biblioteca. [Guia de criação e edição](data/examples/editor-workspace.md).
+- Trabalho local de desenvolvimento; não altera a versão publicada nem representa avaliação humana de usabilidade.
+
 ## Revisão documental local — 18 de outubro de 2026
 
 - Guias de autoria, validação, versões, migração, offline e testes alinhados ao fechamento técnico da autoria geral. Navegação dos exemplos reorganizada e estados históricos identificados.
@@ -21,6 +63,37 @@
 
 - Revisão visual de dados por personagem, conversões limitadas, conflitos e restauração com guardas sobre pacote e biblioteca. Gravação conjunta pelo coordenador/journal existentes; abertura não converte e o catálogo original é preservado. [Uso, contratos e limites](data/examples/data-migration.md).
 - Revisão opcional dos dados em v3 protege importações de outra versão de bindings; clientes antigos impedem a substituição; fichas não salvas em outras janelas impedem migração/restauração conjunta. Sem conversão universal de históricos de jogo.
+## Alterações locais — acabamento dos temas, 14 de outubro de 2026
+
+- Claro com off-white suave, campos quase brancos e bordas mais definidas, navegação distinta e divisórias discretas. Destaques das paletas preservados; Pétalas aproxima o rosa da referência e Preto e branco permanece neutro.
+- Controles compartilhados com foco único, estados hover/desabilitado/erro coerentes, transições de 160ms e fallback para cores forçadas. Radios desmarcados mais legíveis, com a mesma seleção por teclado.
+- Agrupamento leve de estatísticas D&D e calculados genéricos de outros sistemas. Escuro mantém sua paleta, recebendo bordas de campos mais legíveis e pequena redução no overlay dos modais. Sem alterações de dados ou regras.
+
+## Alterações locais — foco, escolhas e superfícies claras, 14 de outubro de 2026
+
+- Tema claro com superfícies neutras nas seis paletas, mantendo suas cores nos destaques; tonalização interna mais leve. Campos mais distintos do fundo no modo escuro.
+- Foco de campos com uma borda e brilho discreto; cantos de painéis/janelas menos arredondados. Salvar/Cancelar permanecem visíveis em janelas de entradas longas.
+- Escolhas exclusivas usam radios, com Ajuste manual explícito. Checkboxes permanecem para escolhas independentes. Nome legado de apresentação preservado como alias, sem reescrever dados ao abrir.
+
+## Alterações locais — leitura e edição de entradas, 14 de outubro de 2026
+
+- Listas com `editMode: dialog` mostram valores como texto e oferecem edição pelo lápis, com rascunho e Salvar/Cancelar; novas entradas só são cadastradas ao salvar.
+- `quickFields` mantém controles de sessão diretamente na ficha. Opções disponíveis nos formulários do editor, com validação das referências aos campos.
+- Aplicado a ataques, magias, habilidades e listas relacionadas nos layouts embutidos. Inventários/tabelas continuam com edição direta, e cópias locais editadas são preservadas.
+- Salvamento preserva identidade/propriedades adicionais, recusa conflitos e confere condições de edição. Busca, histórico, impressão e ensaio isolado acompanham a apresentação.
+
+## Alterações locais — materiais e preferências, 14 de outubro de 2026
+
+- Configurações → Fundo com modos Sólido, Translúcido e Usar transparência do navegador, salvos nas preferências e incluídos no backup.
+- Materiais discretos em menus e janelas, redução manual ou do dispositivo e fallback sólido; impressão com apresentação própria.
+- Prévia isolada acompanha materiais e conserva fundo próprio no modo de navegador transparente. Compatibilidade nativa específica do navegador ainda não verificada.
+
+## Alterações locais — composição da interface, 14 de outubro de 2026
+
+- Catálogo como ícone acessível e navegação superior com ações distribuídas; menu Mais abaixo de 1280 px.
+- Superfície contínua da ficha modular, títulos com hierarquia e listas com divisórias leves, preservando campos e operações.
+- Biblioteca e catálogo em linhas; estados e comandos mantidos, com menor destaque para exclusão.
+- Modo mesa com ritmo compacto, inclusive na prévia isolada do editor. Impressão e referência D&D estática conservam seus estilos próprios.
 
 ## Alterações locais — item 14, 10 de outubro de 2026
 

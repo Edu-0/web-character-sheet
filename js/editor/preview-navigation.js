@@ -1,6 +1,7 @@
+import {editorShortcut} from './keyboard-shortcuts.js';
 // Runs only in the opaque preview. No parent DOM, app state or repositories.
 export function previewNavigation({sources,controller,send}) {
-  const nodes=new Map();let inspecting=false,composing=false,compositionToken=null,gesture=null,suppressClick=false,origin;
+  const nodes=new Map();let inspecting=false,composing=false,compositionToken=null,gesture=null,suppressClick=false,origin,selection;
   const marked=target=>target instanceof Element ? target.closest('[data-editor-source]') : target?.parentElement?.closest('[data-editor-source]');
   const register=(node,pointer)=>{
     if(!sources.has(pointer))return;
@@ -15,7 +16,7 @@ export function previewNavigation({sources,controller,send}) {
     inspecting=composing || enabled===true;document.body.toggleAttribute('data-editor-inspecting',inspecting);
   };
   const authoringHandle=pointer=>{document.querySelectorAll('.editor-canvas-handle').forEach(n=>n.remove());if(!composing||!['components','containers','sections'].some(kind=>pointer?.includes('/'+kind+'/')))return;const root=[...(nodes.get(pointer)||[])].find(n=>n.isConnected&&n.getClientRects().length);if(!root)return;const handle=document.createElement('button');handle.type='button';handle.className='editor-canvas-handle';handle.textContent='Mover este bloco';handle.setAttribute('aria-label','Arrastar definição deste bloco');handle.dataset.editorSource=pointer;root.append(handle);};
-  const pick=node=>{if(node && sources.has(node.dataset.editorSource)){const definition=sources.get(node.dataset.editorSource);if(composing)authoringHandle(node.dataset.editorSource);if(composing&&definition.tabId)controller().activate(definition.tabId,{focus:false});if(composing&&node.matches('summary'))node.parentElement.open=!node.parentElement.open;send('source-picked',{pointer:node.dataset.editorSource});}};
+  const pick=node=>{if(node && sources.has(node.dataset.editorSource)){selection=node.dataset.editorSource;const definition=sources.get(node.dataset.editorSource);if(composing)authoringHandle(node.dataset.editorSource);if(composing&&definition.tabId)controller().activate(definition.tabId,{focus:false});if(composing&&node.matches('summary'))node.parentElement.open=!node.parentElement.open;send('source-picked',{pointer:node.dataset.editorSource});}};
   const stop=event=>{event.preventDefault();event.stopImmediatePropagation();};
   const cancelGesture=()=>{const current=gesture;gesture=null;if(current?.capture?.hasPointerCapture(current.pointerId))current.capture.releasePointerCapture(current.pointerId);document.querySelectorAll('[data-composition-hover]').forEach(n=>{n.removeAttribute('data-composition-hover');n.removeAttribute('data-composition-side');n.removeAttribute('data-composition-axis');});};
   const pointerdown=event=>{
@@ -44,11 +45,12 @@ export function previewNavigation({sources,controller,send}) {
     const node=marked(event.target);
     if(!inspecting){gesture=null;suppressClick=false;origin=node?.dataset.editorSource;return;}
     if(event.key==='Escape'){stop(event);const cancelledDrag=composing&&!!gesture?.dragSource;cancelGesture();suppressClick=cancelledDrag;if(!composing){inspect(false);send('inspection-ended');}return;}
+    if(composing){const action=editorShortcut(event);if(action){stop(event);const pointer=selection||node?.dataset.editorSource;if(action==='context'){const rect=node?.getBoundingClientRect();send('authoring-context',{token:compositionToken,pointer,x:rect?.left||8,y:rect?.bottom||8});}else send('authoring-shortcut',{token:compositionToken,pointer,action});return;}}
     if(event.key==='Tab')return;
     stop(event);
     if(!event.repeat && (event.key==='Enter' || event.key===' '))pick(node);
   };
-  const handlers={pointerdown,pointerup,pointermove:event=>{if(!gesture?.dragSource)return;stop(event);document.querySelectorAll('[data-composition-hover]').forEach(n=>n.removeAttribute('data-composition-hover'));const target=marked(document.elementFromPoint(event.clientX,event.clientY));if(target){const rect=target.getBoundingClientRect(),horizontal=target.parentElement?.matches('.engine-container--grid,.engine-container--flex');target.setAttribute('data-composition-hover','');target.dataset.compositionAxis=horizontal?'horizontal':'vertical';target.dataset.compositionSide=(horizontal?event.clientX>rect.left+rect.width/2:event.clientY>rect.top+rect.height/2)?'after':'before';}},click,mousedown:mouse,mouseup:mouse,dblclick:mouse,keydown,
+  const handlers={contextmenu:event=>{const node=marked(event.target);if(!composing||!node||!sources.has(node.dataset.editorSource))return;stop(event);selection=node.dataset.editorSource;send('authoring-context',{token:compositionToken,pointer:selection,x:event.clientX,y:event.clientY});},pointerdown,pointerup,pointermove:event=>{if(!gesture?.dragSource)return;stop(event);document.querySelectorAll('[data-composition-hover]').forEach(n=>n.removeAttribute('data-composition-hover'));const target=marked(document.elementFromPoint(event.clientX,event.clientY));if(target){const rect=target.getBoundingClientRect(),horizontal=target.parentElement?.matches('.engine-container--grid,.engine-container--flex');target.setAttribute('data-composition-hover','');target.dataset.compositionAxis=horizontal?'horizontal':'vertical';target.dataset.compositionSide=(horizontal?event.clientX>rect.left+rect.width/2:event.clientY>rect.top+rect.height/2)?'after':'before';}},click,mousedown:mouse,mouseup:mouse,dblclick:mouse,keydown,
     pointercancel:cancelGesture,lostpointercapture:cancelGesture,beforeinput:event=>{if(inspecting)stop(event);},
     paste:event=>{if(inspecting)stop(event);},drop:event=>{if(inspecting)stop(event);}};
   for(const [type,handler]of Object.entries(handlers))document.addEventListener(type,handler,true);
@@ -76,7 +78,7 @@ export function previewNavigation({sources,controller,send}) {
     register,inspect,compose(enabled,token){cancelGesture();composing=enabled===true;compositionToken=composing?token:null;document.body.toggleAttribute('data-editor-composing',composing);document.querySelectorAll('.editor-canvas-handle').forEach(n=>n.remove());suppressClick=false;inspect(composing);},
     reveal(pointer,{focus=true,scroll=true}={}){
       for(const node of document.querySelectorAll('[data-editor-source-highlight]'))node.removeAttribute('data-editor-source-highlight');
-      const definition=sources.get(pointer),targets=[...(nodes.get(pointer) || [])].filter(node=>node.isConnected);
+      selection=pointer;const definition=sources.get(pointer),targets=[...(nodes.get(pointer) || [])].filter(node=>node.isConnected);
       if(!definition || !targets.length)return {found:false,count:0};
       if(definition.tabId)controller().activate(definition.tabId,{focus:false});
       for(const target of targets){

@@ -1,0 +1,112 @@
+/* Composição contínua para a ficha modular. IDs, controles e ordem do layout
+   continuam no renderer; esta camada é compartilhada com a prévia do editor. */
+@media screen {
+  .engine-sheet { --engine-card-depth: none; gap: 24px; }
+  .engine-sheet .engine-sheet__header {
+    padding: 24px 0; border: 0; border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-sheet__title { font-weight: 500; }
+  .engine-sheet .engine-tabs {
+    gap: 12px; padding: 0; border: 0; border-bottom: 1px solid var(--color-border);
+    border-radius: 0; background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-tab { padding: 12px 10px; border-radius: 0; font-weight: 500; }
+  .engine-sheet .engine-tab[aria-selected='true'] {
+    color: var(--color-accent-strong); background: transparent;
+    box-shadow: inset 0 -2px var(--color-accent-strong);
+  }
+  .engine-sheet .engine-panel { gap: 32px; align-items: start; }
+  .engine-sheet .engine-section {
+    overflow: visible; border: 0; border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-section__header {
+    margin: 0 0 16px; padding: 0; border: 0; background: transparent;
+    flex-wrap: wrap; gap: 8px 20px;
+  }
+  .engine-sheet .engine-section__title {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 500;
+  }
+  .engine-sheet .engine-section__body { padding: 0; gap: 20px; }
+  .engine-sheet .engine-section__note { font-size: 13px; }
+  .engine-sheet .engine-component--card {
+    padding: 12px 0; border: 0; border-radius: 0; background: transparent;
+  }
+  .engine-sheet .engine-component input:not([type='checkbox']):not([type='radio']),
+  .engine-sheet .engine-component select { min-height: 44px; }
+  .engine-sheet .engine-component--hero input { font-size: clamp(1.5rem, 3vw, 2rem); }
+  .engine-sheet .engine-dnd-ability {
+    padding: 12px 0; border: 0; border-bottom: 1px solid var(--color-border);
+    border-radius: 0; background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-dnd-derived {
+    border: 0; border-radius: 0; background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-dnd-derived__label { text-transform: none; letter-spacing: 0; }
+  .engine-sheet .engine-dnd-derived__value { font-size: 1.5rem; font-weight: 600; }
+  .engine-sheet .engine-container--stat-strip {
+    gap: 20px; padding-block: 16px; border-block: 1px solid var(--color-border);
+  }
+  :root[data-theme='light'] .engine-sheet .engine-container--stat-strip {
+    background: var(--color-panel-alt);
+  }
+  .engine-sheet .engine-container--stat-strip > .engine-component { padding-inline: 8px; }
+  :root[data-theme='light'] .engine-sheet .engine-container--stat-strip .engine-component > .field { background: transparent; }
+  .engine-sheet .engine-container--stat-strip > .engine-component:has(.field) {
+    border: 0; border-radius: 0; background: transparent;
+  }
+  .engine-sheet .engine-container--stat-strip .engine-dnd-derived { background: transparent; }
+  .engine-sheet .engine-dnd-skill { padding: 8px 0; min-height: 48px; }
+  .engine-sheet .engine-entry-list { gap: 0; border-top: 1px solid var(--color-border); }
+  .engine-sheet .engine-entry {
+    border: 0; border-bottom: 1px solid var(--color-border); border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-entry__summary { padding: 12px 0; min-height: 48px; }
+  .engine-sheet .engine-entry__body { padding-inline: 0; }
+  .engine-sheet .engine-entry[open] > .engine-entry__body {
+    border-left: 2px solid var(--color-border); padding-left: 16px;
+  }
+  .engine-sheet .engine-entry__title { white-space: normal; overflow-wrap: anywhere; }
+  .engine-sheet .engine-skill-catalog__group,
+  .engine-sheet .engine-slot,
+  .engine-sheet .engine-budget__metric {
+    border: 0; border-bottom: 1px solid var(--color-border); border-radius: 0;
+    background: transparent; box-shadow: none;
+  }
+  .engine-sheet .engine-skill-catalog__group { padding-inline: 0; }
+  .engine-sheet .engine-slots__grid { gap: 20px; }
+  /* Cálculos, ações e avisos conservam seus estados funcionais. */
+  .engine-sheet .engine-computed { box-shadow: none; }
+  :root[data-theme='light'] .engine-sheet .engine-computed {
+    border: 0; border-bottom: 1px solid var(--color-border);
+    border-radius: 0; background: transparent;
+  }
+  .engine-sheet .engine-computed__label { color: var(--color-text-muted); }
+  .engine-sheet [data-editor-source-highlight] { box-shadow: 0 0 0 6px var(--color-panel); }
+  #view-sheet:has(#generic-sheet-host:not([hidden])) #sheet-heading {
+    background: transparent; border-radius: 0; padding-block: 20px;
+  }
+  #view-sheet:has(#generic-sheet-host:not([hidden])) #sheet-heading h1 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 500;
+  }
+  .engine-sheet .engine-container--two-column .engine-component:has(.engine-tags) {
+    padding: 16px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none;
+  }
+  [data-sheet-mode='table'] .engine-sheet .engine-panel { gap: 24px 32px; }
+  [data-sheet-mode='table'] .engine-sheet .engine-section__title {
+    font-family: var(--font-body); font-size: 1rem; font-weight: 600;
+  }
+  [data-sheet-mode='table'] .engine-sheet .engine-section__header { margin-bottom: 12px; }
+  [data-sheet-mode='table'] .engine-sheet .engine-section__body { gap: 12px; }
+  [data-sheet-mode='table'] .engine-sheet .engine-entry__summary { padding-block: 10px; }
+  @media (max-width: 700px) {
+    .engine-sheet, .engine-sheet .engine-panel { gap: 28px; }
+    .engine-sheet .engine-section__title { font-size: 1.25rem; }
+    .engine-sheet .engine-tabs { gap: 4px; }
+    .engine-sheet .engine-tab { padding-inline: 8px; }
+    .engine-sheet .engine-section__body { gap: 16px; }
+    .engine-sheet .engine-section__header { margin-bottom: 12px; }
+  }
+}

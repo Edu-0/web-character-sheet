@@ -55,7 +55,7 @@ export const COMPONENT_CONTRACTS = {
   die:component(basic,'Traço por escala; degraus existentes independentes de efeitos temporários',true,{...calculation,...roll,allowComposite:p('boolean')}),
   image:component(advanced,'Imagem local segura',true,{alt:p('string')}),
   tagList:component(advanced,'Lista de textos',true,{placeholder:p('string')}),
-  list:component(advanced,'Coleção de registros com identidade',true,{...collection,...roll,entryAction:p('string',{enum:['roll','dndSpell','dndAttack']}),rollPreset:p('path'),rollConfigFrom:p('path',{alias:'rollPreset'})},'schemas.js / roll-references.js / entry-rolls.js'),
+  list:component(advanced,'Coleção de registros com identidade',true,{...collection,...roll,editMode:p('string',{enum:['inline','dialog'],default:'inline'}),quickFields:p('array',{semantic:'campos de itemSchema editáveis na ficha quando editMode=dialog'}),entryAction:p('string',{enum:['roll','dndSpell','dndAttack']}),rollPreset:p('path'),rollConfigFrom:p('path',{alias:'rollPreset'})},'schemas.js / roll-references.js / entry-rolls.js'),
   table:component(advanced,'Coleção tabular',true,{...collection,...fields('removeLabel searchLabel searchPlaceholder'),searchable:p('boolean')}),
   stateList:component(advanced,'Estados graduados autorais existentes; não é activeEffects',true,{...collection,gradeField:p('string'),effectLabel:p('string'),overflow:p('object'),recovery:p('object')}),
   skillCatalog:component(advanced,'Catálogo configurado de perícias',true,{...calculation,...fields('baseDieFrom categoriesFrom doneLabel editLabel emptyLabel'),allowComposite:p('boolean')}),
@@ -79,7 +79,7 @@ export const COMPONENT_CONTRACTS = {
 export const ITEM_FIELD_CONTRACTS = Object.fromEntries(['text','textarea','number','boolean','select','die','reference'].map(type=>[type,{
   ...fields('label help placeholder'),default:p('any'),...(type==='textarea'?{rows:p('integer',{default:RUNTIME_DEFAULTS.textareaRows})}:{}),
   ...(type==='die'?{allowComposite:p('boolean'),stepControls:p('boolean')}:{}),
-  ...(['select','reference'].includes(type)?{options:p('array'),optionsFrom:p('path'),valueField:p('string'),labelField:p('string'),valueType:p('string'),multiple:p('boolean'),presentation:p('string',{enum:['checkboxes']})}:{}),
+  ...(['select','reference'].includes(type)?{options:p('array'),optionsFrom:p('path'),valueField:p('string'),labelField:p('string'),valueType:p('string'),multiple:p('boolean'),presentation:p('string',{enum:['radios','checkboxes'],semantic:'radios: uma escolha; checkboxes: alias legado de escolha única'})}:{}),
 }]));
 
 export function validateComponentShape(component, path, issues) {

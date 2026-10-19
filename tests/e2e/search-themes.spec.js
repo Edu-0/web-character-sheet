@@ -59,11 +59,12 @@ test('perícia implícita é encontrada sem cadastrar dados e pode ser revelada'
 test('busca conteúdo em cartões recolhidos, abre o campo e aceita teclado', async ({ page }) => {
   await page.getByRole('tab', { name: 'Habilidades', exact: true }).click();
   await page.getByRole('button', { name: 'Adicionar Habilidade', exact: true }).click();
+  const editor = page.locator('dialog.engine-entry-editor');
+  await editor.getByLabel('Nome', { exact: true }).fill('Passo Lunar');
+  await editor.getByLabel('Descrição', { exact: true }).fill(`${'Texto de campanha. '.repeat(30)}Encontra o santuário da estrela prateada.`);
+  await editor.getByRole('button', { name: 'Salvar', exact: true }).click();
   const entry = page.locator('#generic-sheet-host .engine-entry').first();
-  await entry.locator('summary').click();
-  await entry.getByLabel('Nome', { exact: true }).fill('Passo Lunar');
-  await entry.getByLabel('Descrição', { exact: true }).fill(`${'Texto de campanha. '.repeat(30)}Encontra o santuário da estrela prateada.`);
-  await entry.locator('summary').click();
+  if (await entry.getAttribute('open') !== null) await entry.locator('summary').click();
   await page.getByRole('tab', { name: 'Identidade', exact: true }).click();
   const input = page.locator('#sheet-search-input');
   await input.fill('santuario');

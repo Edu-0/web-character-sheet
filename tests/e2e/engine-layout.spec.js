@@ -82,9 +82,14 @@ test('design language acompanha o tema claro', async ({ page }, testInfo) => {
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   const sectionColors = await page.locator('.engine-section').first().evaluate((element) => {
     const style = getComputedStyle(element);
-    return { background: style.backgroundColor, border: style.borderColor };
+    const input=element.querySelector('input:not([type="file"])');
+    const control=getComputedStyle(input);
+    return { background: style.backgroundColor, shadow: style.boxShadow,
+      controlBackground: control.backgroundColor, controlText: control.color, controlBorder: control.borderTopWidth };
   });
-  expect(sectionColors.background).toBe('rgb(255, 255, 255)');
-  expect(sectionColors.border).not.toBe(sectionColors.background);
+  expect(sectionColors.background).toBe('rgba(0, 0, 0, 0)');
+  expect(sectionColors.shadow).toBe('none');
+  expect(sectionColors.controlBackground).not.toBe(sectionColors.controlText);
+  expect(parseFloat(sectionColors.controlBorder)).toBeGreaterThan(0);
   await page.screenshot({ path: testInfo.outputPath('sistema-rpg-light.png'), fullPage: false });
 });

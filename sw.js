@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "6ccabc63d6772ab3f2d4";
+const VERSION = "70cbcdb7ee9409a7a862";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -43,15 +43,23 @@ const ASSETS = [
   },
   {
     "path": "css/components.css",
-    "hash": "5368e972fbd2c6989f6e42ce33aedf8564023a241f9b11bf2ecb311cef23891a"
+    "hash": "67554ca9ad6c74acdc75a0c1b98fb672a6fb92ea02cc4cc34fa005903072bf97"
+  },
+  {
+    "path": "css/control-refinement.css",
+    "hash": "13a93842f84ebfcaed5bc80065194de0784ef363c9f1c14143e05f567363083b"
   },
   {
     "path": "css/editor-preview.css",
     "hash": "aa94ddbd83854d52c06024c2e14d7497ec7936796ccef44847950f94529a6033"
   },
   {
+    "path": "css/editor-workspace.css",
+    "hash": "8282ddeebbc1eaf31c925c36a280574be0ad0be9e131a908f55ee0b735b02271"
+  },
+  {
     "path": "css/editor.css",
-    "hash": "ee513c0aab7f7aec602d8614c40ae9ee7f60ddc0b5e83b851ab847a18fbd59c5"
+    "hash": "ba3e728e020437719f67991e2fdf0cd723095ae76a9f72a1cebde1b69a0a10a0"
   },
   {
     "path": "css/engine-shell.css",
@@ -59,11 +67,23 @@ const ASSETS = [
   },
   {
     "path": "css/engine.css",
-    "hash": "da1f16047595c300385180a15d6e1914ce6d205986473ed4734a06f6e209e125"
+    "hash": "47665ad175695da4acedd69e408cd8c4a4bedb5f53f9f97e6662e0eb31b3d452"
+  },
+  {
+    "path": "css/entry-editor.css",
+    "hash": "ee8c63448c05ea15e79ad258b5755e00cd40f8e6d1b96d54059b8667c501801f"
   },
   {
     "path": "css/layout.css",
     "hash": "a8550f057cf8543c213bc986b3753d3eaeacadf82945869d0bc5c2d776bee5a9"
+  },
+  {
+    "path": "css/library-composition.css",
+    "hash": "81011db26025df406c377cd3a99126fd428d29ef4103c270c426afbf84efd987"
+  },
+  {
+    "path": "css/materials.css",
+    "hash": "ace9d82afac82af5f5e8a707932670c31b192532a2892e101c7c445ac36f5453"
   },
   {
     "path": "css/print.css",
@@ -71,19 +91,27 @@ const ASSETS = [
   },
   {
     "path": "css/refinement.css",
-    "hash": "98ba3b632cf2a2ea40566a5159d51eae3813f39912b9b525b3e30ff7f37d5b98"
+    "hash": "fa1cbef74d2c79bc93e1f1ce6ab05c099b241c336155ff06b42a6a0dde06a543"
   },
   {
     "path": "css/responsive.css",
     "hash": "fa2ae427e8817a28f41c00a6d18b0ccf46370b3c87ef7b97a16c9e7047fc6a5d"
   },
   {
+    "path": "css/sheet-composition.css",
+    "hash": "daf2618a3786d9246f5dd0c6e96a019ad5974f69993b853fe1a8f49cecea50a1"
+  },
+  {
+    "path": "css/shell-topbar.css",
+    "hash": "c28671c9220192a241a5b5cd7c48641c5b8c1e95a0fa66f16e48ad636c709f5f"
+  },
+  {
     "path": "css/variables.css",
-    "hash": "e8dff95b6d332938ac7e7bd5cfa34eafdf31e2e923665e577bb285e4869524af"
+    "hash": "0786b530fe89238535d83503ac4af7ea2cedbb8894afc3e37062a250ec49c21e"
   },
   {
     "path": "data/systems/blades-dark.layout.json",
-    "hash": "6c94f3754e29e35f6ddb681698187bebeecc1d02af00ba1e8d4f2af357c68f1b"
+    "hash": "cb3e6a5fbea96203791707baca9bc5d8e470718f8de42090c257a7758b2b41cc"
   },
   {
     "path": "data/systems/blades-dark.system.json",
@@ -95,7 +123,7 @@ const ASSETS = [
   },
   {
     "path": "data/systems/cthulhu7.layout.json",
-    "hash": "9cfca958a62bf73f3eb56a69c7503fe745215875ac5100c321df44c2dde8faf0"
+    "hash": "298882b6bc068ddb59ea83bf84a2a20252fc290885f6da38b453b7cdfadc9439"
   },
   {
     "path": "data/systems/cthulhu7.system.json",
@@ -107,7 +135,7 @@ const ASSETS = [
   },
   {
     "path": "data/systems/dnd2024.layout.json",
-    "hash": "96e744e8a863687a74e333c3d8efac571bdbdb70a0b898f2a425f8752f405fff"
+    "hash": "c1ef36a3f70d064088a8ba1d150d9f91ce6fbc83dec9711d398d4ec9465f8794"
   },
   {
     "path": "data/systems/dnd2024.system.json",
@@ -115,11 +143,11 @@ const ASSETS = [
   },
   {
     "path": "data/systems/dnd2024.table-layout.json",
-    "hash": "5549222ecb83ccdc0383e8b20d0268703bbe5e39189ae8a4a30beae24cf81242"
+    "hash": "8e91aeaa7eeb37b1d3a9e486ac613d65363e73aaa28533626c05c837fa2f366b"
   },
   {
     "path": "data/systems/fate-accelerated.layout.json",
-    "hash": "64da2d45b68748d0ffc3e57d80915c408114b2f2742a6285bdc9a3ec4330c1dd"
+    "hash": "77ff8e4d73263b94df1eac8eb541c34967b30c2e71bb350cb50fd3380be67e5a"
   },
   {
     "path": "data/systems/fate-accelerated.system.json",
@@ -135,7 +163,7 @@ const ASSETS = [
   },
   {
     "path": "data/systems/ironsworn.layout.json",
-    "hash": "6ca24f8af191db6890527c66ee5d3e92b975d67448b6bdab296dbb1b501bfe54"
+    "hash": "8682fd7b535c29236f51ab9f620e4cd18c600d79214fcc4b254a86f0627ca443"
   },
   {
     "path": "data/systems/ironsworn.system.json",
@@ -147,7 +175,7 @@ const ASSETS = [
   },
   {
     "path": "data/systems/ordem-paranormal.layout.json",
-    "hash": "49558b73db5765f3f1fd81dea28222cfe1a198eaa11a13ea4f4acc5e35b32da5"
+    "hash": "6018ad1c8444f5fa17268dca6e0d432fc0ddda7d64488535ebe0f3fb3a34e369"
   },
   {
     "path": "data/systems/ordem-paranormal.system.json",
@@ -155,11 +183,11 @@ const ASSETS = [
   },
   {
     "path": "data/systems/ordem-paranormal.table-layout.json",
-    "hash": "a01b18051a2a9672c29521d071079b8593e9d7a02ea0864258e7d9f591fb6cbe"
+    "hash": "6956aa6fe4607d56237fcdc6d94ce1619f4a8a5bb7fb5072161e5fb018b92eed"
   },
   {
     "path": "data/systems/sistema-rpg.layout.json",
-    "hash": "668ae280b4cfa0a2d96d8a222a4b539fdeac9eb24378d4279c2be37685554265"
+    "hash": "41adf86e8df46f6f5e8c37d84842a723016deb8bdc1cfaaa11090d4fdf78c389"
   },
   {
     "path": "data/systems/sistema-rpg.system.json",
@@ -167,11 +195,11 @@ const ASSETS = [
   },
   {
     "path": "data/systems/sistema-rpg.table-layout.json",
-    "hash": "78d6f5c416fac8fc400b7a7562c957ada956a156c8bfcc628099738d762379e3"
+    "hash": "dc752fe861cb31a403aa4f124decc54d23308f2153666d88e463d43152061733"
   },
   {
     "path": "data/systems/swade.layout.json",
-    "hash": "864a172ed81e9250242914aff4109b0942adb799c335df11cc69e51932c77df0"
+    "hash": "a6cf462fd8192c02866171c2f224b16518c790e6ee029374d2beeebcc84217af"
   },
   {
     "path": "data/systems/swade.system.json",
@@ -183,7 +211,7 @@ const ASSETS = [
   },
   {
     "path": "index.html",
-    "hash": "ce12aa7a03216e4049c8a417f19046cd804169b5ba96796704c3a8d0783aab3e"
+    "hash": "0af0108f11f98b28f0ca7558c8b34eae7546ab8f822a539f3863d9e5720d698a"
   },
   {
     "path": "js/app-state.js",
@@ -191,11 +219,11 @@ const ASSETS = [
   },
   {
     "path": "js/app.js",
-    "hash": "cd3552181a84e1789c515382e672cc8cb2f3017538600804030908d2572d3390"
+    "hash": "45c0980bc4fc64c97bb5ba6c18c2810505ea1b1e1042da8e88d89eb0b845339e"
   },
   {
     "path": "js/appearance.js",
-    "hash": "39a275f3a170647262f9e2bf451fad15c7c8b5606e7bda6b33fc0e308eada4bd"
+    "hash": "d8e1b76170121145181dec37e586d5f901a00e608dd3609dfc05482566cb4849"
   },
   {
     "path": "js/artwork.js",
@@ -255,7 +283,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/authoring-labels.js",
-    "hash": "c261c933fa5cbccb8291182ad3d875402240ff85c918f25d2a9a09315dbc8348"
+    "hash": "cee49ff18000e60043991cd6c83b8411688ba5493981eb923ae82c8f64b09e58"
   },
   {
     "path": "js/editor/authoring-pending.js",
@@ -331,7 +359,11 @@ const ASSETS = [
   },
   {
     "path": "js/editor/editor-ui.js",
-    "hash": "062ba18c6d3315aa8949f8581311bd063b7672538b05fe0ec22a5eafe9ae70af"
+    "hash": "3f9226d3216ed52dcbaebcee78fe5c79264c5f88d1a2854160567f03d56b6bde"
+  },
+  {
+    "path": "js/editor/editor-workspace.js",
+    "hash": "abf3fe15444ec3bcf82e36f07065e24326c2bde17b50f5b71b3a72d4c022eab7"
   },
   {
     "path": "js/editor/effect-recipe.js",
@@ -351,7 +383,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/form-metadata.js",
-    "hash": "972cb0d3b13f1c4cf1db3be22a11d826bbbcf6c8dbd6e36417d19474596b754a"
+    "hash": "a4558ed98f2542830f9d6b39eb0dc4ee9ac95657dd7de3d249579d8e72343142"
   },
   {
     "path": "js/editor/form-structure.js",
@@ -359,7 +391,7 @@ const ASSETS = [
   },
   {
     "path": "js/editor/form-view.js",
-    "hash": "534c31652a5018e91791f2965c8f6caa9792e480e742a9a0308e442fe754506d"
+    "hash": "da4d0eb02d7b7535496ed4aab4b760fd7333dc22a7d2d78275f3694d9c24784d"
   },
   {
     "path": "js/editor/formula-builder.js",
@@ -379,11 +411,11 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.css",
-    "hash": "dcb128399e7f6e6c2d5352f9ff247cf3fb89175e88d5cb6b6d111b28882336d4"
+    "hash": "72412474b02644ccf3078aa6f352df44aa141e22397205ceaeaaee3cc55cbabe"
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "03b8ff306642d2544608878699aa7f8acf391c7aa6c2cf59eb82a3c00ab3f604"
+    "hash": "229517d46ba96177bfeaa15098c1520948c4c953cdf5a33669117eb8d334b67a"
   },
   {
     "path": "js/editor/history.js",
@@ -395,7 +427,11 @@ const ASSETS = [
   },
   {
     "path": "js/editor/inspector.js",
-    "hash": "6c5bf19e8605f2f9ebdb1f30d4212f23a8ffdcf13f88be02ad34243b6748a749"
+    "hash": "431b699971e11e163b405f77b0c3b04ce4c66dfb8c122870abae9652e136300d"
+  },
+  {
+    "path": "js/editor/keyboard-shortcuts.js",
+    "hash": "27fa925363ede3cce09eb164710d51b91e38ec1445459b077373a0b0961f09b8"
   },
   {
     "path": "js/editor/layout-manager.js",
@@ -443,15 +479,15 @@ const ASSETS = [
   },
   {
     "path": "js/editor/preview-entry.js",
-    "hash": "1fcf20d83eeb739003041f95cbf90ae1a41be7214029793de205f959c1adb39d"
+    "hash": "c5f5433603585be7628e62c6d4e73a925b8255d16f9be4477e86a6321dd5e869"
   },
   {
     "path": "js/editor/preview-host.js",
-    "hash": "3b2e622369d1c93fe6d521c1b43e98f7fb885aed5b7e6c986e2fbdd8fafeca96"
+    "hash": "3c17c5a5db89678f3b73ebaf3c3181d5ebf386b11cdb497cb99985dcc6bc9fa5"
   },
   {
     "path": "js/editor/preview-navigation.js",
-    "hash": "f65f7abb1626fed1602ae680aa094bcded1d4f78dbda7e1a3f32fb6363819f18"
+    "hash": "4d2b7c9c6e0612eea8e5ae33181f0c09433bd8f44f15260961b9ba569b58ab12"
   },
   {
     "path": "js/editor/preview-protocol.js",
@@ -558,6 +594,14 @@ const ASSETS = [
     "hash": "2275444dc7d9b59bd9cb6f19e147b18f3ac7533e53495f9a4c9005864e7682af"
   },
   {
+    "path": "js/editor/workspace-interactions.js",
+    "hash": "73a6ced7efbc3a4e28d0a10c0b2cf5b116712788aeac3488cb2308b589927e6c"
+  },
+  {
+    "path": "js/editor/workspace-state.js",
+    "hash": "47f4f7fdd69bcd5f61f9ef3e18b1046fa11c4b21932671f594acfda2d360ac65"
+  },
+  {
     "path": "js/engine/action-choices.js",
     "hash": "13635a9966b8daab2b2ad5b58b99bc6e0218e3a26633cb1f608e807aa67d7c5d"
   },
@@ -583,7 +627,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/advanced-fields.js",
-    "hash": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6"
+    "hash": "f4061480bc4151023ae1d140aa0e172dc1302b159e50eb8716351b8cf9bce920"
   },
   {
     "path": "js/engine/assistance.js",
@@ -670,6 +714,14 @@ const ASSETS = [
     "hash": "81dfa39ce65394dfd1754d152d0e7460027fa465777bf63fc27652e13fb1c161"
   },
   {
+    "path": "js/engine/entry-edit.js",
+    "hash": "4295677ae7031a450691d4e687434058a1ac96cdc4e754fe8e31fba8272a07a2"
+  },
+  {
+    "path": "js/engine/entry-editor.js",
+    "hash": "72e9cf69af46a5fc4603b3234b8867f42313613152e96e399a584094e5513084"
+  },
+  {
     "path": "js/engine/entry-roll-preparation.js",
     "hash": "3a1446c5b0e33c7f7ca5a4ad43fb88dff9fe5b759349e56482976c61631a31af"
   },
@@ -711,7 +763,11 @@ const ASSETS = [
   },
   {
     "path": "js/engine/option-checkboxes.js",
-    "hash": "371dd1c6a8f4a3c2f5262c05b3631e882d5a8e32bc33dab0d64da82a8e5ab96e"
+    "hash": "80de71ffb1a9b75fb67eec9d5469496982fcde92487e1edeef35e77816f0dbba"
+  },
+  {
+    "path": "js/engine/option-radios.js",
+    "hash": "f279f603fa9f2912ec0e747b2f8c042517cbee864825ba656333c8768bcea4a6"
   },
   {
     "path": "js/engine/paths.js",
@@ -763,7 +819,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/renderer.js",
-    "hash": "b13467d51f42192362fb25c7f13a9aeb739096db18de7250ecd8757bc398d429"
+    "hash": "1085a4a4dec5ca097697c18ba5009f32567771970cfbc99c604c7f5517255205"
   },
   {
     "path": "js/engine/resolution-results.js",
@@ -867,7 +923,7 @@ const ASSETS = [
   },
   {
     "path": "js/icons.js",
-    "hash": "b7c148ff6fc087c4e9952e755990c362d5e6509a69cd5bc848b8180af25bf995"
+    "hash": "b6a75abde21f1a88f5bb5d4bf7bb10f6b2a5d7a46d54aa93ddc703745f191543"
   },
   {
     "path": "js/images.js",
@@ -876,6 +932,14 @@ const ASSETS = [
   {
     "path": "js/library-backup.js",
     "hash": "b8bb018a94d933d9edab7892160c9138f7e91189f3ae7caddaf9d3ad549bb8ca"
+  },
+  {
+    "path": "js/material-preferences.js",
+    "hash": "c21ea7dd1c7f778133f637580d4610e544e707b80d8e6555395cbcbb27d344a0"
+  },
+  {
+    "path": "js/materials.js",
+    "hash": "1fd1bbf23e04ab08be9e9671ace320e86cca5510e5d2447b6d710f27c2604304"
   },
   {
     "path": "js/migrations/data-conversions.js",
@@ -895,7 +959,7 @@ const ASSETS = [
   },
   {
     "path": "js/modal.js",
-    "hash": "17bae4c71f1f41ff67f0bf799461db673908ad3a29c7f3b1b8773e2470f901dd"
+    "hash": "d213b7475a892d9ae411336e11db803958e1cdc55913d7020bcacd4fdae06969"
   },
   {
     "path": "js/notifications.js",
@@ -911,7 +975,7 @@ const ASSETS = [
   },
   {
     "path": "js/pwa.js",
-    "hash": "97bfa206b21735b0d3e17c467c99a8caf2e9cba26563ec20d1a4e8cb5cca88c7"
+    "hash": "9b532a2080345f778cd672112c68de1ca1adbe538cadf986e21b09525051adce"
   },
   {
     "path": "js/repositories/catalog-installations.js",
@@ -943,7 +1007,7 @@ const ASSETS = [
   },
   {
     "path": "js/shell-actions.js",
-    "hash": "0db5a3327a6e9b77507cfd0a6eac5d7f378d54061871dc56c853edda2d73a339"
+    "hash": "7c52c6311199de391d2fe301e027f25ca843f1cd90170dc408d23f7a3e258727"
   },
   {
     "path": "js/state.js",
@@ -975,7 +1039,7 @@ const ASSETS = [
   },
   {
     "path": "js/ui.js",
-    "hash": "77ecdb9de0457f860bd0ae651c3a740aa49a6f611f8fcb45e2f0f279e1d6921a"
+    "hash": "7664f65f848d167f970cb8b12cfcdf02b04bc8972599bfeacd720b19e9a832a1"
   },
   {
     "path": "js/validation/actions.js",
@@ -995,7 +1059,7 @@ const ASSETS = [
   },
   {
     "path": "js/validation/contracts.js",
-    "hash": "3d49943b65bf6f8b6f5df81e2d5979a070fed833ea787e5237fc5bb0f65d118b"
+    "hash": "32e5cef1f64af4f54721d159a6cf2afb69f72b176c9e642273a3e4e8049c244c"
   },
   {
     "path": "js/validation/data-definitions.js",
@@ -1035,7 +1099,7 @@ const ASSETS = [
   },
   {
     "path": "js/validation/schemas.js",
-    "hash": "f95f25839f9e1572331ced975e5af6ee215eaf2aa2ed41b68b1716c08941dc7e"
+    "hash": "508f091066d194541ff6b82d7405bd35c653b29fc26c215dce20eb5d9269de8e"
   },
   {
     "path": "js/validation/versions.js",
@@ -1118,14 +1182,15 @@ self.addEventListener('install', event => {
       }
     } catch (error) { await reportFailure(error); throw error; }
   })());
-  // Sem skipWaiting: janelas antigas continuam usando a versão antiga inteira.
+  // Updates stay waiting until all open app windows preserve their work.
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     for (const key of await caches.keys()) if (key.startsWith(PREFIX) && key !== CACHE) await caches.delete(key);
+    await self.clients.claim();
   })());
-  // Sem clients.claim: uma página já aberta não troca de versão durante a sessão.
+  // Prepared windows reload on controllerchange; initial installation does not reload.
 });
 
 async function serve(url, asset) {
@@ -1153,7 +1218,36 @@ self.addEventListener('fetch', event => {
   if (asset) event.respondWith(serve(requested.href, asset));
 });
 
+let updatingApp = false;
+async function activateUpdate(event) {
+  const reply = message => event.ports[0].postMessage(message);
+  if (updatingApp) { reply({ok:false,message:'Outra atualização já está em andamento.'}); return; }
+  updatingApp = true;
+  let windows = []; const transaction = crypto.randomUUID();
+  try {
+    const cache = await caches.open(CACHE);
+    if (!(await Promise.all([...urls.keys()].map(url => cache.match(url)))).every(Boolean)) throw Error('A nova versão ainda não está completa. Verifique a conexão e tente novamente.');
+    windows = (await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client => client.url.startsWith(SCOPE));
+    const results = await Promise.all(windows.map(client => new Promise(resolve => {
+      const channel = new MessageChannel();
+      const finish = result => { clearTimeout(timer); channel.port1.close(); resolve(result); };
+      const timer = setTimeout(() => finish({ready:false,message:'Uma aba está desatualizada ou não respondeu. Feche as outras abas do aplicativo e tente novamente.'}), 8000);
+      channel.port1.onmessage = ({data}) => finish(data?.protocol === 1 ? data : {ready:false,message:'Feche as abas antigas do aplicativo e tente novamente.'});
+      try { client.postMessage({type:'APP_UPDATE_PREPARE',transaction},[channel.port2]); } catch { finish({ready:false,message:'Não foi possível preparar uma das abas. Tente novamente.'}); }
+    })));
+    const failed = results.find(result => !result.ready);
+    if (failed) throw Error(failed.message || 'Uma aba não conseguiu salvar suas alterações. A versão atual foi mantida.');
+    const current = (await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client => client.url.startsWith(SCOPE));
+    if (current.some(client => !windows.some(known => known.id === client.id))) throw Error('Outra aba foi aberta durante a atualização. Tente novamente.');
+    reply({ok:true}); await self.skipWaiting();
+  } catch (error) {
+    for (const client of windows) client.postMessage({type:'APP_UPDATE_ABORT',transaction});
+    reply({ok:false,message:error.message});
+  } finally { updatingApp = false; }
+}
+
 self.addEventListener('message', event => {
+  if(event.data?.type==='APP_UPDATE_ACTIVATE' && event.ports[0] && event.source?.url?.startsWith(SCOPE)){event.waitUntil(activateUpdate(event));return;}
   if(event.data?.type==='VERIFY_LIBRARY_WRITERS' && event.ports[0]){
     event.waitUntil((async()=>{
       const clients=(await self.clients.matchAll({includeUncontrolled:true,type:'window'})).filter(client=>client.url.startsWith(SCOPE));

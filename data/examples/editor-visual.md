@@ -1,5 +1,7 @@
 # Autoria visual de pacotes
 
+**Navegação do editor:** **Ficha** é a área de composição; **Testar** oferece o ensaio. As referências a Compor/Experimentar abaixo correspondem a essas tarefas. Dados/Regras e Revisar organizam seus construtores e a conclusão. [Guia das seis áreas](editor-workspace.md).
+
 O marco visual P1 e a autoria geral v3 estão implementados no escopo descrito abaixo. Dados, regras e vínculos têm identidades explícitas e são independentes da apresentação. Registros, coleções, ações, eventos, efeitos e progressão usam operações permitidas pela engine, sem JavaScript fornecido pelo pacote. A substituição estrutural de dados instalados usa [migração com revisão](data-migration.md). Consulte o [fechamento técnico e suas limitações](authoring-validation.md).
 
 [Traços da Jornada](traits.md) combina criação, evolução, Pool, técnicas, repouso, carga e estados vinculados em um [pacote fictício importável](traits.package.json). Os dados e as condições são compartilhados pelos controles e ações.
@@ -73,3 +75,6 @@ Verificações reproduzíveis e pendências de avaliação estão em [verificaç
 Texto pendente dos construtores e receitas fica na interface recuperável. Aplicar um campo é uma ação explícita; descarte também. Exportação e aplicação usam o fluxo existente, com validação e preflight. Dados de ensaio e interface ficam fora do pacote.
 
 A cobertura é dos mecanismos atualmente implementados. Mecânicas adicionais podem exigir extensão da engine. A ambição de permitir que qualquer pessoa configure qualquer sistema continua aberta. Testes automatizados não substituem avaliação com iniciantes, aparelhos físicos ou tecnologias assistivas; resultados dessas avaliações não foram obtidos nesta entrega.
+
+
+No ensaio, janelas de confirmação e recuperação respeitam a altura da prévia. Conteúdos longos têm rolagem interna, mantendo os botões de fechar, cancelar e confirmar acessíveis.

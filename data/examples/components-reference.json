@@ -1085,6 +1085,14 @@
           "semantic": "field/equals; bloqueia controles, sem apagar dados",
           "type": "object"
         },
+        "editMode": {
+          "default": "inline",
+          "enum": [
+            "inline",
+            "dialog"
+          ],
+          "type": "string"
+        },
         "editableWhen": {
           "semantic": "v3; regra Sim/Não compartilhada; bloquear edição preserva dados",
           "type": "object"
@@ -1128,6 +1136,10 @@
         "print": {
           "semantic": "perfil compact; validação em schemas.js",
           "type": "object"
+        },
+        "quickFields": {
+          "semantic": "campos de itemSchema editáveis na ficha quando editMode=dialog",
+          "type": "array"
         },
         "reorderable": {
           "type": "boolean"
@@ -2444,8 +2456,10 @@
       },
       "presentation": {
         "enum": [
+          "radios",
           "checkboxes"
         ],
+        "semantic": "radios: uma escolha; checkboxes: alias legado de escolha única",
         "type": "string"
       },
       "valueField": {
@@ -2482,8 +2496,10 @@
       },
       "presentation": {
         "enum": [
+          "radios",
           "checkboxes"
         ],
+        "semantic": "radios: uma escolha; checkboxes: alias legado de escolha única",
         "type": "string"
       },
       "valueField": {
@@ -2594,7 +2610,7 @@
     "js/engine/action-plan.js": "4a648af7bdfbdd117b71e1f453296b1a1808a42b1312dfd65588dbb9f667fecd",
     "js/engine/action-progressions.js": "f4a13df5fa4296745a9b43f60ee4ca88c0f0971490678d4fb1acd57dea7ab303",
     "js/engine/action-records.js": "a6d20d02d39769e53d0859edd0d34d495a1456c3e9478e623df58b293c565374",
-    "js/engine/advanced-fields.js": "2945250287d2b34801aa494d628739148ddca60f827f793e5b501ea5b78235e6",
+    "js/engine/advanced-fields.js": "f4061480bc4151023ae1d140aa0e172dc1302b159e50eb8716351b8cf9bce920",
     "js/engine/assisted-fields.js": "203e3fb0aa9af0d40eb8e5e8f2989d561a6d74569d2bd360a18996ea68aa2a0a",
     "js/engine/bound-fields.js": "ca4290143688e5218703c107b4b89b564eb2396bffc0a51d1b08eafbb35f30b4",
     "js/engine/character-history.js": "f46d865c00084773fd8ca8e12bca9fe02c8e9b0da241ec7005adb5accb3081e9",
@@ -2642,7 +2658,7 @@
     "js/validation/backup.js": "4ce1a50fcd8739ea086b846bc7a089731f0f493a2accb450752f81e8e38fa77a",
     "js/validation/catalog.js": "beda9ba194c9971424ed18e3666b14a0ccbbac7765b7a829b793eb85e25f549c",
     "js/validation/checks.js": "48db8458c7327c0996fe6e5e831663f26e7b002f021e98bd43adf9870e27c351",
-    "js/validation/contracts.js": "3d49943b65bf6f8b6f5df81e2d5979a070fed833ea787e5237fc5bb0f65d118b",
+    "js/validation/contracts.js": "32e5cef1f64af4f54721d159a6cf2afb69f72b176c9e642273a3e4e8049c244c",
     "js/validation/data-definitions.js": "756ea8f8b2e87acdd8a86e5366127bc5dac2a1a0a1819393e4c4ac49e678891e",
     "js/validation/diagnostics.js": "8ab10b73458f72e49ebac150291d03823440bf127004fc770cd952b0a7585c8a",
     "js/validation/documents.js": "5795e4d961e39536ceacbe367f3796a431a7f58c0029a0baf7cc04de0408f6e5",
@@ -2652,7 +2668,7 @@
     "js/validation/recovery.js": "5e25239416131e97fdd5964e5a52645242039d9641ba414213b576a679e41f1b",
     "js/validation/references.js": "6a8656ce4736d1fee470751a310e6f88c5c28064fbaa10ee1c8e89cfa8b39254",
     "js/validation/roll-references.js": "bfe1051d6425682fe5043d16ce865091ae408fadf811ea0c9338891653721bcb",
-    "js/validation/schemas.js": "f95f25839f9e1572331ced975e5af6ee215eaf2aa2ed41b68b1716c08941dc7e",
+    "js/validation/schemas.js": "508f091066d194541ff6b82d7405bd35c653b29fc26c215dce20eb5d9269de8e",
     "js/validation/versions.js": "c9b2fd271721e72b489044f900e2cffc2ecd5da7d6bd4497e30571f850c7b172"
   },
   "supportedVersions": {

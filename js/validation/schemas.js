@@ -304,12 +304,17 @@ function validateComponent(component, path, system, issues, layoutVersion,depth=
       if (system && definition?.stepControls === true) validateStepScale(system, `${path}.itemSchema.${key}.stepControls`, issues);
       if (isObject(definition)) validateFieldValue(definition.default, definition, `${path}.itemSchema.${key}.default`, issues);
       if (definition?.presentation !== undefined) {
-        if (type !== 'select' || definition.presentation !== 'checkboxes') add(issues, `${path}.itemSchema.${key}.presentation`, 'somente select aceita checkboxes');
-        if (definition.valueType !== undefined && definition.valueType !== 'string') add(issues, `${path}.itemSchema.${key}.valueType`, 'checkboxes salva uma escolha textual');
+        if (type !== 'select' || !['radios', 'checkboxes'].includes(definition.presentation)) add(issues, `${path}.itemSchema.${key}.presentation`, 'somente select aceita apresentação em radios');
+        if (definition.valueType !== undefined && definition.valueType !== 'string') add(issues, `${path}.itemSchema.${key}.valueType`, 'radios salva uma escolha textual');
         const options = definition.options;
-        if (!Array.isArray(options) || options.length < 2 || options.length > 10 || options.some(option => !isObject(option) || typeof option.value !== 'string' || typeof option.label !== 'string' || !option.label.trim()) || !options.some(option => option.value === '') || new Set(options.map(option => option?.value)).size !== options.length) add(issues, `${path}.itemSchema.${key}.options`, 'checkboxes exige 2–10 opções com valores textuais distintos e uma opção vazia para ajuste manual');
+        if (!Array.isArray(options) || options.length < 2 || options.length > 10 || options.some(option => !isObject(option) || typeof option.value !== 'string' || typeof option.label !== 'string' || !option.label.trim()) || !options.some(option => option.value === '') || new Set(options.map(option => option?.value)).size !== options.length) add(issues, `${path}.itemSchema.${key}.options`, 'radios exige 2–10 opções com valores textuais distintos e uma opção vazia para ajuste manual');
       }
     }
+  }
+  if (component.editMode !== undefined && component.type !== 'list') add(issues, `${path}.editMode`, 'modo de edição exige componente list');
+  if (component.quickFields !== undefined) {
+    const fields = component.quickFields;
+    if (component.type !== 'list' || component.editMode !== 'dialog' || !Array.isArray(fields) || new Set(fields).size !== fields.length || fields.some(key => typeof key !== 'string' || key === 'id' || !Object.hasOwn(component.itemSchema || {}, key))) add(issues, `${path}.quickFields`, 'exige modo dialog e campos distintos presentes em itemSchema');
   }
   if (component.itemDetails !== undefined && requireObject(component.itemDetails, `${path}.itemDetails`, issues)) {
     if (!['list', 'table'].includes(component.type)) add(issues, `${path}.itemDetails`, 'exige list ou table');

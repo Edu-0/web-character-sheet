@@ -20,7 +20,14 @@
 <link rel="stylesheet" href="css/appearance-search.css" />
 <link rel="stylesheet" href="css/artwork.css" />
 <link rel="stylesheet" href="css/refinement.css" />
+<link rel="stylesheet" href="css/shell-topbar.css" />
+<link rel="stylesheet" href="css/sheet-composition.css" />
+<link rel="stylesheet" href="css/library-composition.css" />
 <link rel="stylesheet" href="css/editor.css" />
+<link rel="stylesheet" href="css/materials.css" />
+<link rel="stylesheet" href="css/entry-editor.css" />
+<link rel="stylesheet" href="css/control-refinement.css" />
+<link rel="stylesheet" href="css/editor-workspace.css" />
 <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
@@ -70,10 +77,15 @@
 
   <nav class="shell-nav no-print" aria-label="Navegação principal">
     <button type="button" class="shell-nav__item" data-app-view-target="systems">Sistemas</button>
-    <button type="button" class="shell-nav__item" data-app-view-target="catalog">Catálogo</button>
     <button type="button" class="shell-nav__item" data-app-view-target="characters">Personagens</button>
     <button type="button" class="shell-nav__item" data-app-view-target="sheet">Ficha atual</button>
-    <button type="button" class="shell-nav__item" data-app-view-target="settings">Configurações</button>
+    <button type="button" class="shell-nav__item shell-nav__settings" data-app-view-target="settings" aria-label="Configurações" title="Configurações">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-.6 2.3-2 .9-2.1-.6-2 3.4 1.6 1.7v2.6L2.3 15l2 3.4 2.1-.6 2 .9L9 21h4l.6-2.3 2-.9 2.1.6 2-3.4-1.6-1.7v-2.6l1.6-1.7-2-3.4-2.1.6-2-.9L13 3z"/><circle cx="11" cy="12" r="3"/></svg>
+      <span>Configurações</span>
+    </button>
+    <button type="button" class="shell-nav__item shell-nav__catalog" data-app-view-target="catalog" aria-label="Catálogo" title="Catálogo de sistemas">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v11h16V9M3 9l2-5h14l2 5M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M9 20v-6h6v6"/></svg>
+    </button>
   </nav>
 
   <div class="shell-content">
@@ -168,6 +180,7 @@
         <button type="button" id="appearance-tab-colors" role="tab" aria-selected="true" aria-controls="appearance-colors">Cores</button>
         <button type="button" id="appearance-tab-dice" role="tab" aria-selected="false" aria-controls="appearance-dice" tabindex="-1">Dados</button>
         <button type="button" id="appearance-tab-ornaments" role="tab" aria-selected="false" aria-controls="appearance-ornaments" tabindex="-1">Ornamentos</button>
+        <button type="button" id="appearance-tab-background" role="tab" aria-selected="false" aria-controls="appearance-background" tabindex="-1">Fundo</button>
       </div>
       <section id="appearance-colors" role="tabpanel" aria-labelledby="appearance-tab-colors">
       <label class="field appearance-mode"><span>Modo de leitura</span><select id="appearance-mode"></select></label>
@@ -180,6 +193,16 @@
         <label class="field"><span>Exibir dados como</span><select id="dice-display-mode"><option value="text">Texto · d6, d8…</option><option value="illustrated">Ícone vetorial com texto</option></select></label>
         <div id="dice-display-preview" class="dice-display-preview" aria-label="Prévia dos dados"></div>
         <p>O texto identifica cada dado nos dois modos. Essa escolha é independente dos ornamentos.</p>
+      </section>
+      <section id="appearance-background" class="appearance-section" role="tabpanel" aria-labelledby="appearance-tab-background" hidden>
+        <h2>Fundo e transparência</h2>
+        <div class="appearance-background-controls">
+          <label class="field"><span>Fundo da aplicação</span><select id="appearance-background-mode" aria-describedby="appearance-browser-hint"><option value="solid">Sólido</option><option value="translucent">Translúcido</option><option value="browser">Usar transparência do navegador</option></select></label>
+          <p id="appearance-browser-hint">Meu navegador permite páginas transparentes. Requer transparência habilitada no navegador. Transparência apenas na barra do navegador não torna a página transparente.</p>
+          <label class="field field--checkbox"><input type="checkbox" id="appearance-reduce-transparency" aria-describedby="appearance-reduce-hint"><span>Reduzir efeitos de transparência</span></label>
+          <p id="appearance-reduce-hint">Prefira superfícies opacas e sem desfoque. A preferência de redução de transparência do dispositivo também é respeitada quando disponível.</p>
+          <p id="appearance-material-status" role="status" aria-live="polite"></p>
+        </div>
       </section>
       <section id="appearance-ornaments" class="appearance-section" role="tabpanel" aria-labelledby="appearance-tab-ornaments" hidden>
         <h2 id="ornament-title">Ornamentos da ficha</h2>

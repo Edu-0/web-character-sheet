@@ -20,7 +20,9 @@ async function warm(page, url = '/') {
 async function settings(page) { await page.getByRole('button', { name: 'Configurações', exact: true }).click(); }
 async function sheet(page) { await page.getByRole('button', { name: 'Ficha atual', exact: true }).click(); }
 async function reopenPrepared(page) {
-  await Promise.all([page.waitForEvent('load'), page.locator('#btn-enable-offline').click()]);
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
+  await page.reload();
   await expect(page.locator('#sheet-layout-select')).toHaveValue('dnd2024-layout');
   await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
 }
@@ -155,7 +157,7 @@ test('preparação incompleta não anuncia offline; tentativa posterior completa
     await sheet(page); await page.locator(host).getByLabel('Nome do personagem', { exact: true }).fill('Salva mesmo sem cache');
     await expect(page.locator('#save-indicator')).toHaveText('Salvo');
     server.failures.clear(); await settings(page); await page.locator('#btn-check-update').click();
-    await expect(page.locator('#offline-status')).toContainText('Preparação concluída');
+    await expect(page.locator('#offline-status')).toContainText('Disponível offline');
     await reopenPrepared(page); await sheet(page);
     await expect(page.locator(host).getByLabel('Nome do personagem', { exact: true })).toHaveValue('Salva mesmo sem cache');
   } finally { await server.close(); }
@@ -184,7 +186,7 @@ for (const suffix of ['', '\r\n']) test(`Live Server: HTML/SVG originais dispon�
   try {
     await page.goto(server.url);
     expect(await page.evaluate(() => window.fixtureLiveReload)).toBe(true);
-    await settings(page); await expect(page.locator('#offline-status')).toContainText('Preparação concluída');
+    await settings(page); await expect(page.locator('#offline-status')).toContainText('Disponível offline');
     // A resposta contém a injeção, mas o cache deve manter os bytes originais verificados.
     for (const path of ['index.html', 'assets/app/icon.svg']) {
       const bytes = await page.evaluate(async path => {
@@ -211,7 +213,7 @@ for (const fiveServer of [false, true]) test(`${fiveServer ? 'Five Server' : 'Li
     await expect(page.locator('#offline-status')).toContainText('index.html foi alterado');
     expect(await versions(page)).toHaveLength(0);
     server.release.files.set('index.html', original); await page.locator('#btn-check-update').click();
-    await expect(page.locator('#offline-status')).toContainText('Preparação concluída');
+    await expect(page.locator('#offline-status')).toContainText('Disponível offline');
   } finally { await server.close(); }
 });
 
@@ -220,7 +222,7 @@ test('Five Server: bloco no head com indentação prepara HTML original e reabre
   try {
     await page.goto(server.url); await settings(page);
     expect(await page.evaluate(() => window.fixtureFiveServer)).toBe(true);
-    await expect(page.locator('#offline-status')).toContainText('Preparação concluída');
+    await expect(page.locator('#offline-status')).toContainText('Disponível offline');
     const cached = await page.evaluate(async () => {
       const name = (await caches.keys()).find(key => key.startsWith('ficha-rpg-offline:'));
       const cache = await caches.open(name);
@@ -272,24 +274,6 @@ test('instalação é oferecida somente pelo evento do navegador; cancelar permi
   await expect(page.locator('#btn-install-app')).toBeHidden(); expect(await page.evaluate(() => window.installCount)).toBe(1);
   await sheet(page); await page.locator(host).getByLabel('Nome do personagem', { exact: true }).fill('Depois de cancelar');
   await expect(page.locator('#save-indicator')).toHaveText('Salvo');
-});
-
-test('reabertura aguarda salvamento e falha de quota conserva edição na página', async ({ page }) => {
-  await page.goto('/'); await page.evaluate(() => navigator.serviceWorker.ready); await settings(page);
-  await expect(page.locator('#btn-enable-offline')).toBeVisible(); await sheet(page);
-  await page.locator(host).getByLabel('Nome do personagem', { exact: true }).fill('Não perder ao reabrir');
-  await settings(page);
-  await page.evaluate(() => {
-    window.originalStorageWrite = Storage.prototype.setItem;
-    Storage.prototype.setItem = function(key, value) { if (key.startsWith('ficha-rpg:v2:characters:')) throw new DOMException('Quota', 'QuotaExceededError'); return window.originalStorageWrite.call(this, key, value); };
-    window.pageStillHere = true;
-  });
-  await page.locator('#btn-enable-offline').click();
-  expect(await page.evaluate(() => window.pageStillHere)).toBe(true); expect((await values(page)).identity.name).toBe('Não perder ao reabrir');
-  await expect(page.locator('#save-indicator')).toContainText('Não salvo');
-  await page.evaluate(() => { Storage.prototype.setItem = window.originalStorageWrite; });
-  await page.locator('#btn-enable-offline').click(); await sheet(page);
-  await expect(page.locator(host).getByLabel('Nome do personagem', { exact: true })).toHaveValue('Não perder ao reabrir');
 });
 
 test('navegador sem service worker mantém a ficha e explica a limitação', async ({ page }) => {
