@@ -14,6 +14,13 @@ export function initPwa({ beforeReload }) {
   const $ = id => document.getElementById(id);
   const status = $('offline-status'), update = $('pwa-update-status'), install = $('btn-install-app');
   const reopen = $('btn-enable-offline'), check = $('btn-check-update'), connection = $('connection-indicator');
+  if (location.protocol === 'ficha:') {
+    status.textContent = 'Aplicativo Windows disponível offline. Seus dados ficam neste computador; use Exportar tudo para fazer backup.';
+    update.hidden = false;
+    update.textContent = 'Para atualizar, use Gerar-Ficha-RPG.exe e substitua o portátil ou execute o novo instalador com o aplicativo fechado.';
+    install.hidden = reopen.hidden = check.hidden = connection.hidden = true;
+    return;
+  }
   const supported = isSecureContext && typeof navigator.serviceWorker?.register === 'function';
   let registration = null, prompt = null, busy = false, failure = '', refreshId = 0, checkedManually = false;
   let prepared = false, updating = false, reloading = false, blocker = null, releaseTimer = null, lastCheck = 0;

@@ -4,6 +4,9 @@ Este inventário não substitui as licenças completas nem certifica a proveniê
 
 ## Ferramentas de desenvolvimento
 
+- `electron` **44.9.2**: MIT, Electron contributors. [Projeto e licença](https://github.com/electron/electron/blob/v44.9.2/LICENSE). O executável Windows distribui também Chromium e suas dependências, com `LICENSE.electron.txt` e `LICENSES.chromium.html` incluídos pelo empacotador; preserve esses avisos junto do runtime. Não é importado na versão web.
+- `electron-builder` **26.15.3**: MIT. [Projeto e licença](https://github.com/electron-userland/electron-builder/blob/v26.15.3/LICENSE). Ferramenta de build; o instalador e o portátil usam NSIS e componentes com seus próprios termos. Preserve os avisos dos pacotes e ferramentas quando redistribuí-los. O gerador baixa Node.js e ferramentas dos distribuidores oficiais; os arquivos de licença acompanham as ferramentas extraídas.
+
 - `esbuild` **0.28.2**, versão exata no manifest/lockfile: MIT, Copyright (c) 2020 Evan Wallace. [Projeto e licença](https://github.com/evanw/esbuild/blob/v0.28.2/LICENSE.md). Ferramenta de build, sem dependência npm no navegador. A licença completa acompanha o pacote em `node_modules/esbuild/LICENSE.md`; preserve-a ao redistribuir a ferramenta. O bundle contém o código local da prévia, sob os termos próprios do projeto e de seus assets.
 
 - `@playwright/test`, `playwright` e `playwright-core`: Apache-2.0, conforme os metadados do lockfile e os avisos dos pacotes instalados. Projeto: [Microsoft Playwright](https://github.com/microsoft/playwright). Usados nos testes; não são importados pela aplicação no navegador.

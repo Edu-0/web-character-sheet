@@ -2,6 +2,8 @@
   "name": "ficha-rpg",
   "version": "0.8.0",
   "private": true,
+  "description": "Ficha RPG local para sistemas de RPG de mesa",
+  "main": "desktop/main.cjs",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "test:unit": "node --test tests/unit/*.test.mjs",
@@ -16,6 +18,11 @@
     "build:offline": "npm run build:preview && node scripts/build-offline.mjs",
     "check:offline": "npm run check:preview && node scripts/build-offline.mjs --check",
     "build:site": "npm run build:offline && node scripts/build-site.mjs",
+    "build:desktop": "node scripts/build-desktop.mjs",
+    "build:generator": "node scripts/build-generator.mjs",
+    "desktop:dev": "node scripts/build-desktop.mjs --dev",
+    "test:desktop": "node --test tests/desktop/*.test.mjs",
+    "test:portable": "node tests/desktop/portable-smoke.mjs",
     "build:reference": "node scripts/build-reference.mjs",
     "check:reference": "node scripts/build-reference.mjs --check",
     "build:editor-capabilities": "node scripts/build-editor-capabilities.mjs",
@@ -23,6 +30,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
+    "electron": "44.9.2",
+    "electron-builder": "26.15.3",
     "esbuild": "0.28.2"
   }
 }

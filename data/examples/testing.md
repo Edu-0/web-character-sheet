@@ -2,13 +2,14 @@
 
 Os contratos de [ações tipadas](action-flows.md) têm testes Node de admissão, custos, conflitos, presença, transcripts, limites e marcos. A suíte `editor-action-flows.spec.js` cria as regras pela interface desde um pacote vazio e verifica prévia/cancelamento, os dois perfis, histórico causal, recarga, quota/retry sem novo RNG, exportação/reimportação, arquivo e habilitação v3 explícita. A inspeção do documento é somente uma asserção; as regras desses percursos não são injetadas pelo JSON.
 
-Execute apenas uma suíte Playwright por vez; todas usam a porta 4173 e contextos isolados, sem acessar a biblioteca pessoal. Pare o servidor manual antes. O setup gera o worker offline uma vez por execução, inicia o servidor e o fecha ao terminar.
+Execute apenas uma suíte de navegador por vez na porta 4173, usando contextos isolados, sem acessar a biblioteca pessoal. Pare o servidor manual antes. O setup gera o worker offline uma vez por execução, inicia o servidor e o fecha ao terminar. Os testes desktop usam o protocolo interno e perfis fictícios próprios; o smoke do portátil usa uma porta de depuração local temporária.
 
 | Comando | Quando usar | Cobertura |
 | --- | --- | --- |
 | `npm run test:unit` | Ao editar regra ou contrato | Regras determinísticas, extremos, limites de segurança e validação de todos os pacotes; sem navegador |
 | `npm run test:quick` | Durante implementação | Node e seleção `@smoke`: shell, sistemas antigos/novos, persistência/JSON, sincronização D&D, desfazer, componente importado, importação perigosa e rollback de quota |
 | `npm run test:full` | Antes de concluir mudança integrada | Node, todos os Playwright, links de documentação e cache offline atualizado |
+| `npm run test:desktop` | Após `build:desktop` em Windows | Pacote real: offline, renderer isolado, D&D estática/modular/comparação, prévia do editor, guias, temas e persistência após reabrir, em perfil fictício |
 | `npx playwright test tests/e2e/additional-systems.spec.js --grep fate-accelerated --workers=1` | Validar uma etapa | Fluxo do sistema e temas/responsividade; substitua o ID pelo desejado |
 
 `test:e2e` continua disponível para toda a cobertura de navegador. Os testes rápidos são um subconjunto da mesma suíte, sem arquivos duplicados. Visual, PDF, PWA, casos extensos e regressões específicas continuam na completa. Falhas não são ocultadas com retries ou testes pulados.

@@ -1,5 +1,11 @@
 # Histórico de versões
 
+## Em desenvolvimento
+
+- Distribuição Windows x64: executável portátil com perfil ao lado do arquivo e instalador por usuário com perfil estável, ambos com a aplicação pública completa e uso offline imediato.
+- Gerador `.exe` independente de Git/Node instalados: baixa um snapshot do `main`, Node.js 22 LTS com verificação SHA-256 e dependências do lockfile para produzir novos executáveis sem armazená-los nos commits. Geração local e GitHub Actions também disponíveis.
+- Desktop usa origem interna estável, renderer isolado e arquivos públicos permitidos; atualização explícita pelo gerador mantém a persistência existente. Bibliotecas do navegador, portátil e instalado são transferidas por backup.
+
 ## 0.8.0 — 20 de outubro de 2026
 
 Pré-lançamento. [Release e downloads](https://github.com/Edu-0/web-character-sheet/releases/tag/v0.8.0).

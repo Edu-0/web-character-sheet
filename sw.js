@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "4f43873d111714c6c21b";
+const VERSION = "c82a47ca3beddb43d366";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -983,7 +983,7 @@ const ASSETS = [
   },
   {
     "path": "js/pwa.js",
-    "hash": "a261c1cac0115cb6a2646603c8cc6b1d903aa38796e69ed897cd4d3d733363db"
+    "hash": "e3dbc6f3140432ae9f1c42ad5e8765c92cbb2d8d98bac6f523912390d17a9224"
   },
   {
     "path": "js/repositories/catalog-installations.js",

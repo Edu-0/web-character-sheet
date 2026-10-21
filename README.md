@@ -115,6 +115,8 @@ As imagens deste README são capturas reais da interface com dados fictícios, f
 
 ## Experimentar localmente
 
+Para Windows 10/11 x64, há empacotamento **portátil**, **instalador** e **Gerar-Ficha-RPG.exe**, que baixa o código atual do GitHub e gera novas versões localmente. Os binários ficam fora dos commits. Consulte [uso, dados e geração dos executáveis](data/examples/desktop.md). Para gerar neste checkout Windows, use `npm ci` e `npm run build:desktop`.
+
 Requisitos: Node.js 22 ou superior, npm e um navegador moderno.
 
 ```sh

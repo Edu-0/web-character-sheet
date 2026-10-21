@@ -1,0 +1,28 @@
+Ficha RPG - Windows 10/11 x64
+
+Ficha-RPG-<versao>-portable-x64.exe: execute sem instalar. Os dados ficam em
+"Ficha RPG Dados", ao lado do exe. Mova essa pasta junto com o portátil.
+Use uma pasta gravável; não execute diretamente dentro de um ZIP.
+
+Ficha-RPG-<versao>-instalador-x64.exe: instala apenas para o usuário atual,
+sem exigir administrador. Os dados ficam em %APPDATA%\Ficha RPG.
+Reinstalar/atualizar mantém os dados; desinstalar não apaga o perfil.
+
+Gerar-Ficha-RPG.exe: baixa o commit atual do main no GitHub e compila novos
+executáveis. Requer internet, Windows PowerShell 5.1 e .NET Framework 4.x
+(presentes normalmente no Windows 10/11). Não exige Git nem Node instalado.
+Por padrão, cria "Ficha RPG Gerados" ao lado do gerador: use pasta gravável.
+A primeira execução baixa ferramentas e pode demorar vários minutos.
+Não atualiza o aplicativo aberto. Feche-o antes de substituir o exe.
+
+O navegador, o portátil e a instalação têm bibliotecas separadas. Para
+transferir, use Configurações > Exportar tudo / Importar tudo. Faça backup.
+
+Os executáveis não têm assinatura digital. O Windows pode mostrar um aviso
+de editor desconhecido. SHA256SUMS.txt permite conferir a cópia recebida.
+Licença não comercial e avisos: resources/site no aplicativo instalado;
+no portátil, a pasta é extraída temporariamente enquanto o app está aberto.
+
+Não envie executáveis nos commits. Versione apenas o código e o lockfile;
+os arquivos gerados ficam em output/ (ignorado). Use GitHub Releases para
+distribuir binários, se desejar. O gerador não faz commit, push ou publicação.
