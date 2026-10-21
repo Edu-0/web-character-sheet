@@ -28,10 +28,6 @@
   .engine-entry-editor__feedback:empty { display: none; }
   .engine-entry-editor footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; flex-shrink: 0; }
   .engine-entry-editor footer button { min-height: 44px; }
-  @supports (backdrop-filter: blur(1px)) {
-    :root[data-material-effects='on'] .engine-entry-editor::backdrop { background: var(--modal-overlay-effects); backdrop-filter: blur(var(--material-modal-blur, 5px)); }
-  }
-  @media (prefers-reduced-transparency: reduce) { .engine-entry-editor::backdrop { backdrop-filter: none !important; } }
   @media (max-width: 600px) {
     .engine-entry-editor { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); padding: 20px; }
     .engine-entry-editor__fields { grid-template-columns: minmax(0, 1fr); }

@@ -31,4 +31,6 @@ Salvar usa o fluxo existente de edição do personagem e oferece desfazer/refaze
 
 O modo também funciona no ensaio isolado do editor. Alterações da amostra não editam o pacote nem o personagem ativo. Fechar o ensaio ou trocar a ficha descarta a janela de edição daquela renderização.
 
+Reconstruir a mesma ficha durante a edição conserva a janela, seu texto e o foco. Salvar usa a lista atual e mantém as verificações de condição, remoção e conflito; mudanças em outros campos continuam preservadas. A transferência exige o mesmo personagem, sistema e definição do componente, incluindo suas condições de edição. Entradas sem ID só podem ser reencontradas quando seu objeto original continua na lista. Se a lista ou sua definição sair do layout, o texto permanece disponível para consulta ou cópia, mas Salvar não aplica alterações ali. Cancelar continua descartando somente o rascunho. Essa continuidade é temporária: recarregar a página, sair da ficha ou encerrar o ensaio não salva o rascunho da janela.
+
 Os layouts embutidos usam o lápis em ataques, magias, habilidades e listas relacionadas; controles rápidos são definidos explicitamente em cada layout. Cópias locais de pacotes já editadas pelo usuário não são reescritas automaticamente pela atualização dos arquivos embutidos.

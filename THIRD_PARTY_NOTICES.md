@@ -47,6 +47,6 @@ O módulo D&D é não oficial. Marcas e materiais da Wizards of the Coast perman
 
 O livro original do Sistema de RPG é conteúdo autoral separado da engine. Referências locais não são materiais destinados à distribuição.
 
-As artes autorais selecionadas em `assets/artwork/` foram integradas com autorização do autor e mantêm direitos separados da licença da engine. O [registro de artes](assets/artwork/README.md) identifica as adaptações dos dados e símbolos e as composições decorativas locais. A aplicação não carrega a pasta de referências do livro.
+As artes autorais selecionadas em `assets/artwork/` foram integradas com autorização do autor e mantêm direitos separados da licença da engine. O [registro de artes](assets/artwork/README.md) identifica as adaptações dos dados e símbolos e as composições decorativas locais, incluindo os 27 desenhos geométricos adicionais de Orgulho, Trans, Sangue, Horror cósmico, Sci-fi, Pergaminho, Oceano, Solarpunk e Frutiger Aero, sem assets externos. A aplicação não carrega a pasta de referências do livro.
 
 Consulte a [licença da aplicação](LICENSE). A documentação interna de direitos e as pendências de distribuição ficam na memória privada do projeto, sem integrar o repositório público.

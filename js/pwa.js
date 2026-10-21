@@ -15,7 +15,7 @@ export function initPwa({ beforeReload }) {
   const status = $('offline-status'), update = $('pwa-update-status'), install = $('btn-install-app');
   const reopen = $('btn-enable-offline'), check = $('btn-check-update'), connection = $('connection-indicator');
   const supported = isSecureContext && typeof navigator.serviceWorker?.register === 'function';
-  let registration = null, prompt = null, busy = false, failure = '', refreshId = 0;
+  let registration = null, prompt = null, busy = false, failure = '', refreshId = 0, checkedManually = false;
   let prepared = false, updating = false, reloading = false, blocker = null, releaseTimer = null, lastCheck = 0;
   let dismissedWorker = null, preparation = 0, preparedTransaction = null;
   // An initial install also passes through waiting briefly; it is not an update.
@@ -66,15 +66,20 @@ export function initPwa({ beforeReload }) {
     const id = ++refreshId;
     connection.hidden = navigator.onLine; connection.textContent = 'Offline';
     check.disabled = !supported || !navigator.onLine || busy || registration?.installing?.state === 'installing';
+    check.textContent = busy ? 'Preparando offline…' : 'Verificar / preparar offline';
+    check.setAttribute('aria-busy', String(busy));
     install.hidden = !prompt || display.matches || navigator.standalone === true;
     reopen.hidden = true; update.hidden = true; settingsApply.hidden = !waitingUpdate(); apply.disabled = settingsApply.disabled = updating;
     if (!supported) { status.textContent = 'Uso offline indisponível neste endereço ou navegador. Use HTTPS ou localhost em um navegador compatível.'; return; }
+    if (busy) status.textContent = 'Verificando a versão e preparando os arquivos para uso offline…';
     const worker = navigator.serviceWorker.controller || registration?.active;
     const result = worker ? await requestStatus(worker) : null;
     if (id !== refreshId) return;
-    if (result?.ready) {
+    if (busy) {
+      status.textContent = 'Verificando a versão e preparando os arquivos para uso offline…';
+    } else if (result?.ready) {
       status.textContent = navigator.serviceWorker.controller
-        ? `${navigator.onLine ? 'Disponível offline.' : 'Você está offline.'} Suas edições continuam salvas neste navegador.`
+        ? `${navigator.onLine ? checkedManually && !failure ? 'Verificação concluída. Disponível offline.' : 'Disponível offline.' : 'Você está offline.'} Suas edições continuam salvas neste navegador.`
         : 'Preparação concluída. Reabra o app para ativar o uso offline.';
       reopen.hidden = Boolean(navigator.serviceWorker.controller);
     } else if (failure || worker) status.textContent = `Não foi possível concluir a preparação offline.${failureMessage() || ' Conecte-se e tente novamente; suas fichas continuam neste navegador.'}`;
@@ -106,13 +111,25 @@ export function initPwa({ beforeReload }) {
   }
   check.addEventListener('click', async () => {
     if (busy || updating || !supported || !navigator.onLine) return;
-    busy = true; failure = ''; void refresh();
+    busy = true; failure = ''; checkedManually = false; void refresh();
     try {
+      // O worker não pertence ao cache público: confira o servidor real, inclusive
+      // quando uma cópia antiga da página continua funcionando pelo cache.
+      let response;
+      try { response = await fetch(workerUrl, {cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(15000)}); }
+      catch { throw Error('Não foi possível acessar sw.js. Verifique se o servidor está aberto nesta pasta e tente novamente.'); }
+      if (!response.ok) throw Error(`O servidor não entregou sw.js (HTTP ${response.status}). No Five Server, abra a pasta do projeto e use root: '.'.`);
+      if (!/javascript|ecmascript/i.test(response.headers.get('Content-Type') || '')) throw Error('O servidor entregou uma página em vez de sw.js. Confira a pasta raiz e a configuração do servidor.');
       if (!registration?.active && !registration?.waiting) await register(); else await registration.update();
       if (registration.active) {
         const current = await requestStatus(registration.active);
-        if (current && !current.ready && !(await requestStatus(registration.active, 'OFFLINE_PREPARE'))?.ready && !failure) failure = 'Alguns arquivos ainda estão indisponíveis. Tente novamente com o servidor conectado.';
+        if (!current) throw Error('O navegador não respondeu à verificação offline. Reabra o app e tente novamente.');
+        if (!current.ready) {
+          const result = await requestStatus(registration.active, 'OFFLINE_PREPARE', 30000);
+          if (!result?.ready) throw Error(result?.error || 'A preparação ainda não foi confirmada. Aguarde os downloads e verifique novamente com o servidor conectado.');
+        }
       }
+      checkedManually = true;
     } catch (error) { failure = error.message; }
     finally { busy = false; void refresh(); }
   });

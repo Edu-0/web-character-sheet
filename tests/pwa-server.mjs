@@ -6,16 +6,22 @@ import { buildOffline } from '../scripts/build-offline.mjs';
 export async function startPwaServer({ prefix = '/ficha/', liveReload = null, fiveServer = false } = {}) {
   let release = await buildOffline({ write: false });
   const failures = new Map();
+  const delays = new Map(), downloads = {active: 0, peak: 0};
   const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
     '.json': 'application/json; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png',
     '.svg': 'image/svg+xml', '.webmanifest': 'application/manifest+json' };
-  const server = createServer((request, response) => {
+  const server = createServer(async (request, response) => {
     const pathname = new URL(request.url, 'http://127.0.0.1').pathname;
     const path = pathname.startsWith(prefix) ? pathname.slice(prefix.length) || 'index.html' : fiveServer && pathname === '/fiveserver.js' ? 'fiveserver.js' : null;
     let content = path === 'sw.js' ? release.source : release.files.get(path);
     if (path === 'docs/private/fixture.txt') content = 'Conteúdo privado fictício; não deve entrar no cache.';
     if (fiveServer && path === 'fiveserver.js') content = 'window.fixtureFiveServer = true;';
-    if (failures.has(path)) { response.writeHead(503).end('Falha simulada'); return; }
+    if (failures.has(path)) { response.writeHead(Number(failures.get(path)) >= 400 ? failures.get(path) : 503).end('Falha simulada'); return; }
+    if (delays.has(path)) {
+      downloads.active++; downloads.peak = Math.max(downloads.peak, downloads.active);
+      await new Promise(resolve => setTimeout(resolve, delays.get(path)));
+      downloads.active--;
+    }
     if (content === undefined) { response.writeHead(404).end('Não encontrado'); return; }
     // Bloco fictício com o envelope do Live Server, inserido como no servidor real.
     if (liveReload !== null && /\.(html|svg)$/.test(path)) {
@@ -32,7 +38,7 @@ export async function startPwaServer({ prefix = '/ficha/', liveReload = null, fi
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   return {
     url: `http://127.0.0.1:${server.address().port}${prefix}`,
-    get release() { return release; }, failures,
+    get release() { return release; }, failures, delays, downloads,
     async next(overrides) { release = await buildOffline({ write: false, overrides }); return release; },
     async close() { await new Promise(resolve => server.close(resolve)); },
   };

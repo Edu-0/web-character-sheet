@@ -61,7 +61,7 @@ test('texto é padrão; vetores mantêm nomes e rolagens e persistem independent
 test('combinações, posição ocupada, intensidade e ativação preservam a ficha e sobrevivem à recarga', async ({ page }) => {
   const snapshot = await character(page);
   await settings(page);
-  await expect(page.locator('.ornament-choice')).toHaveCount(9);
+  await expect(page.locator('.ornament-choice')).toHaveCount(36);
   await page.getByRole('tab', { name: 'Ornamentos', exact: true }).click();
   await page.locator('#ornament-preset').selectOption('garden');
   await page.locator('#ornament-intensity').selectOption('strong');

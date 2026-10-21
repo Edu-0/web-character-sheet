@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="css/entry-editor.css" />
 <link rel="stylesheet" href="css/control-refinement.css" />
 <link rel="stylesheet" href="css/editor-workspace.css" />
+<link rel="stylesheet" href="css/frutiger-aero.css" />
 <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
@@ -186,6 +187,11 @@
       <label class="field appearance-mode"><span>Modo de leitura</span><select id="appearance-mode"></select></label>
       <h2 class="appearance-title">Paleta de cores</h2>
       <div id="appearance-palettes" class="palette-choices" role="group" aria-label="Paleta de cores"></div>
+      <div id="appearance-theme-artwork" class="appearance-theme-artwork" hidden>
+        <button id="appearance-theme-ornaments" type="button" class="button">Aplicar ornamentos deste tema</button>
+        <p>Substitui a combinação atual de ornamentos. Você pode personalizá-la na aba Ornamentos.</p>
+      </div>
+      <p id="appearance-theme-ornaments-status" role="status" aria-live="polite"></p>
       <p class="appearance-note">Cada paleta tem uma versão clara e uma escura. O botão no cabeçalho alterna entre elas.</p>
       </section>
       <section id="appearance-dice" class="appearance-section" role="tabpanel" aria-labelledby="appearance-tab-dice" hidden>
@@ -197,11 +203,23 @@
       <section id="appearance-background" class="appearance-section" role="tabpanel" aria-labelledby="appearance-tab-background" hidden>
         <h2>Fundo e transparência</h2>
         <div class="appearance-background-controls">
-          <label class="field"><span>Fundo da aplicação</span><select id="appearance-background-mode" aria-describedby="appearance-browser-hint"><option value="solid">Sólido</option><option value="translucent">Translúcido</option><option value="browser">Usar transparência do navegador</option></select></label>
-          <p id="appearance-browser-hint">Meu navegador permite páginas transparentes. Requer transparência habilitada no navegador. Transparência apenas na barra do navegador não torna a página transparente.</p>
+          <label class="field"><span>Fundo da aplicação</span><select id="appearance-background-mode" aria-describedby="appearance-material-status"><option value="solid">Sólido</option><option value="translucent">Translúcido</option><option value="mega">Mega translúcido · experimental</option></select></label>
           <label class="field field--checkbox"><input type="checkbox" id="appearance-reduce-transparency" aria-describedby="appearance-reduce-hint"><span>Reduzir efeitos de transparência</span></label>
           <p id="appearance-reduce-hint">Prefira superfícies opacas e sem desfoque. A preferência de redução de transparência do dispositivo também é respeitada quando disponível.</p>
           <p id="appearance-material-status" role="status" aria-live="polite"></p>
+          <fieldset id="appearance-glass-controls" class="appearance-glass-controls" aria-describedby="appearance-glass-hint">
+            <legend>Tintura do vidro</legend>
+            <label class="field"><span>Cor do vidro</span><select id="appearance-glass-tint"><option value="palette">Acompanhar a paleta</option><option value="neutral">Neutro · sem tintura</option><option value="rose">Rosa</option><option value="azure">Azul</option><option value="emerald">Esmeralda</option><option value="crimson">Carmesim</option><option value="violet">Violeta</option></select></label>
+            <label class="field"><span>Intensidade da tintura</span><select id="appearance-glass-strength"><option value="soft">Suave</option><option value="medium">Média</option><option value="strong">Intensa</option></select></label>
+          </fieldset>
+          <p id="appearance-glass-hint">Aplicada em Translúcido e Mega. A tintura fica guardada no modo Sólido ou com efeitos reduzidos; campos mantêm fundo próprio.</p>
+          <div class="appearance-material-preview" role="group" aria-label="Prévia do material">
+            <div class="appearance-material-preview__surface">
+              <strong>Materiais da interface</strong>
+              <p>Mesmo conteúdo, outro acabamento.</p>
+              <button id="appearance-preview-open" type="button" class="button">Ver janela de exemplo</button>
+            </div>
+          </div>
         </div>
       </section>
       <section id="appearance-ornaments" class="appearance-section" role="tabpanel" aria-labelledby="appearance-tab-ornaments" hidden>

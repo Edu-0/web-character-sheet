@@ -1,5 +1,32 @@
 # Histórico de versões
 
+## 0.8.0 — 20 de outubro de 2026
+
+Pré-lançamento. [Release e downloads](https://github.com/Edu-0/web-character-sheet/releases/tag/v0.8.0).
+
+- Criação de sistemas organizada em Visão geral, Ficha, Dados, Regras, Testar e Revisar. Editores JSON, por formulários e visual compartilham documento, histórico, validação, rascunhos e aplicação pela biblioteca. Primeiro elemento orientado, propriedades progressivas, atalhos, menu de contexto e JSON flutuante somente leitura.
+- Autoria de dados tipados, vínculos, registros, coleções, consultas, ações, eventos, efeitos e progressão no escopo documentado. Ensaio isolado, exportação de pacotes e migração explícita preservam as decisões manuais da mesa.
+- Cabeçalho e catálogo compactos, superfícies mais contínuas e listas de ataques, magias e habilidades em modo de leitura com lápis e Salvar/Cancelar. Controles rápidos continuam na ficha. A edição conserva rascunho e foco em remontagens compatíveis, sem perder conflitos ou mudanças em outros campos.
+- Dezessete paletas claras/escuras e 36 ornamentos opcionais. Inclui LGBT · Orgulho, Trans, Sangue, Horror cósmico, Sci-fi, Alto contraste, Daltônico · Azul e âmbar, Pergaminho, Oceano, Solarpunk e Frutiger Aero. Selecionar paleta preserva a decoração escolhida; os conjuntos de ornamentos são aplicados explicitamente.
+- Materiais Sólido, Translúcido e Mega translúcido experimental, com tinturas independentes e janela de exemplo. Campos e ações principais conservam fundos próprios. Alto contraste suspende vidro sem apagar a preferência; redução de efeitos e cores forçadas preservadas. Frutiger Aero acrescenta céu, água, bolhas, reflexos e acabamento compartilhado com a prévia. O modo específico Zen/Mica foi retirado; valores legados usam Sólido.
+- Atualização offline com aviso global, salvamento de ficha/rascunho e coordenação entre abas antes de recarregar. Verificação manual mostra progresso, confirmação e diagnóstico; reparos compartilham uma fila de quatro downloads, preservando hashes e aguardando até 30s pela resposta. Janela aberta, falha de gravação ou aba incompatível impede uma troca insegura.
+- Five Server com raiz relativa ao workspace, corrigindo o caminho duplicado que causava HTTP 404. Novos arquivos de runtime entram no pacote offline; o aplicativo pode reabrir com as aparências e sistemas locais sem rede.
+- Distribuição estática produzida por `npm run build:site`: aplicativo, guias públicos, licença, avisos das artes e de terceiros e metadados/hashes. Pacote e arquivos de desenvolvimento permanecem separados.
+
+### Verificações e limites
+
+- Rodada dirigida de publicação: 40/40 cenários aprovados, incluindo criação desde vazio, recuperação do rascunho, edição pelo lápis, persistência e atualização offline entre abas.
+- Verificações mais recentes de aparência: 393/393 testes Node e rodada final limpa de 34/34 cenários de navegador, incluindo 17 paletas com vidro/tintura, responsividade, foco, redução, impressão, prévia e edição. Sem regressão nos módulos alterados instrumentados; pequenas variações no agregado de cobertura em módulos não modificados estão registradas nas verificações de desenvolvimento.
+- Fechamento técnico anterior: 533 cenários únicos de navegador com último resultado aprovado em rodadas (529/533 + 4/4), sem alegação de uma integral única limpa. Três timeouts de inicialização/montagem não reapareceram no dirigido, com causa não confirmada; um teste passou a aguardar os dados após reload. As revisões posteriores de offline e temas receberam suas verificações dirigidas.
+- Zoom nativo 200% verificado em perfil isolado, com 60 campos e os dois modos. Jornada de criação desde um sistema vazio até rascunho, instalação e uso de personagem coberta. Uso offline conferido também no Five Server real da porta 5500, em perfil isolado.
+- Interface pt-BR. Celular verificado por emulação; avaliação com iniciantes, tecnologias assistivas e aparelhos físicos não realizada. Não há certificação universal de acessibilidade ou autoria universal de regras. A opção Daltônico oferece azul/âmbar, sem promessa de correção universal.
+- Rascunho do lápis é temporário e não atravessa reload ou troca de personagem. Fichas e preferências continuam locais ao navegador/origem. Instalação não cria conta, nuvem ou backup.
+- Licença não comercial e direitos separados de RPG, artes e conteúdo de terceiros preservados. O projeto é independente e não oficial; a licença do código não abre livros, marcas ou desenhos nem certifica sua proveniência integral.
+
+## Configuração local — Five Server, 19 de outubro de 2026
+
+- Configuração do Five Server para abrir a raiz do projeto em 127.0.0.1:5500, com instruções de início e atualização do cache offline no README. Sem alteração no aplicativo ou nos dados.
+
 ## Alterações locais — integração no principal, 19 de outubro de 2026
 
 - Interface geral, temas, materiais, edição pelo lápis e editor de sistemas reunidos no checkout principal, incluindo atalhos, menu contextual, JSON flutuante e inclusão orientada.

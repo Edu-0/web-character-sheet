@@ -23,8 +23,8 @@ const characterHistory=new CharacterHistory();
 const send = (type,payload={}) => port?.postMessage(previewMessage(type,context,payload));
 function appearance(value) {
   for (const key of ['theme','palette','diceDisplay']) if (typeof value?.[key]==='string' && /^[a-z-]+$/.test(value[key])) document.documentElement.dataset[key]=value[key];
-  if(value && (Object.hasOwn(value,'background') || Object.hasOwn(value,'materialEffects'))){
-    const attributes=previewMaterialAttributes({background:document.documentElement.dataset.background,materialEffects:document.documentElement.dataset.materialEffects,...value});
+  if(value && ['background','materialEffects','glassTint','glassTintStrength'].some(key=>Object.hasOwn(value,key))){
+    const attributes=previewMaterialAttributes({...document.documentElement.dataset,...value});
     Object.assign(document.documentElement.dataset,attributes);
   }
   document.documentElement.dataset.calculationControls='visible';

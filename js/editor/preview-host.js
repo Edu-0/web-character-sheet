@@ -8,7 +8,7 @@ async function runtimeAssets() {
   })).catch(error=>{assets=null;throw error;});
   return assets;
 }
-const materialAttrs = () => Object.fromEntries(['background','materialEffects'].map(key=>[key,document.documentElement.dataset[key] || '']));
+const materialAttrs = () => Object.fromEntries(['background','materialEffects','glassTint','glassTintStrength'].map(key=>[key,document.documentElement.dataset[key] || '']));
 const attrs = () => ({...Object.fromEntries(['theme','palette','diceDisplay'].map(key=>[key,document.documentElement.dataset[key] || ''])),...materialAttrs()});
 export class PreviewHost {
   constructor(host,{sessionId=crypto.randomUUID(),onDiagnostic=()=>{},onSource=()=>{},onInspectionEnd=()=>{},onCompositionDrop=()=>{},onAuthoring=()=>{}}={}) {this.host=host;this.sessionId=sessionId;this.generation=0;this.onDiagnostic=onDiagnostic;this.onSource=onSource;this.onInspectionEnd=onInspectionEnd;this.onCompositionDrop=onCompositionDrop;this.onAuthoring=onAuthoring;this.pending=new Set();this.materialListener=()=>this.appearance({});document.addEventListener('materials:change',this.materialListener);}

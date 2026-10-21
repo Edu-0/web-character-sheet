@@ -1,6 +1,6 @@
 # Ficha RPG
 
-**Versão 0.5.0 — pré-lançamento publicado.** Este checkout também contém avanços locais de autoria posteriores à versão publicada; não representam uma nova release. Novidades e limites em [Histórico de versões](CHANGELOG.md).
+**Versão 0.8.0 — pré-lançamento.** Editores, autoria de sistemas e interface reorganizada, com novas opções de aparência. [Downloads e notas da versão](https://github.com/Edu-0/web-character-sheet/releases/tag/v0.8.0). Verificações e limites em [Histórico de versões](CHANGELOG.md).
 
 **Fichas bonitas, organizadas e prontas para a sessão.**
 
@@ -36,16 +36,18 @@ O **catálogo local reúne oito sistemas**, cada um com os layouts **Padrão** e
 
 A ficha modular organiza seus componentes numa superfície contínua, com títulos e espaçamento separando os assuntos. Biblioteca e catálogo usam linhas com ações e estados visíveis. O **Modo mesa** mantém uma composição mais compacta para consulta, compartilhando os mesmos dados com a apresentação completa.
 
-Escolha entre seis paletas — Clássico, Editorial, Floresta, Rubi, Preto e branco e Pétalas — em modo claro ou escuro. Combine ornamentos, posições e intensidade, ou mantenha uma apresentação simples. Os dados podem aparecer em texto ou com ícones vetoriais acompanhados de texto. Sistemas com passos de dados podem habilitar botões **−/+** para descer ou subir na escala, inclusive cada dado de um traço composto.
+Escolha entre dezessete paletas em modo claro ou escuro: Clássico, Editorial, Floresta, Rubi, Preto e branco, Pétalas, **LGBT · Orgulho, Trans, Sangue, Horror cósmico, Sci-fi, Alto contraste, Daltônico · Azul e âmbar, Pergaminho, Oceano, Solarpunk e Frutiger Aero**. Há 36 ornamentos e combinações prontas; aplicar uma paleta preserva sua decoração, e um botão separado aplica os ornamentos do tema. Os dados podem aparecer em texto ou com ícones vetoriais acompanhados de texto. Sistemas com passos de dados podem habilitar botões **−/+** para descer ou subir na escala, inclusive cada dado de um traço composto.
 
-Em **Configurações → Fundo**, escolha Sólido, Translúcido ou Usar transparência do navegador. Menus e janelas têm materiais discretos, com redução de efeitos disponível. Consulte [funcionamento, preferências e limites](data/examples/appearance.md).
+Em **Configurações → Fundo**, escolha Sólido, Translúcido ou Mega translúcido (experimental), com prévia do acabamento e uma janela de exemplo. A tintura do vidro pode acompanhar a paleta ou usar uma cor própria, com três intensidades. Campos mantêm leitura estável e há redução de efeitos disponível. Consulte [funcionamento, preferências e limites](data/examples/appearance.md).
+
+**Frutiger Aero** combina azul, verde e tipografia sem serifa com reflexos nos botões. Em Translúcido ou Mega, o fundo ganha céu, água e bolhas; janelas usam o vidro e desfoque existentes. Para esse acabamento, escolha a paleta em Cores e o material em Fundo. Seus três ornamentos são opcionais.
 
 No modo claro, fundo off-white, navegação sutil e campos quase brancos se distinguem por divisórias e bordas discretas. Cada paleta mantém a cor nos destaques; Preto e branco conserva superfícies neutras. Campos têm foco único; escolhas exclusivas usam círculos, e escolhas independentes usam checkboxes. A recuperação oferece Ajuste manual como opção explícita.
 
 <table>
   <tr>
     <td align="center"><img src="assets/readme/ficha-mobile.png" width="260" alt="Ficha no celular em modo escuro, com menu Mais e cartões responsivos" /></td>
-    <td align="center"><img src="assets/readme/aparencia.png" width="760" alt="Configurações de aparência com as seis paletas e modos claro e escuro" /></td>
+    <td align="center"><img src="assets/readme/aparencia.png" width="760" alt="Configurações de aparência com paletas e modos claro e escuro" /></td>
   </tr>
   <tr><td align="center">Para consultar durante a sessão</td><td align="center">Cores e apresentação do seu jeito</td></tr>
 </table>
@@ -122,9 +124,17 @@ node tests/static-server.mjs
 
 Abra [http://127.0.0.1:4173](http://127.0.0.1:4173). Encerre o servidor com `Ctrl+C`. Use HTTP: abrir `index.html` diretamente por `file://` não é o fluxo suportado.
 
+Para usar a extensão **Live Server (Five Server)** no VS Code, abra esta pasta como workspace e execute **Five-Server: Start** na paleta de comandos (`Ctrl+Shift+P`), ou clique com o botão direito em `index.html` → **Open with Five Server**. O [arquivo de configuração](fiveserver.config.js) usa `root: '.'`, relativo ao workspace, e o endereço **http://127.0.0.1:5500/index.html**. Um caminho absoluto nessa opção pode ser combinado duas vezes pela extensão, gerando HTTP 404 até para `sw.js`. Se o servidor já estava aberto, encerre com **Five-Server: Close** e inicie novamente para carregar a configuração.
+
+O cache offline também funciona no Five Server: após mudanças no código, execute `npm run build:offline` e use **Atualizar agora** quando a nova versão aparecer. A recarga da extensão não substitui esse processo. Mantenha o mesmo endereço para acessar seus dados locais: mudar host ou porta abre outro armazenamento do navegador.
+
 Instalação e uso offline exigem HTTPS ou um endereço local confiável, além de um navegador compatível. Após alterar o runtime, regenere o worker com `npm run build:offline` e verifique com `npm run check:offline`. Uma atualização preparada aparece no aviso **Atualizar agora**, que salva alterações e rascunhos antes de reabrir as abas. Uma aba com a versão antiga do procedimento pode exigir fechamento uma vez; seus dados locais permanecem. Os testes fazem essa geração automaticamente antes de iniciar o servidor.
 
 O servidor é para desenvolvimento e serve o repositório inteiro. Não o exponha à internet nem hospede a pasta inteira: memória interna, referências e dados privados não devem integrar uma distribuição.
+
+Para preparar somente os arquivos públicos do site, execute `npm run build:site`. O comando gera uma pasta nova `output/ficha-rpg-<versão>-<sufixo>/`, com o aplicativo, guias públicos, licença, avisos de terceiros e `build-info.json` com versão e hashes dos assets offline. A pasta não contém memória privada, repositório Git, ferramentas de desenvolvimento ou dados locais do navegador. O comando prepara os arquivos; não os publica nem configura hospedagem.
+
+O teste adicional `npm run test:zoom` abre um perfil isolado do Edge e verifica o zoom nativo de 200%, com 60 campos, ferramentas e propriedades nos dois temas. Usa uma extensão local de teste para a API de zoom do navegador; não modifica o perfil habitual. Evidências ficam em `output/native-zoom-<sufixo>/`.
 
 ## Para quem desenvolve
 

@@ -25,6 +25,7 @@ import { stepCost } from './point-budget.js';
 import { appendFieldHelp } from './help.js';
 import { createDiceLabel, createRuleGlyph } from '../dice-display.js';
 import {openEntryEditor} from './entry-editor.js';
+import {entryEditorKey} from './entry-editor-scope.js';
 import {prepareEntryEdit} from './entry-edit.js';
 import {componentPresentation} from './predicates.js';
 
@@ -370,25 +371,43 @@ function renderList(container, context) {
     const costs = values.map((item) => creationItemCost(item, context));
     costTotal.textContent = costs.includes(null) ? 'Custo a definir com a mesa' : `${costs.reduce((sum, cost) => sum + cost, 0)} pontos · custo cumulativo das escolhas atuais`;
   };
+  const bindingKey = entryEditorKey(context);
+  const editorBinding = {
+    owner: wrap,
+    focus: id => [...entries.querySelectorAll('.engine-entry')].find(node => node.dataset.entryId === String(id))?.querySelector('.engine-entry__edit') || add,
+    edit(draft, original, source) {
+      requireListEditable(context);
+      const currentValues = ensureArray(context.character, context.field);
+      const current = original.id ? currentValues.find(value => value.id === original.id) : currentValues.find(value => value === source);
+      const next = prepareEntryEdit(current, original, draft, Object.keys(context.itemSchema || {}));
+      const before = structuredClone(current);
+      const candidate = structuredClone(context.character);
+      getByPath(candidate, context.field)[currentValues.indexOf(current)] = next;
+      context.validateCharacter?.(candidate);
+      Object.assign(current, next);
+      try { refresh(); context.onChange?.(); }
+      catch (error) { for (const key of Object.keys(current)) delete current[key]; Object.assign(current, before); refresh(); throw error; }
+    },
+    add(draft) {
+      requireListEditable(context);
+      values = ensureArray(context.character, context.field);
+      if (Number.isInteger(context.fixedLength) && values.length >= context.fixedLength) throw new Error('A lista já atingiu seu limite de entradas.');
+      const candidate = structuredClone(context.character);
+      getByPath(candidate, context.field).push(draft);
+      context.validateCharacter?.(candidate);
+      values.push(draft);
+      try { refresh(); context.onChange?.(); }
+      catch (error) { values.splice(values.indexOf(draft), 1); refresh(); throw error; }
+    },
+  };
+  context.entryEditors?.bind(bindingKey, editorBinding);
   const entryContext = {
     ...context,
     editEntry(item, index) {
-      const original = structuredClone(item);
       openEntryEditor({owner: wrap, title: `Editar ${entryTitle(item, index)}`, item, context, renderField: renderItemField,
+        bindingKey,
         returnFocus: () => [...entries.querySelectorAll('.engine-entry')].find(node => node.dataset.entryId === String(item.id || index))?.querySelector('.engine-entry__edit') || add,
-        onSave(draft) {
-          requireListEditable(context);
-          const currentValues = ensureArray(context.character, context.field);
-          const current = item.id ? currentValues.find(value => value.id === item.id) : currentValues.find(value => value === item);
-          const next = prepareEntryEdit(current, original, draft, Object.keys(context.itemSchema || {}));
-          const before = structuredClone(current);
-          const candidate = structuredClone(context.character);
-          getByPath(candidate, context.field)[currentValues.indexOf(current)] = next;
-          context.validateCharacter?.(candidate);
-          Object.assign(current, next);
-          try { refresh(); context.onChange?.(); }
-          catch (error) { for (const key of Object.keys(current)) delete current[key]; Object.assign(current, before); refresh(); throw error; }
-        },
+        onSave: editorBinding.edit,
       });
     },
     registerRefresh(refresh) {
@@ -421,18 +440,9 @@ function renderList(container, context) {
     if (context.editMode === 'dialog') {
       const item = {id: createId(), ...defaultsFromSchema(context.itemSchema, context)};
       openEntryEditor({owner: wrap, title: context.addLabel || `Adicionar em ${context.label}`, item, context, renderField: renderItemField,
+        bindingKey, adding: true,
         returnFocus: () => [...entries.querySelectorAll('.engine-entry')].find(node => node.dataset.entryId === String(item.id))?.querySelector('.engine-entry__edit') || add,
-        onSave(draft) {
-          requireListEditable(context);
-          values = ensureArray(context.character, context.field);
-          if (Number.isInteger(context.fixedLength) && values.length >= context.fixedLength) throw new Error('A lista já atingiu seu limite de entradas.');
-          const candidate = structuredClone(context.character);
-          getByPath(candidate, context.field).push(draft);
-          context.validateCharacter?.(candidate);
-          values.push(draft);
-          try { refresh(); context.onChange?.(); }
-          catch (error) { values.splice(values.indexOf(draft), 1); refresh(); throw error; }
-        },
+        onSave: editorBinding.add,
       });
       return;
     }

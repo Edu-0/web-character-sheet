@@ -32,6 +32,17 @@ export const PALETTES = [
   { key: 'ruby', label: 'Rubi', description: 'Vermelho e vinho sobre tons suaves e quentes.' },
   { key: 'monochrome', label: 'Preto e branco', description: 'Preto, branco e cinza, com uma leitura sóbria.' },
   { key: 'petals', label: 'Pétalas', description: 'Rosa, malva e lilás, delicados como um jardim florido.' },
+  { key: 'pride', label: 'LGBT · Orgulho', description: 'Arco-íris nos detalhes, com ametista e superfícies neutras.', ornamentPreset: 'pride' },
+  { key: 'trans', label: 'Trans', description: 'Azul, rosa e branco em detalhes suaves e luminosos.', ornamentPreset: 'trans' },
+  { key: 'blood', label: 'Sangue', description: 'Carmesim, obsidiana e espinhos para aventuras sombrias.', ornamentPreset: 'blood' },
+  { key: 'eldritch', label: 'Horror cósmico', description: 'Verde espectral, violeta e símbolos do desconhecido.', ornamentPreset: 'eldritch' },
+  { key: 'scifi', label: 'Sci-fi', description: 'Azul ionizado, ciano e circuitos de uma estação orbital.', ornamentPreset: 'scifi' },
+  { key: 'high-contrast', label: 'Alto contraste', description: 'Superfícies opacas, limites fortes e foco destacado, em claro e escuro.' },
+  { key: 'colorblind', label: 'Daltônico · Azul e âmbar', description: 'Destaques em azul e âmbar. Estados continuam identificados por texto e símbolos.' },
+  { key: 'parchment', label: 'Pergaminho', description: 'Papel marfim, tinta sépia e iluminuras de um livro de aventuras.', ornamentPreset: 'parchment' },
+  { key: 'ocean', label: 'Oceano', description: 'Azul profundo, espuma e detalhes de navegação.', ornamentPreset: 'ocean' },
+  { key: 'solarpunk', label: 'Solarpunk', description: 'Verde vivo, luz dourada e tecnologia em harmonia com a natureza.', ornamentPreset: 'solarpunk' },
+  { key: 'frutiger-aero', label: 'Frutiger Aero', description: 'Céu azul, verde vivo e reflexos aquáticos. Combine com Translúcido ou Mega em Fundo.', ornamentPreset: 'frutiger-aero' },
 ];
 
 

@@ -51,22 +51,27 @@ async function reportFailure(error) {
   }
 }
 
+async function cacheAssets(cache, missingOnly = false) {
+  const queue = [...urls];
+  // Limita também os reparos: baixar o catálogo inteiro de uma vez sobrecarrega
+  // servidores locais. Aguarda todos os trabalhadores antes de relatar a falha.
+  const results = await Promise.allSettled(Array.from({length: 4}, async () => {
+    while (queue.length) {
+      const [url, asset] = queue.shift();
+      if (!missingOnly || !await cache.match(url)) await cache.put(url, await verifiedResponse(url, asset));
+    }
+  }));
+  const failed = results.find(result => result.status === 'rejected');
+  if (failed) throw failed.reason;
+}
+let repairing = null;
+
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     try {
       const cache = await caches.open(CACHE);
-      const queue = [...urls];
-      // Aguarda TODOS os downloads antes de limpar uma instalação falha.
-      const results = await Promise.allSettled(Array.from({ length: 4 }, async () => {
-        while (queue.length) {
-          const [url, asset] = queue.shift();
-          await cache.put(url, await verifiedResponse(url, asset));
-        }
-      }));
-      if (results.some(result => result.status === 'rejected')) {
-        await caches.delete(CACHE);
-        throw results.find(result => result.status === 'rejected').reason;
-      }
+      try { await cacheAssets(cache); }
+      catch (error) { await caches.delete(CACHE); throw error; }
     } catch (error) { await reportFailure(error); throw error; }
   })());
   // Updates stay waiting until all open app windows preserve their work.
@@ -149,15 +154,18 @@ self.addEventListener('message', event => {
   }
   if (!['OFFLINE_STATUS', 'OFFLINE_PREPARE'].includes(event.data?.type) || !event.ports[0]) return;
   event.waitUntil((async () => {
-    const cache = await caches.open(CACHE);
-    if (event.data.type === 'OFFLINE_PREPARE') {
-      const results = await Promise.allSettled([...urls].map(async ([url, asset]) => {
-        if (!await cache.match(url)) await cache.put(url, await verifiedResponse(url, asset));
-      }));
-      const failed = results.find(result => result.status === 'rejected');
-      if (failed) await reportFailure(failed.reason);
+    try {
+      const cache = await caches.open(CACHE);
+      if (event.data.type === 'OFFLINE_PREPARE') {
+        // Abas ou novas tentativas compartilham o reparo que já está em andamento.
+        repairing ||= cacheAssets(cache, true).finally(() => { repairing = null; });
+        await repairing;
+      }
+      const present = await Promise.all([...urls.keys()].map(async url => Boolean(await cache.match(url))));
+      event.ports[0].postMessage({ ready: present.every(Boolean), version: VERSION });
+    } catch (error) {
+      await reportFailure(error);
+      event.ports[0].postMessage({ready: false, version: VERSION, error: error.message});
     }
-    const present = await Promise.all([...urls.keys()].map(async url => Boolean(await cache.match(url))));
-    event.ports[0].postMessage({ ready: present.every(Boolean), version: VERSION });
   })());
 });

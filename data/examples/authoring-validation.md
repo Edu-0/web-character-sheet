@@ -1,5 +1,15 @@
 # Verificação da autoria geral
 
+## Fechamento local da 0.8.0 — 20 de outubro de 2026
+
+391 testes Node aprovados após os metadados finais e o empacotador. Cobertura global: 86,26% de linhas, 83,70% de ramos e 86,09% de funções; o módulo novo de continuidade do lápis tem 100% nas três métricas. Módulos exclusivamente DOM continuam cobertos pelos testes de navegador, sem atribuir essas porcentagens a eles.
+
+A rodada ampla de navegador terminou com 529/533 aprovações, quatro falhas e nenhum caso pulado. Um teste novo lia os dados da ficha antes do fim do bootstrap após reload; a espera foi corrigida no próprio teste. Três casos tiveram timeout de inicialização/navegação/montagem. Os quatro passaram no dirigido com um worker, sem alteração do produto para esses timeouts e sem causa confirmada. São 533 cenários distintos com último resultado aprovado em duas rodadas, não uma integral única limpa.
+
+`npm run test:zoom` confirmou zoom nativo de 200% em perfil isolado do Edge: fator 2 pela API do navegador, DPR dobrado e viewport reduzido pela metade, com CSS zoom 1 e pinch 1. Foram percorridos 60 campos, início/meio/fim, ferramentas, propriedades e seis áreas nos dois temas; as capturas foram inspecionadas. `release-journey.spec.js` verificou vazio → primeiro campo → recuperar rascunho → exportar → instalar → criar/salvar/reabrir/exportar personagem.
+
+Os testes de desempenho atuais incluem 10.001 vínculos com 50 linhas renderizadas e consulta de 1.000 entradas; medianas observadas de 58,3 ms para a montagem do grafo e 24,3 ms para a consulta nessa execução. Casos acima dos limites foram recusados. Essas medições exploratórias, feitas durante a regressão, não são SLA nem cobrem todos os documentos. Resultados de 15/10 abaixo permanecem históricos. Testes automatizados e inspeção do agente não constituem avaliação humana/assistiva ou certificação universal de acessibilidade.
+
 Os exemplos de [Aventuras](adventurers.md), [Investigação](investigator.md), [Cartógrafos](cartographers.md) e [Traços](traits.md) são pacotes fictícios para experimentar mecanismos declarativos. As regras desses exemplos são visíveis no documento, e um pacote novo começa vazio. Cada exemplo distingue os controles assistidos das decisões da mesa.
 
 ## Reproduzir as verificações técnicas

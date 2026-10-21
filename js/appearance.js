@@ -1,5 +1,7 @@
 import { applyPalette, applyTheme, getAvailablePalettes, getAvailableThemes } from './theme.js';
 import {initMaterialControls} from './materials.js';
+import {getArtworkPreferences, applyArtworkPreferences} from './artwork.js';
+import {ORNAMENT_PRESETS} from '../assets/artwork/ornaments.js';
 
 export function initAppearanceControls() {
   const tabs = [...document.querySelectorAll('.appearance-tabs [role="tab"]')];
@@ -46,7 +48,17 @@ export function initAppearanceControls() {
   function refresh() {
     mode.value = document.documentElement.dataset.theme;
     palettes.querySelectorAll('button').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.paletteChoice === document.documentElement.dataset.palette)));
+    const palette = getAvailablePalettes().find(item => item.key === document.documentElement.dataset.palette);
+    document.getElementById('appearance-theme-artwork').hidden = !palette?.ornamentPreset;
+    document.getElementById('appearance-theme-ornaments-status').textContent = '';
   }
+  document.getElementById('appearance-theme-ornaments').addEventListener('click', () => {
+    const palette = getAvailablePalettes().find(item => item.key === document.documentElement.dataset.palette);
+    const preset = ORNAMENT_PRESETS.find(item => item.id === palette?.ornamentPreset);
+    if (!preset) return;
+    applyArtworkPreferences({artwork: {...getArtworkPreferences().artwork, enabled: true, preset: preset.id, selected: preset.selected}});
+    document.getElementById('appearance-theme-ornaments-status').textContent = `Combinação ${preset.label} aplicada. Personalize na aba Ornamentos.`;
+  });
   document.addEventListener('appearance:change', refresh);
   refresh();
   initMaterialControls();

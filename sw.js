@@ -1,5 +1,5 @@
 // Gerado por build-offline.mjs: os hashes e a versão pertencem ao mesmo conjunto.
-const VERSION = "70cbcdb7ee9409a7a862";
+const VERSION = "4f43873d111714c6c21b";
 const ASSETS = [
   {
     "path": "assets/app/icon-180.png",
@@ -23,15 +23,15 @@ const ASSETS = [
   },
   {
     "path": "assets/artwork/ornaments.js",
-    "hash": "21962cf170084bf330bece9128d803039add764e2ede0b6ee55502107f550fe7"
+    "hash": "bf43d8614f49bf17694ea367da5edfa7c63584e74b243ff033f3e78a9ab703f4"
   },
   {
     "path": "css/appearance-search.css",
-    "hash": "36b7e359e6a415337c9cca2f448659535ffd17163e3557f2cf8e5d741145e43a"
+    "hash": "ebbdc4f1d0925383a8ec225e90722c4f31bbef32060685a24da42b2623f5b004"
   },
   {
     "path": "css/artwork.css",
-    "hash": "ad3579c75597dcdb402cd09242859920e6a6df6f95748a6528265c5e55dfecf4"
+    "hash": "a84ff208f5923c80ad5bca7b2c0933f4c2cfd974a5349ea81ddeab4f35c3c3e5"
   },
   {
     "path": "css/base.css",
@@ -43,7 +43,7 @@ const ASSETS = [
   },
   {
     "path": "css/components.css",
-    "hash": "67554ca9ad6c74acdc75a0c1b98fb672a6fb92ea02cc4cc34fa005903072bf97"
+    "hash": "e65e26f1f028661ab120b6d2401ff27d4ff2752c5789105009298682934e4883"
   },
   {
     "path": "css/control-refinement.css",
@@ -71,7 +71,11 @@ const ASSETS = [
   },
   {
     "path": "css/entry-editor.css",
-    "hash": "ee8c63448c05ea15e79ad258b5755e00cd40f8e6d1b96d54059b8667c501801f"
+    "hash": "3c8d717985ac567e754f8464e6d10c45f796e81d5088d613d1f2d946148ef959"
+  },
+  {
+    "path": "css/frutiger-aero.css",
+    "hash": "a9d04d9121bf0bae10cfb1aabf9d091121773d23c9c6862c05ae4a69e9d8f56f"
   },
   {
     "path": "css/layout.css",
@@ -83,7 +87,7 @@ const ASSETS = [
   },
   {
     "path": "css/materials.css",
-    "hash": "ace9d82afac82af5f5e8a707932670c31b192532a2892e101c7c445ac36f5453"
+    "hash": "bf19a83b125d42b28c873da7c8a40f76f9ad87a4f826c58e95a1f7ccdac6c1f3"
   },
   {
     "path": "css/print.css",
@@ -107,7 +111,7 @@ const ASSETS = [
   },
   {
     "path": "css/variables.css",
-    "hash": "0786b530fe89238535d83503ac4af7ea2cedbb8894afc3e37062a250ec49c21e"
+    "hash": "5fdf7ce4f47acf71c514db841ce13f8a4285e26f205a5336eda2d0f908e418f1"
   },
   {
     "path": "data/systems/blades-dark.layout.json",
@@ -211,7 +215,7 @@ const ASSETS = [
   },
   {
     "path": "index.html",
-    "hash": "0af0108f11f98b28f0ca7558c8b34eae7546ab8f822a539f3863d9e5720d698a"
+    "hash": "037dc2e0f72e76fcd7fc47fbd223e32845092af3fe02bd0ea5640ec4f7e91d52"
   },
   {
     "path": "js/app-state.js",
@@ -223,7 +227,7 @@ const ASSETS = [
   },
   {
     "path": "js/appearance.js",
-    "hash": "d8e1b76170121145181dec37e586d5f901a00e608dd3609dfc05482566cb4849"
+    "hash": "880ecba0304cdbdd340800b8d9197cbe392533750f4f6e2362a40383eac907df"
   },
   {
     "path": "js/artwork.js",
@@ -251,7 +255,7 @@ const ASSETS = [
   },
   {
     "path": "js/data.js",
-    "hash": "2046c5e4dcac70e63b7d155dad22a3cfc946d593957a4ab8e2424b56175de587"
+    "hash": "03b6b131be0f89350b01f6140c15e8b46c5dfe92583ac2a07b49b9681f9d9b0c"
   },
   {
     "path": "js/dice-display.js",
@@ -411,11 +415,11 @@ const ASSETS = [
   },
   {
     "path": "js/editor/generated/preview.css",
-    "hash": "72412474b02644ccf3078aa6f352df44aa141e22397205ceaeaaee3cc55cbabe"
+    "hash": "5387ce652d1dd43db137c5b28849f0f52a74d72a8f099a5fce06f71234a5175e"
   },
   {
     "path": "js/editor/generated/preview.js",
-    "hash": "229517d46ba96177bfeaa15098c1520948c4c953cdf5a33669117eb8d334b67a"
+    "hash": "9f4b46d214c105986f2adc3d229c01e4b25f46f2cefe209bc8d7229ebd0cf010"
   },
   {
     "path": "js/editor/history.js",
@@ -479,11 +483,11 @@ const ASSETS = [
   },
   {
     "path": "js/editor/preview-entry.js",
-    "hash": "c5f5433603585be7628e62c6d4e73a925b8255d16f9be4477e86a6321dd5e869"
+    "hash": "9ceeafa885663a9cf364e94f4421cc08e8c5ee192f6637d44c67cd967159f9a6"
   },
   {
     "path": "js/editor/preview-host.js",
-    "hash": "3c17c5a5db89678f3b73ebaf3c3181d5ebf386b11cdb497cb99985dcc6bc9fa5"
+    "hash": "31fa08e4b1cd5c5d8c73d8b254f116a2a451abbb18848d1cebaf297e5c4c346b"
   },
   {
     "path": "js/editor/preview-navigation.js",
@@ -627,7 +631,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/advanced-fields.js",
-    "hash": "f4061480bc4151023ae1d140aa0e172dc1302b159e50eb8716351b8cf9bce920"
+    "hash": "fe3f654cef0309f764005e5fa54f4e26854216d484379d60e38db88c8664d8bd"
   },
   {
     "path": "js/engine/assistance.js",
@@ -718,8 +722,12 @@ const ASSETS = [
     "hash": "4295677ae7031a450691d4e687434058a1ac96cdc4e754fe8e31fba8272a07a2"
   },
   {
+    "path": "js/engine/entry-editor-scope.js",
+    "hash": "dda3fccacdcb66a7f1ec6b86201d84b08c6b8f18a9d3a6bb4aa11fbbb2a836b1"
+  },
+  {
     "path": "js/engine/entry-editor.js",
-    "hash": "72e9cf69af46a5fc4603b3234b8867f42313613152e96e399a584094e5513084"
+    "hash": "b0051ed68a7f38d5f852e42342ab58cb074f906af0aa82d23e43ab14f2de5e7c"
   },
   {
     "path": "js/engine/entry-roll-preparation.js",
@@ -819,7 +827,7 @@ const ASSETS = [
   },
   {
     "path": "js/engine/renderer.js",
-    "hash": "1085a4a4dec5ca097697c18ba5009f32567771970cfbc99c604c7f5517255205"
+    "hash": "d9c90c69983e0c19ab391d7f3db2e5352e6e5f32012e85a3462614639d31c9fe"
   },
   {
     "path": "js/engine/resolution-results.js",
@@ -935,11 +943,11 @@ const ASSETS = [
   },
   {
     "path": "js/material-preferences.js",
-    "hash": "c21ea7dd1c7f778133f637580d4610e544e707b80d8e6555395cbcbb27d344a0"
+    "hash": "fcc2b8558f5ececa9d4fc98b4fa380409c59f7da79d2ea840af8e6718c839837"
   },
   {
     "path": "js/materials.js",
-    "hash": "1fd1bbf23e04ab08be9e9671ace320e86cca5510e5d2447b6d710f27c2604304"
+    "hash": "9a11ce1d7ff2cd6dd7b60683ed5555486ba835949cdbb255adf5b518a802da4e"
   },
   {
     "path": "js/migrations/data-conversions.js",
@@ -975,7 +983,7 @@ const ASSETS = [
   },
   {
     "path": "js/pwa.js",
-    "hash": "9b532a2080345f778cd672112c68de1ca1adbe538cadf986e21b09525051adce"
+    "hash": "a261c1cac0115cb6a2646603c8cc6b1d903aa38796e69ed897cd4d3d733363db"
   },
   {
     "path": "js/repositories/catalog-installations.js",
@@ -1164,22 +1172,27 @@ async function reportFailure(error) {
   }
 }
 
+async function cacheAssets(cache, missingOnly = false) {
+  const queue = [...urls];
+  // Limita também os reparos: baixar o catálogo inteiro de uma vez sobrecarrega
+  // servidores locais. Aguarda todos os trabalhadores antes de relatar a falha.
+  const results = await Promise.allSettled(Array.from({length: 4}, async () => {
+    while (queue.length) {
+      const [url, asset] = queue.shift();
+      if (!missingOnly || !await cache.match(url)) await cache.put(url, await verifiedResponse(url, asset));
+    }
+  }));
+  const failed = results.find(result => result.status === 'rejected');
+  if (failed) throw failed.reason;
+}
+let repairing = null;
+
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     try {
       const cache = await caches.open(CACHE);
-      const queue = [...urls];
-      // Aguarda TODOS os downloads antes de limpar uma instalação falha.
-      const results = await Promise.allSettled(Array.from({ length: 4 }, async () => {
-        while (queue.length) {
-          const [url, asset] = queue.shift();
-          await cache.put(url, await verifiedResponse(url, asset));
-        }
-      }));
-      if (results.some(result => result.status === 'rejected')) {
-        await caches.delete(CACHE);
-        throw results.find(result => result.status === 'rejected').reason;
-      }
+      try { await cacheAssets(cache); }
+      catch (error) { await caches.delete(CACHE); throw error; }
     } catch (error) { await reportFailure(error); throw error; }
   })());
   // Updates stay waiting until all open app windows preserve their work.
@@ -1262,15 +1275,18 @@ self.addEventListener('message', event => {
   }
   if (!['OFFLINE_STATUS', 'OFFLINE_PREPARE'].includes(event.data?.type) || !event.ports[0]) return;
   event.waitUntil((async () => {
-    const cache = await caches.open(CACHE);
-    if (event.data.type === 'OFFLINE_PREPARE') {
-      const results = await Promise.allSettled([...urls].map(async ([url, asset]) => {
-        if (!await cache.match(url)) await cache.put(url, await verifiedResponse(url, asset));
-      }));
-      const failed = results.find(result => result.status === 'rejected');
-      if (failed) await reportFailure(failed.reason);
+    try {
+      const cache = await caches.open(CACHE);
+      if (event.data.type === 'OFFLINE_PREPARE') {
+        // Abas ou novas tentativas compartilham o reparo que já está em andamento.
+        repairing ||= cacheAssets(cache, true).finally(() => { repairing = null; });
+        await repairing;
+      }
+      const present = await Promise.all([...urls.keys()].map(async url => Boolean(await cache.match(url))));
+      event.ports[0].postMessage({ ready: present.every(Boolean), version: VERSION });
+    } catch (error) {
+      await reportFailure(error);
+      event.ports[0].postMessage({ready: false, version: VERSION, error: error.message});
     }
-    const present = await Promise.all([...urls.keys()].map(async url => Boolean(await cache.match(url))));
-    event.ports[0].postMessage({ ready: present.every(Boolean), version: VERSION });
   })());
 });

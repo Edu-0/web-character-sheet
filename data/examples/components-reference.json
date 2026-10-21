@@ -2610,7 +2610,7 @@
     "js/engine/action-plan.js": "4a648af7bdfbdd117b71e1f453296b1a1808a42b1312dfd65588dbb9f667fecd",
     "js/engine/action-progressions.js": "f4a13df5fa4296745a9b43f60ee4ca88c0f0971490678d4fb1acd57dea7ab303",
     "js/engine/action-records.js": "a6d20d02d39769e53d0859edd0d34d495a1456c3e9478e623df58b293c565374",
-    "js/engine/advanced-fields.js": "f4061480bc4151023ae1d140aa0e172dc1302b159e50eb8716351b8cf9bce920",
+    "js/engine/advanced-fields.js": "fe3f654cef0309f764005e5fa54f4e26854216d484379d60e38db88c8664d8bd",
     "js/engine/assisted-fields.js": "203e3fb0aa9af0d40eb8e5e8f2989d561a6d74569d2bd360a18996ea68aa2a0a",
     "js/engine/bound-fields.js": "ca4290143688e5218703c107b4b89b564eb2396bffc0a51d1b08eafbb35f30b4",
     "js/engine/character-history.js": "f46d865c00084773fd8ca8e12bca9fe02c8e9b0da241ec7005adb5accb3081e9",

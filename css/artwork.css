@@ -1,4 +1,9 @@
 /* A arte ocupa uma faixa própria; não cobre campos ou recebe cliques. */
+/* Flag colors are decorative; active text keeps accessible palette colors, including in the sandbox. */
+@media screen {
+  [data-palette='pride'] .engine-sheet .engine-tab[aria-selected='true'] { border-image: linear-gradient(90deg,#e44852,#f89a43,#f6d957,#56b87a,#529fe0,#a17bd5) 1; border-bottom: 2px solid; box-shadow: none; }
+  [data-palette='trans'] .engine-sheet .engine-tab[aria-selected='true'] { border-image: linear-gradient(90deg,#5bcefa 20%,#f5a9b8 20% 40%,#ffffff 40% 60%,#f5a9b8 60% 80%,#5bcefa 80%) 1; border-bottom: 2px solid; box-shadow: none; }
+}
 #view-settings .shell-stub { width: min(960px, calc(100% - 2 * var(--space-5))); }
 .appearance-section { margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--color-border); }
 .appearance-section h2 { font-size: var(--fs-lg); margin-bottom: var(--space-4); }

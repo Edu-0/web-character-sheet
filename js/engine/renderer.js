@@ -20,6 +20,7 @@ import { highlightSearchTarget } from './search.js';
 import {commitRenderedChanges} from './render-projection.js';
 import {createRuleContext} from './rule-registry.js';
 import {componentPresentation} from './predicates.js';
+import {createEntryEditorScope} from './entry-editor-scope.js';
 
 export function renderSheet(host, layout, character, options = {}) {
   if(options.materializeDefaults===false && !options.projected){
@@ -55,6 +56,8 @@ export function renderSheet(host, layout, character, options = {}) {
   const panels = element('div', 'engine-panels');
   const tabs = [];
   const cleanups = [];
+  const entryEditors = createEntryEditorScope(host, character, options.system);
+  cleanups.push(() => entryEditors.destroy());
   const refreshers = new Set();
   const structuralRefreshers=new Set();
   const presentationRefreshers=new Set();
@@ -62,6 +65,7 @@ export function renderSheet(host, layout, character, options = {}) {
   const ruleEvaluation=options.system?.schemaVersion===3?createRuleContext(options.system,character):undefined;
   const componentOptions = {
     ...options,
+    entryEditors,
     ruleEvaluation,
     registerCleanup(cleanup) {
       cleanups.push(cleanup);
@@ -274,6 +278,8 @@ function renderComponent(component, character, options) {
     ruleEvaluation:options.ruleEvaluation,
     registerRefresh: options.registerRefresh,
     registerCleanup: options.registerCleanup,
+    entryEditors: options.entryEditors,
+    entryEditorIdentity: component,
     upgradeCharacter: options.upgradeCharacter,
     upgradeActionCharacter:options.upgradeActionCharacter,
     getCharacter:options.getCharacter || (()=>character),

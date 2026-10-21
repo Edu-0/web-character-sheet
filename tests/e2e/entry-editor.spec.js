@@ -81,7 +81,7 @@ async function mountHarness(page) {
     window.entryModel={meta:{system:'test',id:'test'},locked:false,things:[{id:'a',title:'Alpha',count:2,note:'Original'}]};window.entryWrites=0;
     const root=document.createElement('div');root.id='entry-harness';document.body.prepend(root);
     const component={type:'list',field:'things',label:'Objetos',editMode:'dialog',quickFields:['count'],disabledWhen:{field:'locked',equals:true},itemSchema:{title:{type:'text',label:'Título'},count:{type:'number',label:'Saldo'},note:{type:'textarea',label:'Observação'}}};
-    window.entryHarness=renderSheet(root,{id:'h',tabs:[{id:'one',label:'Uma',sections:[{id:'s',containers:[{id:'c',components:[component]}]}]}]},window.entryModel,{onChange:()=>window.entryWrites++,validateCharacter:c=>{if(c.things.some(x=>x.count<0))throw Error('Saldo deve ser positivo.');}});
+    window.remountEntryHarness=()=>{window.entryHarness?.destroy();window.entryHarness=renderSheet(root,{id:'h',tabs:[{id:'one',label:'Uma',sections:[{id:'s',containers:[{id:'c',components:[component]}]}]}]},window.entryModel,{onChange:()=>window.entryWrites++,validateCharacter:c=>{if(c.things.some(x=>x.count<0))throw Error('Saldo deve ser positivo.');}});};window.remountEntryHarness();
   });
 }
 test('salvar preserva alterações rápidas, recusa conflito/remoção/condição e mantém rascunho inválido', async ({page}) => {
@@ -103,6 +103,64 @@ test('salvar preserva alterações rápidas, recusa conflito/remoção/condiçã
   await page.evaluate(()=>{window.entryModel.locked=false;window.entryModel.things=[];});
   await dialog(page).getByRole('button',{name:'Salvar',exact:true}).click();await expect(dialog(page).getByRole('alert')).toContainText('removida');
   await page.evaluate(()=>window.entryHarness.destroy());await expect(dialog(page)).toHaveCount(0);
+});
+
+test('remontagem conserva rascunho, foco e conflitos; Salvar usa a lista atual sem perder controles rápidos', async ({page}) => {
+  await ready(page);await mountHarness(page);
+  await page.locator('#entry-harness .engine-entry__edit').click();
+  await dialog(page).getByLabel('Título',{exact:true}).fill('Beta pendente');
+  await page.evaluate(()=>{window.entryModel.things[0].count=1;window.remountEntryHarness();});
+  await expect(dialog(page).getByLabel('Título',{exact:true})).toHaveValue('Beta pendente');
+  await expect(dialog(page).getByLabel('Título',{exact:true})).toBeFocused();
+  expect(await page.evaluate(()=>window.entryWrites)).toBe(0);
+  await dialog(page).getByRole('button',{name:'Salvar',exact:true}).click();
+  expect(await page.evaluate(()=>window.entryModel.things[0])).toMatchObject({title:'Beta pendente',count:1});
+  expect(await page.evaluate(()=>window.entryWrites)).toBe(1);
+  await page.locator('#entry-harness .engine-entry__edit').click();
+  await dialog(page).getByLabel('Observação').fill('Minha revisão');
+  await page.evaluate(()=>{window.entryModel.things[0].note='Revisão externa';window.remountEntryHarness();});
+  await dialog(page).getByRole('button',{name:'Salvar',exact:true}).click();
+  await expect(dialog(page).getByRole('alert')).toContainText('também mudou');
+  await expect(dialog(page).getByLabel('Observação')).toHaveValue('Minha revisão');
+  await dialog(page).getByRole('button',{name:'Cancelar',exact:true}).click();
+  expect(await page.evaluate(()=>window.entryModel.things[0].note)).toBe('Revisão externa');
+  await page.locator('#entry-harness .engine-collection__toolbar').getByRole('button',{name:'Adicionar',exact:true}).click();
+  await dialog(page).getByLabel('Título',{exact:true}).fill('Novo item pendente');
+  await page.evaluate(()=>window.remountEntryHarness());
+  expect(await page.evaluate(()=>window.entryModel.things.length)).toBe(1);
+  await dialog(page).getByRole('button',{name:'Salvar',exact:true}).click();
+  expect(await page.evaluate(()=>window.entryModel.things.map(x=>x.title))).toEqual(['Beta pendente','Novo item pendente']);
+});
+
+test('remontagem da ficha real mantém a edição até Salvar e não altera outro campo atualizado', async ({page}) => {
+  await ready(page);await seed(page);
+  await page.locator(`${host} .engine-entry[data-entry-id="gift"]`).getByRole('button',{name:'Editar Passo lunar',exact:true}).click();
+  await dialog(page).getByLabel('Nome',{exact:true}).fill('Passo da aurora');
+  await page.evaluate(async()=>{const {state}=await import('/js/state.js');state.setPath('features.0.usesCurrent',1);});
+  await expect(dialog(page).getByLabel('Nome',{exact:true})).toHaveValue('Passo da aurora');
+  expect((await read(page)).features[0].name).toBe('Passo lunar');
+  await dialog(page).getByRole('button',{name:'Salvar',exact:true}).click();
+  expect((await read(page)).features[0]).toMatchObject({name:'Passo da aurora',usesCurrent:1});
+  await expect(page.locator('#save-indicator')).toHaveText('Salvo');
+  await page.reload();
+  await expect.poll(async()=>(await read(page))?.features?.[0]?.name).toBe('Passo da aurora');
+});
+
+test('lista removida mantém o texto para cópia sem salvar; outra ficha encerra a janela anterior', async ({page}) => {
+  await ready(page);await mountHarness(page);
+  await page.locator('#entry-harness .engine-entry__edit').click();
+  await dialog(page).getByLabel('Título',{exact:true}).fill('Preservar este texto');
+  await page.evaluate(async()=>{
+    const {renderSheet}=await import('/js/engine/renderer.js');window.entryHarness.destroy();
+    window.entryHarness=renderSheet(document.querySelector('#entry-harness'),{id:'other',tabs:[]},window.entryModel);
+  });
+  await expect(dialog(page).getByLabel('Título',{exact:true})).toHaveValue('Preservar este texto');
+  await dialog(page).getByRole('button',{name:'Salvar',exact:true}).click();
+  await expect(dialog(page).getByRole('alert')).toContainText('lista não está disponível');
+  expect(await page.evaluate(()=>window.entryModel.things[0].title)).toBe('Alpha');
+  await page.evaluate(()=>{window.entryModel={...window.entryModel,meta:{system:'test',id:'another'}};window.remountEntryHarness();});
+  await expect(dialog(page)).toHaveCount(0);
+  expect(await page.evaluate(()=>window.entryWrites)).toBe(0);
 });
 
 test('diálogo acessível e responsivo; texto longo, temas, redução de efeitos e impressão', async ({page},testInfo) => {

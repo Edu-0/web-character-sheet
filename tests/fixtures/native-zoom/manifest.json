@@ -1,0 +1,1 @@
+{"manifest_version":3,"name":"Local native zoom verification","version":"1.0","permissions":["tabs"],"background":{"service_worker":"zoom.js"}}

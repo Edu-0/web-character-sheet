@@ -307,6 +307,90 @@
   --scrollbar-color: #b99cb5 #f2e6ef;
 }
 
+/* Theme accents remain separate from legible reading surfaces. */
+[data-palette='pride'] {
+  --color-bg: #191723; --color-bg-elevated: #211e2d; --color-panel: #252232; --color-panel-alt: #302c3e;
+  --color-text: #f3effb; --color-text-muted: #c5bdd5; --color-text-faint: #c0b7d1;
+  --color-accent: #c8b1ff; --color-accent-strong: #ddcfff; --color-accent-contrast: #221a32; --color-secondary: #eea7c3;
+  --color-computed-bg: #352d49;
+}
+[data-palette='pride'][data-theme='light'] { --color-accent: #7043a7; --color-accent-strong: #60348f; --color-accent-contrast: #ffffff; --color-secondary: #a53f70; }
+[data-palette='trans'] {
+  --color-bg: #141e28; --color-bg-elevated: #1c2733; --color-panel: #222d3a; --color-panel-alt: #2c3747;
+  --color-text: #f4f5fb; --color-text-muted: #bdcbdc; --color-text-faint: #b9c6d9;
+  --color-accent: #91d9f4; --color-accent-strong: #b7e9fa; --color-accent-contrast: #172a36; --color-secondary: #f0aec8;
+  --color-computed-bg: #293e50;
+}
+[data-palette='trans'][data-theme='light'] { --color-accent: #28647c; --color-accent-strong: #20556b; --color-accent-contrast: #ffffff; --color-secondary: #a14b72; }
+[data-palette='blood'] {
+  --color-bg: #1d151a; --color-bg-elevated: #271c23; --color-panel: #2c2028; --color-panel-alt: #392a32;
+  --color-text: #fcf0f3; --color-text-muted: #d4bac4; --color-text-faint: #cdb4c0;
+  --color-accent: #f39aaf; --color-accent-strong: #ffb8c8; --color-accent-contrast: #321823; --color-secondary: #b7a7d6;
+  --color-computed-bg: #452b37;
+}
+[data-palette='blood'][data-theme='light'] { --color-accent: #a12849; --color-accent-strong: #8a1f3d; --color-accent-contrast: #ffffff; --color-secondary: #725586; }
+[data-palette='eldritch'] {
+  --color-bg: #121d1c; --color-bg-elevated: #192725; --color-panel: #1e2c2a; --color-panel-alt: #293936;
+  --color-text: #eff7ef; --color-text-muted: #b9d0c4; --color-text-faint: #b6cabc;
+  --color-accent: #aed9ac; --color-accent-strong: #c6edc1; --color-accent-contrast: #192b20; --color-secondary: #bb9bd6;
+  --color-computed-bg: #2a4035;
+}
+[data-palette='eldritch'][data-theme='light'] { --color-accent: #326649; --color-accent-strong: #275539; --color-accent-contrast: #ffffff; --color-secondary: #77518e; }
+[data-palette='scifi'] {
+  --color-bg: #121c28; --color-bg-elevated: #192535; --color-panel: #1e2c3b; --color-panel-alt: #283849;
+  --color-text: #edf5ff; --color-text-muted: #bacbdd; --color-text-faint: #b5c5d8;
+  --color-accent: #8ed9ee; --color-accent-strong: #b2edfa; --color-accent-contrast: #142b35; --color-secondary: #b1abf5;
+  --color-computed-bg: #274152;
+}
+[data-palette='scifi'][data-theme='light'] { --color-accent: #26617c; --color-accent-strong: #1c526c; --color-accent-contrast: #ffffff; --color-secondary: #6352a4; }
+
+[data-palette='colorblind'] {
+  --color-bg: #141c25; --color-bg-elevated: #1a2530; --color-panel: #20303d; --color-panel-alt: #293b49;
+  --color-text: #f3f6fa; --color-text-muted: #c4cfda; --color-text-faint: #bacbd9;
+  --color-accent: #91caff; --color-accent-strong: #b5dcff; --color-accent-contrast: #142b3b; --color-secondary: #dfad43;
+  --color-success: #91caff; --color-info: #b5dcff; --color-danger: #efb55d; --color-danger-strong: #ffcc80; --color-danger-contrast: #142b3b;
+  --color-computed-bg: #2a4053;
+}
+[data-palette='colorblind'][data-theme='light'] {
+  --color-accent: #175b8c; --color-accent-strong: #114b76; --color-accent-contrast: #ffffff; --color-secondary: #865915;
+  --color-success: #175b8c; --color-info: #114b76; --color-danger: #8a4b16; --color-danger-strong: #713c0e; --color-danger-contrast: #ffffff;
+}
+[data-palette='parchment'] {
+  --color-bg: #1e1b17; --color-bg-elevated: #26221c; --color-panel: #302a22; --color-panel-alt: #3a3228;
+  --color-text: #faf2e4; --color-text-muted: #d1c1aa; --color-text-faint: #cfbda5;
+  --color-accent: #dfb775; --color-accent-strong: #f2d099; --color-accent-contrast: #302315; --color-secondary: #b1c0a0;
+  --color-computed-bg: #443625;
+}
+[data-palette='parchment'][data-theme='light'] { --color-accent: #80562b; --color-accent-strong: #68431f; --color-accent-contrast: #ffffff; --color-secondary: #536742; }
+[data-palette='ocean'] {
+  --color-bg: #101d25; --color-bg-elevated: #152630; --color-panel: #182e39; --color-panel-alt: #223c47;
+  --color-text: #eef8fc; --color-text-muted: #bcd3dd; --color-text-faint: #bad0d9;
+  --color-accent: #85d3e2; --color-accent-strong: #b0e7ed; --color-accent-contrast: #12313b; --color-secondary: #a5badf;
+  --color-computed-bg: #254550;
+}
+[data-palette='ocean'][data-theme='light'] { --color-accent: #237084; --color-accent-strong: #1b596b; --color-accent-contrast: #ffffff; --color-secondary: #4b6198; }
+[data-palette='solarpunk'] {
+  --color-bg: #182119; --color-bg-elevated: #1e2920; --color-panel: #243126; --color-panel-alt: #303f30;
+  --color-text: #f3f7e8; --color-text-muted: #c6d4b7; --color-text-faint: #c0d0ad;
+  --color-accent: #b0d882; --color-accent-strong: #d0ed9d; --color-accent-contrast: #24331a; --color-secondary: #e7c46c;
+  --color-computed-bg: #39492b;
+}
+[data-palette='solarpunk'][data-theme='light'] { --color-accent: #426c35; --color-accent-strong: #315329; --color-accent-contrast: #ffffff; --color-secondary: #846114; }
+
+[data-palette='frutiger-aero'] {
+  --font-display: 'Segoe UI', 'Trebuchet MS', var(--font-body);
+  --color-bg: #0c2232; --color-bg-elevated: #123448; --color-panel: #173c50; --color-panel-alt: #20485b; --color-input: #123243;
+  --color-border: #325b6f; --color-border-strong: #85a7b7; --color-input-border: #85a7b7; --color-choice-border: #a1c3d1;
+  --color-text: #f0fcff; --color-text-muted: #c0dce8; --color-text-faint: #b9d4e0;
+  --color-accent: #a4ddf3; --color-accent-strong: #c4f2ff; --color-accent-contrast: #083044; --color-secondary: #abd46f;
+  --color-success: #b1de83; --color-info: #96ddf4; --color-danger: #ffb8a6; --color-danger-strong: #ffd4c7; --color-danger-contrast: #193141;
+  --color-computed-bg: #214b60; --scrollbar-color: #85a7b7 #123448;
+}
+[data-palette='frutiger-aero'][data-theme='light'] {
+  --color-accent: #126988; --color-accent-strong: #0d526f; --color-accent-contrast: #ffffff; --color-secondary: #4d7626;
+  --color-success: #466b20; --color-info: #126988; --color-danger: #983b29; --color-danger-strong: #7f2d1e; --color-danger-contrast: #ffffff;
+}
+
 /* Shared light reading surfaces: a quiet tint, distinct controls and fine dividers.
    Control boundaries are stronger than decorative dividers for non-text contrast. */
 :root[data-theme='light'], [data-palette][data-theme='light'] {
@@ -345,4 +429,45 @@
   --color-choice-border: #767676;
   --color-computed-bg: #e9e9e9;
   --scrollbar-color: #8d8d8d #eeeeee;
+}
+
+/* Paper and landscape palettes opt into quiet surface tints explicitly. */
+[data-palette='parchment'][data-theme='light'] {
+  --color-bg: #f5f0e4; --color-bg-elevated: #fffdf6; --color-panel: #fffdf6; --color-panel-alt: #eee6d5; --color-input: #fffcf5;
+  --color-text: #352b20; --color-text-muted: #655644; --color-text-faint: #6d5b47;
+  --color-border: #d9ccb5; --color-border-strong: #8a795f; --color-input-border: #8a795f; --color-choice-border: #806d54;
+  --color-computed-bg: #eae0ca; --scrollbar-color: #8a795f #eee6d5;
+}
+[data-palette='ocean'][data-theme='light'] { --color-bg: #f2f7f8; --color-panel-alt: #e8f0f3; --color-input: #fcfefe; --color-computed-bg: #e4eef3; }
+[data-palette='solarpunk'][data-theme='light'] { --color-bg: #f5f7ef; --color-panel-alt: #edf0e4; --color-input: #fdfef9; --color-computed-bg: #e8eedc; }
+[data-palette='frutiger-aero'][data-theme='light'] {
+  --color-bg: #e9f6fc; --color-bg-elevated: #f4fcff; --color-panel: #f8fdff; --color-panel-alt: #dceef5; --color-input: #fcffff;
+  --color-text: #103549; --color-text-muted: #3c5969; --color-text-faint: #496473;
+  --color-border: #bdd8e4; --color-border-strong: #628395; --color-input-border: #628395; --color-choice-border: #50768b;
+  --color-computed-bg: #d6ebf3; --scrollbar-color: #628395 #dceef5;
+}
+
+/* Enhanced text contrast is opt-in; materials retain the saved glass choice. */
+:root[data-palette='high-contrast'] {
+  --color-bg: #000000; --color-bg-elevated: #0d0d0d; --color-panel: #0d0d0d; --color-panel-alt: #171717; --color-input: #000000;
+  --color-text: #ffffff; --color-text-muted: #e0e0e0; --color-text-faint: #d8d8d8;
+  --color-border: #a0a0a0; --color-border-strong: #dddddd; --color-input-border: #b5b5b5; --color-choice-border: #dddddd;
+  --color-accent: #ffd43b; --color-accent-strong: #ffe780; --color-accent-contrast: #000000; --color-secondary: #8ad5ff;
+  --color-success: #c5f8a0; --color-info: #8ad5ff; --color-danger: #ff9c98; --color-danger-strong: #ffc5bf; --color-danger-contrast: #000000;
+  --color-focus: #ffe780; --color-computed-bg: #171717; --scrollbar-color: #dddddd #000000;
+  --shadow-sm: none; --shadow-md: none; --shadow-lg: none;
+}
+:root[data-palette='high-contrast'][data-theme='light'] {
+  --color-bg: #ffffff; --color-bg-elevated: #ffffff; --color-panel: #ffffff; --color-panel-alt: #f0f0f0; --color-input: #ffffff;
+  --color-text: #111111; --color-text-muted: #303030; --color-text-faint: #393939;
+  --color-border: #666666; --color-border-strong: #333333; --color-input-border: #555555; --color-choice-border: #333333;
+  --color-accent: #063d82; --color-accent-strong: #04316b; --color-accent-contrast: #ffffff; --color-secondary: #573800;
+  --color-success: #234d11; --color-info: #063d82; --color-danger: #7b2020; --color-danger-strong: #5f1616; --color-danger-contrast: #ffffff;
+  --color-focus: #04316b; --color-computed-bg: #f0f0f0; --scrollbar-color: #333333 #ffffff;
+}
+@media screen {
+  :root[data-palette='high-contrast'] :is(a, .button--ghost) { text-decoration: underline; text-underline-offset: .2em; }
+  :root[data-palette='high-contrast'] :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; box-shadow: none; }
+  :root[data-palette='high-contrast'] :is(input, textarea)::placeholder { color: var(--color-text-muted); opacity: 1; }
+  :root[data-palette='high-contrast'] .palette-choice[aria-pressed='true'] { border-style: double; border-width: 4px; box-shadow: none; }
 }

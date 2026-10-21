@@ -31,8 +31,59 @@ async function openSystem(page, name) {
   await page.locator('#systems-list .library-card').filter({ hasText: name }).getByRole('button', { name: 'Abrir', exact: true }).click();
   await expect(page.locator('#shell-current-system')).toHaveText(name);
 }
-async function values(page) { return page.evaluate(async () => structuredClone((await import('/js/state.js')).state.get())); }
+async function values(page) { return page.evaluate(async () => structuredClone((await import(new URL('js/state.js', location.href).href)).state.get())); }
 async function versions(page) { return page.evaluate(async () => (await caches.keys()).filter(key => key.startsWith('ficha-rpg-offline:'))); }
+
+for (const kind of ['404', 'html']) test(`verificação manual explica sw.js ${kind}, preserva a versão e permite nova tentativa`, async ({page,context}) => {
+  const server = await startPwaServer({fiveServer:true});
+  try {
+    await warm(page,server.url);
+    const input=page.locator(host).getByLabel('Nome do personagem',{exact:true});
+    await input.fill('Não apagar minha ficha');await expect(page.locator('#save-indicator')).toHaveText('Salvo');
+    const before=await values(page), cacheNames=await versions(page);
+    await settings(page);
+    if(kind==='404') server.failures.set('sw.js',404);
+    else await page.route('**/sw.js',route=>route.fulfill({status:200,contentType:'text/html',body:'<!doctype html><title>Pasta incorreta</title>'}));
+    await page.locator('#btn-check-update').click();
+    await expect(page.locator('#pwa-update-status')).toContainText(kind==='404'?'sw.js (HTTP 404)':'uma página em vez de sw.js');
+    await expect(page.locator('#offline-status')).toContainText('Disponível offline');
+    expect(await values(page)).toEqual(before);expect(await versions(page)).toEqual(cacheNames);
+    server.failures.clear();await page.unroute('**/sw.js');
+    await page.locator('#btn-check-update').click();
+    await expect(page.locator('#offline-status')).toContainText('Verificação concluída. Disponível offline');
+    await expect(page.locator('#pwa-update-status')).toBeHidden();
+    await context.setOffline(true);await page.reload();await sheet(page);await expect(input).toHaveValue('Não apagar minha ficha');
+  } finally {await server.close();}
+});
+
+test('reparo lento mostra progresso, aguarda mais de cinco segundos e limita downloads simultâneos',async({page,context})=>{
+  const server=await startPwaServer();
+  try {
+    await warm(page,server.url);await settings(page);
+    const paths=['assets/app/icon-512.png',...server.release.assets.filter(asset=>asset.path.endsWith('.css')).slice(0,7).map(asset=>asset.path)];
+    await page.evaluate(async paths=>{
+      const name=(await caches.keys()).find(key=>key.startsWith('ficha-rpg-offline:'));
+      const cache=await caches.open(name);for(const path of paths)await cache.delete(new URL(path,location.href).href);
+    },paths);
+    for(const path of paths)server.delays.set(path,path.endsWith('.png')?6000:300);
+    await page.locator('#btn-check-update').click();
+    await expect(page.locator('#btn-check-update')).toHaveAttribute('aria-busy','true');
+    await expect(page.locator('#btn-check-update')).toBeDisabled();
+    await expect(page.locator('#offline-status')).toContainText('preparando os arquivos');
+    await expect.poll(()=>server.downloads.active).toBeGreaterThan(0);
+    await page.evaluate(()=>{
+      window.parallelRepair=new Promise(resolve=>{
+        const channel=new MessageChannel();channel.port1.onmessage=event=>{channel.port1.close();resolve(event.data);};
+        navigator.serviceWorker.controller.postMessage({type:'OFFLINE_PREPARE'},[channel.port2]);
+      });
+    });
+    await expect(page.locator('#offline-status')).toContainText('Verificação concluída. Disponível offline',{timeout:20000});
+    expect(await page.evaluate(()=>window.parallelRepair)).toMatchObject({ready:true});
+    expect(server.downloads.peak).toBeGreaterThan(1);expect(server.downloads.peak).toBeLessThanOrEqual(4);
+    await expect(page.locator('#btn-check-update')).toHaveAttribute('aria-busy','false');
+    await context.setOffline(true);await page.reload();await expect(page.locator('#shell-current-system')).toHaveText('D&D 5e (2024)');
+  }finally{await server.close();}
+});
 
 test('manifesto instalável, ícones locais e lista offline somente com runtime público', async ({ page }) => {
   await warm(page);
@@ -157,7 +208,8 @@ test('preparação incompleta não anuncia offline; tentativa posterior completa
     await sheet(page); await page.locator(host).getByLabel('Nome do personagem', { exact: true }).fill('Salva mesmo sem cache');
     await expect(page.locator('#save-indicator')).toHaveText('Salvo');
     server.failures.clear(); await settings(page); await page.locator('#btn-check-update').click();
-    await expect(page.locator('#offline-status')).toContainText('Disponível offline');
+    // Esta tentativa instala o catálogo inteiro, não apenas uma resposta de UI.
+    await expect(page.locator('#offline-status')).toContainText('Disponível offline', {timeout:30000});
     await reopenPrepared(page); await sheet(page);
     await expect(page.locator(host).getByLabel('Nome do personagem', { exact: true })).toHaveValue('Salva mesmo sem cache');
   } finally { await server.close(); }
